@@ -12,20 +12,20 @@ import java.util.List;
  *
  * @author ben
  */
-public class Ordine {
+public class Evento {
 
     /**
-     * indice cardinale dell'ordine effettuato
+     * Titolo dell'evento.
      */
-    int nOrdine;
+    String titolo;
 
     /**
-     * Data/ora in cui è stato effettuato l'ordine
+     * Data in cui si svolge.
      */
     Date data;
 
     /**
-     * Lista dei beni per il singolo ordine.
+     * Lista degli ordini avuti all'evento
      */
-    List<BeneVenduto> listaBeni;
+    List<Ordine> listaOrdini;
 }

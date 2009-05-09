@@ -5,17 +5,17 @@
 
 package gestionecassa;
 
+import java.util.List;
+
 /**
  *
  * @author ben
  */
-public class Main {
+public class BeniConOpzione extends BeneVenduto {
 
     /**
-     * @param args the command line arguments
+     * Lista delle opzioni disponibili per questo bene.
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
-    }
+    List<String> listaOpzioni;
 
 }
