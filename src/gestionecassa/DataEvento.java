@@ -12,25 +12,20 @@ import java.util.List;
  *
  * @author ben
  */
-public class Evento {
+public class DataEvento {
 
     /**
-     * Titolo dell'evento.
+     * Title of this specific date.
      */
-    String titolo;
+    String titoloData;
 
     /**
-     * Data in cui inizia.
+     * Data
      */
-    Date dataInizio;
+    Date data;
 
     /**
-     * Data in cui finisce.
+     * Lista degli ordini avuti all'evento
      */
-    Date dataFine;
-
-    /**
-     * Lista delle date dell'evento.
-     */
-    List<DataEvento> listaDate;
+    List<Ordine> listaOrdini;
 }
