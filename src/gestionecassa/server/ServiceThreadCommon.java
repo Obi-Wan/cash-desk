@@ -37,7 +37,7 @@ public class ServiceThreadCommon extends UnicastRemoteObject implements Serializ
     
     /** Creates a new instance of ServiceThreadCommon */
     ServiceThreadCommon(SessionRecord nMySelf, DataManager dataMgr)
-            throws RemoteException {
+            throws  RemoteException{
         myself = nMySelf;
         dataManager = dataMgr;
     }

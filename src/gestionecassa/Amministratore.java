@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package gestionecassa;
 
 /**
@@ -18,7 +13,7 @@ public class Amministratore extends Persona {
      * @param username the username of the Amministratore
      * @param the password of the Amministratore
      */
-    public Amministratore(int idAmministratore,String username,String password) {
+    public Amministratore(int idAmministratore, String password, String username) {
         super(idAmministratore, password, username);
     }
 }

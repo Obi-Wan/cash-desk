@@ -76,7 +76,7 @@ public class Server extends UnicastRemoteObject implements ServerRMICommon {
     /**
      * Creates a new instance of Server
      */
-    private Server() throws RemoteException {
+    private Server() throws  RemoteException{
         sessionList = new ArrayList<SessionRecord> ();
         ilTimer = new ServerTimer();
         ilTimer.start();
@@ -127,7 +127,7 @@ public class Server extends UnicastRemoteObject implements ServerRMICommon {
      *
      * @return the id of the user in the table
      */
-    public int getIdTabella(int sessionID)throws RemoteException {
+    public int getIdTabella(int sessionID)throws  RemoteException{
         return (sessionList.get(sessionID).idTabella);
     }
     
@@ -144,7 +144,7 @@ public class Server extends UnicastRemoteObject implements ServerRMICommon {
      * @return  The id of the user, which is used in comunication, once logged.
      */
     public int sendRMILoginData(String username, String password) 
-            throws RemoteException, WrongLoginException {
+            throws    RemoteException, WrongLoginException{
         return logga(username,password);
     }
 
@@ -160,8 +160,7 @@ public class Server extends UnicastRemoteObject implements ServerRMICommon {
      * @return  The id of the user, which is used in comunication, once logged.
      */
     public int sendRMIDatiRegistrazione(Persona user)
-            throws RemoteException, ActorAlreadyExistingException,
-                WrongLoginException {
+            throws    RemoteException, ActorAlreadyExistingException, WrongLoginException{
 
         String username = user.getUsername();
         String password = user.getPassword();
@@ -194,8 +193,8 @@ public class Server extends UnicastRemoteObject implements ServerRMICommon {
      *
      * @return  the session id.
      */
-    private int logga(final String username,final String password)
-            throws WrongLoginException, RemoteException {
+    private int logga(final String username, final String password)
+            throws    WrongLoginException, RemoteException{
         SessionRecord tempRecord = new SessionRecord();
         /* Controlla che i dati dell'utente siano presenti nel
          * database degli utenti registrati*/
@@ -260,7 +259,7 @@ public class Server extends UnicastRemoteObject implements ServerRMICommon {
      *
      * @return Reference to the user found. null if nobody found.
      */
-    private final Persona verificaUsername(final String username,final String password) {
+    private final Persona verificaUsername(final String username, final String password) {
         
         /* Controlla prima in una tabella poi se non ottieni risultato,
          nella'tlra e restituisci l'oggetto corrispondente alla perosna
@@ -338,7 +337,7 @@ public class Server extends UnicastRemoteObject implements ServerRMICommon {
      *
      * @throws  RemoteException because we are in RMI context.
      */
-    public void keepAlive(int sessionID) throws RemoteException {
+    public void keepAlive(int sessionID) throws  RemoteException{
         synchronized (sessionListSemaphore) {
             sessionList.get(sessionID).timeElapsed = 0;
         }
@@ -348,7 +347,7 @@ public class Server extends UnicastRemoteObject implements ServerRMICommon {
      *
      * @throws  RemoteException because we are in RMI context.
      */
-    public void closeService(int sessionID) throws RemoteException {
+    public void closeService(int sessionID) throws  RemoteException{
         /*timer will do the rest.*/
         synchronized (sessionListSemaphore) {
             eraseSession(sessionList.get(sessionID));

@@ -15,7 +15,7 @@ public class ServerRMICassiereImpl extends ServiceThreadCommon
         implements ServerRMICassiere {
 
     ServerRMICassiereImpl(SessionRecord session, DataManager dataManager)
-            throws RemoteException {
+            throws  RemoteException{
         super(session,dataManager);
     }
 }

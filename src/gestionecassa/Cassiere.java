@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package gestionecassa;
 
@@ -18,7 +14,7 @@ public class Cassiere extends Persona {
      * @param username the username of cassiere
      * @param the password of cassiere.
      */
-    public Cassiere(int idCassiere,String username,String password) {
+    public Cassiere(int idCassiere, String username, String password) {
         super(idCassiere, password, username);
     }
 }

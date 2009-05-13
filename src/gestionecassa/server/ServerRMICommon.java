@@ -29,7 +29,7 @@ public interface ServerRMICommon extends Remote {
      * @return  The id of the user, which is used in comunication, once logged.
      */
     public int sendRMILoginData(String username, String password) 
-            throws RemoteException, WrongLoginException;
+            throws   RemoteException, WrongLoginException;
 
     /** Method which both the clients use to register themselves in.
      *
@@ -42,8 +42,7 @@ public interface ServerRMICommon extends Remote {
      * @return  The id of the user, which is used in comunication, once logged.
      */
     public int sendRMIDatiRegistrazione(Persona user)
-            throws RemoteException, ActorAlreadyExistingException,
-                    WrongLoginException;
+            throws   RemoteException, ActorAlreadyExistingException, WrongLoginException;
     
     /**
      * Method that tell's the server that the client still

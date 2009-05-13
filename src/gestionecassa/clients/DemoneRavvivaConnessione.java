@@ -24,17 +24,17 @@ public class DemoneRavvivaConnessione extends Thread {
     /**
      * Right log to use.
      */
-    Logger logger;
+    private Logger logger;
 
     /**
      * Id of the client.
      */
-    int id;
+    private int id;
 
     /**
      * Server
      */
-    ServerRMICommon server;
+    private ServerRMICommon server;
     
     /**
      * Creates a new instance of DemoneRavvivaConnessione
@@ -43,8 +43,7 @@ public class DemoneRavvivaConnessione extends Thread {
      * @param id
      * @param logger
      */
-    public DemoneRavvivaConnessione(ServerRMICommon server, int id,
-            Logger logger) {
+    public DemoneRavvivaConnessione(ServerRMICommon server, int id, Logger logger) {
         /*The only way to destroy it, without having care of anything*/
         this.setDaemon(true);
 

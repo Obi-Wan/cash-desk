@@ -15,7 +15,7 @@ public class ServerRMIAmministratoreImpl extends ServiceThreadCommon
         implements ServerRMIAmministratore {
 
     ServerRMIAmministratoreImpl(SessionRecord session, DataManager dataManager)
-            throws RemoteException {
+            throws  RemoteException{
         super(session,dataManager);
     }
 }

@@ -1,15 +1,31 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * GuiLoginPanel.java
+ * 
+ * Copyright (C) 2009 Nicola Roberto Viganò
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /*
  * GuiLoginPanel.java
  *
- * Created on 10-mag-2009, 16.31.48
+ * Created on 12-mag-2009, 22.20.16
  */
 
 package gestionecassa.clients;
+
+import gestionecassa.exceptions.WrongLoginException;
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 
 /**
  *
@@ -17,9 +33,19 @@ package gestionecassa.clients;
  */
 public class GuiLoginPanel extends javax.swing.JPanel {
 
+    /**
+     * The owner to call for operations
+     */
+    ClientAPI owner;
+
+    JFrame parent;
+
     /** Creates new form GuiLoginPanel */
-    public GuiLoginPanel() {
+    public GuiLoginPanel(JFrame parent,ClientAPI owner, String nomePostazione) {
         initComponents();
+        jTextFieldLuogo.setText(nomePostazione);
+        this.owner = owner;
+        this.parent = parent;
     }
 
     /** This method is called from within the constructor to
@@ -36,8 +62,10 @@ public class GuiLoginPanel extends javax.swing.JPanel {
     jTextFieldUsername = new javax.swing.JTextField();
     jLabelPassword = new javax.swing.JLabel();
     jPasswordFieldPassword = new javax.swing.JPasswordField();
-    jLabel1 = new javax.swing.JLabel();
+    jLabelPostazione = new javax.swing.JLabel();
     jTextFieldLuogo = new javax.swing.JTextField();
+    jLabelServer = new javax.swing.JLabel();
+    jTextFieldServer = new javax.swing.JTextField();
     jPanelButtons = new javax.swing.JPanel();
     jButtonLogin = new javax.swing.JButton();
     jButtonAnnulla = new javax.swing.JButton();
@@ -47,9 +75,11 @@ public class GuiLoginPanel extends javax.swing.JPanel {
 
     jLabelPassword.setText("Password");
 
-    jLabel1.setText("Postazione");
+    jLabelPostazione.setText("Postazione");
 
     jTextFieldLuogo.setEditable(false);
+
+    jLabelServer.setText("Server");
 
     javax.swing.GroupLayout jPanelInfoLayout = new javax.swing.GroupLayout(jPanelInfo);
     jPanelInfo.setLayout(jPanelInfoLayout);
@@ -60,12 +90,14 @@ public class GuiLoginPanel extends javax.swing.JPanel {
         .addGroup(jPanelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addComponent(jLabelUsername)
           .addComponent(jLabelPassword)
-          .addComponent(jLabel1))
+          .addComponent(jLabelPostazione)
+          .addComponent(jLabelServer))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(jPanelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addComponent(jPasswordFieldPassword, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
           .addComponent(jTextFieldUsername, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
-          .addComponent(jTextFieldLuogo, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE))
+          .addComponent(jTextFieldLuogo, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
+          .addComponent(jTextFieldServer, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE))
         .addContainerGap())
     );
     jPanelInfoLayout.setVerticalGroup(
@@ -81,12 +113,21 @@ public class GuiLoginPanel extends javax.swing.JPanel {
           .addComponent(jPasswordFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(jPanelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel1)
+          .addComponent(jLabelPostazione)
           .addComponent(jTextFieldLuogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(jPanelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabelServer)
+          .addComponent(jTextFieldServer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
     jButtonLogin.setText("Login");
+    jButtonLogin.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonLoginActionPerformed(evt);
+      }
+    });
 
     jButtonAnnulla.setText("Annulla");
 
@@ -103,9 +144,9 @@ public class GuiLoginPanel extends javax.swing.JPanel {
       jPanelButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanelButtonsLayout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(jButtonLogin)
+        .addComponent(jButtonLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jButtonAnnulla)
+        .addComponent(jButtonAnnulla, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
         .addComponent(jButtonPulisci)
         .addContainerGap())
@@ -117,11 +158,11 @@ public class GuiLoginPanel extends javax.swing.JPanel {
       jPanelButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanelButtonsLayout.createSequentialGroup()
         .addContainerGap()
-        .addGroup(jPanelButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        .addGroup(jPanelButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
           .addComponent(jButtonLogin)
           .addComponent(jButtonAnnulla)
           .addComponent(jButtonPulisci))
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addContainerGap())
     );
 
     jPanelButtonsLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jButtonAnnulla, jButtonLogin, jButtonPulisci});
@@ -130,42 +171,75 @@ public class GuiLoginPanel extends javax.swing.JPanel {
     this.setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 400, Short.MAX_VALUE)
-      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+      .addGroup(layout.createSequentialGroup()
         .addContainerGap()
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-          .addComponent(jPanelButtons, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(jPanelInfo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(jPanelInfo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(jPanelButtons, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         .addContainerGap())
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 172, Short.MAX_VALUE)
-      .addGroup(layout.createSequentialGroup()
+      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
         .addContainerGap()
         .addComponent(jPanelInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addComponent(jPanelButtons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addContainerGap())
     );
   }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonPulisciActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPulisciActionPerformed
-        // TODO add your handling code here:
+        jTextFieldUsername.setText("");
+        jPasswordFieldPassword.setText("");
+        jTextFieldServer.setText("");
 }//GEN-LAST:event_jButtonPulisciActionPerformed
+
+    private void jButtonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoginActionPerformed
+
+        //waiting dialog!!
+        JDialog waiting = new WaitingDialog(parent,false,"tring to login");
+        waiting.setVisible(true);
+
+        try {
+            owner.login(jTextFieldUsername.getText(), 
+                    new String(jPasswordFieldPassword.getPassword()),
+                    jTextFieldServer.getText());
+        } catch (WrongLoginException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Il nome e/o la password immessi non sono validi","Errore",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+        } catch (RemoteException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "RemoteException nel tentativo di connessione","Errore",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+        } catch (MalformedURLException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "L'URL del server e' sbagliato","Errore",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+        } catch (NotBoundException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "La classe non e' stata registrata sul server","Errore!",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+        } finally {
+            waiting.dispose();
+        }
+    }//GEN-LAST:event_jButtonLoginActionPerformed
 
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton jButtonAnnulla;
   private javax.swing.JButton jButtonLogin;
   private javax.swing.JButton jButtonPulisci;
-  private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabelPassword;
+  private javax.swing.JLabel jLabelPostazione;
+  private javax.swing.JLabel jLabelServer;
   private javax.swing.JLabel jLabelUsername;
   private javax.swing.JPanel jPanelButtons;
   private javax.swing.JPanel jPanelInfo;
   private javax.swing.JPasswordField jPasswordFieldPassword;
   private javax.swing.JTextField jTextFieldLuogo;
+  private javax.swing.JTextField jTextFieldServer;
   private javax.swing.JTextField jTextFieldUsername;
   // End of variables declaration//GEN-END:variables
 
