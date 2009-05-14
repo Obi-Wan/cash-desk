@@ -25,7 +25,7 @@ class SessionRecord implements Serializable {
     String username;
     
     /** Thread that is serving this user. */
-    ServiceThreadCommon relatedThread;
+    SharedServerService relatedThread;
     
     /** Reference to who is this user. */
     Persona user;
@@ -55,7 +55,7 @@ class SessionRecord implements Serializable {
      * @param nUser     Reference to the user.
      * @param nTime     new indication for timeEtimeElapsed
      */
-    public SessionRecord(final int nClId, final String nUsername, final ServiceThreadCommon nRelated, final Persona nUser, final int nTime) {
+    public SessionRecord(final int nClId, final String nUsername, final SharedServerService nRelated, final Persona nUser, final int nTime) {
         clientId = nClId;
         username = nUsername;
         relatedThread = nRelated;

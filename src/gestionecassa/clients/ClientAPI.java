@@ -32,6 +32,13 @@ public interface ClientAPI {
     Logger getLogger();
 
     /**
+     * Returns the chosen logger for the GUI objects
+     *
+     * @return
+     */
+    Logger getLoggerGUI();
+
+    /**
      * The stopping Method
      */
     void stopClient();
@@ -70,6 +77,13 @@ public interface ClientAPI {
             throws WrongLoginException, RemoteException, MalformedURLException,
                 NotBoundException;
 
+    /**
+     * Logs out the current user from the remote app-server
+     *
+     * @throws java.rmi.RemoteException
+     */
+    public void logout() throws RemoteException;
+    
     /**
      * Starts the thread deputated to keep connection alive
      */

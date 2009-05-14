@@ -43,4 +43,13 @@ public class BeneVenduto {
     public boolean hasOptions() {
         return false;
     }
+
+    /**
+     * Sort of toString, but leaving that fully functional
+     *
+     * @return The string describing the good.
+     */
+    public String getPrintableFormat() {
+        return new String("- " + nome + "\t € " + prezzo);
+    }
 }

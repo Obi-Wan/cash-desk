@@ -48,7 +48,7 @@ public class Cassa extends Luogo implements CassaAPI {
      * Creates a new instance of Cassa.
      */
     private Cassa(String nomeLuogo) {
-        super(nomeLuogo, Log.GESTIONECASSA_CASSA);
+        super(nomeLuogo, Log.GESTIONECASSA_CASSA, Log.GESTIONECASSA_CASSA_GUI);
     }
 
     /**
@@ -92,9 +92,8 @@ public class Cassa extends Luogo implements CassaAPI {
     {
         server = (ServerRMICassiere)
                 sendDatiRegistrazione(user, serverName);
-        logger.info("Connessione avvenuta con id: " + sessionID);
 
-        avviaDemoneConnessione();
+        setupAfterLogin();
     }
 
     /**
@@ -116,8 +115,7 @@ public class Cassa extends Luogo implements CassaAPI {
     {
         server = (ServerRMICassiere)
                 sendDatiLogin(username, password, serverName);
-        logger.info("Connessione avvenuta con id: " + sessionID);
 
-        avviaDemoneConnessione();
+        setupAfterLogin();
     }
 }

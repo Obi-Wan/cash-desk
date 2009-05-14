@@ -1,5 +1,5 @@
 /*
- * ServiceThreadCommon.java
+ * SharedServerService.java
  *
  * Created on 26 gennaio 2007, 14.57
  *
@@ -9,6 +9,7 @@
 
 package gestionecassa.server;
 
+import gestionecassa.ListaBeni;
 import gestionecassa.Log;
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -19,7 +20,8 @@ import java.rmi.server.UnicastRemoteObject;
  *
  * @author ben
  */
-public class ServiceThreadCommon extends UnicastRemoteObject implements Serializable, Runnable {
+public class SharedServerService extends UnicastRemoteObject 
+        implements Serializable, Runnable, ServerRMIShared {
     
     /** Thread that rapresents myself */
     private Thread runner;
@@ -35,8 +37,8 @@ public class ServiceThreadCommon extends UnicastRemoteObject implements Serializ
      */
     DataManager dataManager;
     
-    /** Creates a new instance of ServiceThreadCommon */
-    ServiceThreadCommon(SessionRecord nMySelf, DataManager dataMgr)
+    /** Creates a new instance of SharedServerService */
+    SharedServerService(SessionRecord nMySelf, DataManager dataMgr)
             throws  RemoteException{
         myself = nMySelf;
         dataManager = dataMgr;
@@ -68,8 +70,19 @@ public class ServiceThreadCommon extends UnicastRemoteObject implements Serializ
         }
     }
     
-    /** This method stops the thread. */
+    /**
+     * This method stops the thread.
+     */
     public void stopThread() {
         stopThread = true;
+    }
+
+    /**
+     * 
+     * @return
+     * @throws java.rmi.RemoteException
+     */
+    public ListaBeni requestListaBeni() throws RemoteException {
+        return dataManager.getCurrentListaBeni();
     }
 }

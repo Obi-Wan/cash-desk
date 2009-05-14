@@ -11,7 +11,7 @@ import java.rmi.RemoteException;
  *
  * @author ben
  */
-public class ServerRMICassiereImpl extends ServiceThreadCommon
+public class ServerRMICassiereImpl extends SharedServerService
         implements ServerRMICassiere {
 
     ServerRMICassiereImpl(SessionRecord session, DataManager dataManager)

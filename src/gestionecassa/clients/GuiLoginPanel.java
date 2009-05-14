@@ -130,6 +130,11 @@ public class GuiLoginPanel extends javax.swing.JPanel {
     });
 
     jButtonAnnulla.setText("Annulla");
+    jButtonAnnulla.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonAnnullaActionPerformed(evt);
+      }
+    });
 
     jButtonPulisci.setText("Pulisci");
     jButtonPulisci.addActionListener(new java.awt.event.ActionListener() {
@@ -225,6 +230,10 @@ public class GuiLoginPanel extends javax.swing.JPanel {
             waiting.dispose();
         }
     }//GEN-LAST:event_jButtonLoginActionPerformed
+
+    private void jButtonAnnullaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAnnullaActionPerformed
+        parent.dispose();
+    }//GEN-LAST:event_jButtonAnnullaActionPerformed
 
 
   // Variables declaration - do not modify//GEN-BEGIN:variables

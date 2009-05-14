@@ -5,6 +5,7 @@
 
 package gestionecassa;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  *
  * @author ben
  */
-public class ListaBeni {
+public class ListaBeni implements Serializable {
 
     /**
      * Lista dei beni vendibili
@@ -33,5 +34,18 @@ public class ListaBeni {
      */
     public ListaBeni(List<BeneVenduto> lista) {
         this.lista = new ArrayList<BeneVenduto>(lista);
+    }
+
+    /**
+     * Similar to toString but leaves it fully functional
+     *
+     * @return a written description of the list
+     */
+    public String getPrintableFormat() {
+        String output = new String("Lista dei beni venduti:\n");
+        for (BeneVenduto beneVenduto : lista) {
+            output += new String(beneVenduto.getPrintableFormat() + "\n");
+        }
+        return output;
     }
 }

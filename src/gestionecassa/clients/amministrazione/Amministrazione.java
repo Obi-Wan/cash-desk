@@ -48,7 +48,8 @@ public class Amministrazione extends Luogo implements AmministrazioneAPI {
      * Creates a new instance of Amministrazione.
      */
     private Amministrazione(String nomeLuogo) {
-        super(nomeLuogo, Log.GESTIONECASSA_AMMINISTRAZIONE);
+        super(nomeLuogo, Log.GESTIONECASSA_AMMINISTRAZIONE,
+                Log.GESTIONECASSA_AMMINISTRAZIONE_GUI);
     }
 
     /**
@@ -92,9 +93,8 @@ public class Amministrazione extends Luogo implements AmministrazioneAPI {
     {
         server = (ServerRMIAmministratore)
                 sendDatiRegistrazione(user, serverName);
-        logger.info("Connessione avvenuta con id: " + sessionID);
 
-        avviaDemoneConnessione();
+        setupAfterLogin();
     }
 
     /**
@@ -116,8 +116,7 @@ public class Amministrazione extends Luogo implements AmministrazioneAPI {
     {
         server = (ServerRMIAmministratore)
                 sendDatiLogin(username, password, serverName);
-        logger.info("Connessione avvenuta con id: " + sessionID);
 
-        avviaDemoneConnessione();
+        setupAfterLogin();
     }
 }

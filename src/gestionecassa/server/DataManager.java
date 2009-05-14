@@ -5,6 +5,8 @@
 
 package gestionecassa.server;
 
+import gestionecassa.BeneVenduto;
+import gestionecassa.ListaBeni;
 import gestionecassa.Persona;
 
 /**
@@ -12,12 +14,47 @@ import gestionecassa.Persona;
  * @author ben
  */
 public class DataManager {
-    
+
+    /**
+     * list of handled good
+     */
+    ListaBeni listaBeni;
+
+    /**
+     * Default constructor
+     */
+    public DataManager() {
+        listaBeni = new ListaBeni();
+
+        //FIXME solo per test
+        listaBeni.lista.add(new BeneVenduto("fagiolo", 25));
+        listaBeni.lista.add(new BeneVenduto("ameba", 35));
+    }
+
+    /**
+     *
+     * @param user
+     * @return
+     */
     int registraUtente(Persona user) {
         return 0;
     }
 
+    /**
+     *
+     * @param username
+     * @param password
+     * @return
+     */
     Persona verificaUsername(String username, String password) {
         return new Persona();
+    }
+
+    /**
+     *
+     * @return
+     */
+    final ListaBeni getCurrentListaBeni() {
+        return listaBeni;
     }
 }

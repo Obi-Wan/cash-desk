@@ -210,7 +210,7 @@ public class Server extends UnicastRemoteObject implements ServerRMICommon {
         /* Prima constrolla che le password coincidano, poi guarda nella lista
          * degli utenti collegati e determina un nuovo session id
          */
-        ServiceThreadCommon srv = null;
+        SharedServerService srv = null;
         try {
             if (tempRecord.user instanceof Cassiere) {
                 

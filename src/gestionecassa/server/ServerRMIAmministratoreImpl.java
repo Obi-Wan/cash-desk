@@ -11,7 +11,7 @@ import java.rmi.RemoteException;
  *
  * @author ben
  */
-public class ServerRMIAmministratoreImpl extends ServiceThreadCommon
+public class ServerRMIAmministratoreImpl extends SharedServerService
         implements ServerRMIAmministratore {
 
     ServerRMIAmministratoreImpl(SessionRecord session, DataManager dataManager)

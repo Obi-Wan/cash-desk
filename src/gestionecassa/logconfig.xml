@@ -13,7 +13,7 @@
 	<!-- Log to a file with a Pattern layout -->
     	<appender class="org.apache.log4j.RollingFileAppender" name="FILE_LOGGER">
     	<!-- NOTE: the starting directory is the main application server directory (e.g. d:\webservers\resin) -->
-            <param name="File" value="log/progettolaureati.log"/>
+            <param name="File" value="log/gestionecassa.log"/>
             <param name="Append" value="true"/>
 	    <param name="MaxFileSize" value="20MB"/>
 	    <param name="MaxBackupIndex" value="8"/>
@@ -50,25 +50,25 @@
 	    </layout>  
 	</appender>	
 	
-        <category additivity="true" name="progettolaureati">
+        <category additivity="true" name="gestionecassa">
 	  <appender-ref ref="FILE_LOGGER"/>
         </category>
-	<category additivity="true" name="progettolaureati.clientAzienda">
+	<category additivity="true" name="gestionecassa.amministrazione">
 	  <appender-ref ref="FILE_LOGGER"/>
 	</category>	
-	<category additivity="true" name="progettolaureati.clientAzienda.gui">
+	<category additivity="true" name="gestionecassa.amministrazione.gui">
 	  <appender-ref ref="FILE_LOGGER"/>
 	</category>
-	<category additivity="true" name="progettolaureati.clientLaureato">
+	<category additivity="true" name="gestionecassa.cassa">
 	  <appender-ref ref="FILE_LOGGER"/>
 	</category>	
-	<category additivity="true" name="progettolaureati.clientLaureato.gui">
+	<category additivity="true" name="gestionecassa.cassa.gui">
 	  <appender-ref ref="FILE_LOGGER"/>
 	</category>	
-	<category additivity="true" name="progettolaureati.server">
+	<category additivity="true" name="gestionecassa.server">
 	  <appender-ref ref="FILE_LOGGER"/>
 	</category>
-	<category additivity="true" name="progettolaureati.server.dbm">
+	<category additivity="true" name="gestionecassa.server.dbm">
 	  <appender-ref ref="FILE_LOGGER"/>
 	</category>	
 

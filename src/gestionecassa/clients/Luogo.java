@@ -14,6 +14,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -27,7 +28,9 @@ abstract public class Luogo extends Thread implements ClientAPI {
      */
     protected volatile static boolean stopApp;
 
-    /** Reference to the server */
+    /**
+     * Reference to the central server
+     */
     protected static ServerRMICommon serverCentrale;
     
     /**
@@ -39,7 +42,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
     /**
      * Nome identificativo del luogo (hostname)
      */
-    protected final String nome;
+    protected final String hostname;
 
     /**
      * Chosen Logger for this application
@@ -47,18 +50,29 @@ abstract public class Luogo extends Thread implements ClientAPI {
     protected final Logger logger;
 
     /**
+     * Chosen Logger for the GUI elements
+     */
+    protected final Logger loggerGUI;
+
+    /**
      * Daemon that keeps connection with server alive.
      */
     protected DemoneRavvivaConnessione threadConnessione;
 
     /**
-     * Costruttore esplicito che assegna subito il nome al luogo
-     *
-     * @param nome
+     * The frame that display the Applictaion GUI
      */
-    protected Luogo(String nome, Logger logger) {
-        this.nome = nome;
+    protected GuiAppFrame appFrame;
+
+    /**
+     * Costruttore esplicito che assegna subito il hostname al luogo
+     *
+     * @param hostname
+     */
+    protected Luogo(String nome, Logger logger, Logger loggerGUI) {
+        this.hostname = nome;
         this.logger = logger;
+        this.loggerGUI = loggerGUI;
         Luogo.stopApp = false;
     }
 
@@ -75,7 +89,10 @@ abstract public class Luogo extends Thread implements ClientAPI {
     @Override
     public void run() {
         // avvia la fase di login
-        //this.showFormLogin();
+        appFrame = new GuiAppFrame(this);
+        appFrame.setContentPanel(new GuiLoginPanel(appFrame, this, hostname));
+        appFrame.setVisible(true);
+        
         // Comincia l'esecuzione normale
         try {
             while (stopApp == false) {
@@ -93,13 +110,10 @@ abstract public class Luogo extends Thread implements ClientAPI {
      */
     public void stopClient() {
         try {
-            /*Let's stop the service on the server.*/
-            if (serverCentrale != null && sessionID >= 0) {
-                serverCentrale.closeService(sessionID);
-            }
+            logout();
         } catch (RemoteException ex) {
-            //TODO andrebbe segnalato anche all'utente con un avviso
-            logger.warn("Client interrotto in modo brusco", ex);
+            /* mando il messaggio all'utente */
+            ex.printStackTrace();
         }
         stopApp = true;
     }
@@ -111,6 +125,15 @@ abstract public class Luogo extends Thread implements ClientAPI {
      */
     public Logger getLogger() {
         return logger;
+    }
+
+    /**
+     * Returns chosen logger for the GUI objects
+     *
+     * @return
+     */
+    public Logger getLoggerGUI() {
+        return loggerGUI;
     }
     
     /**
@@ -176,7 +199,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
      * @throws java.net.MalformedURLException
      * @throws java.rmi.NotBoundException
      */
-    public Remote sendDatiLogin(String username, String password, String serverName)
+    protected Remote sendDatiLogin(String username, String password, String serverName)
             throws WrongLoginException, RemoteException, MalformedURLException,
                 NotBoundException
     {
@@ -208,6 +231,13 @@ abstract public class Luogo extends Thread implements ClientAPI {
         }
     }
 
+    protected void setupAfterLogin() {
+        logger.info("Connessione avvenuta con id: " + sessionID);
+
+        appFrame.enableLogout(true);
+        avviaDemoneConnessione();
+    }
+
     /**
      * Starts the thread deputated to keep connection alive
      */
@@ -221,6 +251,27 @@ abstract public class Luogo extends Thread implements ClientAPI {
      * Stops the thread deputated to keep connection alive
      */
     public void stopDemoneConnessione() {
-        threadConnessione.interrupt();
+        if (threadConnessione != null)
+            threadConnessione.interrupt();
+    }
+
+    /**
+     * Logs out the current user from the remote app-server
+     *
+     * @throws java.rmi.RemoteException
+     */
+    public void logout() throws RemoteException {
+        try {
+            /*Let's stop the service on the server.*/
+            if (serverCentrale != null && sessionID >= 0) {
+                serverCentrale.closeService(sessionID);
+            }
+        } catch (RemoteException ex) {
+            logger.warn("Connessione interrotta in modo brusco", ex);
+            throw ex;
+        } finally {
+            stopDemoneConnessione();
+            appFrame.enableLogout(false);
+        }
     }
 }
