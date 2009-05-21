@@ -5,6 +5,7 @@
 
 package gestionecassa.clients;
 
+import gestionecassa.ListaBeni;
 import gestionecassa.Persona;
 import gestionecassa.exceptions.*;
 import java.net.MalformedURLException;
@@ -37,6 +38,13 @@ public interface ClientAPI {
      * @return
      */
     Logger getLoggerGUI();
+
+    /**
+     * Returns the hostname
+     *
+     * @return
+     */
+    String getHostname();
 
     /**
      * The stopping Method
@@ -93,4 +101,13 @@ public interface ClientAPI {
      * Stops the thread deputated to keep connection alive
      */
     public void stopDemoneConnessione();
+
+    /**
+     * 
+     *
+     * @return
+     *
+     * @throws java.rmi.RemoteException
+     */
+    public ListaBeni requestListaBeni() throws RemoteException;
 }

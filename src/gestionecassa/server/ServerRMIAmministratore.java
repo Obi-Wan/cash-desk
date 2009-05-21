@@ -7,11 +7,12 @@ package gestionecassa.server;
 
 import java.io.Serializable;
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 /**
  *
  * @author ben
  */
-public interface ServerRMIAmministratore extends Remote, Serializable {
-
+public interface ServerRMIAmministratore 
+        extends ServerRMIShared, Remote, Serializable {
 }

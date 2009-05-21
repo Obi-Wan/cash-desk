@@ -12,6 +12,7 @@ import java.rmi.Remote;
  *
  * @author ben
  */
-public interface ServerRMICassiere extends Remote, Serializable {
+public interface ServerRMICassiere 
+        extends ServerRMIShared, Remote, Serializable {
 
 }

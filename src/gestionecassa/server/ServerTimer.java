@@ -55,11 +55,11 @@ class ServerTimer extends Thread {
      */
     private void aggiornaTimeElapsed() {
         Log.GESTIONECASSA_SERVER.debug("faccio il check delle sessioni attive.");
-        synchronized (Server.sessionList) {
+        synchronized (Server.sessionListSemaphore) {
             for (SessionRecord elem : Server.sessionList) {
                 /*se supera il timeout distrugge il thread e rimuove la sessione*/
                 Log.GESTIONECASSA_SERVER.debug("elemento con session id: "+
-                        elem.clientId + "ed enlpastime: "+elem.timeElapsed);
+                        elem.clientId + "ed elapsedtime: "+elem.timeElapsed);
                 if (++elem.timeElapsed > 14) {
                     Log.GESTIONECASSA_SERVER.debug("eliminato sess con id: "+
                             elem.clientId);

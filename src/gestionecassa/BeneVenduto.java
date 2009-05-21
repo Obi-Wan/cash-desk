@@ -1,11 +1,13 @@
 
 package gestionecassa;
 
+import java.io.Serializable;
+
 /**
  *
  * @author ben
  */
-public class BeneVenduto {
+public class BeneVenduto implements Serializable {
 
     /**
      *

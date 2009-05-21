@@ -29,12 +29,12 @@ import javax.swing.JPanel;
  *
  * @author ben
  */
-public class GuiAppFrame extends javax.swing.JFrame {
+abstract public class GuiAppFrame extends javax.swing.JFrame {
 
     /**
      * The owner of this frame.
      */
-    ClientAPI owner;
+    protected ClientAPI owner;
     
     /**
      * Creates new form GuiAppFrame
@@ -56,7 +56,6 @@ public class GuiAppFrame extends javax.swing.JFrame {
 //        }
 //        this.setLocation((screenSize.width - frameSize.width) / 2,
 //                (screenSize.height - frameSize.height) / 2);
-        enableLogout(false);
     }
 
     /** This method is called from within the constructor to
@@ -68,101 +67,23 @@ public class GuiAppFrame extends javax.swing.JFrame {
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
 
-    jScrollPanelMain = new javax.swing.JScrollPane();
-    jToolBarMain = new javax.swing.JToolBar();
-    jButtonLogout = new javax.swing.JButton();
-    jSeparator1 = new javax.swing.JToolBar.Separator();
-    jButtonList = new javax.swing.JButton();
-    jSeparator2 = new javax.swing.JToolBar.Separator();
-    jButtonOptions = new javax.swing.JButton();
-
-    setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-    jToolBarMain.setFloatable(false);
-    jToolBarMain.setRollover(true);
-
-    jButtonLogout.setText("Logout");
-    jButtonLogout.setFocusable(false);
-    jButtonLogout.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-    jButtonLogout.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-    jButtonLogout.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButtonLogoutActionPerformed(evt);
-      }
-    });
-    jToolBarMain.add(jButtonLogout);
-    jToolBarMain.add(jSeparator1);
-
-    jButtonList.setText("Lista beni venduti");
-    jButtonList.setFocusable(false);
-    jButtonList.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-    jButtonList.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-    jButtonList.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButtonListActionPerformed(evt);
-      }
-    });
-    jToolBarMain.add(jButtonList);
-    jToolBarMain.add(jSeparator2);
-
-    jButtonOptions.setText("Opzioni");
-    jButtonOptions.setFocusable(false);
-    jButtonOptions.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-    jButtonOptions.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-    jButtonOptions.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButtonOptionsActionPerformed(evt);
-      }
-    });
-    jToolBarMain.add(jButtonOptions);
+    setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(jToolBarMain, javax.swing.GroupLayout.DEFAULT_SIZE, 533, Short.MAX_VALUE)
-      .addComponent(jScrollPanelMain, javax.swing.GroupLayout.DEFAULT_SIZE, 533, Short.MAX_VALUE)
+      .addGap(0, 533, Short.MAX_VALUE)
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addComponent(jToolBarMain, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jScrollPanelMain, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE))
+      .addGap(0, 417, Short.MAX_VALUE)
     );
 
     pack();
   }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLogoutActionPerformed
-        try {
-            owner.logout();
-        } catch (RemoteException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                "Il server non ha risposto nel tentativo di chiuder la connessione",
-                "Errore di comunicazione",
-                javax.swing.JOptionPane.ERROR_MESSAGE);
-        } finally {
-            this.enableLogout(false);
-        }
-    }//GEN-LAST:event_jButtonLogoutActionPerformed
-
-    private void jButtonListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonListActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonListActionPerformed
-
-    private void jButtonOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionsActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonOptionsActionPerformed
-
   // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JButton jButtonList;
-  private javax.swing.JButton jButtonLogout;
-  private javax.swing.JButton jButtonOptions;
-  private javax.swing.JScrollPane jScrollPanelMain;
-  private javax.swing.JToolBar.Separator jSeparator1;
-  private javax.swing.JToolBar.Separator jSeparator2;
-  private javax.swing.JToolBar jToolBarMain;
   // End of variables declaration//GEN-END:variables
 
 
@@ -182,24 +103,34 @@ public class GuiAppFrame extends javax.swing.JFrame {
      *
      * @param content
      */
-    public void setContentPanel(JPanel content) {
-        jScrollPanelMain.setViewportView(content);
-        this.pack();
-    }
+    abstract public void setContentPanel(JPanel content);
 
     /**
      * cleans the work area.
      */
-    public void cleanContentPanel() {
-        jScrollPanelMain.setViewportView(new JPanel());
-    }
-
+    abstract public void cleanContentPanel();
+    
     /**
      * Enables or disables logout button.
      *
      * @param value
      */
-    public void enableLogout(boolean value) {
-        jButtonLogout.setEnabled(value);
+    abstract public void enableLogout(boolean value);
+
+    /**
+     *
+     */
+    public void logout() {
+        try {
+            owner.logout();
+        } catch (RemoteException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Il server non ha risposto nel tentativo di chiuder la connessione",
+                "Errore di comunicazione",
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+        } finally {
+            this.enableLogout(false);
+            this.setContentPanel(new GuiLoginPanel(this, owner, owner.getHostname()));
+        }
     }
 }

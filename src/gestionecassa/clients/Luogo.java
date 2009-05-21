@@ -8,13 +8,12 @@ package gestionecassa.clients;
 import gestionecassa.Persona;
 import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.WrongLoginException;
-import gestionecassa.server.ServerRMICommon;
+import gestionecassa.server.ServerRMIMainCommon;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -26,18 +25,18 @@ abstract public class Luogo extends Thread implements ClientAPI {
     /** Variable that tells to the main thread he has to
      * stop working.
      */
-    protected volatile static boolean stopApp;
+    protected volatile boolean stopApp;
 
     /**
      * Reference to the central server
      */
-    protected static ServerRMICommon serverCentrale;
+    protected ServerRMIMainCommon serverCentrale;
     
     /**
      * The ID returned from the server, that we will use
      * to comunicate with it.
      */
-    protected static int sessionID;
+    protected int sessionID;
 
     /**
      * Nome identificativo del luogo (hostname)
@@ -73,7 +72,9 @@ abstract public class Luogo extends Thread implements ClientAPI {
         this.hostname = nome;
         this.logger = logger;
         this.loggerGUI = loggerGUI;
-        Luogo.stopApp = false;
+        this.stopApp = false;
+        this.sessionID = -1;
+        this.serverCentrale = null;
     }
 
     /**
@@ -88,8 +89,10 @@ abstract public class Luogo extends Thread implements ClientAPI {
      */
     @Override
     public void run() {
-        // avvia la fase di login
-        appFrame = new GuiAppFrame(this);
+        // concludi fase preparatoria al login
+//        if (appFrame == null) {
+//            appFrame = new GuiAppFrame(this);
+//        }
         appFrame.setContentPanel(new GuiLoginPanel(appFrame, this, hostname));
         appFrame.setVisible(true);
         
@@ -135,6 +138,15 @@ abstract public class Luogo extends Thread implements ClientAPI {
     public Logger getLoggerGUI() {
         return loggerGUI;
     }
+
+    /**
+     * Returns the hostname
+     *
+     * @return
+     */
+    final public String getHostname() {
+        return hostname;
+    }
     
     /**
      * Method that makes LocalBusinessLogic send registration data
@@ -157,7 +169,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
     {
         try {
             /* Login phase */
-            serverCentrale = (ServerRMICommon)
+            serverCentrale = (ServerRMIMainCommon)
                 Naming.lookup("//" + serverName + "/ServerRMI");
 
             /* faccio il raise dell'id solo a scopo di debug. */
@@ -205,7 +217,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
     {
         try {
             /* Login phase */
-            serverCentrale = (ServerRMICommon)
+            serverCentrale = (ServerRMIMainCommon)
                 Naming.lookup("//" + serverName + "/ServerRMI");
             /* faccio il raise dell'id solo a scopo di debug. */
             sessionID = serverCentrale.sendRMILoginData(username,password);
@@ -271,6 +283,8 @@ abstract public class Luogo extends Thread implements ClientAPI {
             throw ex;
         } finally {
             stopDemoneConnessione();
+            sessionID = -1;
+            serverCentrale = null;
             appFrame.enableLogout(false);
         }
     }

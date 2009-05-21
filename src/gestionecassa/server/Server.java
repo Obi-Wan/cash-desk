@@ -28,7 +28,8 @@ import gestionecassa.exceptions.WrongLoginException;
  *
  * @author ben
  */
-public class Server extends UnicastRemoteObject implements ServerRMICommon {
+public class Server extends UnicastRemoteObject 
+        implements ServerRMIMainCommon, ServerRMIMainAmministrazione {
     
     /**
      * reference to the main local business logic (serverBL)
@@ -89,8 +90,17 @@ public class Server extends UnicastRemoteObject implements ServerRMICommon {
     /**
      * The stopping Method
      */
-    public void stopServer() {
+    void stopServer() {
         ilTimer.stopServer();
+    }
+
+    /**
+     * Stops the server on this machine.
+     *
+     * @throws java.rmi.RemoteException
+     */
+    public void remotelyStopServer() throws RemoteException {
+        stopServer();
     }
     
     /**
@@ -228,6 +238,8 @@ public class Server extends UnicastRemoteObject implements ServerRMICommon {
                 
                 tempRecord.idTabella = ((Amministratore)tempRecord.user).getId();
                 srv = new ServerRMIAmministratoreImpl(tempRecord,dataManager);
+            } else {
+                throw new WrongLoginException();
             }
         } catch (RemoteException ex) {
             Log.GESTIONECASSA_SERVER.error("Errore nell'instanziazione dell'" +
@@ -241,12 +253,15 @@ public class Server extends UnicastRemoteObject implements ServerRMICommon {
         
         try {
             Naming.rebind("Server"+tempRecord.clientId,srv);
+            Log.GESTIONECASSA_SERVER.debug("Registrato nuovo working thread" +
+                    " raggiungibile a: /Server"+tempRecord.clientId);
         } catch (MalformedURLException ex) {
             Log.GESTIONECASSA_SERVER.error("L'indirzzo verso cui fare il" +
                     " bind del working thread e' sbagliato",ex);
         } catch (RemoteException ex) {
             Log.GESTIONECASSA_SERVER.error("non e' stato possible registrare" +
                     " la classe del working thread: remote exception",ex);
+            throw ex;
         }
         srv.start();
         
@@ -328,7 +343,7 @@ public class Server extends UnicastRemoteObject implements ServerRMICommon {
             session.username = new String("");
             session.relatedThread.stopThread();
         }
-        Log.GESTIONECASSA_SERVER.debug("Eliminata la sessioen scaduta o" +
+        Log.GESTIONECASSA_SERVER.debug("Eliminata la sessione scaduta o" +
                 " terminata");
     }
     

@@ -6,6 +6,7 @@
 package gestionecassa.server;
 
 import gestionecassa.BeneVenduto;
+import gestionecassa.Cassiere;
 import gestionecassa.ListaBeni;
 import gestionecassa.Persona;
 
@@ -47,7 +48,7 @@ public class DataManager {
      * @return
      */
     Persona verificaUsername(String username, String password) {
-        return new Persona();
+        return new Cassiere(0,username,password);
     }
 
     /**

@@ -15,7 +15,7 @@ import java.rmi.RemoteException;
  *
  * @author ben
  */
-public interface ServerRMICommon extends Remote {
+public interface ServerRMIMainCommon extends Remote {
 
     /** Method which both the clients use to log themselves in.
      *

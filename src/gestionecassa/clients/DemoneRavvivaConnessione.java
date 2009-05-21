@@ -10,7 +10,7 @@
 package gestionecassa.clients;
 
 import java.rmi.RemoteException;
-import gestionecassa.server.ServerRMICommon;
+import gestionecassa.server.ServerRMIMainCommon;
 import org.apache.log4j.Logger;
 
 /**
@@ -34,7 +34,7 @@ public class DemoneRavvivaConnessione extends Thread {
     /**
      * Server
      */
-    private ServerRMICommon server;
+    private ServerRMIMainCommon server;
     
     /**
      * Creates a new instance of DemoneRavvivaConnessione
@@ -43,7 +43,7 @@ public class DemoneRavvivaConnessione extends Thread {
      * @param id
      * @param logger
      */
-    public DemoneRavvivaConnessione(ServerRMICommon server, int id, Logger logger) {
+    public DemoneRavvivaConnessione(ServerRMIMainCommon server, int id, Logger logger) {
         /*The only way to destroy it, without having care of anything*/
         this.setDaemon(true);
 
