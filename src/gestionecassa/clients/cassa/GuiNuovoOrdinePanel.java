@@ -20,15 +20,41 @@
 
 package gestionecassa.clients.cassa;
 
+import gestionecassa.BeneVenduto;
+import gestionecassa.ListaBeni;
+import gestionecassa.Log;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.GroupLayout.ParallelGroup;
+import javax.swing.GroupLayout.SequentialGroup;
+import org.apache.log4j.Logger;
+
 /**
  *
  * @author ben
  */
 public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
 
+    CassaAPI owner;
+
+    Logger logger;
+
+    /**
+     * Local Reference to the goods list.
+     */
+    ListaBeni listaBeni;
+
+    List<recordListaBeni> tabellaBeni;
+
     /** Creates new form GuiNuovoOrdinePanel */
-    public GuiNuovoOrdinePanel() {
+    public GuiNuovoOrdinePanel(CassaAPI owner) {
         initComponents();
+        this.owner = owner;
+        this.logger = Log.GESTIONECASSA_CASSA_GUI;
+
+        getListaBeni();
+        buildList();
     }
 
     /** This method is called from within the constructor to
@@ -40,20 +66,253 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
 
+    jPanelListaBeni = new javax.swing.JPanel();
+    jPanelBottoni1 = new javax.swing.JPanel();
+    jButtonConferma = new javax.swing.JButton();
+    jButtonPulisci = new javax.swing.JButton();
+    jPanelBottoni2 = new javax.swing.JPanel();
+    jButtonAnnulla = new javax.swing.JButton();
+    jButtonAggiorna = new javax.swing.JButton();
+
+    javax.swing.GroupLayout jPanelListaBeniLayout = new javax.swing.GroupLayout(jPanelListaBeni);
+    jPanelListaBeni.setLayout(jPanelListaBeniLayout);
+    jPanelListaBeniLayout.setHorizontalGroup(
+      jPanelListaBeniLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGap(0, 499, Short.MAX_VALUE)
+    );
+    jPanelListaBeniLayout.setVerticalGroup(
+      jPanelListaBeniLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGap(0, 315, Short.MAX_VALUE)
+    );
+
+    jButtonConferma.setText("Conferma");
+    jButtonConferma.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonConfermaActionPerformed(evt);
+      }
+    });
+
+    jButtonPulisci.setText("Pulisci");
+    jButtonPulisci.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonPulisciActionPerformed(evt);
+      }
+    });
+
+    javax.swing.GroupLayout jPanelBottoni1Layout = new javax.swing.GroupLayout(jPanelBottoni1);
+    jPanelBottoni1.setLayout(jPanelBottoni1Layout);
+    jPanelBottoni1Layout.setHorizontalGroup(
+      jPanelBottoni1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanelBottoni1Layout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(jButtonConferma)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 282, Short.MAX_VALUE)
+        .addComponent(jButtonPulisci)
+        .addContainerGap())
+    );
+    jPanelBottoni1Layout.setVerticalGroup(
+      jPanelBottoni1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanelBottoni1Layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanelBottoni1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jButtonConferma)
+          .addComponent(jButtonPulisci))
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+    );
+
+    jButtonAnnulla.setText("Annulla Ultimo Ordine");
+    jButtonAnnulla.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonAnnullaActionPerformed(evt);
+      }
+    });
+
+    jButtonAggiorna.setText("Aggiorna Lista");
+    jButtonAggiorna.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonAggiornaActionPerformed(evt);
+      }
+    });
+
+    javax.swing.GroupLayout jPanelBottoni2Layout = new javax.swing.GroupLayout(jPanelBottoni2);
+    jPanelBottoni2.setLayout(jPanelBottoni2Layout);
+    jPanelBottoni2Layout.setHorizontalGroup(
+      jPanelBottoni2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelBottoni2Layout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(jButtonAggiorna)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 152, Short.MAX_VALUE)
+        .addComponent(jButtonAnnulla)
+        .addContainerGap())
+    );
+    jPanelBottoni2Layout.setVerticalGroup(
+      jPanelBottoni2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanelBottoni2Layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanelBottoni2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jButtonAnnulla)
+          .addComponent(jButtonAggiorna))
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+    );
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
     this.setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 400, Short.MAX_VALUE)
+      .addGroup(layout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(jPanelBottoni2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addContainerGap())
+      .addGroup(layout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(jPanelBottoni1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addContainerGap())
+      .addComponent(jPanelListaBeni, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 300, Short.MAX_VALUE)
+      .addGroup(layout.createSequentialGroup()
+        .addComponent(jPanelListaBeni, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jPanelBottoni1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(jPanelBottoni2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap())
     );
   }// </editor-fold>//GEN-END:initComponents
 
+    private void jButtonAggiornaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAggiornaActionPerformed
+        requestListaBeni();
+        getListaBeni();
+        buildList();
+    }//GEN-LAST:event_jButtonAggiornaActionPerformed
+
+    private void jButtonPulisciActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPulisciActionPerformed
+        pulisci();
+    }//GEN-LAST:event_jButtonPulisciActionPerformed
+
+    private void jButtonConfermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfermaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonConfermaActionPerformed
+
+    private void jButtonAnnullaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAnnullaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonAnnullaActionPerformed
+
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JButton jButtonAggiorna;
+  private javax.swing.JButton jButtonAnnulla;
+  private javax.swing.JButton jButtonConferma;
+  private javax.swing.JButton jButtonPulisci;
+  private javax.swing.JPanel jPanelBottoni1;
+  private javax.swing.JPanel jPanelBottoni2;
+  private javax.swing.JPanel jPanelListaBeni;
   // End of variables declaration//GEN-END:variables
 
+    /**
+     *
+     */
+    private void buildList() {
+        tabellaBeni = new ArrayList<recordListaBeni>();
+        for (BeneVenduto bene : listaBeni.lista) {
+            GuiSingoloBeneOrdinePanel tempPanel =
+                    new GuiSingoloBeneOrdinePanel(bene,logger);
+            tabellaBeni.add(new recordListaBeni(bene, tempPanel));
+        }
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(jPanelListaBeni);
+        jPanelListaBeni.setLayout(layout);
+
+        ParallelGroup tempHorizGroup = layout.createParallelGroup(
+                javax.swing.GroupLayout.Alignment.LEADING);
+        SequentialGroup tempSequGroup = layout.createSequentialGroup()
+            .addContainerGap();
+        
+        for (recordListaBeni singoloRecord : tabellaBeni) {
+
+            tempHorizGroup.addComponent(singoloRecord.pannello,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
+
+            tempSequGroup
+                .addComponent(singoloRecord.pannello,
+                    javax.swing.GroupLayout.PREFERRED_SIZE,
+                    javax.swing.GroupLayout.DEFAULT_SIZE,
+                    javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(
+                    javax.swing.LayoutStyle.ComponentPlacement.RELATED);
+        }
+        tempSequGroup.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
+
+        // infine aggiungiamo il gruppo di elementi alla pagina principale.
+        layout.setHorizontalGroup(
+          layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(tempHorizGroup)
+                .addContainerGap() )
+        );
+        
+        layout.setVerticalGroup(
+          layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(tempSequGroup)
+        );
+    }
+
+    /**
+     *
+     */
+    private void getListaBeni() {
+        listaBeni = owner.getListaBeni();
+    }
+
+    /**
+     * 
+     */
+    private void requestListaBeni() {
+        try {
+            owner.requestListaBeni();
+        } catch (RemoteException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Il server non ha risposto alla richiesta della lista",
+                "Errore di comunicazione",
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void pulisci() {
+        for (recordListaBeni singoloRecord : tabellaBeni) {
+            singoloRecord.pannello.resetSpinner();
+        }
+    }
+
+    /**
+     * Inner class that defines a record of the table of goods.
+     *
+     * @author ben
+     */
+    class recordListaBeni {
+
+        /**
+         *
+         */
+        final BeneVenduto bene;
+
+        /**
+         *
+         */
+        final GuiSingoloBeneOrdinePanel pannello;
+
+        /**
+         * Explicit constructor
+         *
+         * @param bene
+         * @param pannello
+         */
+        public recordListaBeni(BeneVenduto bene, GuiSingoloBeneOrdinePanel pannello) {
+            this.bene = bene;
+            this.pannello = pannello;
+        }
+    }
 }

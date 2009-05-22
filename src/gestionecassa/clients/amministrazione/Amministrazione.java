@@ -122,6 +122,13 @@ public class Amministrazione extends Luogo implements AmministrazioneAPI {
         setupAfterLogin();
     }
 
+    @Override
+    protected void setupAfterLogin() throws RemoteException {
+        super.setupAfterLogin();
+
+        // fai quel che devi fare
+    }
+
     /**
      * Closes the remote server to which we are connected to
      *
@@ -141,11 +148,15 @@ public class Amministrazione extends Luogo implements AmministrazioneAPI {
     /**
      * Requests the list of sold goods
      *
-     * @return List of goods
-     *
      * @throws java.rmi.RemoteException
      */
-    public ListaBeni requestListaBeni() throws RemoteException {
-        return server.requestListaBeni();
+    public void requestListaBeni() throws RemoteException {
+        try {
+            listaBeni = server.requestListaBeni();
+        } catch (RemoteException ex) {
+            logger.warn("Il server non ha risposto alla richiesta della lista",
+                    ex);
+            throw ex;
+        }
     }
 }

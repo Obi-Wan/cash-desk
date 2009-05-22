@@ -17,7 +17,7 @@ public class BeneVenduto implements Serializable {
     /**
      *
      */
-    float prezzo;
+    double prezzo;
 
     /**
      * Default constructor
@@ -32,7 +32,7 @@ public class BeneVenduto implements Serializable {
      * @param nome Name of the good
      * @param prezzo Price
      */
-    public BeneVenduto(String nome, float prezzo) {
+    public BeneVenduto(String nome, double prezzo) {
         this.nome = new String(nome);
         this.prezzo = prezzo;
     }
@@ -53,5 +53,13 @@ public class BeneVenduto implements Serializable {
      */
     public String getPrintableFormat() {
         return new String("- " + nome + "\t € " + prezzo);
+    }
+
+    final public String getNome() {
+        return nome;
+    }
+
+    final public double getPrezzo() {
+        return prezzo;
     }
 }

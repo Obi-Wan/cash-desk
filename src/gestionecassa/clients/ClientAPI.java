@@ -103,11 +103,15 @@ public interface ClientAPI {
     public void stopDemoneConnessione();
 
     /**
-     * 
      *
-     * @return
      *
      * @throws java.rmi.RemoteException
      */
-    public ListaBeni requestListaBeni() throws RemoteException;
+    public void requestListaBeni() throws RemoteException;
+
+    /**
+     * 
+     * @return
+     */
+    public ListaBeni getListaBeni();
 }

@@ -5,6 +5,7 @@
 
 package gestionecassa.clients;
 
+import gestionecassa.ListaBeni;
 import gestionecassa.Persona;
 import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.WrongLoginException;
@@ -14,6 +15,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -62,6 +64,10 @@ abstract public class Luogo extends Thread implements ClientAPI {
      * The frame that display the Applictaion GUI
      */
     protected GuiAppFrame appFrame;
+    /**
+     *
+     */
+    protected ListaBeni listaBeni;
 
     /**
      * Costruttore esplicito che assegna subito il hostname al luogo
@@ -243,11 +249,30 @@ abstract public class Luogo extends Thread implements ClientAPI {
         }
     }
 
-    protected void setupAfterLogin() {
+    /**
+     * Sets up the work environment at the end of the login
+     *
+     * @throws java.rmi.RemoteException
+     */
+    protected void setupAfterLogin() throws RemoteException {
         logger.info("Connessione avvenuta con id: " + sessionID);
 
         appFrame.enableLogout(true);
         avviaDemoneConnessione();
+        try {
+            requestListaBeni();
+        } catch (RemoteException ex) {
+            logger.warn("Il server non ha risposto alla richiesta della " +
+                    "lista beni, subio dopo la connessione", ex);
+            try {
+                logout();
+            } catch (RemoteException ex1) {
+                logger.warn("Neanche la comunicazione per la disconnessione" +
+                        " è andata a buon fine", ex1);
+            } finally {
+                throw ex;
+            }
+        }
     }
 
     /**
@@ -287,5 +312,14 @@ abstract public class Luogo extends Thread implements ClientAPI {
             serverCentrale = null;
             appFrame.enableLogout(false);
         }
+    }
+
+    /**
+     *
+     *
+     * @return List of goods
+     */
+    public ListaBeni getListaBeni() {
+        return listaBeni;
     }
 }

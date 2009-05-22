@@ -50,25 +50,25 @@
 	    </layout>  
 	</appender>	
 	
-        <category additivity="true" name="gestionecassa">
+        <category additivity="false" name="gestionecassa">
 	  <appender-ref ref="FILE_LOGGER"/>
         </category>
-	<category additivity="true" name="gestionecassa.amministrazione">
+	<category additivity="false" name="gestionecassa.amministrazione">
 	  <appender-ref ref="FILE_LOGGER"/>
 	</category>	
-	<category additivity="true" name="gestionecassa.amministrazione.gui">
+	<category additivity="false" name="gestionecassa.amministrazione.gui">
 	  <appender-ref ref="FILE_LOGGER"/>
 	</category>
-	<category additivity="true" name="gestionecassa.cassa">
+	<category additivity="false" name="gestionecassa.cassa">
 	  <appender-ref ref="FILE_LOGGER"/>
 	</category>	
-	<category additivity="true" name="gestionecassa.cassa.gui">
+	<category additivity="false" name="gestionecassa.cassa.gui">
 	  <appender-ref ref="FILE_LOGGER"/>
 	</category>	
-	<category additivity="true" name="gestionecassa.server">
+	<category additivity="false" name="gestionecassa.server">
 	  <appender-ref ref="FILE_LOGGER"/>
 	</category>
-	<category additivity="true" name="gestionecassa.server.dbm">
+	<category additivity="false" name="gestionecassa.server.dbm">
 	  <appender-ref ref="FILE_LOGGER"/>
 	</category>	
 

@@ -30,6 +30,7 @@ public class DataManager {
         //FIXME solo per test
         listaBeni.lista.add(new BeneVenduto("fagiolo", 25));
         listaBeni.lista.add(new BeneVenduto("ameba", 35));
+        listaBeni.lista.add(new BeneVenduto("merda dello stige", 5.5));
     }
 
     /**

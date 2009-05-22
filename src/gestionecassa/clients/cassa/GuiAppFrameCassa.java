@@ -129,16 +129,8 @@ public class GuiAppFrameCassa extends GuiAppFrame {
     private void jButtonListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonListActionPerformed
         if (dialogListaBeni == null) {
             dialogListaBeni = new GuiDialogListaBeni(this, false);
-            try {
-                dialogListaBeni.setListaBeni(owner.requestListaBeni());
-                dialogListaBeni.setVisible(true);
-            } catch (RemoteException ex) {
-                dialogListaBeni = null;
-                javax.swing.JOptionPane.showMessageDialog(this,
-                    "Il server non ha risposto alla richiesta della lista",
-                    "Errore di comunicazione",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
-            }
+            dialogListaBeni.setListaBeni(owner.getListaBeni());
+            dialogListaBeni.setVisible(true);
         } else {
             dialogListaBeni.setVisible(true);
             dialogListaBeni.requestFocus();

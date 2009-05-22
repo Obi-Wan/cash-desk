@@ -8,15 +8,12 @@ package gestionecassa.clients.cassa;
 import gestionecassa.ListaBeni;
 import gestionecassa.Log;
 import gestionecassa.Persona;
-import gestionecassa.clients.GuiAppFrame;
 import gestionecassa.clients.Luogo;
 import gestionecassa.exceptions.*;
 import gestionecassa.server.ServerRMICassiere;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -124,22 +121,20 @@ public class Cassa extends Luogo implements CassaAPI {
     }
 
     @Override
-    protected void setupAfterLogin() {
+    protected void setupAfterLogin() throws RemoteException {
         super.setupAfterLogin();
 
-        appFrame.setContentPanel(new GuiNuovoOrdinePanel());
+        appFrame.setContentPanel(new GuiNuovoOrdinePanel(this));
     }
 
     /**
      * Requests the list of sold goods
      *
-     * @return List of goods
-     *
      * @throws java.rmi.RemoteException
      */
-    public ListaBeni requestListaBeni() throws RemoteException {
+    public void requestListaBeni() throws RemoteException {
         try {
-            return server.requestListaBeni();
+            listaBeni = server.requestListaBeni();
         } catch (RemoteException ex) {
             logger.warn("Il server non ha risposto alla richiesta della lista",
                     ex);
