@@ -20,8 +20,8 @@
 
 package gestionecassa.clients;
 
-//import java.awt.Dimension;
-//import java.awt.Toolkit;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.rmi.RemoteException;
 import javax.swing.JPanel;
 
@@ -46,16 +46,16 @@ abstract public class GuiAppFrame extends javax.swing.JFrame {
         this.owner = owner;
         
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-//        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-//        Dimension frameSize = this.getSize();
-//        if (frameSize.height > screenSize.height) {
-//            frameSize.height = screenSize.height;
-//        }
-//        if (frameSize.width > screenSize.width) {
-//            frameSize.width = screenSize.width;
-//        }
-//        this.setLocation((screenSize.width - frameSize.width) / 2,
-//                (screenSize.height - frameSize.height) / 2);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension frameSize = this.getSize();
+        if (frameSize.height > screenSize.height) {
+            frameSize.height = screenSize.height;
+        }
+        if (frameSize.width > screenSize.width) {
+            frameSize.width = screenSize.width;
+        }
+        this.setLocation((screenSize.width - frameSize.width) / 2,
+                (screenSize.height - frameSize.height) / 2);
     }
 
     /** This method is called from within the constructor to

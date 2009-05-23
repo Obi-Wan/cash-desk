@@ -23,15 +23,14 @@ package gestionecassa.clients.cassa;
 import gestionecassa.BeneVenduto;
 import java.text.ParseException;
 import javax.swing.SpinnerNumberModel;
-import org.apache.log4j.Logger;
 
 /**
  *
  * @author ben
  */
-public class GuiSingoloBeneOrdinePanel extends javax.swing.JPanel {
+public class GuiSingoloBeneOrdinePanel extends GuiAbstrSingoloBenePanel {
 
-    Logger logger;
+    BeneVenduto bene;
 
     SpinnerNumberModel spinnerModel;
 
@@ -40,9 +39,9 @@ public class GuiSingoloBeneOrdinePanel extends javax.swing.JPanel {
      *
      * @param nome
      */
-    public GuiSingoloBeneOrdinePanel(BeneVenduto bene, Logger logger) {
+    public GuiSingoloBeneOrdinePanel(BeneVenduto bene) {
         initComponents();
-        this.logger = logger;
+        this.bene = bene;
 
         spinnerModel = new SpinnerNumberModel(0, 0, 255, 1);
         jSpinnerNum.setModel(spinnerModel);
@@ -175,7 +174,7 @@ public class GuiSingoloBeneOrdinePanel extends javax.swing.JPanel {
     /**
      * 
      */
-    public void resetSpinner() {
+    public void clean() {
         jSpinnerNum.setValue(spinnerModel.getMinimum());
     }
 

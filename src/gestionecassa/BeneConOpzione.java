@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @author ben
  */
-public class BeniConOpzione extends BeneVenduto {
+public class BeneConOpzione extends BeneVenduto {
 
     /**
      * Lista delle opzioni disponibili per questo bene.
@@ -22,7 +22,7 @@ public class BeniConOpzione extends BeneVenduto {
      * @param prezzo
      * @param opzioni
      */
-    public BeniConOpzione(String nome, float prezzo,List<String> opzioni) {
+    public BeneConOpzione(String nome, double prezzo,List<String> opzioni) {
         super(nome, prezzo);
         this.opzioni = new ArrayList<String>(opzioni);
     }
@@ -33,7 +33,7 @@ public class BeniConOpzione extends BeneVenduto {
      * @param nome
      * @param prezzo
      */
-    public BeniConOpzione(String nome, float prezzo) {
+    public BeneConOpzione(String nome, double prezzo) {
         this(nome, prezzo, new ArrayList<String>());
     }
 
@@ -55,5 +55,13 @@ public class BeniConOpzione extends BeneVenduto {
         }
         output += "--";
         return output;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public List<String> getOpzioni() {
+        return opzioni;
     }
 }

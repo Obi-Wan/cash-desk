@@ -61,7 +61,7 @@ public class ListaBeniTest {
         List<String> options = new ArrayList<String>();
         options.add("con mano");
         options.add("cor culo");
-        instance.lista.add(new BeniConOpzione("rasponi", 20,options));
+        instance.lista.add(new BeneConOpzione("rasponi", 20,options));
 
         String expResult = "Lista dei beni venduti:\n- culo\t € 80.0\n- " +
                 "merda\t € 10.0\n- rasponi\t € 20.0\n  .\t con mano\n  .\t cor culo\n--\n";

@@ -22,7 +22,8 @@ package gestionecassa.clients.cassa;
 
 import gestionecassa.clients.ClientAPI;
 import gestionecassa.clients.GuiAppFrame;
-import java.rmi.RemoteException;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import javax.swing.JPanel;
 
 /**
@@ -45,6 +46,17 @@ public class GuiAppFrameCassa extends GuiAppFrame {
         super(owner);
         initComponents();
         enableLogout(false);
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension frameSize = this.getSize();
+        if (frameSize.height > screenSize.height) {
+            frameSize.height = screenSize.height;
+        }
+        if (frameSize.width > screenSize.width) {
+            frameSize.width = screenSize.width;
+        }
+        this.setLocation((screenSize.width - frameSize.width) / 2,
+                (screenSize.height - frameSize.height) / 2);
     }
 
     /** This method is called from within the constructor to
@@ -108,15 +120,15 @@ public class GuiAppFrameCassa extends GuiAppFrame {
     getContentPane().setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(jToolBarMain, javax.swing.GroupLayout.DEFAULT_SIZE, 509, Short.MAX_VALUE)
-      .addComponent(jScrollPanelMain, javax.swing.GroupLayout.DEFAULT_SIZE, 509, Short.MAX_VALUE)
+      .addComponent(jToolBarMain, javax.swing.GroupLayout.DEFAULT_SIZE, 631, Short.MAX_VALUE)
+      .addComponent(jScrollPanelMain, javax.swing.GroupLayout.DEFAULT_SIZE, 631, Short.MAX_VALUE)
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
         .addComponent(jToolBarMain, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jScrollPanelMain, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE))
+        .addComponent(jScrollPanelMain, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE))
     );
 
     pack();

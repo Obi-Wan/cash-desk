@@ -20,6 +20,7 @@
 
 package gestionecassa.clients.cassa;
 
+import gestionecassa.BeneConOpzione;
 import gestionecassa.BeneVenduto;
 import gestionecassa.ListaBeni;
 import gestionecassa.Log;
@@ -54,7 +55,8 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
         this.logger = Log.GESTIONECASSA_CASSA_GUI;
 
         getListaBeni();
-        buildList();
+        buildContentsList();
+        buildVisualList();
     }
 
     /** This method is called from within the constructor to
@@ -78,7 +80,7 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
     jPanelListaBeni.setLayout(jPanelListaBeniLayout);
     jPanelListaBeniLayout.setHorizontalGroup(
       jPanelListaBeniLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 499, Short.MAX_VALUE)
+      .addGap(0, 559, Short.MAX_VALUE)
     );
     jPanelListaBeniLayout.setVerticalGroup(
       jPanelListaBeniLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -106,7 +108,7 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
       .addGroup(jPanelBottoni1Layout.createSequentialGroup()
         .addContainerGap()
         .addComponent(jButtonConferma)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 282, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 342, Short.MAX_VALUE)
         .addComponent(jButtonPulisci)
         .addContainerGap())
     );
@@ -141,7 +143,7 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelBottoni2Layout.createSequentialGroup()
         .addContainerGap()
         .addComponent(jButtonAggiorna)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 152, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 212, Short.MAX_VALUE)
         .addComponent(jButtonAnnulla)
         .addContainerGap())
     );
@@ -184,7 +186,8 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
     private void jButtonAggiornaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAggiornaActionPerformed
         requestListaBeni();
         getListaBeni();
-        buildList();
+        buildContentsList();
+        buildVisualList();
     }//GEN-LAST:event_jButtonAggiornaActionPerformed
 
     private void jButtonPulisciActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPulisciActionPerformed
@@ -213,13 +216,22 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
     /**
      *
      */
-    private void buildList() {
+    private void buildContentsList() {
         tabellaBeni = new ArrayList<recordListaBeni>();
         for (BeneVenduto bene : listaBeni.lista) {
-            GuiSingoloBeneOrdinePanel tempPanel =
-                    new GuiSingoloBeneOrdinePanel(bene,logger);
+            GuiAbstrSingoloBenePanel tempPanel;
+            if (bene instanceof BeneConOpzione) {
+                tempPanel = new GuiSingoloBeneOpzioniOrdinePanel((BeneConOpzione)bene);
+            } else {
+                tempPanel = new GuiSingoloBeneOrdinePanel(bene);
+            }
             tabellaBeni.add(new recordListaBeni(bene, tempPanel));
         }
+    }
+
+    private void buildVisualList() {
+
+        jPanelListaBeni.removeAll();
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(jPanelListaBeni);
         jPanelListaBeni.setLayout(layout);
@@ -228,7 +240,7 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
                 javax.swing.GroupLayout.Alignment.LEADING);
         SequentialGroup tempSequGroup = layout.createSequentialGroup()
             .addContainerGap();
-        
+
         for (recordListaBeni singoloRecord : tabellaBeni) {
 
             tempHorizGroup.addComponent(singoloRecord.pannello,
@@ -253,7 +265,7 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
                 .addGroup(tempHorizGroup)
                 .addContainerGap() )
         );
-        
+
         layout.setVerticalGroup(
           layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tempSequGroup)
@@ -283,7 +295,7 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
 
     private void pulisci() {
         for (recordListaBeni singoloRecord : tabellaBeni) {
-            singoloRecord.pannello.resetSpinner();
+            singoloRecord.pannello.clean();
         }
     }
 
@@ -302,7 +314,7 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
         /**
          *
          */
-        final GuiSingoloBeneOrdinePanel pannello;
+        final GuiAbstrSingoloBenePanel pannello;
 
         /**
          * Explicit constructor
@@ -310,7 +322,7 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
          * @param bene
          * @param pannello
          */
-        public recordListaBeni(BeneVenduto bene, GuiSingoloBeneOrdinePanel pannello) {
+        public recordListaBeni(BeneVenduto bene, GuiAbstrSingoloBenePanel pannello) {
             this.bene = bene;
             this.pannello = pannello;
         }
