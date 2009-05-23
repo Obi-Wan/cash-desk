@@ -21,12 +21,10 @@
 package gestionecassa.clients.cassa;
 
 import gestionecassa.BeneConOpzione;
-import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
-import javax.swing.SpringLayout;
 
 /**
  *
@@ -146,6 +144,9 @@ public class GuiSingoloBeneOpzioniOrdinePanel extends GuiAbstrSingoloBenePanel {
         rebuildListaOpzioni();
     }
 
+    /**
+     *
+     */
     private void addNewOpzionePanel() {
         GuiSingolaOpzionePanel tempPanel =
                 new GuiSingolaOpzionePanel(this,bene.getOpzioni());
@@ -153,11 +154,18 @@ public class GuiSingoloBeneOpzioniOrdinePanel extends GuiAbstrSingoloBenePanel {
         rebuildListaOpzioni();
     }
 
+    /**
+     *
+     * @param panel
+     */
     void removeOpzionePanel(GuiSingolaOpzionePanel panel) {
         pannelliopzioni.remove(panel);
         rebuildListaOpzioni();
     }
 
+    /**
+     *
+     */
     private void rebuildListaOpzioni() {
         jPanelOpzioni.removeAll();
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(jPanelOpzioni);
@@ -197,5 +205,33 @@ public class GuiSingoloBeneOpzioniOrdinePanel extends GuiAbstrSingoloBenePanel {
           layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tempSequGroup)
         );
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public List<int[]> getListaParziali() {
+        List<int[]> tempLista = new ArrayList<int[]>();
+        for (GuiSingolaOpzionePanel singolaOpzionePanel : pannelliopzioni) {
+            int[] tempArray = 
+                {singolaOpzionePanel.getComboNum(),
+                 singolaOpzionePanel.getNumParziale()};
+            tempLista.add(tempArray);
+        }
+        return tempLista;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    @Override
+    public int getNumTot() {
+        int tot = 0;
+        for (GuiSingolaOpzionePanel singolaOpzionePanel : pannelliopzioni) {
+            tot += singolaOpzionePanel.getNumParziale();
+        }
+        return tot;
     }
 }

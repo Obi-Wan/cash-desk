@@ -32,13 +32,27 @@ import javax.swing.SpinnerNumberModel;
  */
 public class GuiSingolaOpzionePanel extends javax.swing.JPanel {
 
+    /**
+     *
+     */
     GuiSingoloBeneOpzioniOrdinePanel parent;
 
-    ComboBoxModel comboModel;
+    /**
+     *
+     */
+    DefaultComboBoxModel comboModel;
 
+    /**
+     *
+     */
     SpinnerNumberModel spinnerModel;
 
-    /** Creates new form GuiSingolaOpzionePanel */
+    /**
+     * Creates new form GuiSingolaOpzionePanel
+     *
+     * @param parent
+     * @param opzioni
+     */
     public GuiSingolaOpzionePanel(GuiSingoloBeneOpzioniOrdinePanel parent,
             List<String> opzioni) {
         initComponents();
@@ -132,6 +146,10 @@ public class GuiSingolaOpzionePanel extends javax.swing.JPanel {
     );
   }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * 
+     * @param evt
+     */
     private void jButtonLessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLessActionPerformed
         Object previous = spinnerModel.getPreviousValue();
         if (previous != null) {
@@ -139,6 +157,10 @@ public class GuiSingolaOpzionePanel extends javax.swing.JPanel {
         }
 }//GEN-LAST:event_jButtonLessActionPerformed
 
+    /**
+     *
+     * @param evt
+     */
     private void jButtonMoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMoreActionPerformed
         Object next = spinnerModel.getNextValue();
         if (next != null) {
@@ -146,6 +168,10 @@ public class GuiSingolaOpzionePanel extends javax.swing.JPanel {
         }
 }//GEN-LAST:event_jButtonMoreActionPerformed
 
+    /**
+     *
+     * @param evt
+     */
     private void jButtonRimuoviActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRimuoviActionPerformed
         parent.removeOpzionePanel(this);
     }//GEN-LAST:event_jButtonRimuoviActionPerformed
@@ -160,10 +186,11 @@ public class GuiSingolaOpzionePanel extends javax.swing.JPanel {
   // End of variables declaration//GEN-END:variables
 
     /**
+     * Gets the partial count of items for the selected option
      *
      * @return
      */
-    public int getJSpinnerNum() {
+    public int getNumParziale() {
         try {
             jSpinnerNum.commitEdit();
         } catch (ParseException ex) {
@@ -173,10 +200,20 @@ public class GuiSingolaOpzionePanel extends javax.swing.JPanel {
     }
 
     /**
-     * 
-     * @return
+     * Getter for the selected item in combo box
+     *
+     * @return The selected Option
      */
     public String getComboChoice() {
         return (String)comboModel.getSelectedItem();
+    }
+
+    /**
+     * Gets the index of the selected item in the combobox
+     *
+     * @return the index
+     */
+    public int getComboNum() {
+        return comboModel.getIndexOf(comboModel.getSelectedItem());
     }
 }

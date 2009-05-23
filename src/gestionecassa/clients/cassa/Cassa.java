@@ -5,13 +5,13 @@
 
 package gestionecassa.clients.cassa;
 
-import gestionecassa.ListaBeni;
 import gestionecassa.Log;
 import gestionecassa.Persona;
 import gestionecassa.clients.Luogo;
 import gestionecassa.exceptions.*;
 import gestionecassa.server.ServerRMICassiere;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
@@ -39,7 +39,14 @@ public class Cassa extends Luogo implements CassaAPI {
     public static synchronized CassaAPI crea() {
         // Fase di set-up
         if (businessLogicLocale == null) {
-            Cassa tempClient = new Cassa(System.getenv("HOSTNAME"));
+            String hostname;
+            try {
+                hostname = java.net.InetAddress.getLocalHost().getHostName();
+            } catch (UnknownHostException ex) {
+                hostname = System.getProperty("user.name") + "@" +
+                        System.getProperty("os.name");
+            }
+            Cassa tempClient = new Cassa(hostname);
             businessLogicLocale = tempClient;
         }
         return businessLogicLocale;

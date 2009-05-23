@@ -162,7 +162,7 @@ public class GuiSingoloBeneOrdinePanel extends GuiAbstrSingoloBenePanel {
      * 
      * @return
      */
-    public int getJSpinnerNum() {
+    public int getNumTot() {
         try {
             jSpinnerNum.commitEdit();
         } catch (ParseException ex) {

@@ -57,4 +57,10 @@ abstract public class GuiAbstrSingoloBenePanel extends javax.swing.JPanel {
   // End of variables declaration//GEN-END:variables
 
     abstract public void clean();
+
+    /**
+     *
+     * @return
+     */
+    public abstract int getNumTot();
 }

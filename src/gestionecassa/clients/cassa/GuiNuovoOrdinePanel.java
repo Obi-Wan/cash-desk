@@ -24,6 +24,7 @@ import gestionecassa.BeneConOpzione;
 import gestionecassa.BeneVenduto;
 import gestionecassa.ListaBeni;
 import gestionecassa.Log;
+import gestionecassa.Ordine;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -326,5 +327,27 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
             this.bene = bene;
             this.pannello = pannello;
         }
+    }
+
+    /**
+     * Creates a new order
+     *
+     * @return the creted order
+     */
+    private Ordine creaNuovoOrdine() {
+        Ordine tempOrd = new Ordine();
+        for (recordListaBeni singoloRecord : tabellaBeni) {
+            if (singoloRecord.bene.hasOptions()) {
+                tempOrd.addBeneConOpzione(
+                        (BeneConOpzione)singoloRecord.bene,
+                        singoloRecord.pannello.getNumTot(),
+                        ((GuiSingoloBeneOpzioniOrdinePanel)
+                                (singoloRecord.pannello)).getListaParziali());
+            } else {
+                tempOrd.addBeneVenduto(singoloRecord.bene,
+                        singoloRecord.pannello.getNumTot());
+            }
+        }
+        return tempOrd;
     }
 }

@@ -96,9 +96,6 @@ abstract public class Luogo extends Thread implements ClientAPI {
     @Override
     public void run() {
         // concludi fase preparatoria al login
-//        if (appFrame == null) {
-//            appFrame = new GuiAppFrame(this);
-//        }
         appFrame.setContentPanel(new GuiLoginPanel(appFrame, this, hostname));
         appFrame.setVisible(true);
         
