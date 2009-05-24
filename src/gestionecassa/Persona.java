@@ -35,7 +35,7 @@ public class Persona {
      * @param password
      * @param username
      */
-    public Persona(int id, String password, String username) {
+    public Persona(int id, String username, String password) {
         this.id = id;
         this.password = new String(password);
         this.username = new String(username);

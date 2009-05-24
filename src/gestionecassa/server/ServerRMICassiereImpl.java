@@ -5,6 +5,7 @@
 
 package gestionecassa.server;
 
+import gestionecassa.Ordine;
 import java.rmi.RemoteException;
 
 /**
@@ -17,5 +18,9 @@ public class ServerRMICassiereImpl extends SharedServerService
     ServerRMICassiereImpl(SessionRecord session, DataManager dataManager)
             throws  RemoteException{
         super(session,dataManager);
+    }
+
+    public void sendOrdine(Ordine nuovoOrdine) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

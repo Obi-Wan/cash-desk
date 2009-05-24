@@ -48,7 +48,7 @@ public class Server extends UnicastRemoteObject
      * lead the threads to share the same semaphore.
      */
     static final String sessionListSemaphore = 
-            new String("Semaphore" + System.currentTimeMillis());
+            new String("SessionsSemaphore" + System.currentTimeMillis());
     
     /**
      * reference to the timer and sessions manager.
@@ -83,8 +83,11 @@ public class Server extends UnicastRemoteObject
         ilTimer.start();
         
         dataManager = new DataManager();
-        
-        Log.GESTIONECASSA_SERVER.info("Server started");
+
+        java.util.Calendar tempCal = java.util.Calendar.getInstance();
+        tempCal.setTime(new java.util.Date());
+        final String stringaData = String.format("%1$tY-%1$tm-%1te",tempCal);
+        Log.GESTIONECASSA_SERVER.info("Server started: " + stringaData);
     }
     
     /**
@@ -109,27 +112,33 @@ public class Server extends UnicastRemoteObject
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-//        java.util.Calendar tempCal = java.util.Calendar.getInstance();
-//        tempCal.setTime(new java.util.Date());
-//        String stringaData = String.format("%1$tY-%1$tm-%1te",tempCal);
-//        System.out.println(stringaData);
+        
         Server.avvia();
         
         try {
             LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
-        } catch (Exception e) {
-            Log.GESTIONECASSA_SERVER.warn("Impossibile avviare un nuovo"+
-                    " registry (e' forse gia' in esecuzione?)",e);
-        }
-        try {
-            Naming.rebind("ServerRMI",businessLogicLocale);
-        } catch (MalformedURLException e) {
-            Log.GESTIONECASSA_SERVER.error("l'indirizzo e' sbagliato: ",e);
-        } catch (RemoteException e) {
-            Log.GESTIONECASSA_SERVER.error("Impossibile accedere al registry: ",e);
-        }
+            
+            try {
+                Naming.rebind("ServerRMI",businessLogicLocale);
 
-        // ora avvia gli altri servizi
+                // ora avvia gli altri servizi
+                System.out.println("Service Up and Running");
+
+            } catch (MalformedURLException ex) {
+                Log.GESTIONECASSA_SERVER.error("l'indirizzo e' sbagliato: ",ex);
+
+                businessLogicLocale.stopServer();
+            } catch (RemoteException ex) {
+                Log.GESTIONECASSA_SERVER.error("Impossibile accedere al registry: ",ex);
+
+                businessLogicLocale.stopServer();
+            }
+        } catch (Exception ex) {
+            Log.GESTIONECASSA_SERVER.warn("Impossibile avviare un nuovo"+
+                    " registry (e' forse gia' in esecuzione?)",ex);
+            
+            businessLogicLocale.stopServer();
+        }
     }
     
     /**
@@ -214,6 +223,7 @@ public class Server extends UnicastRemoteObject
         
         if (tempRecord.user == null) {
             //questo numero indica che l'utente non e' stato trovato nel db
+
             throw new WrongLoginException();
         } //se non esiste restituisco un errore.
         

@@ -42,6 +42,7 @@ class ServerTimer extends Thread {
                     aggiornaTimeElapsed();
                 }
             }
+            System.out.println("Exiting");
         } catch (InterruptedException ex) {
             Log.GESTIONECASSA_SERVER.warn("Il server e' stato interrotto" +
                     "da una InterruptedException",ex);
