@@ -15,7 +15,6 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -44,6 +43,11 @@ abstract public class Luogo extends Thread implements ClientAPI {
      * Nome identificativo del luogo (hostname)
      */
     protected final String hostname;
+
+    /**
+     * Nome identificativo dell'utente
+     */
+    protected String username;
 
     /**
      * Chosen Logger for this application
@@ -81,6 +85,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
         this.stopApp = false;
         this.sessionID = -1;
         this.serverCentrale = null;
+        this.username = "";
     }
 
     /**
@@ -149,6 +154,15 @@ abstract public class Luogo extends Thread implements ClientAPI {
      */
     final public String getHostname() {
         return hostname;
+    }
+
+    /**
+     * Returns the username of the logged user.
+     *
+     * @return
+     */
+    public String getUsername() {
+        return username;
     }
     
     /**
@@ -251,10 +265,11 @@ abstract public class Luogo extends Thread implements ClientAPI {
      *
      * @throws java.rmi.RemoteException
      */
-    protected void setupAfterLogin() throws RemoteException {
+    protected void setupAfterLogin(String username) throws RemoteException {
         logger.info("Connessione avvenuta con id: " + sessionID);
 
         appFrame.enableLogout(true);
+        this.username = new String(username);
         avviaDemoneConnessione();
         try {
             requestListaBeni();
@@ -308,6 +323,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
             sessionID = -1;
             serverCentrale = null;
             appFrame.enableLogout(false);
+            username = "";
         }
     }
 

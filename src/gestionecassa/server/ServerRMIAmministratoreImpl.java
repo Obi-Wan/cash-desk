@@ -6,6 +6,7 @@
 package gestionecassa.server;
 
 import java.rmi.RemoteException;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -20,8 +21,9 @@ public class ServerRMIAmministratoreImpl extends SharedServerService
      * @param dataManager
      * @throws java.rmi.RemoteException
      */
-    ServerRMIAmministratoreImpl(SessionRecord session, DataManager dataManager)
+    ServerRMIAmministratoreImpl(SessionRecord session, DataManager dataManager,
+            Logger logger)
             throws  RemoteException{
-        super(session,dataManager);
+        super(session,dataManager,logger);
     }
 }

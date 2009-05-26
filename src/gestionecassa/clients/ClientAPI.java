@@ -114,4 +114,11 @@ public interface ClientAPI {
      * @return
      */
     public ListaBeni getListaBeni();
+
+    /**
+     * Returns the username of the logged user.
+     *
+     * @return
+     */
+    String getUsername();
 }

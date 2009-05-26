@@ -14,6 +14,7 @@ import gestionecassa.Log;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import org.apache.log4j.Logger;
 
 /** This class rapresents a common base for ServerRMILaureatoImpl
  * and ServerRMIAziendaImpl. It manages session and session-timer.
@@ -36,12 +37,16 @@ public class SharedServerService extends UnicastRemoteObject
      * Reference to the manager of data.
      */
     DataManager dataManager;
+
+    Logger logger;
     
     /** Creates a new instance of SharedServerService */
-    SharedServerService(SessionRecord nMySelf, DataManager dataMgr)
-            throws  RemoteException{
+    SharedServerService(SessionRecord nMySelf, DataManager dataMgr,
+            Logger logger)
+                throws  RemoteException{
         myself = nMySelf;
         dataManager = dataMgr;
+        this.logger = logger;
     }
     
     /**

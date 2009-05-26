@@ -18,4 +18,6 @@ public interface ServerRMICassiere
         extends ServerRMIShared, Remote, Serializable {
 
     public void sendOrdine(Ordine nuovoOrdine) throws RemoteException;
+
+    void annullaUltimoOrdine() throws RemoteException;
 }

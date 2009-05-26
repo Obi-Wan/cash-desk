@@ -239,7 +239,8 @@ public class Server extends UnicastRemoteObject
                     throw new WrongLoginException();
                 
                 tempRecord.idTabella = ((Cassiere)tempRecord.user).getId();
-                srv = new ServerRMICassiereImpl(tempRecord,dataManager);
+                srv = new ServerRMICassiereImpl(tempRecord,dataManager,
+                            Log.GESTIONECASSA_SERVER);
             } else if(tempRecord.user instanceof Amministratore){
                 
                 // se la password non e' giusta lo dico al client
@@ -247,7 +248,8 @@ public class Server extends UnicastRemoteObject
                     throw new WrongLoginException();
                 
                 tempRecord.idTabella = ((Amministratore)tempRecord.user).getId();
-                srv = new ServerRMIAmministratoreImpl(tempRecord,dataManager);
+                srv = new ServerRMIAmministratoreImpl(tempRecord,dataManager,
+                        Log.GESTIONECASSA_SERVER);
             } else {
                 throw new WrongLoginException();
             }

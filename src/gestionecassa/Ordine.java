@@ -5,6 +5,7 @@
 
 package gestionecassa;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
  *
  * @author ben
  */
-public class Ordine {
+public class Ordine implements Serializable {
 
     /**
      * indice cardinale dell'ordine effettuato
@@ -45,7 +46,7 @@ public class Ordine {
      *
      * @author ben
      */
-    public class recordSingoloBene {
+    public class recordSingoloBene implements Serializable {
 
         /**
          * Reference al bene.
@@ -89,19 +90,26 @@ public class Ordine {
     }
 
     /**
-     * Default constructor
+     * Default constructor (well, at most :) )
+     *
+     * @param username
+     * @param hostname
      */
-    public Ordine() {
-        this(0, new Date(), new ArrayList<recordSingoloBene>());
+    public Ordine(String username, String hostname) {
+        this(0, new Date(), new String(username), new String(hostname),
+                new ArrayList<recordSingoloBene>());
     }
 
     /**
      * Explicit constructor of the date
      *
      * @param data
+     * @param username
+     * @param hostname
      */
-    public Ordine(Date data) {
-        this(0, new Date(data.getTime()), new ArrayList<recordSingoloBene>());
+    public Ordine(Date data, String username, String hostname) {
+        this(0, new Date(data.getTime()), new String(username), 
+                new String(hostname), new ArrayList<recordSingoloBene>());
     }
 
     /**
@@ -109,12 +117,17 @@ public class Ordine {
      *
      * @param nOrdine
      * @param data
+     * @param username
+     * @param hostname
      * @param listaBeni
      */
-    private Ordine(int nOrdine, Date data, List<recordSingoloBene> listaBeni) {
+    private Ordine(int nOrdine, Date data, String username, String hostname,
+            List<recordSingoloBene> listaBeni) {
         this.nOrdine = nOrdine;
         this.data = data;
         this.listaBeni = listaBeni;
+        this.username = username;
+        this.hostname = hostname;
     }
 
     /**

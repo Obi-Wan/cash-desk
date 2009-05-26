@@ -96,7 +96,7 @@ public class Amministrazione extends Luogo implements AmministrazioneAPI {
         server = (ServerRMIAmministratore)
                 sendDatiRegistrazione(user, serverName);
 
-        setupAfterLogin();
+        setupAfterLogin(user.getUsername());
     }
 
     /**
@@ -119,12 +119,12 @@ public class Amministrazione extends Luogo implements AmministrazioneAPI {
         server = (ServerRMIAmministratore)
                 sendDatiLogin(username, password, serverName);
 
-        setupAfterLogin();
+        setupAfterLogin(username);
     }
 
     @Override
-    protected void setupAfterLogin() throws RemoteException {
-        super.setupAfterLogin();
+    protected void setupAfterLogin(String username) throws RemoteException {
+        super.setupAfterLogin(username);
 
         // fai quel che devi fare
     }

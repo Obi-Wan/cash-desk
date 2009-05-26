@@ -6,6 +6,7 @@
 package gestionecassa.clients.cassa;
 
 import gestionecassa.Log;
+import gestionecassa.Ordine;
 import gestionecassa.Persona;
 import gestionecassa.clients.Luogo;
 import gestionecassa.exceptions.*;
@@ -101,7 +102,7 @@ public class Cassa extends Luogo implements CassaAPI {
         server = (ServerRMICassiere)
                 sendDatiRegistrazione(user, serverName);
 
-        setupAfterLogin();
+        setupAfterLogin(user.getUsername());
     }
 
     /**
@@ -124,12 +125,12 @@ public class Cassa extends Luogo implements CassaAPI {
         server = (ServerRMICassiere)
                 sendDatiLogin(username, password, serverName);
 
-        setupAfterLogin();
+        setupAfterLogin(username);
     }
 
     @Override
-    protected void setupAfterLogin() throws RemoteException {
-        super.setupAfterLogin();
+    protected void setupAfterLogin(String username) throws RemoteException {
+        super.setupAfterLogin(username);
 
         appFrame.setContentPanel(new GuiNuovoOrdinePanel(this));
     }
@@ -145,6 +146,35 @@ public class Cassa extends Luogo implements CassaAPI {
         } catch (RemoteException ex) {
             logger.warn("Il server non ha risposto alla richiesta della lista",
                     ex);
+            throw ex;
+        }
+    }
+
+    /**
+     *
+     * @param nuovoOrdine
+     *
+     * @throws java.rmi.RemoteException
+     */
+    public void sendNuovoOrdine(Ordine nuovoOrdine) throws RemoteException {
+        try {
+            server.sendOrdine(nuovoOrdine);
+        } catch (RemoteException ex) {
+            logger.warn("Errore nella comunicazione col server",ex);
+            throw ex;
+        }
+    }
+
+    /**
+     *
+     *
+     * @throws java.rmi.RemoteException
+     */
+    public void annullaUltimoOrdine() throws RemoteException {
+        try {
+            server.annullaUltimoOrdine();
+        } catch (RemoteException ex) {
+            logger.warn("Errore nella comunicazione col server",ex);
             throw ex;
         }
     }

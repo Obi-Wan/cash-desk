@@ -23,14 +23,12 @@ package gestionecassa.clients.cassa;
 import gestionecassa.BeneConOpzione;
 import gestionecassa.BeneVenduto;
 import gestionecassa.ListaBeni;
-import gestionecassa.Log;
 import gestionecassa.Ordine;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
-import org.apache.log4j.Logger;
 
 /**
  *
@@ -38,22 +36,29 @@ import org.apache.log4j.Logger;
  */
 public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
 
+    /**
+     * Reference alla classe della business logic
+     */
     CassaAPI owner;
-
-    Logger logger;
 
     /**
      * Local Reference to the goods list.
      */
     ListaBeni listaBeni;
 
+    /**
+     * Lista appoggio che per ogni bene associa un pannello
+     */
     List<recordListaBeni> tabellaBeni;
 
-    /** Creates new form GuiNuovoOrdinePanel */
+    /** 
+     * Creates new form GuiNuovoOrdinePanel
+     *
+     * @param owner
+     */
     public GuiNuovoOrdinePanel(CassaAPI owner) {
         initComponents();
         this.owner = owner;
-        this.logger = Log.GESTIONECASSA_CASSA_GUI;
 
         getListaBeni();
         buildContentsList();
@@ -196,11 +201,20 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonPulisciActionPerformed
 
     private void jButtonConfermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfermaActionPerformed
-        // TODO add your handling code here:
+        try {
+            owner.sendNuovoOrdine(creaNuovoOrdine());
+            this.pulisci();
+        } catch (RemoteException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Il server non ha risposto alla richiesta dell'invio del " +
+                "nuovo ordine",
+                "Errore di comunicazione",
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jButtonConfermaActionPerformed
 
     private void jButtonAnnullaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAnnullaActionPerformed
-        // TODO add your handling code here:
+        annullaUltimoOrdine();
     }//GEN-LAST:event_jButtonAnnullaActionPerformed
 
 
@@ -230,18 +244,30 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
         }
     }
 
+    /**
+     *
+     */
     private void buildVisualList() {
 
+        /* Prima di tutto rimuoviamo i pannelli di prima che se no incasinano
+         * tutto
+         */
         jPanelListaBeni.removeAll();
 
+        /* Creo il nuovo layout in cui organizzerò i nuovi pannelli
+         */
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(jPanelListaBeni);
         jPanelListaBeni.setLayout(layout);
 
+        /* Creo i due gruppi con cui organizzare i pannelli
+         */
         ParallelGroup tempHorizGroup = layout.createParallelGroup(
                 javax.swing.GroupLayout.Alignment.LEADING);
         SequentialGroup tempSequGroup = layout.createSequentialGroup()
             .addContainerGap();
 
+        /* Ciclo in cui aggiungo i pannelli ai gruppi con le impostazioni giuste
+         */
         for (recordListaBeni singoloRecord : tabellaBeni) {
 
             tempHorizGroup.addComponent(singoloRecord.pannello,
@@ -256,9 +282,14 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
                 .addPreferredGap(
                     javax.swing.LayoutStyle.ComponentPlacement.RELATED);
         }
+        
+        /* Ultimo spazio del gruppo verticale
+         */
         tempSequGroup.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
 
-        // infine aggiungiamo il gruppo di elementi alla pagina principale.
+        /* infine aggiungiamo il gruppo di elementi al layout della pagina
+         * principale.
+         */
         layout.setHorizontalGroup(
           layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -266,7 +297,6 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
                 .addGroup(tempHorizGroup)
                 .addContainerGap() )
         );
-
         layout.setVerticalGroup(
           layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(tempSequGroup)
@@ -294,6 +324,9 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * 
+     */
     private void pulisci() {
         for (recordListaBeni singoloRecord : tabellaBeni) {
             singoloRecord.pannello.clean();
@@ -335,7 +368,7 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
      * @return the creted order
      */
     private Ordine creaNuovoOrdine() {
-        Ordine tempOrd = new Ordine();
+        Ordine tempOrd = new Ordine(owner.getUsername(), owner.getHostname());
         for (recordListaBeni singoloRecord : tabellaBeni) {
             if (singoloRecord.bene.hasOptions()) {
                 tempOrd.addBeneConOpzione(
@@ -349,5 +382,30 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
             }
         }
         return tempOrd;
+    }
+
+    /**
+     * Questo metodo si occupa di gestire l'annullamento dell'ultimo ordine
+     * emesso, questo è abbastanza critico e da trattare con cautela.
+     */
+    private void annullaUltimoOrdine() {
+        final int result = javax.swing.JOptionPane.showConfirmDialog(this,
+                "Vuoi veramente annullare l'ultimo ordine emesso?",
+                "Annulla ultimo Ordine", javax.swing.JOptionPane.YES_NO_OPTION,
+                javax.swing.JOptionPane.WARNING_MESSAGE);
+        if (result == javax.swing.JOptionPane.YES_OPTION) {
+            try {
+                owner.annullaUltimoOrdine();
+                javax.swing.JOptionPane.showMessageDialog(this,
+                    "L'ultimo Ordine emesso è stato annullato",
+                    "Operazione terminata",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            } catch (RemoteException ex) {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                    "Il server non ha risposto alla richiesta di annullamento",
+                    "Errore di comunicazione",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 }
