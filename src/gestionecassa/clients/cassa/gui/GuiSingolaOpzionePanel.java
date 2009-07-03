@@ -18,7 +18,7 @@
  * Created on 23-mag-2009, 14.11.41
  */
 
-package gestionecassa.clients.cassa;
+package gestionecassa.clients.cassa.gui;
 
 import java.text.ParseException;
 import java.util.List;

@@ -18,6 +18,9 @@ import org.apache.log4j.Logger;
 public class ServerRMICassiereImpl extends SharedServerService
         implements ServerRMICassiere {
 
+    /**
+     * 
+     */
     List<Ordine> ordini;
 
     /**

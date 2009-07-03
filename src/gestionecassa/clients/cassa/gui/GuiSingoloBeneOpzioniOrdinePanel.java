@@ -18,7 +18,7 @@
  * Created on 23-mag-2009, 14.06.45
  */
 
-package gestionecassa.clients.cassa;
+package gestionecassa.clients.cassa.gui;
 
 import gestionecassa.BeneConOpzione;
 import java.util.ArrayList;

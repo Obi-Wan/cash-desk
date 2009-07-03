@@ -18,7 +18,7 @@
  * Created on 22-mag-2009, 12.36.51
  */
 
-package gestionecassa.clients.cassa;
+package gestionecassa.clients.cassa.gui;
 
 import gestionecassa.BeneVenduto;
 import java.text.ParseException;

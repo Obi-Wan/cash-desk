@@ -38,6 +38,9 @@ public class GuiLoginPanel extends javax.swing.JPanel {
      */
     ClientAPI owner;
 
+    /**
+     * 
+     */
     JFrame parent;
 
     /** Creates new form GuiLoginPanel */
@@ -46,6 +49,8 @@ public class GuiLoginPanel extends javax.swing.JPanel {
         jTextFieldLuogo.setText(nomePostazione);
         this.owner = owner;
         this.parent = parent;
+
+        pulisci(owner.getOptions());
     }
 
     /** This method is called from within the constructor to
@@ -195,9 +200,7 @@ public class GuiLoginPanel extends javax.swing.JPanel {
   }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonPulisciActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPulisciActionPerformed
-        jTextFieldUsername.setText("");
-        jPasswordFieldPassword.setText("");
-        jTextFieldServer.setText("");
+        pulisci();
 }//GEN-LAST:event_jButtonPulisciActionPerformed
 
     private void jButtonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoginActionPerformed
@@ -252,4 +255,18 @@ public class GuiLoginPanel extends javax.swing.JPanel {
   private javax.swing.JTextField jTextFieldUsername;
   // End of variables declaration//GEN-END:variables
 
+    /**
+     *
+     */
+    private void pulisci() {
+        jTextFieldUsername.setText("");
+        jPasswordFieldPassword.setText("");
+        jTextFieldServer.setText("");
+    }
+
+    private void pulisci(LuogoOptions options) {
+        jTextFieldUsername.setText(options.defaultUsername);
+        jPasswordFieldPassword.setText("");
+        jTextFieldServer.setText(options.defaultServer);
+    }
 }

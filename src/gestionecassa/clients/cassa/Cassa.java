@@ -5,16 +5,21 @@
 
 package gestionecassa.clients.cassa;
 
+import gestionecassa.clients.cassa.gui.GuiAppFrameCassa;
+import gestionecassa.clients.cassa.gui.GuiNuovoOrdinePanel;
 import gestionecassa.Log;
 import gestionecassa.Ordine;
 import gestionecassa.Persona;
 import gestionecassa.clients.Luogo;
 import gestionecassa.exceptions.*;
 import gestionecassa.server.ServerRMICassiere;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -77,6 +82,16 @@ public class Cassa extends Luogo implements CassaAPI {
      */
     @Override
     public void run() {
+        XmlCassaHandler xmlHandler = new XmlCassaHandler();
+        try {
+            xmlHandler.loadOptions(options);
+        } catch (IOException ex) {
+            logger.warn("Unable to read data from configfile", ex);
+        } catch (ParserConfigurationException ex) {
+            logger.warn("Parse exception in conf file", ex);
+        } catch (SAXException ex) {
+            logger.warn("SAXException in conf file", ex);
+        }
         // avvia la fase di login
         appFrame = new GuiAppFrameCassa(this);
 

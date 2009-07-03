@@ -121,4 +121,10 @@ public interface ClientAPI {
      * @return
      */
     String getUsername();
+
+    /**
+     *
+     * @return
+     */
+    LuogoOptions getOptions();
 }

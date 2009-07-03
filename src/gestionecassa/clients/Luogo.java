@@ -68,10 +68,16 @@ abstract public class Luogo extends Thread implements ClientAPI {
      * The frame that display the Applictaion GUI
      */
     protected GuiAppFrame appFrame;
+
     /**
      *
      */
     protected ListaBeni listaBeni;
+
+    /**
+     *
+     */
+    protected LuogoOptions options;
 
     /**
      * Costruttore esplicito che assegna subito il hostname al luogo
@@ -86,6 +92,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
         this.sessionID = -1;
         this.serverCentrale = null;
         this.username = "";
+        options = new LuogoOptions();
     }
 
     /**
@@ -334,5 +341,13 @@ abstract public class Luogo extends Thread implements ClientAPI {
      */
     public ListaBeni getListaBeni() {
         return listaBeni;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public LuogoOptions getOptions() {
+        return options;
     }
 }

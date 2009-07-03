@@ -18,7 +18,7 @@
  * Created on 21-mag-2009, 21.09.15
  */
 
-package gestionecassa.clients.cassa;
+package gestionecassa.clients.cassa.gui;
 
 import gestionecassa.ListaBeni;
 

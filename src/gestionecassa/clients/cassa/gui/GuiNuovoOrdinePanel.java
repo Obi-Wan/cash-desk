@@ -18,8 +18,9 @@
  * Created on 12-mag-2009, 22.16.39
  */
 
-package gestionecassa.clients.cassa;
+package gestionecassa.clients.cassa.gui;
 
+import gestionecassa.clients.cassa.*;
 import gestionecassa.BeneConOpzione;
 import gestionecassa.BeneVenduto;
 import gestionecassa.ListaBeni;

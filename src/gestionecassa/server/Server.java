@@ -87,7 +87,7 @@ public class Server extends UnicastRemoteObject
         java.util.Calendar tempCal = java.util.Calendar.getInstance();
         tempCal.setTime(new java.util.Date());
         final String stringaData = String.format("%1$tY-%1$tm-%1te",tempCal);
-        Log.GESTIONECASSA_SERVER.info("Server started: " + stringaData);
+        Log.GESTIONECASSA_SERVER.info("Server created: " + stringaData);
     }
     
     /**
