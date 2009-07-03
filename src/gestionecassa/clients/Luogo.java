@@ -91,6 +91,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
         this.stopApp = false;
         this.sessionID = -1;
         this.serverCentrale = null;
+        this.listaBeni = null;
         this.username = "";
         options = new LuogoOptions();
     }
@@ -349,5 +350,13 @@ abstract public class Luogo extends Thread implements ClientAPI {
      */
     public LuogoOptions getOptions() {
         return options;
+    }
+
+    /**
+     *
+     * @param options 
+     */
+    public void setOptions(LuogoOptions options) {
+        this.options = options;
     }
 }

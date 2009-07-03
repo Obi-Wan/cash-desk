@@ -127,4 +127,10 @@ public interface ClientAPI {
      * @return
      */
     LuogoOptions getOptions();
+
+    /**
+     *
+     * @param options
+     */
+    void setOptions(LuogoOptions options);
 }

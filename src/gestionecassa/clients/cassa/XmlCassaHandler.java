@@ -16,14 +16,15 @@ package gestionecassa.clients.cassa;
 
 import gestionecassa.XmlHandler;
 import gestionecassa.clients.LuogoOptions;
-import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import javax.xml.parsers.*;
-
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+import org.dom4j.DocumentHelper;
+import org.dom4j.io.XMLWriter;
 
 /**
  *
@@ -35,62 +36,48 @@ public class XmlCassaHandler implements XmlHandler<LuogoOptions> {
 
     @Override
     public void saveOptions(LuogoOptions options) throws IOException {
-        String output = "<?xml version='1.0' standalone='yes'?>\n";
-        output += "<config version=\"1.0\" client=\"cassa\">\n";
-        output += "  <username><![CDATA[" + options.defaultUsername + "]]></username>\n";
-        output += "  <server><![CDATA[" + options.defaultServer + "]]></server>\n";
-        output += "</config>\n";
-        BufferedWriter outputStream =
-            new BufferedWriter(new FileWriter(optionsFile));
-        outputStream.write(output);
-        outputStream.flush();
-        outputStream.close();
+        
+        Document document = DocumentHelper.createDocument();
+        Element root = document.addElement( "config" );
+        root.addAttribute("version", "1.0");
+        root.addAttribute("client", "cassa");
+
+        root.addElement("username").addText(options.defaultUsername);
+
+        root.addElement("server").addText(options.defaultServer);
+
+        // lets write to a file
+        XMLWriter writer = new XMLWriter(new FileWriter(optionsFile));
+        writer.write( document );
+        writer.close();
     }
 
     @Override
-    public void loadOptions(LuogoOptions options) throws IOException,
-            ParserConfigurationException, SAXException {
-//        FileReader is = new FileReader(optionsFile);
-//        BufferedReader inputStream =
-//                new BufferedReader(is);
-//        String input = "";
-//        int temp;
-//        while ((temp = inputStream.read()) != -1) {
-//            input += (char)temp;
-//        }
-//        inputStream.close();
-//
-//        Log.GESTIONECASSA_CASSA.debug(input);
+    public void loadOptions(LuogoOptions options) throws IOException, 
+            DocumentException {
 
-        Document document =
-                DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(optionsFile);
+        SAXReader reader = new SAXReader();
+        Document document = reader.read(optionsFile);
         
-        NamedNodeMap attributes = document.getAttributes();
-        if (attributes != null) {
-            for (int count = 0;count < attributes.getLength();count++) {
-                if (attributes.item(count).getNodeName().equals("version")) {
-                    if (!attributes.item(count).getNodeValue().equals("1.0")) {
-                        throw new IOException("Wrong file version!");
-                    }
-                } else if (attributes.item(count).getNodeName().equals("client")) {
-                    if (!attributes.item(count).getNodeValue().equals("cassa")) {
-                        throw new IOException("This config file is for another client");
-                    }
-                }
-            }
+        Element nodoRoot = document.getRootElement();
+        if (!nodoRoot.attributeValue("version").equals("1.0")) {
+            throw new IOException("Wrong file version!");
+        } else if (!nodoRoot.attributeValue("client").equals("cassa")) {
+            throw new IOException("This config file is for another client");
         }
-        NodeList listaUsername = document.getElementsByTagName("username");
-        for (int count = 0; count < listaUsername.getLength(); count++) {
-            if (listaUsername.item(count).getNodeName().equals("username")) {
-                options.defaultUsername = listaUsername.item(count).getTextContent();
-            }
+
+        Element nodoUser = nodoRoot.element("username");
+        if (nodoUser != null) {
+            options.defaultUsername = nodoUser.getStringValue();
+        } else {
+            throw new IOException("This config file does not contain right info");
         }
-        NodeList listaServer = document.getElementsByTagName("server");
-        for (int count = 0; count < listaServer.getLength(); count++) {
-            if (listaServer.item(count).getNodeName().equals("server")) {
-                options.defaultServer = listaServer.item(count).getTextContent();
-            }
+
+        Element nodoServer = nodoRoot.element("server");
+        if (nodoUser != null) {
+            options.defaultServer = nodoServer.getStringValue();
+        } else {
+            throw new IOException("This config file does not contain right info");
         }
     }
-
 }

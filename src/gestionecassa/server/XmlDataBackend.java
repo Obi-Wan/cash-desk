@@ -1,5 +1,5 @@
 /*
- * XmlHandler.java
+ * XmlDataBackend.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -12,18 +12,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package gestionecassa;
-
-import java.io.IOException;
-import org.dom4j.DocumentException;
+package gestionecassa.server;
 
 /**
  *
  * @author ben
  */
-public interface XmlHandler<type> {
+public class XmlDataBackend {
 
-    void saveOptions(type options) throws IOException;
-
-    void loadOptions(type options) throws IOException, DocumentException;
 }

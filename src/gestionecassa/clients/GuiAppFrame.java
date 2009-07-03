@@ -109,7 +109,7 @@ abstract public class GuiAppFrame extends javax.swing.JFrame {
      * cleans the work area.
      */
     abstract public void cleanContentPanel();
-    
+
     /**
      * Enables or disables logout button.
      *

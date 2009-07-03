@@ -22,6 +22,7 @@ package gestionecassa.clients.cassa.gui;
 
 import gestionecassa.clients.ClientAPI;
 import gestionecassa.clients.GuiAppFrame;
+import gestionecassa.clients.GuiOptionsDialog;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.JPanel;
@@ -46,6 +47,7 @@ public class GuiAppFrameCassa extends GuiAppFrame {
         super(owner);
         initComponents();
         enableLogout(false);
+        enableListaBeni(false);
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = this.getSize();
@@ -150,7 +152,7 @@ public class GuiAppFrameCassa extends GuiAppFrame {
 }//GEN-LAST:event_jButtonListActionPerformed
 
     private void jButtonOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionsActionPerformed
-        // TODO add your handling code here:
+        new GuiOptionsDialog(this, true, owner).setVisible(true);
 }//GEN-LAST:event_jButtonOptionsActionPerformed
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -195,5 +197,12 @@ public class GuiAppFrameCassa extends GuiAppFrame {
      */
     public void cleanDialogListaBeni() {
         dialogListaBeni = null;
+    }
+
+    public void enableListaBeni(boolean value) {
+        jButtonList.setEnabled(value);
+        if (!value) {
+            this.dialogListaBeni = null;
+        }
     }
 }
