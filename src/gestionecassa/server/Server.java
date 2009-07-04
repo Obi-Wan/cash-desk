@@ -9,6 +9,7 @@
 
 package gestionecassa.server;
 
+import gestionecassa.server.datamanager.DataManager;
 import gestionecassa.Amministratore;
 import gestionecassa.Persona;
 import gestionecassa.Cassiere;
@@ -23,6 +24,9 @@ import java.util.List;
 import gestionecassa.Log;
 import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.WrongLoginException;
+import gestionecassa.server.clientservices.*;
+import gestionecassa.server.datamanager.BackendAPI_1;
+import gestionecassa.server.datamanager.backends.XmlDataBackend;
 
 /** This is the main class of the server side application.
  *
@@ -81,8 +85,11 @@ public class Server extends UnicastRemoteObject
         sessionList = new ArrayList<SessionRecord> ();
         ilTimer = new ServerTimer();
         ilTimer.start();
+
+        // this is implementation specific. I will change it if necessary
+        BackendAPI_1 dataBackend = new XmlDataBackend();
         
-        dataManager = new DataManager();
+        dataManager = new DataManager(dataBackend);
 
         java.util.Calendar tempCal = java.util.Calendar.getInstance();
         tempCal.setTime(new java.util.Date());
@@ -185,24 +192,12 @@ public class Server extends UnicastRemoteObject
         String password = user.getPassword();
 
         //se lo username non e' presente lo posso registrare.
-        if (verificaUsername(username,password) == null) {
-            registra(user);
+        if (dataManager.verificaUsername(username) == null) {
+            dataManager.registraUtente(user);
             return logga(username,password);
         } else {
             throw new ActorAlreadyExistingException();
         }
-    }
-    
-    /**
-     * This Method registers a new Actor.
-     *
-     * @param   user    data of the new Cassiere.
-     */
-    private void registra(final Persona user) {
-        int id = dataManager.registraUtente(user);
-        //dell'id nella tabella ce ne facciamo poco in questo punto.
-        Log.GESTIONECASSA_SERVER.info("Registrato nuovo " + user.getClass()
-                + " con id (nella sua tabella): " + id);
     }
     
     /** Logs a user, through his username and password.
@@ -218,12 +213,11 @@ public class Server extends UnicastRemoteObject
         /* Controlla che i dati dell'utente siano presenti nel
          * database degli utenti registrati*/
         
-        tempRecord.user = verificaUsername(username,password);
+        tempRecord.user = dataManager.verificaUsername(username);
         //anche se mi son appena registrato, e' importante: fa un doppio check.
         
         if (tempRecord.user == null) {
-            //questo numero indica che l'utente non e' stato trovato nel db
-
+            //questo indica che l'utente non e' stato trovato nel db
             throw new WrongLoginException();
         } //se non esiste restituisco un errore.
         
@@ -251,6 +245,7 @@ public class Server extends UnicastRemoteObject
                 srv = new ServerRMIAmministratoreImpl(tempRecord,dataManager,
                         Log.GESTIONECASSA_SERVER);
             } else {
+                // Se non appartiene a nessuna delle classi di client, errore.
                 throw new WrongLoginException();
             }
         } catch (RemoteException ex) {
@@ -278,32 +273,6 @@ public class Server extends UnicastRemoteObject
         srv.start();
         
         return tempRecord.clientId;
-    }
-    
-    /** This method verifies that the username is free.
-     *
-     * @param username  the username to verify.
-     *
-     * @return Reference to the user found. null if nobody found.
-     */
-    private final Persona verificaUsername(final String username, final String password) {
-        
-        /* Controlla prima in una tabella poi se non ottieni risultato,
-         nella'tlra e restituisci l'oggetto corrispondente alla perosna
-         che sta cercando di loggarsi. Se non trovi nessun restituisci null*/
-
-        Persona user = dataManager.verificaUsername(username,password);
-        
-        if (user != null) {
-            if (user instanceof Amministratore) {
-                Log.GESTIONECASSA_SERVER.debug("Trovato utente fra gli Amministratori");
-            } else {
-                Log.GESTIONECASSA_SERVER.debug("Trovato utente fra i Cassieri");
-            }
-        }
-        
-        return user;
-        
     }
     
     /** This method looks for the first free number in sessions list.

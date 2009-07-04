@@ -1,5 +1,5 @@
 /*
- * XmlDataBackend.java
+ * DMAmministrazioneAPI.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -12,12 +12,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package gestionecassa.server;
+package gestionecassa.server.datamanager;
 
 /**
  *
  * @author ben
  */
-public class XmlDataBackend {
+public interface DMAmministrazioneAPI extends DMCommonAPI {
 
 }

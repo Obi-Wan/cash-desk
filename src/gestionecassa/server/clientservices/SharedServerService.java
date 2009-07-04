@@ -7,10 +7,12 @@
  * and open the template in the editor.
  */
 
-package gestionecassa.server;
+package gestionecassa.server.clientservices;
 
 import gestionecassa.ListaBeni;
 import gestionecassa.Log;
+import gestionecassa.server.SessionRecord;
+import gestionecassa.server.datamanager.DataManager;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -22,7 +24,7 @@ import org.apache.log4j.Logger;
  * @author ben
  */
 public class SharedServerService extends UnicastRemoteObject 
-        implements Serializable, Runnable, ServerRMIShared {
+        implements Serializable, Runnable {
     
     /** Thread that rapresents myself */
     private Thread runner;
@@ -33,19 +35,12 @@ public class SharedServerService extends UnicastRemoteObject
     /** Reference to his entry in sessions table */
     SessionRecord myself;
 
-    /**
-     * Reference to the manager of data.
-     */
-    DataManager dataManager;
-
     Logger logger;
     
     /** Creates a new instance of SharedServerService */
-    SharedServerService(SessionRecord nMySelf, DataManager dataMgr,
-            Logger logger)
+    SharedServerService(SessionRecord nMySelf, Logger logger)
                 throws  RemoteException{
         myself = nMySelf;
-        dataManager = dataMgr;
         this.logger = logger;
     }
     
@@ -66,7 +61,7 @@ public class SharedServerService extends UnicastRemoteObject
     public void run(){
         try {
             Log.GESTIONECASSA_SERVER.debug("Iniziata l'esecuzione del server" +
-                    "di servizio con id: "+myself.clientId);
+                    "di servizio con id: "+myself.getClientId());
             while(stopThread == false) {
                 Thread.sleep(100);
             }
@@ -81,14 +76,5 @@ public class SharedServerService extends UnicastRemoteObject
      */
     public void stopThread() {
         stopThread = true;
-    }
-
-    /**
-     * 
-     * @return
-     * @throws java.rmi.RemoteException
-     */
-    public ListaBeni requestListaBeni() throws RemoteException {
-        return dataManager.getCurrentListaBeni();
     }
 }

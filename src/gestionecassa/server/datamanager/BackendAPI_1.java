@@ -1,5 +1,5 @@
 /*
- * ServerRMIShared.java
+ * BackendAPI_1.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -12,22 +12,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package gestionecassa.server;
+package gestionecassa.server.datamanager;
 
-import gestionecassa.ListaBeni;
-import java.rmi.Remote;
-import java.rmi.RemoteException;
+import gestionecassa.Ordine;
+import java.io.IOException;
+import java.util.List;
 
 /**
  *
  * @author ben
  */
-public interface ServerRMIShared extends Remote {
+public interface BackendAPI_1 {
 
-    /**
-     * 
-     * @return
-     * @throws java.rmi.RemoteException
-     */
-    public ListaBeni requestListaBeni() throws RemoteException;
+    void flushListaOrdini(String id, List<Ordine> lista) throws IOException;
+
 }

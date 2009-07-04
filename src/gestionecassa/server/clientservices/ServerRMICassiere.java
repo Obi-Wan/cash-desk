@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package gestionecassa.server;
+package gestionecassa.server.clientservices;
 
 import gestionecassa.Ordine;
 import java.io.Serializable;

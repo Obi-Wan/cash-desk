@@ -10,13 +10,14 @@
 package gestionecassa.server;
 
 import gestionecassa.Persona;
+import gestionecassa.server.clientservices.*;
 import java.io.Serializable;
 
 /** This Class stores data of a session.
  *
  * @author ben
  */
-class SessionRecord implements Serializable {
+public class SessionRecord implements Serializable {
     
     /** Session ID of the user. */
     int clientId;
@@ -93,5 +94,13 @@ class SessionRecord implements Serializable {
         hash = 53 * hash + this.clientId;
         hash = 53 * hash + (this.username != null ? this.username.hashCode() : 0);
         return hash;
+    }
+
+    public int getClientId() {
+        return clientId;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }

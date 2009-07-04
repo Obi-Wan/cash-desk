@@ -5,13 +5,12 @@
 
 package gestionecassa.clients.amministrazione;
 
-import gestionecassa.ListaBeni;
 import gestionecassa.Log;
 import gestionecassa.Persona;
 import gestionecassa.clients.Luogo;
 import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.WrongLoginException;
-import gestionecassa.server.ServerRMIAmministratore;
+import gestionecassa.server.clientservices.ServerRMIAmministratore;
 import gestionecassa.server.ServerRMIMainAmministrazione;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;

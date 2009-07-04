@@ -3,28 +3,41 @@
  * and open the template in the editor.
  */
 
-package gestionecassa.server;
+package gestionecassa.server.datamanager;
 
 import gestionecassa.Amministratore;
 import gestionecassa.BeneVenduto;
 import gestionecassa.BeneConOpzione;
 import gestionecassa.Cassiere;
 import gestionecassa.ListaBeni;
+import gestionecassa.Ordine;
 import gestionecassa.Persona;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
  * @author ben
  */
-public class DataManager {
+public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
+        DMAmministrazioneAPI {
 
     /**
      * List of registered users
      */
     TreeMap<String,Persona> listaUtenti;
+
+    /**
+     *
+     */
+    ConcurrentHashMap<String, List<Ordine> > tabellaOrdini;
+
+    /**
+     * The data store backend
+     */
+    BackendAPI_1 dataBackend;
 
     /**
      * Semaphore for the list of users
@@ -52,7 +65,9 @@ public class DataManager {
     /**
      * Default constructor
      */
-    public DataManager() {
+    public DataManager(BackendAPI_1 dataBackend) {
+        this.dataBackend = dataBackend;
+
         synchronized (listaUtentiSemaphore) {
             listaUtenti = new TreeMap<String, Persona>();
 
@@ -78,22 +93,21 @@ public class DataManager {
      * @param user
      * @return
      */
-    int registraUtente(Persona user) {
+    public void registraUtente(Persona user) {
         synchronized (listaUtentiSemaphore) {
-            return 0;
+            listaUtenti.put(user.getUsername(), user);
         }
     }
 
     /**
-     * Verifies a username exists, and if is the case, if the password is right
-     * It creates a new read only copy of the user to prevent problems in syncronization
+     * Verifies a username exists, and if is the case, 
+     * it creates a new read only copy of the user to prevent problems in syncronization
      *
      * @param username
-     * @param password
      *
      * @return 
      */
-    final Persona verificaUsername(String username, String password) {
+    public Persona verificaUsername(String username) {
         synchronized (listaUtentiSemaphore) {
             Persona tempPersona = listaUtenti.get(username);
             if (tempPersona instanceof Cassiere) {
@@ -108,9 +122,32 @@ public class DataManager {
      *
      * @return
      */
-    final ListaBeni getCurrentListaBeni() {
+    public ListaBeni getCurrentListaBeni() {
         synchronized (listaBeniSemaphore) {
             return listaBeni;
         }
+    }
+
+    //----------------------------//
+    // Cassa Client handle.
+    //----------------------------//
+
+    public void createNewCassaSession(String identifier) {
+        tabellaOrdini.put(identifier, new ArrayList<Ordine>());
+    }
+
+    public void closeCassaSession(String identifier) {
+        // flush to disk
+        List tempOrderList = tabellaOrdini.get(identifier);
+
+    }
+
+    public void addNewOrder(String id, Ordine order) {
+        tabellaOrdini.get(id).add(order);
+    }
+
+    public void delLastOrder(String id) {
+        List tempOrderList = tabellaOrdini.get(id);
+        tempOrderList.remove(tempOrderList.size() -1);
     }
 }

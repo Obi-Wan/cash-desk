@@ -12,7 +12,7 @@ import gestionecassa.Ordine;
 import gestionecassa.Persona;
 import gestionecassa.clients.Luogo;
 import gestionecassa.exceptions.*;
-import gestionecassa.server.ServerRMICassiere;
+import gestionecassa.server.clientservices.ServerRMICassiere;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;

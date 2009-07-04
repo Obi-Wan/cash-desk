@@ -3,11 +3,10 @@
  * and open the template in the editor.
  */
 
-package gestionecassa.server;
+package gestionecassa.server.clientservices;
 
 import java.io.Serializable;
 import java.rmi.Remote;
-import java.rmi.RemoteException;
 
 /**
  *
