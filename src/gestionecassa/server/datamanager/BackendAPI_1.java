@@ -14,7 +14,8 @@
 
 package gestionecassa.server.datamanager;
 
-import gestionecassa.Ordine;
+import gestionecassa.ListaBeni;
+import gestionecassa.ordine.Ordine;
 import java.io.IOException;
 import java.util.List;
 
@@ -24,6 +25,9 @@ import java.util.List;
  */
 public interface BackendAPI_1 {
 
-    void flushListaOrdini(String id, List<Ordine> lista) throws IOException;
+    void saveListaOrdini(String id, List<Ordine> lista) throws IOException;
 
+    void saveListaBeni(ListaBeni lista) throws IOException;
+
+    ListaBeni loadListaBeni() throws IOException;
 }

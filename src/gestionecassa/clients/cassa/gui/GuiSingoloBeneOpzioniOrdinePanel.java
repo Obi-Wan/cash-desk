@@ -21,6 +21,8 @@
 package gestionecassa.clients.cassa.gui;
 
 import gestionecassa.BeneConOpzione;
+import gestionecassa.ordine.Ordine;
+import gestionecassa.ordine.recordSingolaOpzione;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.GroupLayout.ParallelGroup;
@@ -211,13 +213,17 @@ public class GuiSingoloBeneOpzioniOrdinePanel extends GuiAbstrSingoloBenePanel {
      * 
      * @return
      */
-    public List<int[]> getListaParziali() {
-        List<int[]> tempLista = new ArrayList<int[]>();
+    public List<recordSingolaOpzione> getListaParziali() {
+        List<recordSingolaOpzione> tempLista
+                = new ArrayList<recordSingolaOpzione>();
         for (GuiSingolaOpzionePanel singolaOpzionePanel : pannelliopzioni) {
-            int[] tempArray = 
-                {singolaOpzionePanel.getComboNum(),
-                 singolaOpzionePanel.getNumParziale()};
-            tempLista.add(tempArray);
+            if (singolaOpzionePanel.getNumParziale() != 0) {
+                recordSingolaOpzione tempArray =
+                    new recordSingolaOpzione(
+                        singolaOpzionePanel.getComboChoice(),
+                        singolaOpzionePanel.getNumParziale());
+                tempLista.add(tempArray);
+            }
         }
         return tempLista;
     }

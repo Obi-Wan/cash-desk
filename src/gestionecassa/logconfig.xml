@@ -68,9 +68,15 @@
 	<category additivity="false" name="gestionecassa.server">
 	  <appender-ref ref="FILE_LOGGER"/>
 	</category>
-	<category additivity="false" name="gestionecassa.server.dbm">
+	<category additivity="false" name="gestionecassa.server.datamanager">
 	  <appender-ref ref="FILE_LOGGER"/>
-	</category>	
+	</category>
+	<category additivity="false" name="gestionecassa.server.datamanager.xml">
+	  <appender-ref ref="FILE_LOGGER"/>
+	</category>
+	<category additivity="false" name="gestionecassa.server.datamanager.db">
+	  <appender-ref ref="FILE_LOGGER"/>
+	</category>
 
 	<!-- root>
 	   <priority value="WARN"/>  

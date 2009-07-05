@@ -6,7 +6,7 @@
 package gestionecassa.server.clientservices;
 
 import gestionecassa.ListaBeni;
-import gestionecassa.Ordine;
+import gestionecassa.ordine.Ordine;
 import java.rmi.RemoteException;
 import org.apache.log4j.Logger;
 import gestionecassa.server.SessionRecord;
@@ -42,7 +42,7 @@ public class ServerRMICassiereImpl extends SharedServerService
         super(session,logger);
         this.dataManager = dataManager;
 
-        sessionIdentifier = session.getUsername();
+        sessionIdentifier = new String(session.getUsername());
 
         dataManager.createNewCassaSession(sessionIdentifier);
     }

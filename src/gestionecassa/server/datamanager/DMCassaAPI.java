@@ -14,7 +14,7 @@
 
 package gestionecassa.server.datamanager;
 
-import gestionecassa.Ordine;
+import gestionecassa.ordine.Ordine;
 
 /**
  *

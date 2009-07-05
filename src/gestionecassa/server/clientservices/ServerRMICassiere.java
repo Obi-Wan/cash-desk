@@ -5,7 +5,7 @@
 
 package gestionecassa.server.clientservices;
 
-import gestionecassa.Ordine;
+import gestionecassa.ordine.Ordine;
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;

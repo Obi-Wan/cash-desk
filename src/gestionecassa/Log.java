@@ -31,10 +31,18 @@ public class Log {
     /** Logger for package gestionecassa.server */
     static public final Logger GESTIONECASSA_SERVER =
             Logger.getLogger("gestionecassa.server");
-    
-    /** Logger for package gestionecassa.server.dbm */
-    static public final Logger GESTIONECASSA_SERVER_DBM =
-            Logger.getLogger("gestionecassa.server.dbm");
+
+    /** Logger for package gestionecassa.server.datamanager */
+    static public final Logger GESTIONECASSA_SERVER_DATAMANAGER =
+            Logger.getLogger("gestionecassa.server.datamanager");
+
+    /** Logger for package gestionecassa.server.datamanager.xml_be */
+    static public final Logger GESTIONECASSA_SERVER_DATAMANAGER_XML =
+            Logger.getLogger("gestionecassa.server.datamanager.xml");
+
+    /** Logger for package gestionecassa.server.datamanager.db_be */
+    static public final Logger GESTIONECASSA_SERVER_DATAMANAGER_DB =
+            Logger.getLogger("gestionecassa.server.datamanager.db");
 
     static {
         // config da file

@@ -3,8 +3,9 @@
  * and open the template in the editor.
  */
 
-package gestionecassa;
+package gestionecassa.ordine;
 
+import gestionecassa.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,54 +41,6 @@ public class Ordine implements Serializable {
      * Lista dei beni per il singolo ordine.
      */
     List<recordSingoloBene> listaBeni;
-
-    /**
-     * Record per ogni bene dell'ordine
-     *
-     * @author ben
-     */
-    public class recordSingoloBene implements Serializable {
-
-        /**
-         * Reference al bene.
-         */
-        public BeneVenduto bene;
-
-        /**
-         * Numero totale per questo articolo
-         */
-        public int numTot;
-
-        /**
-         * Explicit constructor
-         *
-         * @param bene
-         * @param numTot
-         */
-        public recordSingoloBene(BeneVenduto bene, int numTot) {
-            this.bene = bene;
-            this.numTot = numTot;
-        }
-    }
-
-    /**
-     * Record per i beni con opzione
-     *
-     * @author ben
-     */
-    public class recordSingoloBeneConOpzione extends recordSingoloBene {
-
-        /**
-         * Parziali
-         */
-        public List<int[]> numParziale;
-
-        public recordSingoloBeneConOpzione(BeneConOpzione bene, int numTot,
-                List<int[]> numParziale) {
-            super(bene, numTot);
-            this.numParziale = new ArrayList<int[]>(numParziale);
-        }
-    }
 
     /**
      * Default constructor (well, at most :) )
@@ -131,6 +84,22 @@ public class Ordine implements Serializable {
     }
 
     /**
+     *
+     * @return
+     */
+    public Date getData() {
+        return data;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public List<recordSingoloBene> getListaBeni() {
+        return listaBeni;
+    }
+
+    /**
      * Adder helper
      *
      * @param bene
@@ -148,7 +117,7 @@ public class Ordine implements Serializable {
      * @param listaParziale
      */
     public void addBeneConOpzione(BeneConOpzione bene, int numTot, 
-            List<int[]> listaParziale) {
+            List<recordSingolaOpzione> listaParziale) {
         listaBeni.add(new recordSingoloBeneConOpzione(bene, numTot,
                 listaParziale));
     }

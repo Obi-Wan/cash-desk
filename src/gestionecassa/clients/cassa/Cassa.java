@@ -8,7 +8,7 @@ package gestionecassa.clients.cassa;
 import gestionecassa.clients.cassa.gui.GuiAppFrameCassa;
 import gestionecassa.clients.cassa.gui.GuiNuovoOrdinePanel;
 import gestionecassa.Log;
-import gestionecassa.Ordine;
+import gestionecassa.ordine.Ordine;
 import gestionecassa.Persona;
 import gestionecassa.clients.Luogo;
 import gestionecassa.exceptions.*;

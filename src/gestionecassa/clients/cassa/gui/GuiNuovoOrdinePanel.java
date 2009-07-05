@@ -24,7 +24,7 @@ import gestionecassa.clients.cassa.*;
 import gestionecassa.BeneConOpzione;
 import gestionecassa.BeneVenduto;
 import gestionecassa.ListaBeni;
-import gestionecassa.Ordine;
+import gestionecassa.ordine.Ordine;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -372,14 +372,18 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
         Ordine tempOrd = new Ordine(owner.getUsername(), owner.getHostname());
         for (recordListaBeni singoloRecord : tabellaBeni) {
             if (singoloRecord.bene.hasOptions()) {
-                tempOrd.addBeneConOpzione(
+                if (singoloRecord.pannello.getNumTot() != 0) {
+                    tempOrd.addBeneConOpzione(
                         (BeneConOpzione)singoloRecord.bene,
                         singoloRecord.pannello.getNumTot(),
                         ((GuiSingoloBeneOpzioniOrdinePanel)
-                                (singoloRecord.pannello)).getListaParziali());
+                            (singoloRecord.pannello)).getListaParziali());
+                }
             } else {
-                tempOrd.addBeneVenduto(singoloRecord.bene,
+                if (singoloRecord.pannello.getNumTot() != 0) {
+                    tempOrd.addBeneVenduto(singoloRecord.bene,
                         singoloRecord.pannello.getNumTot());
+                }
             }
         }
         return tempOrd;

@@ -233,6 +233,8 @@ public class Server extends UnicastRemoteObject
                     throw new WrongLoginException();
                 
                 tempRecord.idTabella = ((Cassiere)tempRecord.user).getId();
+                tempRecord.username = new String(username);
+
                 srv = new ServerRMICassiereImpl(tempRecord,dataManager,
                             Log.GESTIONECASSA_SERVER);
             } else if(tempRecord.user instanceof Amministratore){
@@ -242,6 +244,8 @@ public class Server extends UnicastRemoteObject
                     throw new WrongLoginException();
                 
                 tempRecord.idTabella = ((Amministratore)tempRecord.user).getId();
+                tempRecord.username = new String(username);
+
                 srv = new ServerRMIAmministratoreImpl(tempRecord,dataManager,
                         Log.GESTIONECASSA_SERVER);
             } else {
@@ -254,7 +258,6 @@ public class Server extends UnicastRemoteObject
             throw ex;
         }
         
-        tempRecord.username = username;
         tempRecord.relatedThread = srv;
         tempRecord.clientId = nuovaSessione(tempRecord);
         

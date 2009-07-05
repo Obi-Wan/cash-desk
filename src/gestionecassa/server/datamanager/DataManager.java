@@ -10,12 +10,15 @@ import gestionecassa.BeneVenduto;
 import gestionecassa.BeneConOpzione;
 import gestionecassa.Cassiere;
 import gestionecassa.ListaBeni;
-import gestionecassa.Ordine;
+import gestionecassa.Log;
+import gestionecassa.ordine.Ordine;
 import gestionecassa.Persona;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -38,6 +41,11 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      * The data store backend
      */
     BackendAPI_1 dataBackend;
+
+    /**
+     * 
+     */
+    Logger logger;
 
     /**
      * Semaphore for the list of users
@@ -67,6 +75,9 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      */
     public DataManager(BackendAPI_1 dataBackend) {
         this.dataBackend = dataBackend;
+        this.logger = Log.GESTIONECASSA_SERVER_DATAMANAGER;
+
+        tabellaOrdini = new ConcurrentHashMap<String, List<Ordine>>();
 
         synchronized (listaUtentiSemaphore) {
             listaUtenti = new TreeMap<String, Persona>();
@@ -139,7 +150,11 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     public void closeCassaSession(String identifier) {
         // flush to disk
         List tempOrderList = tabellaOrdini.get(identifier);
-
+        try {
+            dataBackend.saveListaOrdini(identifier, tempOrderList);
+        } catch (IOException ex) {
+            logger.error("Order list could not be saved", ex);
+        }
     }
 
     public void addNewOrder(String id, Ordine order) {
