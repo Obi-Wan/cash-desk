@@ -10,7 +10,7 @@
 package gestionecassa.server;
 
 import gestionecassa.server.datamanager.DataManager;
-import gestionecassa.Amministratore;
+import gestionecassa.Admin;
 import gestionecassa.Persona;
 import gestionecassa.Cassiere;
 import java.net.MalformedURLException;
@@ -237,13 +237,13 @@ public class Server extends UnicastRemoteObject
 
                 srv = new ServerRMICassiereImpl(tempRecord,dataManager,
                             Log.GESTIONECASSA_SERVER);
-            } else if(tempRecord.user instanceof Amministratore){
+            } else if(tempRecord.user instanceof Admin){
                 
                 // se la password non e' giusta lo dico al client
-                if (!((Amministratore)tempRecord.user).getPassword().equals(password))
+                if (!((Admin)tempRecord.user).getPassword().equals(password))
                     throw new WrongLoginException();
                 
-                tempRecord.idTabella = ((Amministratore)tempRecord.user).getId();
+                tempRecord.idTabella = ((Admin)tempRecord.user).getId();
                 tempRecord.username = new String(username);
 
                 srv = new ServerRMIAmministratoreImpl(tempRecord,dataManager,

@@ -5,7 +5,7 @@
 
 package gestionecassa.server.datamanager;
 
-import gestionecassa.Amministratore;
+import gestionecassa.Admin;
 import gestionecassa.Cassiere;
 import gestionecassa.ListaBeni;
 import gestionecassa.Log;
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -28,7 +29,12 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     /**
      * List of registered users
      */
-    TreeMap<String,Persona> listaUtenti;
+    TreeMap<String,Cassiere> listaCassieri;
+
+    /**
+     * List of registered users
+     */
+    TreeMap<String,Admin> listaAdmins;
 
     /**
      *
@@ -51,8 +57,17 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      * NOTE: it's randozed to avoid the JVM to make optimizations, which could
      * lead the threads to share the same semaphore.
      */
-    static final String listaUtentiSemaphore =
-            new String("UsersSemaphore" + System.currentTimeMillis());
+    static final String listaAdminsSemaphore =
+            new String("AdminsSemaphore" + System.currentTimeMillis());
+
+    /**
+     * Semaphore for the list of users
+     *
+     * NOTE: it's randozed to avoid the JVM to make optimizations, which could
+     * lead the threads to share the same semaphore.
+     */
+    static final String listaCassieriSemaphore =
+            new String("CassieriSemaphore" + System.currentTimeMillis());
 
     /**
      * list of handled good
@@ -70,6 +85,8 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
 
     /**
      * Default constructor
+     *
+     * @param dataBackend 
      */
     public DataManager(BackendAPI_1 dataBackend) {
         this.dataBackend = dataBackend;
@@ -77,12 +94,8 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
 
         tabellaOrdini = new ConcurrentHashMap<String, List<Ordine>>();
 
-        synchronized (listaUtentiSemaphore) {
-            listaUtenti = new TreeMap<String, Persona>();
+        loadListaUtenti();
 
-            //FIXME solo x test
-            listaUtenti.put("bene", new Cassiere(listaUtenti.size(), "bene", "male"));
-        }
         synchronized (listaBeniSemaphore) {
             try {
                 listaBeni = new ListaBeni(dataBackend.loadListaBeni());
@@ -96,13 +109,61 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     }
 
     /**
+     * 
+     */
+    private void loadListaUtenti() {
+        synchronized (listaAdminsSemaphore) {
+            listaAdmins = new TreeMap<String, Admin>();
+            try {
+                List<Admin> listaAdmin = dataBackend.loadListaAdmin();
+                for (Admin amministratore : listaAdmin) {
+                    listaAdmins.put(amministratore.getUsername(), amministratore);
+                }
+            } catch (IOException ex) {
+                logger.warn("reading Admins from file failed, creating a new " +
+                        "blank/default list", ex);
+
+                registraUtente(new Admin(listaAdmins.size(), "admin", "password"));
+            }
+        }
+        synchronized (listaCassieriSemaphore) {
+            listaCassieri = new TreeMap<String, Cassiere>();
+            try {
+                List<Cassiere> listaCassiere = dataBackend.loadListaCassiere();
+                for (Cassiere cassiere : listaCassiere) {
+                    listaCassieri.put(cassiere.getUsername(), cassiere);
+                }
+            } catch (IOException ex) {
+                logger.warn("reading Admins from file failed, creating a new " +
+                        "blank list", ex);
+            }
+        }
+    }
+
+    /**
      *
      * @param user
      * @return
      */
     public void registraUtente(Persona user) {
-        synchronized (listaUtentiSemaphore) {
-            listaUtenti.put(user.getUsername(), user);
+        if (user instanceof Cassiere) {
+            synchronized (listaCassieriSemaphore) {
+                listaCassieri.put(user.getUsername(), (Cassiere)user);
+                try {
+                    dataBackend.saveListaCassiere(listaCassieri.values());
+                } catch (IOException ex) {
+                    logger.error("could not save the new Cassieri list", ex);
+                }
+            }
+        } else if (user instanceof Admin) {
+            synchronized (listaAdminsSemaphore) {
+                listaAdmins.put(user.getUsername(), (Admin)user);
+                try {
+                    dataBackend.saveListaAdmin(listaAdmins.values());
+                } catch (IOException ex) {
+                    logger.error("could not save the new Admins list", ex);
+                }
+            }
         }
     }
 
@@ -115,13 +176,18 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      * @return 
      */
     public Persona verificaUsername(String username) {
-        synchronized (listaUtentiSemaphore) {
-            Persona tempPersona = listaUtenti.get(username);
-            if (tempPersona instanceof Cassiere) {
-                return new Cassiere(tempPersona);
-            } else {
-                return new Amministratore(tempPersona);
+        synchronized (listaCassieriSemaphore) {
+            Cassiere tempCassiere = listaCassieri.get(username);
+            if (tempCassiere != null) {
+                return new Cassiere(tempCassiere);
             }
+        }
+        synchronized (listaAdminsSemaphore) {
+            Admin tempAdmin = listaAdmins.get(username);
+            if (tempAdmin != null) {
+                return new Admin(tempAdmin);
+            }
+            return null;
         }
     }
 

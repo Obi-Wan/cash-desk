@@ -14,10 +14,13 @@
 
 package gestionecassa.server.datamanager;
 
+import gestionecassa.Admin;
 import gestionecassa.BeneVenduto;
+import gestionecassa.Cassiere;
 import gestionecassa.ListaBeni;
 import gestionecassa.ordine.Ordine;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -31,4 +34,12 @@ public interface BackendAPI_1 {
     void saveListaBeni(ListaBeni lista) throws IOException;
 
     List<BeneVenduto> loadListaBeni() throws IOException;
+
+    void saveListaAdmin(Collection<Admin> lista) throws IOException;
+
+    List<Admin> loadListaAdmin() throws IOException;
+
+    void saveListaCassiere(Collection<Cassiere> lista) throws IOException;
+
+    List<Cassiere> loadListaCassiere() throws IOException;
 }
