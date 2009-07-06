@@ -159,7 +159,9 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
 
     public void delLastOrder(String id) {
         List tempOrderList = tabellaOrdini.get(id);
-        tempOrderList.remove(tempOrderList.size() -1);
+        if (tempOrderList.size() >= 0) {
+            tempOrderList.remove(tempOrderList.size() -1);
+        }
     }
 
     public void terminate() {
