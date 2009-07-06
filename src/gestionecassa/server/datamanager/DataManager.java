@@ -6,8 +6,6 @@
 package gestionecassa.server.datamanager;
 
 import gestionecassa.Amministratore;
-import gestionecassa.BeneVenduto;
-import gestionecassa.BeneConOpzione;
 import gestionecassa.Cassiere;
 import gestionecassa.ListaBeni;
 import gestionecassa.Log;
@@ -86,16 +84,14 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
             listaUtenti.put("bene", new Cassiere(listaUtenti.size(), "bene", "male"));
         }
         synchronized (listaBeniSemaphore) {
-            listaBeni = new ListaBeni();
-
-            //FIXME solo per test
-            List<String> listaOpzioni = new ArrayList();
-            listaOpzioni.add("cacca secca");
-            listaOpzioni.add("cacca liquida");
-            listaBeni.lista.add(new BeneVenduto("fagiolo", 25));
-            listaBeni.lista.add(new BeneVenduto("ameba", 35));
-            listaBeni.lista.add(new BeneVenduto("merda dello stige", 5.5));
-            listaBeni.lista.add(new BeneConOpzione("panino alla", 10.25, listaOpzioni));
+            try {
+                listaBeni = new ListaBeni(dataBackend.loadListaBeni());
+            } catch (IOException ex) {
+                logger.warn("ListaBeni could not be loaded, starting up a" +
+                        " new clean list.", ex);
+                
+                listaBeni = new ListaBeni();
+            }
         }
     }
 
@@ -164,5 +160,23 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     public void delLastOrder(String id) {
         List tempOrderList = tabellaOrdini.get(id);
         tempOrderList.remove(tempOrderList.size() -1);
+    }
+
+    public void terminate() {
+    }
+
+    //----------------------------//
+    // Amministrazione Client handle.
+    //----------------------------//
+
+    public void saveNewListaBeni(ListaBeni lista) {
+        synchronized (listaBeniSemaphore) {
+            listaBeni = new ListaBeni(lista.lista);
+            try {
+                dataBackend.saveListaBeni(listaBeni);
+            } catch (IOException ex) {
+                logger.error("could not save lista beni", ex);
+            }
+        }
     }
 }

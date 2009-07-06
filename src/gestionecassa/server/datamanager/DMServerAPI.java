@@ -39,4 +39,9 @@ public interface DMServerAPI {
      */
     Persona verificaUsername(String username);
 
+    /**
+     * Executes the last tasks before quitting (like flushing ad Co.)
+     */
+    void terminate();
+
 }
