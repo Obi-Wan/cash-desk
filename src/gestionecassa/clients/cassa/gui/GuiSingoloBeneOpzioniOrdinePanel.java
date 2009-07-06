@@ -21,7 +21,6 @@
 package gestionecassa.clients.cassa.gui;
 
 import gestionecassa.BeneConOpzione;
-import gestionecassa.ordine.Ordine;
 import gestionecassa.ordine.recordSingolaOpzione;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,10 +37,13 @@ public class GuiSingoloBeneOpzioniOrdinePanel extends GuiAbstrSingoloBenePanel {
 
     List<GuiSingolaOpzionePanel> pannelliopzioni;
 
+    GuiNuovoOrdinePanel parent;
+
     /** Creates new form GuiSingoloBeneOpzioniOrdinePanel */
-    public GuiSingoloBeneOpzioniOrdinePanel(BeneConOpzione bene) {
+    public GuiSingoloBeneOpzioniOrdinePanel(GuiNuovoOrdinePanel parent, BeneConOpzione bene) {
         initComponents();
 
+        this.parent = parent;
         this.bene = bene;
         this.jLabelNome.setText(bene.getNome());
         this.jLabelPrezzo.setText("€ " + bene.getPrezzo());
@@ -163,6 +165,7 @@ public class GuiSingoloBeneOpzioniOrdinePanel extends GuiAbstrSingoloBenePanel {
     void removeOpzionePanel(GuiSingolaOpzionePanel panel) {
         pannelliopzioni.remove(panel);
         rebuildListaOpzioni();
+        triggerUpdateCurrentOrder();
     }
 
     /**
@@ -239,5 +242,12 @@ public class GuiSingoloBeneOpzioniOrdinePanel extends GuiAbstrSingoloBenePanel {
             tot += singolaOpzionePanel.getNumParziale();
         }
         return tot;
+    }
+
+    /**
+     * 
+     */
+    void triggerUpdateCurrentOrder() {
+        parent.updateCurrentOrder();
     }
 }

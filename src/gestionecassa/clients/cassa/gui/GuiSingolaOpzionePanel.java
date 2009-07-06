@@ -22,7 +22,6 @@ package gestionecassa.clients.cassa.gui;
 
 import java.text.ParseException;
 import java.util.List;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.SpinnerNumberModel;
 
@@ -155,6 +154,7 @@ public class GuiSingolaOpzionePanel extends javax.swing.JPanel {
         if (previous != null) {
             jSpinnerNum.setValue(previous);
         }
+        parent.triggerUpdateCurrentOrder();
 }//GEN-LAST:event_jButtonLessActionPerformed
 
     /**
@@ -166,6 +166,7 @@ public class GuiSingolaOpzionePanel extends javax.swing.JPanel {
         if (next != null) {
             jSpinnerNum.setValue(next);
         }
+        parent.triggerUpdateCurrentOrder();
 }//GEN-LAST:event_jButtonMoreActionPerformed
 
     /**

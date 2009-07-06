@@ -156,7 +156,8 @@ public class Cassa extends Luogo implements CassaAPI {
         super.setupAfterLogin(username);
 
         ((GuiAppFrameCassa)appFrame).enableListaBeni(true);
-        appFrame.setContentPanel(new GuiNuovoOrdinePanel(this));
+        appFrame.setContentPanel(new GuiNuovoOrdinePanel(this,(GuiAppFrameCassa)appFrame));
+        ((GuiAppFrameCassa)appFrame).updateUsernameStatus(username);
     }
 
     /**
@@ -203,9 +204,14 @@ public class Cassa extends Luogo implements CassaAPI {
         }
     }
 
+    /**
+     * 
+     * @throws RemoteException
+     */
     @Override
     public void logout() throws RemoteException {
         ((GuiAppFrameCassa)appFrame).enableListaBeni(false);
+        ((GuiAppFrameCassa)appFrame).resetStatus();
         listaBeni = null;
         super.logout();
     }

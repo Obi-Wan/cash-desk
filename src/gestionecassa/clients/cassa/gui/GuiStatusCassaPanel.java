@@ -20,6 +20,10 @@
 
 package gestionecassa.clients.cassa.gui;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  *
  * @author ben
@@ -27,8 +31,9 @@ package gestionecassa.clients.cassa.gui;
 public class GuiStatusCassaPanel extends javax.swing.JPanel {
 
     /** Creates new form GuiStatusCassaPanel */
-    public GuiStatusCassaPanel() {
+    public GuiStatusCassaPanel(String hostname) {
         initComponents();
+        jTextFieldHostname.setText(new String(hostname));
     }
 
     /** This method is called from within the constructor to
@@ -40,20 +45,233 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
 
+    jPanelMachineStatus = new javax.swing.JPanel();
+    jLabelHostname = new javax.swing.JLabel();
+    jTextFieldHostname = new javax.swing.JTextField();
+    jLabelUser = new javax.swing.JLabel();
+    jTextFieldUser = new javax.swing.JTextField();
+    jLabelLogged = new javax.swing.JLabel();
+    jTextFieldLogged = new javax.swing.JTextField();
+    jPanelLastOrder = new javax.swing.JPanel();
+    jLabelTime = new javax.swing.JLabel();
+    jTextFieldTime = new javax.swing.JTextField();
+    jLabelPrize = new javax.swing.JLabel();
+    jTextFieldPrize = new javax.swing.JTextField();
+    jPanelCurrentOrder = new javax.swing.JPanel();
+    jLabelPrizeCurrent = new javax.swing.JLabel();
+    jTextFieldPrizeCurrent = new javax.swing.JTextField();
+
+    jPanelMachineStatus.setBorder(javax.swing.BorderFactory.createTitledBorder("Client Status"));
+
+    jLabelHostname.setText("Hostname");
+
+    jTextFieldHostname.setEditable(false);
+    jTextFieldHostname.setOpaque(false);
+
+    jLabelUser.setText("Username");
+
+    jTextFieldUser.setEditable(false);
+    jTextFieldUser.setOpaque(false);
+
+    jLabelLogged.setText("Logged");
+
+    jTextFieldLogged.setEditable(false);
+    jTextFieldLogged.setOpaque(false);
+
+    javax.swing.GroupLayout jPanelMachineStatusLayout = new javax.swing.GroupLayout(jPanelMachineStatus);
+    jPanelMachineStatus.setLayout(jPanelMachineStatusLayout);
+    jPanelMachineStatusLayout.setHorizontalGroup(
+      jPanelMachineStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanelMachineStatusLayout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanelMachineStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(jPanelMachineStatusLayout.createSequentialGroup()
+            .addComponent(jLabelHostname)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(jTextFieldHostname, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE))
+          .addGroup(jPanelMachineStatusLayout.createSequentialGroup()
+            .addComponent(jLabelUser)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(jTextFieldUser, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE))
+          .addGroup(jPanelMachineStatusLayout.createSequentialGroup()
+            .addComponent(jLabelLogged)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(jTextFieldLogged, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)))
+        .addContainerGap())
+    );
+    jPanelMachineStatusLayout.setVerticalGroup(
+      jPanelMachineStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanelMachineStatusLayout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanelMachineStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabelHostname)
+          .addComponent(jTextFieldHostname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(jPanelMachineStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabelUser)
+          .addComponent(jTextFieldUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(jPanelMachineStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabelLogged)
+          .addComponent(jTextFieldLogged, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+    );
+
+    jPanelLastOrder.setBorder(javax.swing.BorderFactory.createTitledBorder("Last Order"));
+
+    jLabelTime.setText("Time");
+
+    jTextFieldTime.setEditable(false);
+
+    jLabelPrize.setText("Prize");
+
+    jTextFieldPrize.setEditable(false);
+
+    javax.swing.GroupLayout jPanelLastOrderLayout = new javax.swing.GroupLayout(jPanelLastOrder);
+    jPanelLastOrder.setLayout(jPanelLastOrderLayout);
+    jPanelLastOrderLayout.setHorizontalGroup(
+      jPanelLastOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanelLastOrderLayout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanelLastOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(jPanelLastOrderLayout.createSequentialGroup()
+            .addComponent(jLabelTime)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(jTextFieldTime, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE))
+          .addGroup(jPanelLastOrderLayout.createSequentialGroup()
+            .addComponent(jLabelPrize)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(jTextFieldPrize, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)))
+        .addContainerGap())
+    );
+    jPanelLastOrderLayout.setVerticalGroup(
+      jPanelLastOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanelLastOrderLayout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanelLastOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabelTime)
+          .addComponent(jTextFieldTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(jPanelLastOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabelPrize)
+          .addComponent(jTextFieldPrize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+    );
+
+    jPanelCurrentOrder.setBorder(javax.swing.BorderFactory.createTitledBorder("Current Order"));
+
+    jLabelPrizeCurrent.setText("Prize");
+
+    jTextFieldPrizeCurrent.setEditable(false);
+
+    javax.swing.GroupLayout jPanelCurrentOrderLayout = new javax.swing.GroupLayout(jPanelCurrentOrder);
+    jPanelCurrentOrder.setLayout(jPanelCurrentOrderLayout);
+    jPanelCurrentOrderLayout.setHorizontalGroup(
+      jPanelCurrentOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanelCurrentOrderLayout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(jLabelPrizeCurrent)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(jTextFieldPrizeCurrent, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+        .addContainerGap())
+    );
+    jPanelCurrentOrderLayout.setVerticalGroup(
+      jPanelCurrentOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanelCurrentOrderLayout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanelCurrentOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabelPrizeCurrent)
+          .addComponent(jTextFieldPrizeCurrent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+    );
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
     this.setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 230, Short.MAX_VALUE)
+      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+          .addComponent(jPanelCurrentOrder, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(jPanelLastOrder, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(jPanelMachineStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addContainerGap())
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 454, Short.MAX_VALUE)
+      .addGroup(layout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(jPanelMachineStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jPanelLastOrder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jPanelCurrentOrder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap(160, Short.MAX_VALUE))
     );
   }// </editor-fold>//GEN-END:initComponents
 
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JLabel jLabelHostname;
+  private javax.swing.JLabel jLabelLogged;
+  private javax.swing.JLabel jLabelPrize;
+  private javax.swing.JLabel jLabelPrizeCurrent;
+  private javax.swing.JLabel jLabelTime;
+  private javax.swing.JLabel jLabelUser;
+  private javax.swing.JPanel jPanelCurrentOrder;
+  private javax.swing.JPanel jPanelLastOrder;
+  private javax.swing.JPanel jPanelMachineStatus;
+  private javax.swing.JTextField jTextFieldHostname;
+  private javax.swing.JTextField jTextFieldLogged;
+  private javax.swing.JTextField jTextFieldPrize;
+  private javax.swing.JTextField jTextFieldPrizeCurrent;
+  private javax.swing.JTextField jTextFieldTime;
+  private javax.swing.JTextField jTextFieldUser;
   // End of variables declaration//GEN-END:variables
 
+    /**
+     *
+     * @param name
+     */
+    void setLogin( String name ) {
+        final String timestamp = new SimpleDateFormat(
+                "HH:mm:ss dd/MM/yy", Locale.ITALIAN).format(new Date());
+        jTextFieldUser.setText(new String(name));
+        jTextFieldLogged.setText(timestamp);
+    }
+
+    /**
+     * 
+     */
+    void reset() {
+        jTextFieldLogged.setText("");
+        jTextFieldUser.setText("");
+        jTextFieldPrizeCurrent.setText("");
+        jTextFieldTime.setText("");
+        jTextFieldPrize.setText("");
+    }
+
+    void cleanLastOrder() {
+        jTextFieldPrize.setText(jTextFieldPrize.getText() + " (Annullato)");
+    }
+
+    /**
+     *
+     * @param prize
+     */
+    void setCurrentOrder(double prize) {
+        jTextFieldPrizeCurrent.setText(new Double(prize).toString());
+    }
+
+    /**
+     * 
+     * @param time
+     * @param prize
+     */
+    void setLastOrder(double prize) {
+        jTextFieldPrize.setText(new Double(prize).toString());
+        final String timestamp = new SimpleDateFormat(
+                "HH:mm:ss", Locale.ITALIAN).format(new Date());
+        jTextFieldTime.setText(timestamp);
+    }
 }

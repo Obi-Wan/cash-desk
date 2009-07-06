@@ -34,14 +34,17 @@ public class GuiSingoloBeneOrdinePanel extends GuiAbstrSingoloBenePanel {
 
     SpinnerNumberModel spinnerModel;
 
+    GuiNuovoOrdinePanel parent;
+
     /**
      * Creates new form GuiSingoloBeneOrdinePanel
      *
      * @param nome
      */
-    public GuiSingoloBeneOrdinePanel(BeneVenduto bene) {
+    public GuiSingoloBeneOrdinePanel(GuiNuovoOrdinePanel parent, BeneVenduto bene) {
         initComponents();
         this.bene = bene;
+        this.parent = parent;
 
         spinnerModel = new SpinnerNumberModel(0, 0, 255, 1);
         jSpinnerNum.setModel(spinnerModel);
@@ -136,6 +139,7 @@ public class GuiSingoloBeneOrdinePanel extends GuiAbstrSingoloBenePanel {
         if (next != null) {
             jSpinnerNum.setValue(next);
         }
+        parent.updateCurrentOrder();
 }//GEN-LAST:event_jButtonMoreActionPerformed
 
     /**
@@ -147,6 +151,7 @@ public class GuiSingoloBeneOrdinePanel extends GuiAbstrSingoloBenePanel {
         if (previous != null) {
             jSpinnerNum.setValue(previous);
         }
+        parent.updateCurrentOrder();
     }//GEN-LAST:event_jButtonLessActionPerformed
 
 

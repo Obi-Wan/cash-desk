@@ -25,6 +25,7 @@ import gestionecassa.BeneConOpzione;
 import gestionecassa.BeneVenduto;
 import gestionecassa.ListaBeni;
 import gestionecassa.ordine.Ordine;
+import gestionecassa.ordine.recordSingoloBene;
 import java.awt.Dimension;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -43,6 +44,8 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
      */
     CassaAPI owner;
 
+    GuiAppFrameCassa parent;
+
     /**
      * Local Reference to the goods list.
      */
@@ -58,9 +61,10 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
      *
      * @param owner
      */
-    public GuiNuovoOrdinePanel(CassaAPI owner) {
+    public GuiNuovoOrdinePanel(CassaAPI owner, GuiAppFrameCassa parent) {
         initComponents();
         this.owner = owner;
+        this.parent = parent;
 
         getListaBeni();
         buildContentsList();
@@ -207,16 +211,7 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonPulisciActionPerformed
 
     private void jButtonConfermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfermaActionPerformed
-        try {
-            owner.sendNuovoOrdine(creaNuovoOrdine());
-            this.pulisci();
-        } catch (RemoteException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                "Il server non ha risposto alla richiesta dell'invio del " +
-                "nuovo ordine",
-                "Errore di comunicazione",
-                javax.swing.JOptionPane.ERROR_MESSAGE);
-        }
+        confermaNuovoOrdine();
     }//GEN-LAST:event_jButtonConfermaActionPerformed
 
     private void jButtonAnnullaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAnnullaActionPerformed
@@ -242,9 +237,9 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
         for (BeneVenduto bene : listaBeni.lista) {
             GuiAbstrSingoloBenePanel tempPanel;
             if (bene instanceof BeneConOpzione) {
-                tempPanel = new GuiSingoloBeneOpzioniOrdinePanel((BeneConOpzione)bene);
+                tempPanel = new GuiSingoloBeneOpzioniOrdinePanel(this,(BeneConOpzione)bene);
             } else {
-                tempPanel = new GuiSingoloBeneOrdinePanel(bene);
+                tempPanel = new GuiSingoloBeneOrdinePanel(this,bene);
             }
             tabellaBeni.add(new recordListaBeni(bene, tempPanel));
         }
@@ -331,12 +326,31 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
     }
 
     /**
+     *
+     */
+    private void confermaNuovoOrdine() {
+        try {
+            Ordine nuovoOrdine = creaNuovoOrdine();
+            owner.sendNuovoOrdine(nuovoOrdine);
+            parent.updateNewOrder(computeOrderPrize(nuovoOrdine));
+            this.pulisci();
+        } catch (RemoteException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Il server non ha risposto alla richiesta dell'invio del " +
+                "nuovo ordine",
+                "Errore di comunicazione",
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
      * 
      */
     private void pulisci() {
         for (recordListaBeni singoloRecord : tabellaBeni) {
             singoloRecord.pannello.clean();
         }
+        parent.updateCurrentOrder(0);
     }
 
     /**
@@ -395,6 +409,42 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
     }
 
     /**
+     *
+     * @return
+     */
+    private double computeCurrentOrder() {
+        double output = 0;
+        for (recordListaBeni singoloRecord : tabellaBeni) {
+            if (singoloRecord.pannello.getNumTot() != 0) {
+                output += singoloRecord.pannello.getNumTot() *
+                        singoloRecord.bene.getPrezzo();
+            }
+        }
+        return output;
+    }
+
+    /**
+     * 
+     */
+    void updateCurrentOrder() {
+        parent.updateCurrentOrder(computeCurrentOrder());
+    }
+
+    /**
+     *
+     * @param ordine
+     * @return
+     */
+    private double computeOrderPrize(Ordine ordine) {
+        List<recordSingoloBene> lista = ordine.getListaBeni();
+        double output = 0;
+        for (recordSingoloBene singoloBene : lista) {
+            output += singoloBene.numTot * singoloBene.bene.getPrezzo();
+        }
+        return output;
+    }
+
+    /**
      * Questo metodo si occupa di gestire l'annullamento dell'ultimo ordine
      * emesso, questo è abbastanza critico e da trattare con cautela.
      */
@@ -417,5 +467,6 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
                     javax.swing.JOptionPane.ERROR_MESSAGE);
             }
         }
+        parent.cleanLastOrder();
     }
 }

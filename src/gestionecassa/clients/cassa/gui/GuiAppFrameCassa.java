@@ -59,7 +59,7 @@ public class GuiAppFrameCassa extends GuiAppFrame {
 
         jScrollPanelMain = new javax.swing.JScrollPane();
 
-        statusPanel = new GuiStatusCassaPanel();
+        statusPanel = new GuiStatusCassaPanel(owner.getHostname());
 
         if (!(getContentPane().getLayout() instanceof BorderLayout)) {
             getContentPane().setLayout(new BorderLayout());
@@ -139,5 +139,43 @@ public class GuiAppFrameCassa extends GuiAppFrame {
      */
     void selectedDialogOptions() {
         new GuiOptionsDialog(this, true, owner).setVisible(true);
+    }
+
+    /**
+     *
+     * @param username
+     */
+    public void updateUsernameStatus(String username) {
+        statusPanel.setLogin(username);
+    }
+
+    /**
+     * 
+     */
+    public void resetStatus() {
+        statusPanel.reset();
+    }
+
+    /**
+     *
+     * @param prize
+     */
+    void updateCurrentOrder(double prize) {
+        statusPanel.setCurrentOrder(prize);
+    }
+
+    /**
+     *
+     * @param prize
+     */
+    void updateNewOrder(double prize) {
+        statusPanel.setLastOrder(prize);
+    }
+
+    /**
+     * 
+     */
+    void cleanLastOrder() {
+        statusPanel.cleanLastOrder();
     }
 }
