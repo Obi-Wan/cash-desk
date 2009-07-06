@@ -5,6 +5,7 @@
 
 package gestionecassa.clients.amministrazione;
 
+import gestionecassa.clients.amministrazione.gui.GuiAppFrameAmministrazione;
 import gestionecassa.Log;
 import gestionecassa.Persona;
 import gestionecassa.clients.Luogo;

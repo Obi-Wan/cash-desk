@@ -24,6 +24,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.rmi.RemoteException;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 /**
  *
@@ -35,6 +36,11 @@ abstract public class GuiAppFrame extends javax.swing.JFrame {
      * The owner of this frame.
      */
     protected ClientAPI owner;
+
+    /**
+     * 
+     */
+    protected JScrollPane jScrollPanelMain;
     
     /**
      * Creates new form GuiAppFrame
@@ -46,16 +52,6 @@ abstract public class GuiAppFrame extends javax.swing.JFrame {
         this.owner = owner;
         
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension frameSize = this.getSize();
-        if (frameSize.height > screenSize.height) {
-            frameSize.height = screenSize.height;
-        }
-        if (frameSize.width > screenSize.width) {
-            frameSize.width = screenSize.width;
-        }
-        this.setLocation((screenSize.width - frameSize.width) / 2,
-                (screenSize.height - frameSize.height) / 2);
     }
 
     /** This method is called from within the constructor to
@@ -99,16 +95,45 @@ abstract public class GuiAppFrame extends javax.swing.JFrame {
     }
 
     /**
+     * 
+     */
+    protected void packAndCenter() {
+        this.pack();
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension frameSize = this.getSize();
+        if (frameSize.height > screenSize.height) {
+            frameSize.height = screenSize.height;
+        }
+        if (frameSize.width > screenSize.width) {
+            frameSize.width = screenSize.width;
+        }
+        this.setSize(frameSize);
+        this.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
+    }
+
+    /**
      * Sets the new panel into the work area
      *
      * @param content
      */
-    abstract public void setContentPanel(JPanel content);
+    public void setContentPanel(JPanel content) {
+        jScrollPanelMain.setViewportView(content);
+
+        Dimension tempDim = content.getPreferredSize();
+        tempDim.height = tempDim.height + 10;
+        tempDim.width = tempDim.width + 10;
+
+        jScrollPanelMain.setPreferredSize(tempDim);
+
+        packAndCenter();
+    }
 
     /**
      * cleans the work area.
      */
-    abstract public void cleanContentPanel();
+    public void cleanContentPanel() {
+        jScrollPanelMain.setViewportView(new JPanel());
+    }
 
     /**
      * Enables or disables logout button.

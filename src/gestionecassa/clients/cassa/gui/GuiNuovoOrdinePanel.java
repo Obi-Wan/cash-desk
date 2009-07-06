@@ -25,6 +25,7 @@ import gestionecassa.BeneConOpzione;
 import gestionecassa.BeneVenduto;
 import gestionecassa.ListaBeni;
 import gestionecassa.ordine.Ordine;
+import java.awt.Dimension;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +65,8 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
         getListaBeni();
         buildContentsList();
         buildVisualList();
+
+        this.setPreferredSize(new Dimension(800, 450));
     }
 
     /** This method is called from within the constructor to
@@ -82,6 +85,8 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
     jPanelBottoni2 = new javax.swing.JPanel();
     jButtonAnnulla = new javax.swing.JButton();
     jButtonAggiorna = new javax.swing.JButton();
+
+    setMinimumSize(new java.awt.Dimension(150, 150));
 
     javax.swing.GroupLayout jPanelListaBeniLayout = new javax.swing.GroupLayout(jPanelListaBeni);
     jPanelListaBeni.setLayout(jPanelListaBeniLayout);

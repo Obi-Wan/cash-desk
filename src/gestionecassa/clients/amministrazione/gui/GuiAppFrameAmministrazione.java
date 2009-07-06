@@ -1,5 +1,5 @@
 /*
- * GuiAppFrameCassa.java
+ * GuiAppFrameAmministrazione.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,64 +13,57 @@
  */
 
 /*
- * GuiAppFrameCassa.java
+ * GuiAppFrameAmministrazione.java
  *
- * Created on 21-mag-2009, 19.54.50
+ * Created on 21-mag-2009, 19.59.58
  */
 
-package gestionecassa.clients.cassa.gui;
+package gestionecassa.clients.amministrazione.gui;
 
 import gestionecassa.clients.ClientAPI;
 import gestionecassa.clients.GuiAppFrame;
-import gestionecassa.clients.GuiOptionsDialog;
 import java.awt.BorderLayout;
 
 /**
  *
  * @author ben
  */
-public class GuiAppFrameCassa extends GuiAppFrame {
-
-    /**
-     *
-     */
-    GuiDialogListaBeni dialogListaBeni;
-
-    /**
-     *
-     */
-    GuiToolbarCassaPanel toolbar;
+public class GuiAppFrameAmministrazione extends GuiAppFrame {
 
     /**
      * 
      */
-    GuiStatusCassaPanel statusPanel;
+    GuiToolbarAmministrazionePanel toolbar;
 
     /**
-     * Creates new form GuiAppFrameCassa
-     *
-     * @param owner
+     * 
      */
-    public GuiAppFrameCassa(ClientAPI owner) {
+    GuiStatusAmministrazionePanel statusPanel;
+
+    /**
+     * Creates new form GuiAppFrameAmministrazione
+     * 
+     * @param owner 
+     */
+    public GuiAppFrameAmministrazione(ClientAPI owner) {
         super(owner);
         initComponents();
 
-        toolbar = new GuiToolbarCassaPanel(this);
+        toolbar = new GuiToolbarAmministrazionePanel(this);
 
         jScrollPanelMain = new javax.swing.JScrollPane();
 
-        statusPanel = new GuiStatusCassaPanel();
+        statusPanel = new GuiStatusAmministrazionePanel();
 
         if (!(getContentPane().getLayout() instanceof BorderLayout)) {
             getContentPane().setLayout(new BorderLayout());
         }
-        
+
         getContentPane().add(toolbar, java.awt.BorderLayout.PAGE_START);
         getContentPane().add(jScrollPanelMain, java.awt.BorderLayout.CENTER);
         getContentPane().add(statusPanel, java.awt.BorderLayout.LINE_END);
 
         enableLogout(false);
-        enableListaBeni(false);
 
         packAndCenter();
     }
@@ -92,7 +85,6 @@ public class GuiAppFrameCassa extends GuiAppFrame {
   // Variables declaration - do not modify//GEN-BEGIN:variables
   // End of variables declaration//GEN-END:variables
 
-
     /**
      * Enables or disables logout button.
      *
@@ -100,44 +92,5 @@ public class GuiAppFrameCassa extends GuiAppFrame {
      */
     public void enableLogout(boolean value) {
         toolbar.enableLogout(value);
-    }
-
-    /**
-     *
-     */
-    public void cleanDialogListaBeni() {
-        dialogListaBeni = null;
-    }
-
-    /**
-     *
-     * @param value
-     */
-    public void enableListaBeni(boolean value) {
-        toolbar.enableListaBeni(value);
-        if (!value) {
-            this.dialogListaBeni = null;
-        }
-    }
-
-    /**
-     *
-     */
-    void selectedDialogListaBeni() {
-        if (dialogListaBeni == null) {
-            dialogListaBeni = new GuiDialogListaBeni(this, false);
-            dialogListaBeni.setListaBeni(owner.getListaBeni());
-            dialogListaBeni.setVisible(true);
-        } else {
-            dialogListaBeni.setVisible(true);
-            dialogListaBeni.requestFocus();
-        }
-    }
-
-    /**
-     * 
-     */
-    void selectedDialogOptions() {
-        new GuiOptionsDialog(this, true, owner).setVisible(true);
     }
 }

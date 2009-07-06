@@ -1,5 +1,5 @@
 /*
- * GuiAppFrameAmministrazione.java
+ * GuiToolbarCassaPanel.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,27 +13,25 @@
  */
 
 /*
- * GuiAppFrameAmministrazione.java
+ * GuiToolbarCassaPanel.java
  *
- * Created on 21-mag-2009, 19.59.58
+ * Created on 6-lug-2009, 15.46.33
  */
 
-package gestionecassa.clients.amministrazione;
-
-import gestionecassa.clients.ClientAPI;
-import gestionecassa.clients.GuiAppFrame;
-import javax.swing.JPanel;
+package gestionecassa.clients.cassa.gui;
 
 /**
  *
  * @author ben
  */
-public class GuiAppFrameAmministrazione extends GuiAppFrame {
+public class GuiToolbarCassaPanel extends javax.swing.JPanel {
 
-    /** Creates new form GuiAppFrameAmministrazione */
-    public GuiAppFrameAmministrazione(ClientAPI owner) {
-        super(owner);
+    GuiAppFrameCassa owner;
+
+    /** Creates new form GuiToolbarCassaPanel */
+    public GuiToolbarCassaPanel(GuiAppFrameCassa owner) {
         initComponents();
+        this.owner = owner;
     }
 
     /** This method is called from within the constructor to
@@ -48,10 +46,9 @@ public class GuiAppFrameAmministrazione extends GuiAppFrame {
     jToolBarMain = new javax.swing.JToolBar();
     jButtonLogout = new javax.swing.JButton();
     jSeparator1 = new javax.swing.JToolBar.Separator();
+    jButtonList = new javax.swing.JButton();
+    jSeparator2 = new javax.swing.JToolBar.Separator();
     jButtonOptions = new javax.swing.JButton();
-    jScrollPanelMain = new javax.swing.JScrollPane();
-
-    setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
     jToolBarMain.setFloatable(false);
     jToolBarMain.setRollover(true);
@@ -68,6 +65,18 @@ public class GuiAppFrameAmministrazione extends GuiAppFrame {
     jToolBarMain.add(jButtonLogout);
     jToolBarMain.add(jSeparator1);
 
+    jButtonList.setText("Lista beni venduti");
+    jButtonList.setFocusable(false);
+    jButtonList.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+    jButtonList.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+    jButtonList.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonListActionPerformed(evt);
+      }
+    });
+    jToolBarMain.add(jButtonList);
+    jToolBarMain.add(jSeparator2);
+
     jButtonOptions.setText("Opzioni");
     jButtonOptions.setFocusable(false);
     jButtonOptions.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -79,40 +88,45 @@ public class GuiAppFrameAmministrazione extends GuiAppFrame {
     });
     jToolBarMain.add(jButtonOptions);
 
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-    getContentPane().setLayout(layout);
+    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+    this.setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(jToolBarMain, javax.swing.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE)
-      .addComponent(jScrollPanelMain, javax.swing.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE)
+      .addComponent(jToolBarMain, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addComponent(jToolBarMain, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jScrollPanelMain, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE))
+      .addComponent(jToolBarMain, javax.swing.GroupLayout.PREFERRED_SIZE, 25, Short.MAX_VALUE)
     );
-
-    pack();
   }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLogoutActionPerformed
-        logout();
+        owner.logout();
 }//GEN-LAST:event_jButtonLogoutActionPerformed
 
+    private void jButtonListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonListActionPerformed
+        owner.selectedDialogListaBeni();
+}//GEN-LAST:event_jButtonListActionPerformed
+
     private void jButtonOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionsActionPerformed
-        // TODO add your handling code here:
+        owner.selectedDialogOptions();
 }//GEN-LAST:event_jButtonOptionsActionPerformed
 
+
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  protected javax.swing.JButton jButtonList;
   protected javax.swing.JButton jButtonLogout;
   protected javax.swing.JButton jButtonOptions;
-  protected javax.swing.JScrollPane jScrollPanelMain;
   protected javax.swing.JToolBar.Separator jSeparator1;
+  protected javax.swing.JToolBar.Separator jSeparator2;
   protected javax.swing.JToolBar jToolBarMain;
   // End of variables declaration//GEN-END:variables
 
+
+    public void enableListaBeni(boolean value) {
+        jButtonList.setEnabled(value);
+    }
+    
     /**
      * Enables or disables logout button.
      *
@@ -120,22 +134,5 @@ public class GuiAppFrameAmministrazione extends GuiAppFrame {
      */
     public void enableLogout(boolean value) {
         jButtonLogout.setEnabled(value);
-    }
-
-    /**
-     * Sets the new panel into the work area
-     *
-     * @param content
-     */
-    public void setContentPanel(JPanel content) {
-        jScrollPanelMain.setViewportView(content);
-        this.pack();
-    }
-
-    /**
-     * cleans the work area.
-     */
-    public void cleanContentPanel() {
-        jScrollPanelMain.setViewportView(new JPanel());
     }
 }
