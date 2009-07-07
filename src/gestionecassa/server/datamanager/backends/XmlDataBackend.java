@@ -79,6 +79,7 @@ public class XmlDataBackend implements BackendAPI_1 {
         for (Ordine ordine : lista) {
             Element temp = root.addElement("ordine");
             temp.addElement("data").addText(ordine.getData().toString());
+            temp.addElement("prezzo_totale").addText(ordine.getTotalPrize()+"");
             List<recordSingoloBene> listaBeni = ordine.getListaBeni();
 
             for (recordSingoloBene singoloBene : listaBeni) {
@@ -91,14 +92,22 @@ public class XmlDataBackend implements BackendAPI_1 {
                 if (singoloBene.bene.hasOptions()) {
                     tempBene.addAttribute("opzioni", "true");
                     Element tempOpzioni = tempBene.addElement("opzioni");
+                    int progressivo =
+                            ((recordSingoloBeneConOpzione)singoloBene).startProgressivo;
                     List<recordSingolaOpzione> listaOpzioni =
                             ((recordSingoloBeneConOpzione)singoloBene).numParziale;
 
                     for (recordSingolaOpzione singolaOpzione : listaOpzioni) {
+
+                        String stringaProgressivi = new String((progressivo++) + "");
+                        for (int i = 1; i < singolaOpzione.numParz; i++) {
+                            stringaProgressivi += ", " + progressivo++;
+                        }
                         Element tempOpzione = tempOpzioni.addElement("opzione");
                         tempOpzione.addElement("nome").addText(singolaOpzione.nomeOpz);
                         tempOpzione.addElement("numero").addText(
                                 ""+singolaOpzione.numParz);
+                        tempOpzione.addElement("n_progressivi").addText(stringaProgressivi);
                     }
                 } else {
                     tempBene.addAttribute("opzioni", "false");

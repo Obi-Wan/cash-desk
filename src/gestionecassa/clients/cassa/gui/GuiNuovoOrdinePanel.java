@@ -386,25 +386,33 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
      * Creates a new order
      *
      * @return the creted order
+     * 
+     * @throws RemoteException
      */
-    private Ordine creaNuovoOrdine() {
+    private Ordine creaNuovoOrdine() throws RemoteException {
+        int tempNumTot = 0;
         Ordine tempOrd = new Ordine(owner.getUsername(), owner.getHostname());
+
         for (recordListaBeni singoloRecord : tabellaBeni) {
-            if (singoloRecord.bene.hasOptions()) {
-                if (singoloRecord.pannello.getNumTot() != 0) {
+            tempNumTot = singoloRecord.pannello.getNumTot();
+
+            if (singoloRecord.pannello.getNumTot() != 0) {
+
+                if (singoloRecord.bene.hasOptions()) {
+
+                    int progressive = owner.getNProgressivo(
+                            singoloRecord.bene.getNome(), tempNumTot);
                     tempOrd.addBeneConOpzione(
-                        (BeneConOpzione)singoloRecord.bene,
-                        singoloRecord.pannello.getNumTot(),
-                        ((GuiSingoloBeneOpzioniOrdinePanel)
-                            (singoloRecord.pannello)).getListaParziali());
-                }
-            } else {
-                if (singoloRecord.pannello.getNumTot() != 0) {
-                    tempOrd.addBeneVenduto(singoloRecord.bene,
-                        singoloRecord.pannello.getNumTot());
+                            (BeneConOpzione)singoloRecord.bene,
+                            tempNumTot, progressive,
+                            ((GuiSingoloBeneOpzioniOrdinePanel)
+                                (singoloRecord.pannello)).getListaParziali());
+                } else {
+                    tempOrd.addBeneVenduto(singoloRecord.bene,tempNumTot);
                 }
             }
         }
+        tempOrd.setTotalPrize(computeOrderPrize(tempOrd));
         return tempOrd;
     }
 

@@ -83,4 +83,14 @@ public class ServerRMICassiereImpl extends SharedServerService
     public ListaBeni requestListaBeni() throws RemoteException {
         return dataManager.getCurrentListaBeni();
     }
+
+    /**
+     * 
+     * @param nomeBene
+     * @return
+     * @throws RemoteException
+     */
+    public int getNProgressivo(String nomeBene, int n) throws RemoteException {
+        return dataManager.getNProgressivo(nomeBene,n);
+    }
 }

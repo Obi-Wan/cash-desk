@@ -6,6 +6,8 @@
 package gestionecassa.server.datamanager;
 
 import gestionecassa.Admin;
+import gestionecassa.BeneConPreparazione;
+import gestionecassa.BeneVenduto;
 import gestionecassa.Cassiere;
 import gestionecassa.ListaBeni;
 import gestionecassa.Log;
@@ -16,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -25,6 +26,16 @@ import org.apache.log4j.Logger;
  */
 public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
         DMAmministrazioneAPI {
+
+    /**
+     * 
+     */
+    Logger logger;
+
+    /**
+     * The data store backend
+     */
+    BackendAPI_1 dataBackend;
 
     /**
      * List of registered users
@@ -42,14 +53,17 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     ConcurrentHashMap<String, List<Ordine> > tabellaOrdini;
 
     /**
-     * The data store backend
+     * list of handled good
      */
-    BackendAPI_1 dataBackend;
+    ListaBeni listaBeni;
 
     /**
-     * 
+     * For the goods with time of preparation is nice to have a number of
+     * corrispondence between our ticket and the one held by the cooker.
+     *
+     * NOTE: in this implementation it is resetted everytime the server starts/stops
      */
-    Logger logger;
+    TreeMap<String, Integer> listaProgressivi;
 
     /**
      * Semaphore for the list of users
@@ -70,11 +84,6 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
             new String("CassieriSemaphore" + System.currentTimeMillis());
 
     /**
-     * list of handled good
-     */
-    ListaBeni listaBeni;
-
-    /**
      * Semaphore for the list of goods
      *
      * NOTE: it's randozed to avoid the JVM to make optimizations, which could
@@ -82,6 +91,15 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      */
     static final String listaBeniSemaphore =
             new String("BeniSemaphore" + System.currentTimeMillis());
+
+    /**
+     * Semaphore for the list of goods
+     *
+     * NOTE: it's randozed to avoid the JVM to make optimizations, which could
+     * lead the threads to share the same semaphore.
+     */
+    static final String listaProgressiviSemaphore =
+            new String("ProgressiviSemaphore" + System.currentTimeMillis());
 
     /**
      * Default constructor
@@ -96,16 +114,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
 
         loadListaUtenti();
 
-        synchronized (listaBeniSemaphore) {
-            try {
-                listaBeni = new ListaBeni(dataBackend.loadListaBeni());
-            } catch (IOException ex) {
-                logger.warn("ListaBeni could not be loaded, starting up a" +
-                        " new clean list.", ex);
-                
-                listaBeni = new ListaBeni();
-            }
-        }
+        loadListaBeni();
     }
 
     /**
@@ -136,6 +145,33 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
             } catch (IOException ex) {
                 logger.warn("reading Admins from file failed, creating a new " +
                         "blank list", ex);
+            }
+        }
+    }
+
+    /**
+     * 
+     */
+    private void loadListaBeni() {
+        synchronized (listaBeniSemaphore) {
+            try {
+                List<BeneVenduto> lista = dataBackend.loadListaBeni();
+                listaBeni = new ListaBeni(lista);
+
+                synchronized (listaProgressiviSemaphore) {
+                    listaProgressivi = new TreeMap<String, Integer>();
+
+                    for (BeneVenduto beneVenduto : lista) {
+                        if (beneVenduto instanceof BeneConPreparazione) {
+                            listaProgressivi.put(beneVenduto.getNome(), 0);
+                        }
+                    }
+                }
+            } catch (IOException ex) {
+                logger.warn("ListaBeni could not be loaded, starting up a" +
+                        " new clean list.", ex);
+                
+                listaBeni = new ListaBeni();
             }
         }
     }
@@ -240,11 +276,41 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     public void saveNewListaBeni(ListaBeni lista) {
         synchronized (listaBeniSemaphore) {
             listaBeni = new ListaBeni(lista.lista);
+            
+            synchronized (listaProgressiviSemaphore) {
+                listaProgressivi = new TreeMap<String, Integer>();
+
+                for (BeneVenduto beneVenduto : lista.lista) {
+                    if (beneVenduto instanceof BeneConPreparazione) {
+                        listaProgressivi.put(beneVenduto.getNome(), 0);
+                    }
+                }
+            }
             try {
                 dataBackend.saveListaBeni(listaBeni);
             } catch (IOException ex) {
                 logger.error("could not save lista beni", ex);
             }
+        }
+    }
+
+    /**
+     * Used to ask "n" progressive numbers to associate to the BeniConPreparazione
+     *
+     * @param nomeBene
+     *
+     * @return the first of the n progressive numbers
+     */
+    public int getNProgressivo(String nomeBene, int n) {
+        synchronized (listaProgressiviSemaphore) {
+            Integer progressivo = listaProgressivi.get(nomeBene);
+            if (progressivo == null) {
+                throw new RuntimeException("ho trovato un nome che ci sarebbe " +
+                        "dovuto essere nella lista dei progressivi ma che" +
+                        " non c'era!!!");
+            }
+            listaProgressivi.put(nomeBene, progressivo+n);
+            return progressivo.intValue();
         }
     }
 }

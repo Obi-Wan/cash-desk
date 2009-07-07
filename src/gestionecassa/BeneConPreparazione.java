@@ -1,5 +1,5 @@
 /*
- * DMCassaAPI.java
+ * BeneConPreparazione.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -12,23 +12,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package gestionecassa.server.datamanager;
-
-import gestionecassa.ordine.Ordine;
+package gestionecassa;
 
 /**
  *
  * @author ben
  */
-public interface DMCassaAPI extends DMCommonAPI {
-
-    void createNewCassaSession(String identifier);
-
-    void closeCassaSession(String identifier);
-
-    void addNewOrder(String id, Ordine order);
-
-    void delLastOrder(String id);
-
-    int getNProgressivo(String nomeBene,int n);
+public interface BeneConPreparazione {
 }

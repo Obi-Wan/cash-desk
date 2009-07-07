@@ -205,6 +205,20 @@ public class Cassa extends Luogo implements CassaAPI {
     }
 
     /**
+     * Asks to the server for a new bunch of progressive numbers.
+     *
+     * @param nome Name of the goods.
+     * @param n number of the progressive numbers.
+     *
+     * @return the first of the "n" progressive numbers.
+     *
+     * @throws RemoteException
+     */
+    public int getNProgressivo(String nome, int n) throws RemoteException {
+        return server.getNProgressivo(nome, n);
+    }
+
+    /**
      * 
      * @throws RemoteException
      */

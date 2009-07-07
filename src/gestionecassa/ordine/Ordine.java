@@ -18,11 +18,6 @@ import java.util.List;
 public class Ordine implements Serializable {
 
     /**
-     * indice cardinale dell'ordine effettuato
-     */
-    int nOrdine;
-
-    /**
      * Data/ora in cui è stato effettuato l'ordine
      */
     Date data;
@@ -43,14 +38,20 @@ public class Ordine implements Serializable {
     List<recordSingoloBene> listaBeni;
 
     /**
+     *
+     */
+    double totalPrize;
+
+    /**
      * Default constructor (well, at most :) )
      *
      * @param username
      * @param hostname
      */
     public Ordine(String username, String hostname) {
-        this(0, new Date(), new String(username), new String(hostname),
+        this( new Date(), new String(username), new String(hostname),
                 new ArrayList<recordSingoloBene>());
+        totalPrize = 0;
     }
 
     /**
@@ -61,8 +62,9 @@ public class Ordine implements Serializable {
      * @param hostname
      */
     public Ordine(Date data, String username, String hostname) {
-        this(0, new Date(data.getTime()), new String(username), 
+        this( new Date(data.getTime()), new String(username), 
                 new String(hostname), new ArrayList<recordSingoloBene>());
+        totalPrize = 0;
     }
 
     /**
@@ -74,9 +76,8 @@ public class Ordine implements Serializable {
      * @param hostname
      * @param listaBeni
      */
-    private Ordine(int nOrdine, Date data, String username, String hostname,
+    private Ordine( Date data, String username, String hostname,
             List<recordSingoloBene> listaBeni) {
-        this.nOrdine = nOrdine;
         this.data = data;
         this.listaBeni = listaBeni;
         this.username = username;
@@ -100,6 +101,14 @@ public class Ordine implements Serializable {
     }
 
     /**
+     * 
+     * @return
+     */
+    public double getTotalPrize() {
+        return totalPrize;
+    }
+
+    /**
      * Adder helper
      *
      * @param bene
@@ -116,9 +125,17 @@ public class Ordine implements Serializable {
      * @param numTot
      * @param listaParziale
      */
-    public void addBeneConOpzione(BeneConOpzione bene, int numTot, 
+    public void addBeneConOpzione(BeneConOpzione bene, int numTot, int progressive,
             List<recordSingolaOpzione> listaParziale) {
-        listaBeni.add(new recordSingoloBeneConOpzione(bene, numTot,
+        listaBeni.add(new recordSingoloBeneConOpzione(bene, numTot, progressive,
                 listaParziale));
+    }
+
+    /**
+     * 
+     * @param totalPrize
+     */
+    public void setTotalPrize(double totalPrize) {
+        this.totalPrize = totalPrize;
     }
 }
