@@ -11,6 +11,9 @@ import java.rmi.RemoteException;
 import org.apache.log4j.Logger;
 import gestionecassa.server.SessionRecord;
 import gestionecassa.server.datamanager.DMCassaAPI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  *
@@ -42,7 +45,10 @@ public class ServiceRMICassiereImpl extends SharedServerService
         super(session,logger);
         this.dataManager = dataManager;
 
-        sessionIdentifier = new String(session.getUsername());
+        // FIXME italian locale to be avoided in future.
+        final String timestamp = new SimpleDateFormat(
+                "yyyy-MM-dd_HH-mm-ss", Locale.ITALIAN).format(new Date());
+        sessionIdentifier = new String(session.getUsername() + "@" + timestamp);
 
         dataManager.createNewCassaSession(sessionIdentifier);
     }

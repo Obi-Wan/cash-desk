@@ -27,12 +27,9 @@ import gestionecassa.ordine.EntrySingleArticleWithOption;
 import gestionecassa.server.datamanager.BackendAPI_1;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -68,13 +65,10 @@ public class XmlDataBackend implements BackendAPI_1 {
 
     public void saveListOfOrders(String id, List<Order> list) throws IOException {
 
-        final String timestamp = new SimpleDateFormat(
-                "yyyy-MM-dd_HH-mm-ss", Locale.ITALIAN).format(new Date());
-        String fileName = xmlDataPath + id + "_" + timestamp + ".xml";
+        String fileName = xmlDataPath + id + ".xml";
 
         Document document = DocumentHelper.createDocument();
         Element root = document.addElement( "orders" );
-        root.addAttribute("timestamp", timestamp);
 
         for (Order order : list) {
             Element temp = root.addElement("ordine");
