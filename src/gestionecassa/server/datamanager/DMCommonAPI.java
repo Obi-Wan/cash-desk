@@ -14,7 +14,7 @@
 
 package gestionecassa.server.datamanager;
 
-import gestionecassa.ListaBeni;
+import gestionecassa.ArticlesList;
 
 /**
  *
@@ -26,6 +26,6 @@ public interface DMCommonAPI {
      *
      * @return
      */
-    ListaBeni getCurrentListaBeni();
+    ArticlesList getCurrentListaBeni();
 
 }

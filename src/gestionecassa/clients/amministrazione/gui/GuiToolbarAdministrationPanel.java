@@ -1,5 +1,5 @@
 /*
- * GuiToolbarAmministrazionePanel.java
+ * GuiToolbarAdministrationPanel.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,7 +13,7 @@
  */
 
 /*
- * GuiToolbarAmministrazionePanel.java
+ * GuiToolbarAdministrationPanel.java
  *
  * Created on 6-lug-2009, 15.51.25
  */
@@ -24,12 +24,12 @@ package gestionecassa.clients.amministrazione.gui;
  *
  * @author ben
  */
-public class GuiToolbarAmministrazionePanel extends javax.swing.JPanel {
+public class GuiToolbarAdministrationPanel extends javax.swing.JPanel {
 
-    GuiAppFrameAmministrazione owner;
+    GuiAppFrameAdministration owner;
 
-    /** Creates new form GuiToolbarAmministrazionePanel */
-    public GuiToolbarAmministrazionePanel(GuiAppFrameAmministrazione owner) {
+    /** Creates new form GuiToolbarAdministrationPanel */
+    public GuiToolbarAdministrationPanel(GuiAppFrameAdministration owner) {
         initComponents();
         this.owner = owner;
     }

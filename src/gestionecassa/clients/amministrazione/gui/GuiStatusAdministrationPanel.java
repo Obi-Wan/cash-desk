@@ -1,5 +1,5 @@
 /*
- * GuiAbstrSingoloBenePanel.java
+ * GuiStatusCassaPanel.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,22 +13,24 @@
  */
 
 /*
- * GuiAbstrSingoloBenePanel.java
+ * GuiStatusCassaPanel.java
  *
- * Created on 23-mag-2009, 14.48.59
+ * Created on 6-lug-2009, 16.16.23
  */
 
-package gestionecassa.clients.cassa.gui;
+package gestionecassa.clients.amministrazione.gui;
+
+import gestionecassa.clients.cassa.gui.*;
 
 /**
  *
  * @author ben
  */
-abstract public class GuiAbstrSingoloBenePanel extends javax.swing.JPanel {
+public class GuiStatusAdministrationPanel extends javax.swing.JPanel {
 
-    /** Creates new form GuiAbstrSingoloBenePanel */
-    public GuiAbstrSingoloBenePanel() {
-        //initComponents();
+    /** Creates new form GuiStatusCassaPanel */
+    public GuiStatusAdministrationPanel() {
+        initComponents();
     }
 
     /** This method is called from within the constructor to
@@ -44,11 +46,11 @@ abstract public class GuiAbstrSingoloBenePanel extends javax.swing.JPanel {
     this.setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 400, Short.MAX_VALUE)
+      .addGap(0, 230, Short.MAX_VALUE)
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 300, Short.MAX_VALUE)
+      .addGap(0, 454, Short.MAX_VALUE)
     );
   }// </editor-fold>//GEN-END:initComponents
 
@@ -56,11 +58,4 @@ abstract public class GuiAbstrSingoloBenePanel extends javax.swing.JPanel {
   // Variables declaration - do not modify//GEN-BEGIN:variables
   // End of variables declaration//GEN-END:variables
 
-    abstract public void clean();
-
-    /**
-     *
-     * @return
-     */
-    public abstract int getNumTot();
 }

@@ -12,7 +12,7 @@ import java.rmi.RemoteException;
  *
  * @author ben
  */
-public interface AmministrazioneAPI extends ClientAPI {
+public interface AdministrationAPI extends ClientAPI {
 
     /**
      * Closes the remote server to which we are connected to

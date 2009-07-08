@@ -34,7 +34,7 @@ public class GuiAppFrameCassa extends GuiAppFrame {
     /**
      *
      */
-    GuiDialogListaBeni dialogListaBeni;
+    GuiArticlesListDialog dialogListaBeni;
 
     /**
      *
@@ -125,7 +125,7 @@ public class GuiAppFrameCassa extends GuiAppFrame {
      */
     void selectedDialogListaBeni() {
         if (dialogListaBeni == null) {
-            dialogListaBeni = new GuiDialogListaBeni(this, false);
+            dialogListaBeni = new GuiArticlesListDialog(this, false);
             dialogListaBeni.setListaBeni(owner.getListaBeni());
             dialogListaBeni.setVisible(true);
         } else {

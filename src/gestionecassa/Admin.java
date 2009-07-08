@@ -4,14 +4,14 @@ package gestionecassa;
  *
  * @author ben
  */
-public class Admin extends Persona {
+public class Admin extends Person {
 
     /**
      * Copy constructor
      *
      * @param tempPersona
      */
-    public Admin(Persona tempPersona) {
+    public Admin(Person tempPersona) {
         this(tempPersona.id, tempPersona.username, tempPersona.password);
     }
 

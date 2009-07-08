@@ -1,5 +1,5 @@
 /*
- * GuiDialogListaBeni.java
+ * GuiArticlesListDialog.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,25 +13,25 @@
  */
 
 /*
- * GuiDialogListaBeni.java
+ * GuiArticlesListDialog.java
  *
  * Created on 21-mag-2009, 21.09.15
  */
 
 package gestionecassa.clients.cassa.gui;
 
-import gestionecassa.ListaBeni;
+import gestionecassa.ArticlesList;
 
 /**
  *
  * @author ben
  */
-public class GuiDialogListaBeni extends javax.swing.JDialog {
+public class GuiArticlesListDialog extends javax.swing.JDialog {
 
     GuiAppFrameCassa owner;
 
-    /** Creates new form GuiDialogListaBeni */
-    public GuiDialogListaBeni(GuiAppFrameCassa parent, boolean modal) {
+    /** Creates new form GuiArticlesListDialog */
+    public GuiArticlesListDialog(GuiAppFrameCassa parent, boolean modal) {
         super(parent, modal);
         this.owner = parent;
         initComponents();
@@ -82,7 +82,7 @@ public class GuiDialogListaBeni extends javax.swing.JDialog {
   private javax.swing.JTextArea jTextArea1;
   // End of variables declaration//GEN-END:variables
 
-    public void setListaBeni(ListaBeni lista) {
+    public void setListaBeni(ArticlesList lista) {
         jTextArea1.setText(lista.getPrintableFormat());
     }
 

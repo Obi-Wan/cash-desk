@@ -14,7 +14,7 @@
 
 package gestionecassa.server.datamanager;
 
-import gestionecassa.ordine.Ordine;
+import gestionecassa.ordine.Order;
 
 /**
  *
@@ -26,7 +26,7 @@ public interface DMCassaAPI extends DMCommonAPI {
 
     void closeCassaSession(String identifier);
 
-    void addNewOrder(String id, Ordine order);
+    void addNewOrder(String id, Order order);
 
     void delLastOrder(String id);
 

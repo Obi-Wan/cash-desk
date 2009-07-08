@@ -1,5 +1,5 @@
 /*
- * GuiSingolaOpzionePanel.java
+ * GuiOrderSingleOptionPanel.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,7 +13,7 @@
  */
 
 /*
- * GuiSingolaOpzionePanel.java
+ * GuiOrderSingleOptionPanel.java
  *
  * Created on 23-mag-2009, 14.11.41
  */
@@ -29,12 +29,12 @@ import javax.swing.SpinnerNumberModel;
  *
  * @author ben
  */
-public class GuiSingolaOpzionePanel extends javax.swing.JPanel {
+public class GuiOrderSingleOptionPanel extends javax.swing.JPanel {
 
     /**
      *
      */
-    GuiSingoloBeneOpzioniOrdinePanel parent;
+    GuiOrderSingleArticleWOptionsPanel parent;
 
     /**
      *
@@ -47,12 +47,12 @@ public class GuiSingolaOpzionePanel extends javax.swing.JPanel {
     SpinnerNumberModel spinnerModel;
 
     /**
-     * Creates new form GuiSingolaOpzionePanel
+     * Creates new form GuiOrderSingleOptionPanel
      *
      * @param parent
      * @param opzioni
      */
-    public GuiSingolaOpzionePanel(GuiSingoloBeneOpzioniOrdinePanel parent,
+    public GuiOrderSingleOptionPanel(GuiOrderSingleArticleWOptionsPanel parent,
             List<String> opzioni) {
         initComponents();
         this.parent = parent;

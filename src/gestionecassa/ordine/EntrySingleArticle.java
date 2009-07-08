@@ -1,6 +1,6 @@
 package gestionecassa.ordine;
 
-import gestionecassa.BeneVenduto;
+import gestionecassa.Article;
 import java.io.Serializable;
 
 /**
@@ -8,18 +8,18 @@ import java.io.Serializable;
  *
  * @author ben
  */
-public class recordSingoloBene implements Serializable {
+public class EntrySingleArticle implements Serializable {
 
     /**
      * Reference al bene.
      */
-    public BeneVenduto bene;
+    public Article bene;
     /**
      * Numero totale per questo articolo
      */
     public int numTot;
 
-    public recordSingoloBene(BeneVenduto bene, int numTot) {
+    public EntrySingleArticle(Article bene, int numTot) {
         super();
         this.bene = bene;
         this.numTot = numTot;

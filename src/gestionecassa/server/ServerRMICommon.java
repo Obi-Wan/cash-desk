@@ -5,7 +5,7 @@
 
 package gestionecassa.server;
 
-import gestionecassa.Persona;
+import gestionecassa.Person;
 import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.WrongLoginException;
 import java.rmi.Remote;
@@ -15,7 +15,7 @@ import java.rmi.RemoteException;
  *
  * @author ben
  */
-public interface ServerRMIMainCommon extends Remote {
+public interface ServerRMICommon extends Remote {
 
     /** Method which both the clients use to log themselves in.
      *
@@ -41,7 +41,7 @@ public interface ServerRMIMainCommon extends Remote {
      *
      * @return  The id of the user, which is used in comunication, once logged.
      */
-    public int sendRMIDatiRegistrazione(Persona user)
+    public int sendRMIDatiRegistrazione(Person user)
             throws   RemoteException, ActorAlreadyExistingException, WrongLoginException;
     
     /**

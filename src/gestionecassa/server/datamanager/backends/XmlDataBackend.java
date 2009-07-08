@@ -15,15 +15,15 @@
 package gestionecassa.server.datamanager.backends;
 
 import gestionecassa.Admin;
-import gestionecassa.BeneConOpzione;
-import gestionecassa.BeneVenduto;
+import gestionecassa.ArticleWithOptions;
+import gestionecassa.Article;
 import gestionecassa.Cassiere;
-import gestionecassa.ListaBeni;
+import gestionecassa.ArticlesList;
 import gestionecassa.Log;
-import gestionecassa.ordine.Ordine;
-import gestionecassa.ordine.recordSingolaOpzione;
-import gestionecassa.ordine.recordSingoloBene;
-import gestionecassa.ordine.recordSingoloBeneConOpzione;
+import gestionecassa.ordine.Order;
+import gestionecassa.ordine.EntrySingleOption;
+import gestionecassa.ordine.EntrySingleArticle;
+import gestionecassa.ordine.EntrySingleArticleWithOption;
 import gestionecassa.server.datamanager.BackendAPI_1;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -66,7 +66,7 @@ public class XmlDataBackend implements BackendAPI_1 {
         this.logger = Log.GESTIONECASSA_SERVER_DATAMANAGER_XML;
     }
 
-    public void saveListaOrdini(String id, List<Ordine> lista) throws IOException {
+    public void saveListaOrdini(String id, List<Order> lista) throws IOException {
 
         final String timestamp = new SimpleDateFormat(
                 "yyyy-MM-dd_HH-mm-ss", Locale.ITALIAN).format(new Date());
@@ -76,13 +76,13 @@ public class XmlDataBackend implements BackendAPI_1 {
         Element root = document.addElement( "orders" );
         root.addAttribute("timestamp", timestamp);
 
-        for (Ordine ordine : lista) {
+        for (Order ordine : lista) {
             Element temp = root.addElement("ordine");
             temp.addElement("data").addText(ordine.getData().toString());
             temp.addElement("prezzo_totale").addText(ordine.getTotalPrize()+"");
-            List<recordSingoloBene> listaBeni = ordine.getListaBeni();
+            List<EntrySingleArticle> listaBeni = ordine.getListaBeni();
 
-            for (recordSingoloBene singoloBene : listaBeni) {
+            for (EntrySingleArticle singoloBene : listaBeni) {
                 Element tempBene = temp.addElement("singolo_bene");
                 
                 tempBene.addElement("nome").addText(singoloBene.bene.getNome());
@@ -93,11 +93,11 @@ public class XmlDataBackend implements BackendAPI_1 {
                     tempBene.addAttribute("opzioni", "true");
                     Element tempOpzioni = tempBene.addElement("opzioni");
                     int progressivo =
-                            ((recordSingoloBeneConOpzione)singoloBene).startProgressivo;
-                    List<recordSingolaOpzione> listaOpzioni =
-                            ((recordSingoloBeneConOpzione)singoloBene).numParziale;
+                            ((EntrySingleArticleWithOption)singoloBene).startProgressivo;
+                    List<EntrySingleOption> listaOpzioni =
+                            ((EntrySingleArticleWithOption)singoloBene).numParziale;
 
-                    for (recordSingolaOpzione singolaOpzione : listaOpzioni) {
+                    for (EntrySingleOption singolaOpzione : listaOpzioni) {
 
                         String stringaProgressivi = new String((progressivo++) + "");
                         for (int i = 1; i < singolaOpzione.numParz; i++) {
@@ -129,12 +129,12 @@ public class XmlDataBackend implements BackendAPI_1 {
     // Lista beni functions
     //------------------------//
 
-    public void saveListaBeni(ListaBeni lista) throws IOException {
+    public void saveListaBeni(ArticlesList lista) throws IOException {
 
         Document document = DocumentHelper.createDocument();
         Element root = document.addElement( "beni" );
-        List<BeneVenduto> listaVera = lista.lista;
-        for (BeneVenduto beneVenduto : listaVera) {
+        List<Article> listaVera = lista.lista;
+        for (Article beneVenduto : listaVera) {
             Element tempBene = root.addElement("bene");
             tempBene.addElement("nome").addText(beneVenduto.getNome());
             tempBene.addElement("prezzo").addText(beneVenduto.getPrezzo()+"");
@@ -143,7 +143,7 @@ public class XmlDataBackend implements BackendAPI_1 {
                 tempBene.addAttribute("opzioni", "true");
                 Element tempOpzioni = tempBene.addElement("opzioni");
 
-                List<String> listOpzioni = ((BeneConOpzione)beneVenduto).getOpzioni();
+                List<String> listOpzioni = ((ArticleWithOptions)beneVenduto).getOpzioni();
                 for (String nomeOpzione : listOpzioni) {
                     tempOpzioni.addElement("opzione").addText(nomeOpzione);
                 }
@@ -162,8 +162,8 @@ public class XmlDataBackend implements BackendAPI_1 {
         writer.close();
     }
 
-    public List<BeneVenduto> loadListaBeni() throws IOException {
-        List<BeneVenduto> output = new ArrayList<BeneVenduto>();
+    public List<Article> loadListaBeni() throws IOException {
+        List<Article> output = new ArrayList<Article>();
 
         SAXReader reader = new SAXReader();
         Document document;
@@ -178,7 +178,7 @@ public class XmlDataBackend implements BackendAPI_1 {
         
         for (Object bene : nodoRoot.elements("bene")) {
             Element tempRefBene = (Element)bene;
-            BeneVenduto tempBene;
+            Article tempBene;
 
             String nome = tempRefBene.element("nome").getText();
             double prezzo = new Double(tempRefBene.element("prezzo").getText()).doubleValue();
@@ -190,9 +190,9 @@ public class XmlDataBackend implements BackendAPI_1 {
                     opzioni.add(((Element)opzione).getText());
                 }
 
-                tempBene = new BeneConOpzione(nome, prezzo, opzioni);
+                tempBene = new ArticleWithOptions(nome, prezzo, opzioni);
             } else {
-                tempBene = new BeneVenduto(nome, prezzo);
+                tempBene = new Article(nome, prezzo);
             }
             output.add(tempBene);
         }

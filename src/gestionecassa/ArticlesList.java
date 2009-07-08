@@ -13,18 +13,18 @@ import java.util.List;
  *
  * @author ben
  */
-public class ListaBeni implements Serializable {
+public class ArticlesList implements Serializable {
 
     /**
      * Lista dei beni vendibili
      */
-    public List<BeneVenduto> lista;
+    public List<Article> lista;
 
     /**
      * Costruttore di default
      */
-    public ListaBeni() {
-        this(new ArrayList<BeneVenduto>());
+    public ArticlesList() {
+        this(new ArrayList<Article>());
     }
 
     /**
@@ -32,8 +32,8 @@ public class ListaBeni implements Serializable {
      *
      * @param lista
      */
-    public ListaBeni(List<BeneVenduto> lista) {
-        this.lista = new ArrayList<BeneVenduto>(lista);
+    public ArticlesList(List<Article> lista) {
+        this.lista = new ArrayList<Article>(lista);
     }
 
     /**
@@ -43,7 +43,7 @@ public class ListaBeni implements Serializable {
      */
     public String getPrintableFormat() {
         String output = new String("Lista dei beni venduti:\n");
-        for (BeneVenduto beneVenduto : lista) {
+        for (Article beneVenduto : lista) {
             output += new String(beneVenduto.getPrintableFormat() + "\n");
         }
         return output;

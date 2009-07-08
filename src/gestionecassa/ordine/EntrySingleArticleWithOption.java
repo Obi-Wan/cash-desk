@@ -1,6 +1,6 @@
 package gestionecassa.ordine;
 
-import gestionecassa.BeneConOpzione;
+import gestionecassa.ArticleWithOptions;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,21 +9,21 @@ import java.util.List;
  *
  * @author ben
  */
-public class recordSingoloBeneConOpzione extends recordSingoloBene {
+public class EntrySingleArticleWithOption extends EntrySingleArticle {
 
     /**
      * Parziali
      */
-    public List<recordSingolaOpzione> numParziale;
+    public List<EntrySingleOption> numParziale;
 
     /**
      * numbert at which start the progressive numbers (they are numTot in number)
      */
     public int startProgressivo;
 
-    public recordSingoloBeneConOpzione(BeneConOpzione bene, int numTot, int startProg, List<recordSingolaOpzione> numParziale) {
+    public EntrySingleArticleWithOption(ArticleWithOptions bene, int numTot, int startProg, List<EntrySingleOption> numParziale) {
         super(bene, numTot);
         this.startProgressivo = startProg;
-        this.numParziale = new ArrayList<recordSingolaOpzione>(numParziale);
+        this.numParziale = new ArrayList<EntrySingleOption>(numParziale);
     }
 }

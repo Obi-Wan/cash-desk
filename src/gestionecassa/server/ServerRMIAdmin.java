@@ -1,41 +1,31 @@
 /*
- * GuiNuovoOrdinePanel.java
- *
+ * ServerRMIAdmin.java
+ * 
  * Copyright (C) 2009 Nicola Roberto Viganò
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package gestionecassa;
+package gestionecassa.server;
 
-import gestionecassa.ordine.Ordine;
-import java.util.Date;
-import java.util.List;
+import java.rmi.RemoteException;
 
 /**
  *
  * @author ben
  */
-public class DataEvento {
+public interface ServerRMIAdmin extends ServerRMICommon {
 
     /**
-     * Title of this specific date.
+     * Stops the server on this machine.
+     *
+     * @throws java.rmi.RemoteException
      */
-    String titoloData;
-
-    /**
-     * Data
-     */
-    Date data;
-
-    /**
-     * Lista degli ordini avuti all'evento
-     */
-    List<Ordine> listaOrdini;
+    void remotelyStopServer() throws RemoteException;
 }

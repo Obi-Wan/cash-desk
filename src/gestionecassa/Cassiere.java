@@ -5,14 +5,14 @@ package gestionecassa;
  *
  * @author ben
  */
-public class Cassiere extends Persona {
+public class Cassiere extends Person {
 
     /**
      * Copy constructor
      *
      * @param tempPersona
      */
-    public Cassiere(Persona tempPersona) {
+    public Cassiere(Person tempPersona) {
         this(tempPersona.id,tempPersona.username,tempPersona.password);
     }
 

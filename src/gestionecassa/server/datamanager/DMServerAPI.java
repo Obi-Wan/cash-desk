@@ -14,7 +14,7 @@
 
 package gestionecassa.server.datamanager;
 
-import gestionecassa.Persona;
+import gestionecassa.Person;
 
 /**
  *
@@ -27,7 +27,7 @@ public interface DMServerAPI {
      * @param user
      * @return
      */
-    void registraUtente(Persona user);
+    void registraUtente(Person user);
 
     /**
      * Verifies a username exists, and if is the case,
@@ -37,7 +37,7 @@ public interface DMServerAPI {
      *
      * @return
      */
-    Persona verificaUsername(String username);
+    Person verificaUsername(String username);
 
     /**
      * Executes the last tasks before quitting (like flushing ad Co.)

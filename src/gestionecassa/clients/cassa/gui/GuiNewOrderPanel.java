@@ -1,5 +1,5 @@
 /*
- * GuiNuovoOrdinePanel.java
+ * GuiNewOrderPanel.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,7 +13,7 @@
  */
 
 /*
- * GuiNuovoOrdinePanel.java
+ * GuiNewOrderPanel.java
  *
  * Created on 12-mag-2009, 22.16.39
  */
@@ -21,11 +21,11 @@
 package gestionecassa.clients.cassa.gui;
 
 import gestionecassa.clients.cassa.*;
-import gestionecassa.BeneConOpzione;
-import gestionecassa.BeneVenduto;
-import gestionecassa.ListaBeni;
-import gestionecassa.ordine.Ordine;
-import gestionecassa.ordine.recordSingoloBene;
+import gestionecassa.ArticleWithOptions;
+import gestionecassa.Article;
+import gestionecassa.ArticlesList;
+import gestionecassa.ordine.Order;
+import gestionecassa.ordine.EntrySingleArticle;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -41,7 +41,7 @@ import javax.swing.KeyStroke;
  *
  * @author ben
  */
-public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
+public class GuiNewOrderPanel extends javax.swing.JPanel {
 
     /**
      * Reference alla classe della business logic
@@ -53,7 +53,7 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
     /**
      * Local Reference to the goods list.
      */
-    ListaBeni listaBeni;
+    ArticlesList listaBeni;
 
     /**
      * Lista appoggio che per ogni bene associa un pannello
@@ -64,11 +64,11 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
     KeyStroke lessKeys[];
 
     /** 
-     * Creates new form GuiNuovoOrdinePanel
+     * Creates new form GuiNewOrderPanel
      *
      * @param owner
      */
-    public GuiNuovoOrdinePanel(CassaAPI owner, GuiAppFrameCassa parent) {
+    public GuiNewOrderPanel(CassaAPI owner, GuiAppFrameCassa parent) {
         initComponents();
         this.owner = owner;
         this.parent = parent;
@@ -281,12 +281,12 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
     private void buildContentsList() {
         tabellaBeni = new ArrayList<recordListaBeni>();
         int i = 0;
-        for (BeneVenduto bene : listaBeni.lista) {
-            GuiAbstrSingoloBenePanel tempPanel;
-            if (bene instanceof BeneConOpzione) {
-                tempPanel = new GuiSingoloBeneOpzioniOrdinePanel(this,(BeneConOpzione)bene);
+        for (Article bene : listaBeni.lista) {
+            GuiAbstrSingleArticlePanel tempPanel;
+            if (bene instanceof ArticleWithOptions) {
+                tempPanel = new GuiOrderSingleArticleWOptionsPanel(this,(ArticleWithOptions)bene);
             } else {
-                tempPanel = new GuiSingoloBeneOrdinePanel(this,bene,i);
+                tempPanel = new GuiOrderSingleArticlePanel(this,bene,i);
             }
             tabellaBeni.add(new recordListaBeni(bene, tempPanel));
             i++;
@@ -381,7 +381,7 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
      */
     private void confirmAndSendNewOrder() {
         try {
-            Ordine nuovoOrdine = creaNuovoOrdine();
+            Order nuovoOrdine = creaNuovoOrdine();
             if (nuovoOrdine.getTotalPrize() != 0) {
                 owner.sendNuovoOrdine(nuovoOrdine);
                 parent.updateNewOrder(computeOrderPrize(nuovoOrdine));
@@ -416,12 +416,12 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
         /**
          *
          */
-        final BeneVenduto bene;
+        final Article bene;
 
         /**
          *
          */
-        final GuiAbstrSingoloBenePanel pannello;
+        final GuiAbstrSingleArticlePanel pannello;
 
         /**
          * Explicit constructor
@@ -429,7 +429,7 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
          * @param bene
          * @param pannello
          */
-        public recordListaBeni(BeneVenduto bene, GuiAbstrSingoloBenePanel pannello) {
+        public recordListaBeni(Article bene, GuiAbstrSingleArticlePanel pannello) {
             this.bene = bene;
             this.pannello = pannello;
         }
@@ -442,9 +442,9 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
      * 
      * @throws RemoteException
      */
-    private Ordine creaNuovoOrdine() throws RemoteException {
+    private Order creaNuovoOrdine() throws RemoteException {
         int tempNumTot = 0;
-        Ordine tempOrd = new Ordine(owner.getUsername(), owner.getHostname());
+        Order tempOrd = new Order(owner.getUsername(), owner.getHostname());
 
         for (recordListaBeni singoloRecord : tabellaBeni) {
             tempNumTot = singoloRecord.pannello.getNumTot();
@@ -456,9 +456,9 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
                     int progressive = owner.getNProgressivo(
                             singoloRecord.bene.getNome(), tempNumTot);
                     tempOrd.addBeneConOpzione(
-                            (BeneConOpzione)singoloRecord.bene,
+                            (ArticleWithOptions)singoloRecord.bene,
                             tempNumTot, progressive,
-                            ((GuiSingoloBeneOpzioniOrdinePanel)
+                            ((GuiOrderSingleArticleWOptionsPanel)
                                 (singoloRecord.pannello)).getListaParziali());
                 } else {
                     tempOrd.addBeneVenduto(singoloRecord.bene,tempNumTot);
@@ -499,10 +499,10 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
      *
      * @return Prize calculated.
      */
-    private double computeOrderPrize(Ordine ordine) {
-        List<recordSingoloBene> lista = ordine.getListaBeni();
+    private double computeOrderPrize(Order ordine) {
+        List<EntrySingleArticle> lista = ordine.getListaBeni();
         double output = 0;
-        for (recordSingoloBene singoloBene : lista) {
+        for (EntrySingleArticle singoloBene : lista) {
             output += singoloBene.numTot * singoloBene.bene.getPrezzo();
         }
         return output;

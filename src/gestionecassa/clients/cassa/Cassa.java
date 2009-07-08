@@ -6,13 +6,13 @@
 package gestionecassa.clients.cassa;
 
 import gestionecassa.clients.cassa.gui.GuiAppFrameCassa;
-import gestionecassa.clients.cassa.gui.GuiNuovoOrdinePanel;
+import gestionecassa.clients.cassa.gui.GuiNewOrderPanel;
 import gestionecassa.Log;
-import gestionecassa.ordine.Ordine;
-import gestionecassa.Persona;
+import gestionecassa.ordine.Order;
+import gestionecassa.Person;
 import gestionecassa.clients.Luogo;
 import gestionecassa.exceptions.*;
-import gestionecassa.server.clientservices.ServerRMICassiere;
+import gestionecassa.server.clientservices.ServiceRMICassiere;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
@@ -34,7 +34,7 @@ public class Cassa extends Luogo implements CassaAPI {
     /**
      * Specific Server
      */
-    ServerRMICassiere server;
+    ServiceRMICassiere server;
 
     /**
      * Public method that grants the singleton
@@ -118,11 +118,11 @@ public class Cassa extends Luogo implements CassaAPI {
      * @throws java.net.MalformedURLException
      * @throws java.rmi.NotBoundException
      */
-    public void registra(Persona user, String serverName)
+    public void registra(Person user, String serverName)
             throws ActorAlreadyExistingException, WrongLoginException,
                 RemoteException, MalformedURLException, NotBoundException
     {
-        server = (ServerRMICassiere)
+        server = (ServiceRMICassiere)
                 sendDatiRegistrazione(user, serverName);
 
         setupAfterLogin(user.getUsername());
@@ -145,7 +145,7 @@ public class Cassa extends Luogo implements CassaAPI {
             throws WrongLoginException, RemoteException, MalformedURLException,
                 NotBoundException
     {
-        server = (ServerRMICassiere)
+        server = (ServiceRMICassiere)
                 sendDatiLogin(username, password, serverName);
 
         setupAfterLogin(username);
@@ -156,7 +156,7 @@ public class Cassa extends Luogo implements CassaAPI {
         super.setupAfterLogin(username);
 
         ((GuiAppFrameCassa)appFrame).enableListaBeni(true);
-        appFrame.setContentPanel(new GuiNuovoOrdinePanel(this,(GuiAppFrameCassa)appFrame));
+        appFrame.setContentPanel(new GuiNewOrderPanel(this,(GuiAppFrameCassa)appFrame));
         ((GuiAppFrameCassa)appFrame).updateUsernameStatus(username);
     }
 
@@ -181,7 +181,7 @@ public class Cassa extends Luogo implements CassaAPI {
      *
      * @throws java.rmi.RemoteException
      */
-    public void sendNuovoOrdine(Ordine nuovoOrdine) throws RemoteException {
+    public void sendNuovoOrdine(Order nuovoOrdine) throws RemoteException {
         try {
             server.sendOrdine(nuovoOrdine);
         } catch (RemoteException ex) {

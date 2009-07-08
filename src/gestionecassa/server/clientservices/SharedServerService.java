@@ -9,7 +9,7 @@
 
 package gestionecassa.server.clientservices;
 
-import gestionecassa.ListaBeni;
+import gestionecassa.ArticlesList;
 import gestionecassa.Log;
 import gestionecassa.server.SessionRecord;
 import gestionecassa.server.datamanager.DataManager;

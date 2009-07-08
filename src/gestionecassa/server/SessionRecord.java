@@ -9,7 +9,7 @@
 
 package gestionecassa.server;
 
-import gestionecassa.Persona;
+import gestionecassa.Person;
 import gestionecassa.server.clientservices.*;
 import java.io.Serializable;
 
@@ -29,7 +29,7 @@ public class SessionRecord implements Serializable {
     SharedServerService relatedThread;
     
     /** Reference to who is this user. */
-    Persona user;
+    Person user;
     
     /** Counter of time passed since last keep alive
      */
@@ -56,7 +56,7 @@ public class SessionRecord implements Serializable {
      * @param nUser     Reference to the user.
      * @param nTime     new indication for timeEtimeElapsed
      */
-    public SessionRecord(final int nClId, final String nUsername, final SharedServerService nRelated, final Persona nUser, final int nTime) {
+    public SessionRecord(final int nClId, final String nUsername, final SharedServerService nRelated, final Person nUser, final int nTime) {
         clientId = nClId;
         username = nUsername;
         relatedThread = nRelated;

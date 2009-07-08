@@ -5,14 +5,14 @@
 
 package gestionecassa.clients.amministrazione;
 
-import gestionecassa.clients.amministrazione.gui.GuiAppFrameAmministrazione;
+import gestionecassa.clients.amministrazione.gui.GuiAppFrameAdministration;
 import gestionecassa.Log;
-import gestionecassa.Persona;
+import gestionecassa.Person;
 import gestionecassa.clients.Luogo;
 import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.WrongLoginException;
-import gestionecassa.server.clientservices.ServerRMIAmministratore;
-import gestionecassa.server.ServerRMIMainAmministrazione;
+import gestionecassa.server.clientservices.ServiceRMIAdminAPI;
+import gestionecassa.server.ServerRMIAdmin;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -21,35 +21,35 @@ import java.rmi.RemoteException;
  *
  * @author ben
  */
-public class Amministrazione extends Luogo implements AmministrazioneAPI {
+public class Administration extends Luogo implements AdministrationAPI {
 
     /**
      * Local store of himself, with restrictions
      */
-    static AmministrazioneAPI businessLogicLocale;
+    static AdministrationAPI businessLogicLocale;
 
     /**
      *
      */
-    ServerRMIAmministratore server;
+    ServiceRMIAdminAPI server;
 
     /**
      * Creator of the singleton
      *
      * @return reference to the singleton
      */
-    public static synchronized AmministrazioneAPI crea() {
+    public static synchronized AdministrationAPI crea() {
         // Fase di set-up
         if (businessLogicLocale == null) {
-            Amministrazione tempClient = new Amministrazione(System.getenv("HOSTNAME"));
+            Administration tempClient = new Administration(System.getenv("HOSTNAME"));
             businessLogicLocale = tempClient;
         }
         return businessLogicLocale;
     }
     /**
-     * Creates a new instance of Amministrazione.
+     * Creates a new instance of Administration.
      */
-    private Amministrazione(String nomeLuogo) {
+    private Administration(String nomeLuogo) {
         super(nomeLuogo, Log.GESTIONECASSA_AMMINISTRAZIONE,
                 Log.GESTIONECASSA_AMMINISTRAZIONE_GUI);
     }
@@ -62,7 +62,7 @@ public class Amministrazione extends Luogo implements AmministrazioneAPI {
     public static void main(String[] args) {
 
         // cominciamo l'esecuzione del thread principale
-        Amministrazione.crea().avvia();
+        Administration.crea().avvia();
 
     }
 
@@ -72,7 +72,7 @@ public class Amministrazione extends Luogo implements AmministrazioneAPI {
     @Override
     public void run() {
         // avvia la fase di login
-        appFrame = new GuiAppFrameAmministrazione(this);
+        appFrame = new GuiAppFrameAdministration(this);
         
         super.run();
     }
@@ -89,11 +89,11 @@ public class Amministrazione extends Luogo implements AmministrazioneAPI {
      * @throws java.net.MalformedURLException
      * @throws java.rmi.NotBoundException
      */
-    public void registra(Persona user, String serverName)
+    public void registra(Person user, String serverName)
             throws ActorAlreadyExistingException, WrongLoginException,
                 RemoteException, MalformedURLException, NotBoundException
     {
-        server = (ServerRMIAmministratore)
+        server = (ServiceRMIAdminAPI)
                 sendDatiRegistrazione(user, serverName);
 
         setupAfterLogin(user.getUsername());
@@ -116,7 +116,7 @@ public class Amministrazione extends Luogo implements AmministrazioneAPI {
             throws WrongLoginException, RemoteException, MalformedURLException,
                 NotBoundException
     {
-        server = (ServerRMIAmministratore)
+        server = (ServiceRMIAdminAPI)
                 sendDatiLogin(username, password, serverName);
 
         setupAfterLogin(username);
@@ -138,7 +138,7 @@ public class Amministrazione extends Luogo implements AmministrazioneAPI {
         if (this.serverCentrale != null && sessionID >= 0) {
             logout();
             try {
-                ((ServerRMIMainAmministrazione) serverCentrale).remotelyStopServer();
+                ((ServerRMIAdmin) serverCentrale).remotelyStopServer();
             } catch (RemoteException ex) {
                 logger.warn("Errore nella chiusura del server remoto", ex);
             }

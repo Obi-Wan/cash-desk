@@ -7,7 +7,7 @@ import java.io.Serializable;
  *
  * @author ben
  */
-public class BeneVenduto implements Serializable {
+public class Article implements Serializable {
 
     /**
      *
@@ -22,7 +22,7 @@ public class BeneVenduto implements Serializable {
     /**
      * Default constructor
      */
-    public BeneVenduto() {
+    public Article() {
         this("",0);
     }
 
@@ -32,7 +32,7 @@ public class BeneVenduto implements Serializable {
      * @param nome Name of the good
      * @param prezzo Price
      */
-    public BeneVenduto(String nome, double prezzo) {
+    public Article(String nome, double prezzo) {
         this.nome = new String(nome);
         this.prezzo = prezzo;
     }

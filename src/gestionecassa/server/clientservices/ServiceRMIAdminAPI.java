@@ -12,6 +12,6 @@ import java.rmi.Remote;
  *
  * @author ben
  */
-public interface ServerRMIAmministratore 
-        extends ServerRMIShared, Remote, Serializable {
+public interface ServiceRMIAdminAPI
+        extends ServiceRMICommon, Remote, Serializable {
 }

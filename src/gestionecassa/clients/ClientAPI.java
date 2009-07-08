@@ -5,8 +5,8 @@
 
 package gestionecassa.clients;
 
-import gestionecassa.ListaBeni;
-import gestionecassa.Persona;
+import gestionecassa.ArticlesList;
+import gestionecassa.Person;
 import gestionecassa.exceptions.*;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
@@ -64,7 +64,7 @@ public interface ClientAPI {
      * @throws java.net.MalformedURLException
      * @throws java.rmi.NotBoundException
      */
-    public void registra(Persona user, String serverName)
+    public void registra(Person user, String serverName)
             throws ActorAlreadyExistingException, WrongLoginException,
                 RemoteException, MalformedURLException, NotBoundException;
 
@@ -113,7 +113,7 @@ public interface ClientAPI {
      * 
      * @return
      */
-    public ListaBeni getListaBeni();
+    public ArticlesList getListaBeni();
 
     /**
      * Returns the username of the logged user.

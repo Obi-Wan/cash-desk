@@ -5,11 +5,11 @@
 
 package gestionecassa.clients;
 
-import gestionecassa.ListaBeni;
-import gestionecassa.Persona;
+import gestionecassa.ArticlesList;
+import gestionecassa.Person;
 import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.WrongLoginException;
-import gestionecassa.server.ServerRMIMainCommon;
+import gestionecassa.server.ServerRMICommon;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -31,7 +31,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
     /**
      * Reference to the central server
      */
-    protected ServerRMIMainCommon serverCentrale;
+    protected ServerRMICommon serverCentrale;
     
     /**
      * The ID returned from the server, that we will use
@@ -62,7 +62,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
     /**
      * Daemon that keeps connection with server alive.
      */
-    protected DemoneRavvivaConnessione threadConnessione;
+    protected DaemonReestablishConnection threadConnessione;
 
     /**
      * The frame that display the Applictaion GUI
@@ -72,7 +72,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
     /**
      *
      */
-    protected ListaBeni listaBeni;
+    protected ArticlesList listaBeni;
 
     /**
      *
@@ -188,13 +188,13 @@ abstract public class Luogo extends Thread implements ClientAPI {
      * @throws java.net.MalformedURLException
      * @throws java.rmi.NotBoundException
      */
-    protected Remote sendDatiRegistrazione(Persona user, String serverName)
+    protected Remote sendDatiRegistrazione(Person user, String serverName)
             throws ActorAlreadyExistingException, WrongLoginException,
                 RemoteException, MalformedURLException, NotBoundException
     {
         try {
             /* Login phase */
-            serverCentrale = (ServerRMIMainCommon)
+            serverCentrale = (ServerRMICommon)
                 Naming.lookup("//" + serverName + "/ServerRMI");
 
             /* faccio il raise dell'id solo a scopo di debug. */
@@ -242,7 +242,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
     {
         try {
             /* Login phase */
-            serverCentrale = (ServerRMIMainCommon)
+            serverCentrale = (ServerRMICommon)
                 Naming.lookup("//" + serverName + "/ServerRMI");
             /* faccio il raise dell'id solo a scopo di debug. */
             sessionID = serverCentrale.sendRMILoginData(username,password);
@@ -300,7 +300,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
      */
     public void avviaDemoneConnessione() {
         threadConnessione =
-                new DemoneRavvivaConnessione(serverCentrale,sessionID,logger);
+                new DaemonReestablishConnection(serverCentrale,sessionID,logger);
         threadConnessione.start();
     }
 
@@ -340,7 +340,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
      *
      * @return List of goods
      */
-    public ListaBeni getListaBeni() {
+    public ArticlesList getListaBeni() {
         return listaBeni;
     }
 

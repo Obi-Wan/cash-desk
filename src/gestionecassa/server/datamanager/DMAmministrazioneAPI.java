@@ -14,7 +14,7 @@
 
 package gestionecassa.server.datamanager;
 
-import gestionecassa.ListaBeni;
+import gestionecassa.ArticlesList;
 
 /**
  *
@@ -27,6 +27,6 @@ public interface DMAmministrazioneAPI extends DMCommonAPI {
      * 
      * @param lista
      */
-    void saveNewListaBeni(ListaBeni lista);
+    void saveNewListaBeni(ArticlesList lista);
 
 }

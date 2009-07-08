@@ -11,7 +11,7 @@ package gestionecassa.server;
 
 import gestionecassa.server.datamanager.DataManager;
 import gestionecassa.Admin;
-import gestionecassa.Persona;
+import gestionecassa.Person;
 import gestionecassa.Cassiere;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -33,7 +33,7 @@ import gestionecassa.server.datamanager.backends.XmlDataBackend;
  * @author ben
  */
 public class Server extends UnicastRemoteObject 
-        implements ServerRMIMainCommon, ServerRMIMainAmministrazione {
+        implements ServerRMICommon, ServerRMIAdmin {
     
     /**
      * reference to the main local business logic (serverBL)
@@ -185,7 +185,7 @@ public class Server extends UnicastRemoteObject
      *
      * @return  The id of the user, which is used in comunication, once logged.
      */
-    public int sendRMIDatiRegistrazione(Persona user)
+    public int sendRMIDatiRegistrazione(Person user)
             throws    RemoteException, ActorAlreadyExistingException, WrongLoginException{
 
         String username = user.getUsername();
@@ -235,7 +235,7 @@ public class Server extends UnicastRemoteObject
                 tempRecord.idTabella = ((Cassiere)tempRecord.user).getId();
                 tempRecord.username = new String(username);
 
-                srv = new ServerRMICassiereImpl(tempRecord,dataManager,
+                srv = new ServiceRMICassiereImpl(tempRecord,dataManager,
                             Log.GESTIONECASSA_SERVER);
             } else if(tempRecord.user instanceof Admin){
                 
@@ -246,7 +246,7 @@ public class Server extends UnicastRemoteObject
                 tempRecord.idTabella = ((Admin)tempRecord.user).getId();
                 tempRecord.username = new String(username);
 
-                srv = new ServerRMIAmministratoreImpl(tempRecord,dataManager,
+                srv = new ServiceRMIAdminImpl(tempRecord,dataManager,
                         Log.GESTIONECASSA_SERVER);
             } else {
                 // Se non appartiene a nessuna delle classi di client, errore.

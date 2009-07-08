@@ -1,5 +1,5 @@
 /*
- * DemoneRavvivaConnessione.java
+ * DaemonReestablishConnection.java
  *
  * Created on 26 gennaio 2007, 22.28
  *
@@ -10,7 +10,7 @@
 package gestionecassa.clients;
 
 import java.rmi.RemoteException;
-import gestionecassa.server.ServerRMIMainCommon;
+import gestionecassa.server.ServerRMICommon;
 import org.apache.log4j.Logger;
 
 /**
@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
  *
  * @author ben
  */
-public class DemoneRavvivaConnessione extends Thread {
+public class DaemonReestablishConnection extends Thread {
 
     /**
      * Right log to use.
@@ -34,16 +34,16 @@ public class DemoneRavvivaConnessione extends Thread {
     /**
      * Server
      */
-    private ServerRMIMainCommon server;
+    private ServerRMICommon server;
     
     /**
-     * Creates a new instance of DemoneRavvivaConnessione
+     * Creates a new instance of DaemonReestablishConnection
      *
      * @param server 
      * @param id
      * @param logger
      */
-    public DemoneRavvivaConnessione(ServerRMIMainCommon server, int id, Logger logger) {
+    public DaemonReestablishConnection(ServerRMICommon server, int id, Logger logger) {
         /*The only way to destroy it, without having care of anything*/
         this.setDaemon(true);
 

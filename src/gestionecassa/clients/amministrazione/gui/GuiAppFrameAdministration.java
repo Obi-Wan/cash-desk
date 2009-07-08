@@ -1,5 +1,5 @@
 /*
- * GuiAppFrameAmministrazione.java
+ * GuiAppFrameAdministration.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,7 +13,7 @@
  */
 
 /*
- * GuiAppFrameAmministrazione.java
+ * GuiAppFrameAdministration.java
  *
  * Created on 21-mag-2009, 19.59.58
  */
@@ -28,32 +28,32 @@ import java.awt.BorderLayout;
  *
  * @author ben
  */
-public class GuiAppFrameAmministrazione extends GuiAppFrame {
+public class GuiAppFrameAdministration extends GuiAppFrame {
 
     /**
      * 
      */
-    GuiToolbarAmministrazionePanel toolbar;
+    GuiToolbarAdministrationPanel toolbar;
 
     /**
      * 
      */
-    GuiStatusAmministrazionePanel statusPanel;
+    GuiStatusAdministrationPanel statusPanel;
 
     /**
-     * Creates new form GuiAppFrameAmministrazione
+     * Creates new form GuiAppFrameAdministration
      * 
      * @param owner 
      */
-    public GuiAppFrameAmministrazione(ClientAPI owner) {
+    public GuiAppFrameAdministration(ClientAPI owner) {
         super(owner);
         initComponents();
 
-        toolbar = new GuiToolbarAmministrazionePanel(this);
+        toolbar = new GuiToolbarAdministrationPanel(this);
 
         jScrollPanelMain = new javax.swing.JScrollPane();
 
-        statusPanel = new GuiStatusAmministrazionePanel();
+        statusPanel = new GuiStatusAdministrationPanel();
 
         if (!(getContentPane().getLayout() instanceof BorderLayout)) {
             getContentPane().setLayout(new BorderLayout());

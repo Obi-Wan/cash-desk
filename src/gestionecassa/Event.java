@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author ben
  */
-public class Evento {
+public class Event {
 
     /**
      * Titolo dell'evento.
@@ -32,5 +32,5 @@ public class Evento {
     /**
      * Lista delle date dell'evento.
      */
-    List<DataEvento> listaDate;
+    List<EventDate> listaDate;
 }

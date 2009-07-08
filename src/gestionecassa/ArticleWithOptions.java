@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @author ben
  */
-public class BeneConOpzione extends BeneVenduto implements BeneConPreparazione {
+public class ArticleWithOptions extends Article implements ArticleWithPreparation {
 
     /**
      * Lista delle opzioni disponibili per questo bene.
@@ -22,7 +22,7 @@ public class BeneConOpzione extends BeneVenduto implements BeneConPreparazione {
      * @param prezzo
      * @param opzioni
      */
-    public BeneConOpzione(String nome, double prezzo, List<String> opzioni) {
+    public ArticleWithOptions(String nome, double prezzo, List<String> opzioni) {
         super(nome, prezzo);
         this.opzioni = new ArrayList<String>(opzioni);
     }
@@ -33,7 +33,7 @@ public class BeneConOpzione extends BeneVenduto implements BeneConPreparazione {
      * @param nome
      * @param prezzo
      */
-    public BeneConOpzione(String nome, double prezzo) {
+    public ArticleWithOptions(String nome, double prezzo) {
         this(nome, prezzo, new ArrayList<String>());
     }
 

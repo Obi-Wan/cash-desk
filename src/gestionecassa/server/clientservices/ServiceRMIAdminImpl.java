@@ -5,7 +5,7 @@
 
 package gestionecassa.server.clientservices;
 
-import gestionecassa.ListaBeni;
+import gestionecassa.ArticlesList;
 import java.rmi.RemoteException;
 import gestionecassa.server.SessionRecord;
 import gestionecassa.server.datamanager.DMAmministrazioneAPI;
@@ -15,8 +15,8 @@ import org.apache.log4j.Logger;
  *
  * @author ben
  */
-public class ServerRMIAmministratoreImpl extends SharedServerService
-        implements ServerRMIAmministratore {
+public class ServiceRMIAdminImpl extends SharedServerService
+        implements ServiceRMIAdminAPI {
 
     /**
      * 
@@ -29,7 +29,7 @@ public class ServerRMIAmministratoreImpl extends SharedServerService
      * @param dataManager
      * @throws java.rmi.RemoteException
      */
-    public ServerRMIAmministratoreImpl(SessionRecord session, DMAmministrazioneAPI dataManager,
+    public ServiceRMIAdminImpl(SessionRecord session, DMAmministrazioneAPI dataManager,
             Logger logger)
             throws  RemoteException{
         super(session,logger);
@@ -42,7 +42,7 @@ public class ServerRMIAmministratoreImpl extends SharedServerService
      * @return
      * @throws RemoteException
      */
-    public ListaBeni requestListaBeni() throws RemoteException {
+    public ArticlesList requestListaBeni() throws RemoteException {
         return dataManager.getCurrentListaBeni();
     }
 }

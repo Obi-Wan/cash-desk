@@ -5,7 +5,7 @@
 
 package gestionecassa.clients.cassa;
 
-import gestionecassa.ordine.Ordine;
+import gestionecassa.ordine.Order;
 import gestionecassa.clients.ClientAPI;
 import java.rmi.RemoteException;
 
@@ -28,7 +28,7 @@ public interface CassaAPI extends ClientAPI {
      *
      * @throws java.rmi.RemoteException
      */
-    void sendNuovoOrdine(Ordine nuovoOrdine) throws RemoteException;
+    void sendNuovoOrdine(Order nuovoOrdine) throws RemoteException;
 
     /**
      * Asks to the server for a new bunch of progressive numbers.

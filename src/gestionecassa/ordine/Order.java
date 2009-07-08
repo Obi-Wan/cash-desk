@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author ben
  */
-public class Ordine implements Serializable {
+public class Order implements Serializable {
 
     /**
      * Data/ora in cui è stato effettuato l'ordine
@@ -35,7 +35,7 @@ public class Ordine implements Serializable {
     /**
      * Lista dei beni per il singolo ordine.
      */
-    List<recordSingoloBene> listaBeni;
+    List<EntrySingleArticle> listaBeni;
 
     /**
      *
@@ -48,9 +48,9 @@ public class Ordine implements Serializable {
      * @param username
      * @param hostname
      */
-    public Ordine(String username, String hostname) {
+    public Order(String username, String hostname) {
         this( new Date(), new String(username), new String(hostname),
-                new ArrayList<recordSingoloBene>());
+                new ArrayList<EntrySingleArticle>());
         totalPrize = 0;
     }
 
@@ -61,9 +61,9 @@ public class Ordine implements Serializable {
      * @param username
      * @param hostname
      */
-    public Ordine(Date data, String username, String hostname) {
+    public Order(Date data, String username, String hostname) {
         this( new Date(data.getTime()), new String(username), 
-                new String(hostname), new ArrayList<recordSingoloBene>());
+                new String(hostname), new ArrayList<EntrySingleArticle>());
         totalPrize = 0;
     }
 
@@ -76,8 +76,8 @@ public class Ordine implements Serializable {
      * @param hostname
      * @param listaBeni
      */
-    private Ordine( Date data, String username, String hostname,
-            List<recordSingoloBene> listaBeni) {
+    private Order( Date data, String username, String hostname,
+            List<EntrySingleArticle> listaBeni) {
         this.data = data;
         this.listaBeni = listaBeni;
         this.username = username;
@@ -96,7 +96,7 @@ public class Ordine implements Serializable {
      * 
      * @return
      */
-    public List<recordSingoloBene> getListaBeni() {
+    public List<EntrySingleArticle> getListaBeni() {
         return listaBeni;
     }
 
@@ -114,8 +114,8 @@ public class Ordine implements Serializable {
      * @param bene
      * @param numTot
      */
-    public void addBeneVenduto(BeneVenduto bene, int numTot) {
-        listaBeni.add(new recordSingoloBene(bene, numTot));
+    public void addBeneVenduto(Article bene, int numTot) {
+        listaBeni.add(new EntrySingleArticle(bene, numTot));
     }
 
     /**
@@ -125,9 +125,9 @@ public class Ordine implements Serializable {
      * @param numTot
      * @param listaParziale
      */
-    public void addBeneConOpzione(BeneConOpzione bene, int numTot, int progressive,
-            List<recordSingolaOpzione> listaParziale) {
-        listaBeni.add(new recordSingoloBeneConOpzione(bene, numTot, progressive,
+    public void addBeneConOpzione(ArticleWithOptions bene, int numTot, int progressive,
+            List<EntrySingleOption> listaParziale) {
+        listaBeni.add(new EntrySingleArticleWithOption(bene, numTot, progressive,
                 listaParziale));
     }
 

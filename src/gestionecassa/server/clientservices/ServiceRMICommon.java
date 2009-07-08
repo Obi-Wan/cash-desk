@@ -1,5 +1,5 @@
 /*
- * ServerRMIMainAmministrazione.java
+ * ServiceRMICommon.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -12,20 +12,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package gestionecassa.server;
+package gestionecassa.server.clientservices;
 
+import gestionecassa.ArticlesList;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
  *
  * @author ben
  */
-public interface ServerRMIMainAmministrazione extends ServerRMIMainCommon {
+public interface ServiceRMICommon extends Remote {
 
     /**
-     * Stops the server on this machine.
-     *
+     * 
+     * @return
      * @throws java.rmi.RemoteException
      */
-    void remotelyStopServer() throws RemoteException;
+    public ArticlesList requestListaBeni() throws RemoteException;
 }

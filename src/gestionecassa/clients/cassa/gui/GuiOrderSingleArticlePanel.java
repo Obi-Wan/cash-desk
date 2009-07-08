@@ -1,5 +1,5 @@
 /*
- * GuiSingoloBeneOrdinePanel.java
+ * GuiOrderSingleArticlePanel.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,14 +13,14 @@
  */
 
 /*
- * GuiSingoloBeneOrdinePanel.java
+ * GuiOrderSingleArticlePanel.java
  *
  * Created on 22-mag-2009, 12.36.51
  */
 
 package gestionecassa.clients.cassa.gui;
 
-import gestionecassa.BeneVenduto;
+import gestionecassa.Article;
 import java.awt.event.ActionEvent;
 import java.text.ParseException;
 import javax.swing.AbstractAction;
@@ -30,20 +30,20 @@ import javax.swing.SpinnerNumberModel;
  *
  * @author ben
  */
-public class GuiSingoloBeneOrdinePanel extends GuiAbstrSingoloBenePanel {
+public class GuiOrderSingleArticlePanel extends GuiAbstrSingleArticlePanel {
 
-    BeneVenduto bene;
+    Article bene;
 
     SpinnerNumberModel spinnerModel;
 
-    GuiNuovoOrdinePanel parent;
+    GuiNewOrderPanel parent;
 
     /**
-     * Creates new form GuiSingoloBeneOrdinePanel
+     * Creates new form GuiOrderSingleArticlePanel
      *
      * @param nome
      */
-    public GuiSingoloBeneOrdinePanel(GuiNuovoOrdinePanel parent, BeneVenduto bene, int i) {
+    public GuiOrderSingleArticlePanel(GuiNewOrderPanel parent, Article bene, int i) {
         initComponents();
         this.bene = bene;
         this.parent = parent;

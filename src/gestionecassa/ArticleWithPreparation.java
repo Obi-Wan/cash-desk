@@ -1,5 +1,5 @@
 /*
- * ServerRMIShared.java
+ * ArticleWithPreparation.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -12,22 +12,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package gestionecassa.server.clientservices;
-
-import gestionecassa.ListaBeni;
-import java.rmi.Remote;
-import java.rmi.RemoteException;
+package gestionecassa;
 
 /**
  *
  * @author ben
  */
-public interface ServerRMIShared extends Remote {
-
-    /**
-     * 
-     * @return
-     * @throws java.rmi.RemoteException
-     */
-    public ListaBeni requestListaBeni() throws RemoteException;
+public interface ArticleWithPreparation {
 }

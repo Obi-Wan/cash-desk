@@ -5,8 +5,8 @@
 
 package gestionecassa.server.clientservices;
 
-import gestionecassa.ListaBeni;
-import gestionecassa.ordine.Ordine;
+import gestionecassa.ArticlesList;
+import gestionecassa.ordine.Order;
 import java.rmi.RemoteException;
 import org.apache.log4j.Logger;
 import gestionecassa.server.SessionRecord;
@@ -16,8 +16,8 @@ import gestionecassa.server.datamanager.DMCassaAPI;
  *
  * @author ben
  */
-public class ServerRMICassiereImpl extends SharedServerService
-        implements ServerRMICassiere {
+public class ServiceRMICassiereImpl extends SharedServerService
+        implements ServiceRMICassiere {
 
     /**
      * Reference to the data manager
@@ -36,7 +36,7 @@ public class ServerRMICassiereImpl extends SharedServerService
      *
      * @throws java.rmi.RemoteException
      */
-    public ServerRMICassiereImpl(SessionRecord session, DMCassaAPI dataManager,
+    public ServiceRMICassiereImpl(SessionRecord session, DMCassaAPI dataManager,
             Logger logger)
                 throws  RemoteException {
         super(session,logger);
@@ -62,7 +62,7 @@ public class ServerRMICassiereImpl extends SharedServerService
      *
      * @throws java.rmi.RemoteException
      */
-    public void sendOrdine(Ordine nuovoOrdine) throws RemoteException {
+    public void sendOrdine(Order nuovoOrdine) throws RemoteException {
         dataManager.addNewOrder(sessionIdentifier, nuovoOrdine);
     }
 
@@ -80,7 +80,7 @@ public class ServerRMICassiereImpl extends SharedServerService
      * @return
      * @throws RemoteException
      */
-    public ListaBeni requestListaBeni() throws RemoteException {
+    public ArticlesList requestListaBeni() throws RemoteException {
         return dataManager.getCurrentListaBeni();
     }
 

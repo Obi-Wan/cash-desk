@@ -1,5 +1,5 @@
 /*
- * GuiSingoloBeneOpzioniOrdinePanel.java
+ * GuiOrderSingleArticleWOptionsPanel.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,15 +13,15 @@
  */
 
 /*
- * GuiSingoloBeneOpzioniOrdinePanel.java
+ * GuiOrderSingleArticleWOptionsPanel.java
  *
  * Created on 23-mag-2009, 14.06.45
  */
 
 package gestionecassa.clients.cassa.gui;
 
-import gestionecassa.BeneConOpzione;
-import gestionecassa.ordine.recordSingolaOpzione;
+import gestionecassa.ArticleWithOptions;
+import gestionecassa.ordine.EntrySingleOption;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.GroupLayout.ParallelGroup;
@@ -31,16 +31,16 @@ import javax.swing.GroupLayout.SequentialGroup;
  *
  * @author ben
  */
-public class GuiSingoloBeneOpzioniOrdinePanel extends GuiAbstrSingoloBenePanel {
+public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePanel {
 
-    BeneConOpzione bene;
+    ArticleWithOptions bene;
 
-    List<GuiSingolaOpzionePanel> pannelliopzioni;
+    List<GuiOrderSingleOptionPanel> pannelliopzioni;
 
-    GuiNuovoOrdinePanel parent;
+    GuiNewOrderPanel parent;
 
-    /** Creates new form GuiSingoloBeneOpzioniOrdinePanel */
-    public GuiSingoloBeneOpzioniOrdinePanel(GuiNuovoOrdinePanel parent, BeneConOpzione bene) {
+    /** Creates new form GuiOrderSingleArticleWOptionsPanel */
+    public GuiOrderSingleArticleWOptionsPanel(GuiNewOrderPanel parent, ArticleWithOptions bene) {
         initComponents();
 
         this.parent = parent;
@@ -48,7 +48,7 @@ public class GuiSingoloBeneOpzioniOrdinePanel extends GuiAbstrSingoloBenePanel {
         this.jLabelNome.setText(bene.getNome());
         this.jLabelPrezzo.setText("€ " + bene.getPrezzo());
 
-        pannelliopzioni = new ArrayList<GuiSingolaOpzionePanel>();
+        pannelliopzioni = new ArrayList<GuiOrderSingleOptionPanel>();
     }
 
     /** This method is called from within the constructor to
@@ -152,8 +152,8 @@ public class GuiSingoloBeneOpzioniOrdinePanel extends GuiAbstrSingoloBenePanel {
      *
      */
     private void addNewOpzionePanel() {
-        GuiSingolaOpzionePanel tempPanel =
-                new GuiSingolaOpzionePanel(this,bene.getOpzioni());
+        GuiOrderSingleOptionPanel tempPanel =
+                new GuiOrderSingleOptionPanel(this,bene.getOpzioni());
         pannelliopzioni.add(tempPanel);
         rebuildListaOpzioni();
     }
@@ -162,7 +162,7 @@ public class GuiSingoloBeneOpzioniOrdinePanel extends GuiAbstrSingoloBenePanel {
      *
      * @param panel
      */
-    void removeOpzionePanel(GuiSingolaOpzionePanel panel) {
+    void removeOpzionePanel(GuiOrderSingleOptionPanel panel) {
         pannelliopzioni.remove(panel);
         rebuildListaOpzioni();
         triggerUpdateCurrentOrder();
@@ -181,7 +181,7 @@ public class GuiSingoloBeneOpzioniOrdinePanel extends GuiAbstrSingoloBenePanel {
         SequentialGroup tempSequGroup = layout.createSequentialGroup()
             .addContainerGap();
 
-        for (GuiSingolaOpzionePanel singolaOpzionePanel : pannelliopzioni) {
+        for (GuiOrderSingleOptionPanel singolaOpzionePanel : pannelliopzioni) {
 
             tempHorizGroup.addComponent(singolaOpzionePanel,
                     javax.swing.GroupLayout.DEFAULT_SIZE,
@@ -216,13 +216,13 @@ public class GuiSingoloBeneOpzioniOrdinePanel extends GuiAbstrSingoloBenePanel {
      * 
      * @return
      */
-    public List<recordSingolaOpzione> getListaParziali() {
-        List<recordSingolaOpzione> tempLista
-                = new ArrayList<recordSingolaOpzione>();
-        for (GuiSingolaOpzionePanel singolaOpzionePanel : pannelliopzioni) {
+    public List<EntrySingleOption> getListaParziali() {
+        List<EntrySingleOption> tempLista
+                = new ArrayList<EntrySingleOption>();
+        for (GuiOrderSingleOptionPanel singolaOpzionePanel : pannelliopzioni) {
             if (singolaOpzionePanel.getNumParziale() != 0) {
-                recordSingolaOpzione tempArray =
-                    new recordSingolaOpzione(
+                EntrySingleOption tempArray =
+                    new EntrySingleOption(
                         singolaOpzionePanel.getComboChoice(),
                         singolaOpzionePanel.getNumParziale());
                 tempLista.add(tempArray);
@@ -238,7 +238,7 @@ public class GuiSingoloBeneOpzioniOrdinePanel extends GuiAbstrSingoloBenePanel {
     @Override
     public int getNumTot() {
         int tot = 0;
-        for (GuiSingolaOpzionePanel singolaOpzionePanel : pannelliopzioni) {
+        for (GuiOrderSingleOptionPanel singolaOpzionePanel : pannelliopzioni) {
             tot += singolaOpzionePanel.getNumParziale();
         }
         return tot;

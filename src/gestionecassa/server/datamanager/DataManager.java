@@ -6,13 +6,13 @@
 package gestionecassa.server.datamanager;
 
 import gestionecassa.Admin;
-import gestionecassa.BeneConPreparazione;
-import gestionecassa.BeneVenduto;
+import gestionecassa.ArticleWithPreparation;
+import gestionecassa.Article;
 import gestionecassa.Cassiere;
-import gestionecassa.ListaBeni;
+import gestionecassa.ArticlesList;
 import gestionecassa.Log;
-import gestionecassa.ordine.Ordine;
-import gestionecassa.Persona;
+import gestionecassa.ordine.Order;
+import gestionecassa.Person;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,12 +50,12 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     /**
      *
      */
-    ConcurrentHashMap<String, List<Ordine> > tabellaOrdini;
+    ConcurrentHashMap<String, List<Order> > tabellaOrdini;
 
     /**
      * list of handled good
      */
-    ListaBeni listaBeni;
+    ArticlesList listaBeni;
 
     /**
      * For the goods with time of preparation is nice to have a number of
@@ -110,7 +110,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
         this.dataBackend = dataBackend;
         this.logger = Log.GESTIONECASSA_SERVER_DATAMANAGER;
 
-        tabellaOrdini = new ConcurrentHashMap<String, List<Ordine>>();
+        tabellaOrdini = new ConcurrentHashMap<String, List<Order>>();
 
         loadListaUtenti();
 
@@ -155,14 +155,14 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     private void loadListaBeni() {
         synchronized (listaBeniSemaphore) {
             try {
-                List<BeneVenduto> lista = dataBackend.loadListaBeni();
-                listaBeni = new ListaBeni(lista);
+                List<Article> lista = dataBackend.loadListaBeni();
+                listaBeni = new ArticlesList(lista);
 
                 synchronized (listaProgressiviSemaphore) {
                     listaProgressivi = new TreeMap<String, Integer>();
 
-                    for (BeneVenduto beneVenduto : lista) {
-                        if (beneVenduto instanceof BeneConPreparazione) {
+                    for (Article beneVenduto : lista) {
+                        if (beneVenduto instanceof ArticleWithPreparation) {
                             listaProgressivi.put(beneVenduto.getNome(), 0);
                         }
                     }
@@ -171,7 +171,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
                 logger.warn("ListaBeni could not be loaded, starting up a" +
                         " new clean list.", ex);
                 
-                listaBeni = new ListaBeni();
+                listaBeni = new ArticlesList();
             }
         }
     }
@@ -181,7 +181,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      * @param user
      * @return
      */
-    public void registraUtente(Persona user) {
+    public void registraUtente(Person user) {
         if (user instanceof Cassiere) {
             synchronized (listaCassieriSemaphore) {
                 listaCassieri.put(user.getUsername(), (Cassiere)user);
@@ -211,7 +211,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      *
      * @return 
      */
-    public Persona verificaUsername(String username) {
+    public Person verificaUsername(String username) {
         synchronized (listaCassieriSemaphore) {
             Cassiere tempCassiere = listaCassieri.get(username);
             if (tempCassiere != null) {
@@ -231,7 +231,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      *
      * @return
      */
-    public ListaBeni getCurrentListaBeni() {
+    public ArticlesList getCurrentListaBeni() {
         synchronized (listaBeniSemaphore) {
             return listaBeni;
         }
@@ -242,7 +242,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     //----------------------------//
 
     public void createNewCassaSession(String identifier) {
-        tabellaOrdini.put(identifier, new ArrayList<Ordine>());
+        tabellaOrdini.put(identifier, new ArrayList<Order>());
     }
 
     public void closeCassaSession(String identifier) {
@@ -255,7 +255,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
         }
     }
 
-    public void addNewOrder(String id, Ordine order) {
+    public void addNewOrder(String id, Order order) {
         tabellaOrdini.get(id).add(order);
     }
 
@@ -273,15 +273,15 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     // Amministrazione Client handle.
     //----------------------------//
 
-    public void saveNewListaBeni(ListaBeni lista) {
+    public void saveNewListaBeni(ArticlesList lista) {
         synchronized (listaBeniSemaphore) {
-            listaBeni = new ListaBeni(lista.lista);
+            listaBeni = new ArticlesList(lista.lista);
             
             synchronized (listaProgressiviSemaphore) {
                 listaProgressivi = new TreeMap<String, Integer>();
 
-                for (BeneVenduto beneVenduto : lista.lista) {
-                    if (beneVenduto instanceof BeneConPreparazione) {
+                for (Article beneVenduto : lista.lista) {
+                    if (beneVenduto instanceof ArticleWithPreparation) {
                         listaProgressivi.put(beneVenduto.getNome(), 0);
                     }
                 }

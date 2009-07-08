@@ -5,7 +5,7 @@ package gestionecassa;
  *
  * @author ben
  */
-public class Persona {
+public class Person {
 
     /**
      * id that identifies Cassiere.
@@ -25,7 +25,7 @@ public class Persona {
     /**
      * Default constructor
      */
-    public Persona() {
+    public Person() {
         this(0, "", "");
     }
 
@@ -35,7 +35,7 @@ public class Persona {
      * @param password
      * @param username
      */
-    public Persona(int id, String username, String password) {
+    public Person(int id, String username, String password) {
         this.id = id;
         this.password = new String(password);
         this.username = new String(username);

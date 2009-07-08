@@ -5,7 +5,7 @@
 
 package gestionecassa.server.clientservices;
 
-import gestionecassa.ordine.Ordine;
+import gestionecassa.ordine.Order;
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -14,10 +14,10 @@ import java.rmi.RemoteException;
  *
  * @author ben
  */
-public interface ServerRMICassiere 
-        extends ServerRMIShared, Remote, Serializable {
+public interface ServiceRMICassiere
+        extends ServiceRMICommon, Remote, Serializable {
 
-    public void sendOrdine(Ordine nuovoOrdine) throws RemoteException;
+    public void sendOrdine(Order nuovoOrdine) throws RemoteException;
 
     void annullaUltimoOrdine() throws RemoteException;
 
