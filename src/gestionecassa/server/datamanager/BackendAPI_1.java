@@ -24,22 +24,74 @@ import java.util.Collection;
 import java.util.List;
 
 /**
+ * This interface defines the basc functionalities a databackend should provide
+ * More useful functionalities would be ensured by the version 2 of he backend.
  *
  * @author ben
  */
 public interface BackendAPI_1 {
 
+    /**
+     * Saves the whole list for the session id
+     *
+     * @param id Id of the session
+     * @param list List to save
+     *
+     * @throws IOException
+     */
     void saveListOfOrders(String id, List<Order> list) throws IOException;
 
+    /**
+     * Saves the list of old articles
+     *
+     * @param list List of articles
+     *
+     * @throws IOException
+     */
     void saveArticlesList(ArticlesList list) throws IOException;
 
+    /**
+     * Loads and returns the list of sold articles.
+     *
+     * @return the list of sold articles
+     *
+     * @throws IOException
+     */
     List<Article> loadArticlesList() throws IOException;
 
+    /**
+     * Saves the list of all the Admins
+     *
+     * @param list Listo of admins to be saved
+     *
+     * @throws IOException
+     */
     void saveAdminsList(Collection<Admin> list) throws IOException;
 
+    /**
+     * Loads the list of admins and returns it.
+     *
+     * @return
+     *
+     * @throws IOException
+     */
     List<Admin> loadAdminsList() throws IOException;
 
+    /**
+     * Saves the cassieres list
+     * 
+     * @param list
+     *
+     * @throws IOException
+     */
     void saveCassiereList(Collection<Cassiere> list) throws IOException;
 
+    /**
+     * Loads the list of all the cassieres and returns it
+     *
+     * @return 
+     *
+     * @throws IOException
+     */
     List<Cassiere> loadCassiereList() throws IOException;
 }

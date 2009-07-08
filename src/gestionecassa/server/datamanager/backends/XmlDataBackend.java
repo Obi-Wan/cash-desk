@@ -25,6 +25,7 @@ import gestionecassa.ordine.EntrySingleOption;
 import gestionecassa.ordine.EntrySingleArticle;
 import gestionecassa.ordine.EntrySingleArticleWithOption;
 import gestionecassa.server.datamanager.BackendAPI_1;
+import gestionecassa.server.datamanager.BackendAPI_1_5;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ import org.dom4j.io.XMLWriter;
  *
  * @author ben
  */
-public class XmlDataBackend implements BackendAPI_1 {
+public class XmlDataBackend implements BackendAPI_1, BackendAPI_1_5 {
 
     Logger logger;
 
@@ -61,62 +62,6 @@ public class XmlDataBackend implements BackendAPI_1 {
      */
     public XmlDataBackend() {
         this.logger = Log.GESTIONECASSA_SERVER_DATAMANAGER_XML;
-    }
-
-    public void saveListOfOrders(String id, List<Order> list) throws IOException {
-
-        String fileName = xmlDataPath + id + ".xml";
-
-        Document document = DocumentHelper.createDocument();
-        Element root = document.addElement( "orders" );
-
-        for (Order order : list) {
-            Element temp = root.addElement("ordine");
-            temp.addElement("data").addText(order.getData().toString());
-            temp.addElement("prezzo_totale").addText(order.getTotalPrice()+"");
-            List<EntrySingleArticle> listaBeni = order.getListaBeni();
-
-            for (EntrySingleArticle singoloBene : listaBeni) {
-                Element tempBene = temp.addElement("singolo_bene");
-                
-                tempBene.addElement("nome").addText(singoloBene.bene.getNome());
-                tempBene.addElement("prezzo").addText(singoloBene.bene.getPrezzo()+"");
-                tempBene.addElement("numero").addText(singoloBene.numTot+"");
-
-                if (singoloBene.bene.hasOptions()) {
-                    tempBene.addAttribute("opzioni", "true");
-                    Element tempOpzioni = tempBene.addElement("opzioni");
-                    int progressivo =
-                            ((EntrySingleArticleWithOption)singoloBene).startProgressivo;
-                    List<EntrySingleOption> listaOpzioni =
-                            ((EntrySingleArticleWithOption)singoloBene).numParziale;
-
-                    for (EntrySingleOption singolaOpzione : listaOpzioni) {
-
-                        String stringaProgressivi = new String((progressivo++) + "");
-                        for (int i = 1; i < singolaOpzione.numParz; i++) {
-                            stringaProgressivi += ", " + progressivo++;
-                        }
-                        Element tempOpzione = tempOpzioni.addElement("opzione");
-                        tempOpzione.addElement("nome").addText(singolaOpzione.nomeOpz);
-                        tempOpzione.addElement("numero").addText(
-                                ""+singolaOpzione.numParz);
-                        tempOpzione.addElement("n_progressivi").addText(stringaProgressivi);
-                    }
-                } else {
-                    tempBene.addAttribute("opzioni", "false");
-                }
-            }
-        }
-
-        // for debug purposes
-        OutputFormat format = OutputFormat.createPrettyPrint();
-
-        // lets write to a file
-        XMLWriter writer = new XMLWriter(new FileWriter(fileName),format);
-        //XMLWriter writer = new XMLWriter(new FileWriter(fileName));
-        writer.write( document );
-        writer.close();
     }
 
     //------------------------//
@@ -288,5 +233,131 @@ public class XmlDataBackend implements BackendAPI_1 {
         }
 
         return output;
+    }
+
+    //--------------------------//
+    // Orders handle functions.
+    //--------------------------//
+
+    public void saveListOfOrders(String id, List<Order> list) throws IOException {
+
+        String fileName = xmlDataPath + id + ".xml";
+
+        Document document = DocumentHelper.createDocument();
+        Element root = document.addElement( "orders" );
+
+        for (Order order : list) {
+            addOrderToElement(root, order);
+        }
+
+        // for debug purposes
+        OutputFormat format = OutputFormat.createPrettyPrint();
+
+        // lets write to a file
+        XMLWriter writer = new XMLWriter(new FileWriter(fileName),format);
+        //XMLWriter writer = new XMLWriter(new FileWriter(fileName));
+        writer.write( document );
+        writer.close();
+    }
+
+    private void addOrderToElement(Element root, Order order) {
+        Element xmlOrder = root.addElement("ordine");
+        xmlOrder.addElement("data").addText(order.getData().toString());
+        xmlOrder.addElement("prezzo_totale").addText(order.getTotalPrice()+"");
+        List<EntrySingleArticle> listaBeni = order.getListaBeni();
+
+        for (EntrySingleArticle singleArticle : listaBeni) {
+            Element xmlArticle = xmlOrder.addElement("singolo_bene");
+
+            xmlArticle.addElement("nome").addText(singleArticle.bene.getNome());
+            xmlArticle.addElement("prezzo").addText(singleArticle.bene.getPrezzo()+"");
+            xmlArticle.addElement("numero").addText(singleArticle.numTot+"");
+
+            if (singleArticle.bene.hasOptions()) {
+                xmlArticle.addAttribute("opzioni", "true");
+                Element xmlOptions = xmlArticle.addElement("opzioni");
+                int progressivo =
+                        ((EntrySingleArticleWithOption)singleArticle).startProgressivo;
+                List<EntrySingleOption> options =
+                        ((EntrySingleArticleWithOption)singleArticle).numParziale;
+
+                for (EntrySingleOption option : options) {
+
+                    String stringaProgressivi = new String((progressivo++) + "");
+                    for (int i = 1; i < option.numParz; i++) {
+                        stringaProgressivi += ", " + progressivo++;
+                    }
+                    Element xmlOption = xmlOptions.addElement("opzione");
+                    xmlOption.addElement("nome").addText(option.nomeOpz);
+                    xmlOption.addElement("numero").addText(
+                            ""+option.numParz);
+                    xmlOption.addElement("n_progressivi").addText(stringaProgressivi);
+                }
+            } else {
+                xmlArticle.addAttribute("opzioni", "false");
+            }
+        }
+    }
+
+    //--------------------------//
+    // API Version 1.5
+    //--------------------------//
+
+    public void saveNewOrder(String id, Order order) throws IOException {
+
+        SAXReader reader = new SAXReader();
+        Document document;
+        String fileName = xmlDataPath + id + ".xml";
+        try {
+            document = reader.read(fileName);
+        } catch (DocumentException ex) {
+            logger.warn("Error while reading/parsing the orders file this " +
+                    "session: "+id, ex);
+            throw new IOException("I was not able to read/parse the orders " +
+                    "file of this session: "+id, ex);
+        }
+
+        Element root = document.getRootElement();
+
+        addOrderToElement(root, order);
+        
+        // for debug purposes
+        OutputFormat format = OutputFormat.createPrettyPrint();
+
+        // lets write to a file
+        XMLWriter writer = new XMLWriter(new FileWriter(fileName),format);
+        //XMLWriter writer = new XMLWriter(new FileWriter(fileName));
+        writer.write( document );
+        writer.close();
+    }
+
+    public void delLastOrder(String id) throws IOException {
+
+        SAXReader reader = new SAXReader();
+        Document document;
+        String fileName = xmlDataPath + id + ".xml";
+        try {
+            document = reader.read(fileName);
+        } catch (DocumentException ex) {
+            logger.warn("Error while reading/parsing the orders file this " +
+                    "session: "+id, ex);
+            throw new IOException("I was not able to read/parse the orders " +
+                    "file of this session: "+id, ex);
+        }
+
+        Element root = document.getRootElement();
+
+        if (root.nodeCount() != 0) {
+            root.remove(root.node(root.nodeCount()-1));
+        }
+
+        // for debug purposes
+        OutputFormat format = OutputFormat.createPrettyPrint();
+
+        // lets write to a file
+        XMLWriter writer = new XMLWriter(new FileWriter(fileName),format);
+        //XMLWriter writer = new XMLWriter(new FileWriter(fileName));
+        writer.write( document );
+        writer.close();
     }
 }

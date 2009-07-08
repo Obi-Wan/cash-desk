@@ -35,7 +35,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     /**
      * The data store backend
      */
-    BackendAPI_1 dataBackend;
+    BackendAPI_1_5 dataBackend;
 
     /**
      * List of registered users
@@ -106,7 +106,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      *
      * @param dataBackend 
      */
-    public DataManager(BackendAPI_1 dataBackend) {
+    public DataManager(BackendAPI_1_5 dataBackend) {
         this.dataBackend = dataBackend;
         this.logger = Log.GESTIONECASSA_SERVER_DATAMANAGER;
 
