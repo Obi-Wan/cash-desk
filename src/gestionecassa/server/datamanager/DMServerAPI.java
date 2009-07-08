@@ -27,7 +27,7 @@ public interface DMServerAPI {
      * @param user
      * @return
      */
-    void registraUtente(Person user);
+    void registerUser(Person user);
 
     /**
      * Verifies a username exists, and if is the case,
@@ -37,7 +37,7 @@ public interface DMServerAPI {
      *
      * @return
      */
-    Person verificaUsername(String username);
+    Person verifyUsername(String username);
 
     /**
      * Executes the last tasks before quitting (like flushing ad Co.)

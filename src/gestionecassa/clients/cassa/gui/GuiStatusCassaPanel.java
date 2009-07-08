@@ -55,11 +55,11 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
     jPanelLastOrder = new javax.swing.JPanel();
     jLabelTime = new javax.swing.JLabel();
     jTextFieldTime = new javax.swing.JTextField();
-    jLabelPrize = new javax.swing.JLabel();
-    jTextFieldPrize = new javax.swing.JTextField();
+    jLabelPrice = new javax.swing.JLabel();
+    jTextFieldPrice = new javax.swing.JTextField();
     jPanelCurrentOrder = new javax.swing.JPanel();
-    jLabelPrizeCurrent = new javax.swing.JLabel();
-    jTextFieldPrizeCurrent = new javax.swing.JTextField();
+    jLabelPriceCurrent = new javax.swing.JLabel();
+    jTextFieldPriceCurrent = new javax.swing.JTextField();
 
     jPanelMachineStatus.setBorder(javax.swing.BorderFactory.createTitledBorder("Client Status"));
 
@@ -123,9 +123,9 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
 
     jTextFieldTime.setEditable(false);
 
-    jLabelPrize.setText("Prize");
+    jLabelPrice.setText("Price");
 
-    jTextFieldPrize.setEditable(false);
+    jTextFieldPrice.setEditable(false);
 
     javax.swing.GroupLayout jPanelLastOrderLayout = new javax.swing.GroupLayout(jPanelLastOrder);
     jPanelLastOrder.setLayout(jPanelLastOrderLayout);
@@ -139,9 +139,9 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jTextFieldTime, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE))
           .addGroup(jPanelLastOrderLayout.createSequentialGroup()
-            .addComponent(jLabelPrize)
+            .addComponent(jLabelPrice)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jTextFieldPrize, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)))
+            .addComponent(jTextFieldPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)))
         .addContainerGap())
     );
     jPanelLastOrderLayout.setVerticalGroup(
@@ -153,16 +153,16 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
           .addComponent(jTextFieldTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(jPanelLastOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabelPrize)
-          .addComponent(jTextFieldPrize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+          .addComponent(jLabelPrice)
+          .addComponent(jTextFieldPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
     jPanelCurrentOrder.setBorder(javax.swing.BorderFactory.createTitledBorder("Current Order"));
 
-    jLabelPrizeCurrent.setText("Prize");
+    jLabelPriceCurrent.setText("Price");
 
-    jTextFieldPrizeCurrent.setEditable(false);
+    jTextFieldPriceCurrent.setEditable(false);
 
     javax.swing.GroupLayout jPanelCurrentOrderLayout = new javax.swing.GroupLayout(jPanelCurrentOrder);
     jPanelCurrentOrder.setLayout(jPanelCurrentOrderLayout);
@@ -170,9 +170,9 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
       jPanelCurrentOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanelCurrentOrderLayout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(jLabelPrizeCurrent)
+        .addComponent(jLabelPriceCurrent)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jTextFieldPrizeCurrent, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+        .addComponent(jTextFieldPriceCurrent, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
         .addContainerGap())
     );
     jPanelCurrentOrderLayout.setVerticalGroup(
@@ -180,8 +180,8 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
       .addGroup(jPanelCurrentOrderLayout.createSequentialGroup()
         .addContainerGap()
         .addGroup(jPanelCurrentOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabelPrizeCurrent)
-          .addComponent(jTextFieldPrizeCurrent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+          .addComponent(jLabelPriceCurrent)
+          .addComponent(jTextFieldPriceCurrent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
@@ -214,8 +214,8 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JLabel jLabelHostname;
   private javax.swing.JLabel jLabelLogged;
-  private javax.swing.JLabel jLabelPrize;
-  private javax.swing.JLabel jLabelPrizeCurrent;
+  private javax.swing.JLabel jLabelPrice;
+  private javax.swing.JLabel jLabelPriceCurrent;
   private javax.swing.JLabel jLabelTime;
   private javax.swing.JLabel jLabelUser;
   private javax.swing.JPanel jPanelCurrentOrder;
@@ -223,8 +223,8 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
   private javax.swing.JPanel jPanelMachineStatus;
   private javax.swing.JTextField jTextFieldHostname;
   private javax.swing.JTextField jTextFieldLogged;
-  private javax.swing.JTextField jTextFieldPrize;
-  private javax.swing.JTextField jTextFieldPrizeCurrent;
+  private javax.swing.JTextField jTextFieldPrice;
+  private javax.swing.JTextField jTextFieldPriceCurrent;
   private javax.swing.JTextField jTextFieldTime;
   private javax.swing.JTextField jTextFieldUser;
   // End of variables declaration//GEN-END:variables
@@ -246,30 +246,30 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
     void reset() {
         jTextFieldLogged.setText("");
         jTextFieldUser.setText("");
-        jTextFieldPrizeCurrent.setText("");
+        jTextFieldPriceCurrent.setText("");
         jTextFieldTime.setText("");
-        jTextFieldPrize.setText("");
+        jTextFieldPrice.setText("");
     }
 
     void cleanLastOrder() {
-        jTextFieldPrize.setText(jTextFieldPrize.getText() + " (Annullato)");
+        jTextFieldPrice.setText(jTextFieldPrice.getText() + " (Annullato)");
     }
 
     /**
      *
-     * @param prize
+     * @param price
      */
-    void setCurrentOrder(double prize) {
-        jTextFieldPrizeCurrent.setText(new Double(prize).toString());
+    void setCurrentOrder(double price) {
+        jTextFieldPriceCurrent.setText(new Double(price).toString());
     }
 
     /**
      * 
      * @param time
-     * @param prize
+     * @param price
      */
-    void setLastOrder(double prize) {
-        jTextFieldPrize.setText(new Double(prize).toString());
+    void setLastOrder(double price) {
+        jTextFieldPrice.setText(new Double(price).toString());
         final String timestamp = new SimpleDateFormat(
                 "HH:mm:ss", Locale.ITALIAN).format(new Date());
         jTextFieldTime.setText(timestamp);

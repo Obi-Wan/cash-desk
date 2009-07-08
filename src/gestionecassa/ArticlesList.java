@@ -18,7 +18,7 @@ public class ArticlesList implements Serializable {
     /**
      * Lista dei beni vendibili
      */
-    public List<Article> lista;
+    public List<Article> list;
 
     /**
      * Costruttore di default
@@ -28,12 +28,12 @@ public class ArticlesList implements Serializable {
     }
 
     /**
-     * Costruttore che riceve in input una lista che si memorizza.
+     * Costruttore che riceve in input una list che si memorizza.
      *
-     * @param lista
+     * @param list
      */
     public ArticlesList(List<Article> lista) {
-        this.lista = new ArrayList<Article>(lista);
+        this.list = new ArrayList<Article>(lista);
     }
 
     /**
@@ -43,7 +43,7 @@ public class ArticlesList implements Serializable {
      */
     public String getPrintableFormat() {
         String output = new String("Lista dei beni venduti:\n");
-        for (Article beneVenduto : lista) {
+        for (Article beneVenduto : list) {
             output += new String(beneVenduto.getPrintableFormat() + "\n");
         }
         return output;

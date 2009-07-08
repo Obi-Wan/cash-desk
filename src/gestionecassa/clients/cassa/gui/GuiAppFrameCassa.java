@@ -158,18 +158,18 @@ public class GuiAppFrameCassa extends GuiAppFrame {
 
     /**
      *
-     * @param prize
+     * @param price
      */
-    void updateCurrentOrder(double prize) {
-        statusPanel.setCurrentOrder(prize);
+    void updateCurrentOrder(double price) {
+        statusPanel.setCurrentOrder(price);
     }
 
     /**
      *
-     * @param prize
+     * @param price
      */
-    void updateNewOrder(double prize) {
-        statusPanel.setLastOrder(prize);
+    void updateNewOrder(double price) {
+        statusPanel.setLastOrder(price);
     }
 
     /**

@@ -56,12 +56,12 @@ public class ListaBeniTest {
         System.out.println("getPrintableFormat");
 
         ArticlesList instance = new ArticlesList();
-        instance.lista.add(new Article("culo", 80));
-        instance.lista.add(new Article("merda", 10));
+        instance.list.add(new Article("culo", 80));
+        instance.list.add(new Article("merda", 10));
         List<String> options = new ArrayList<String>();
         options.add("con mano");
         options.add("cor culo");
-        instance.lista.add(new ArticleWithOptions("rasponi", 20,options));
+        instance.list.add(new ArticleWithOptions("rasponi", 20,options));
 
         String expResult = "Lista dei beni venduti:\n- culo\t € 80.0\n- " +
                 "merda\t € 10.0\n- rasponi\t € 20.0\n  .\t con mano\n  .\t cor culo\n--\n";

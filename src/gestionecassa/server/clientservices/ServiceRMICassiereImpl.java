@@ -81,7 +81,7 @@ public class ServiceRMICassiereImpl extends SharedServerService
      * @throws RemoteException
      */
     public ArticlesList requestListaBeni() throws RemoteException {
-        return dataManager.getCurrentListaBeni();
+        return dataManager.getCurrentArticlesList();
     }
 
     /**

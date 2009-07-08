@@ -27,6 +27,6 @@ public interface DMAmministrazioneAPI extends DMCommonAPI {
      * 
      * @param lista
      */
-    void saveNewListaBeni(ArticlesList lista);
+    void saveNewArticlesList(ArticlesList lista);
 
 }

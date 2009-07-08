@@ -281,7 +281,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
     private void buildContentsList() {
         tabellaBeni = new ArrayList<recordListaBeni>();
         int i = 0;
-        for (Article bene : listaBeni.lista) {
+        for (Article bene : listaBeni.list) {
             GuiAbstrSingleArticlePanel tempPanel;
             if (bene instanceof ArticleWithOptions) {
                 tempPanel = new GuiOrderSingleArticleWOptionsPanel(this,(ArticleWithOptions)bene);
@@ -382,9 +382,9 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
     private void confirmAndSendNewOrder() {
         try {
             Order nuovoOrdine = creaNuovoOrdine();
-            if (nuovoOrdine.getTotalPrize() != 0) {
+            if (nuovoOrdine.getTotalPrice() != 0) {
                 owner.sendNuovoOrdine(nuovoOrdine);
-                parent.updateNewOrder(computeOrderPrize(nuovoOrdine));
+                parent.updateNewOrder(computeOrderPrice(nuovoOrdine));
                 this.pulisci();
             }
         } catch (RemoteException ex) {
@@ -465,7 +465,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
                 }
             }
         }
-        tempOrd.setTotalPrize(computeOrderPrize(tempOrd));
+        tempOrd.setTotalPrice(computeOrderPrice(tempOrd));
         return tempOrd;
     }
 
@@ -486,20 +486,20 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
     }
 
     /**
-     * Committs the calculated prize of the current partial order to the gui.
+     * Committs the calculated price of the current partial order to the gui.
      */
     void updateCurrentOrder() {
         parent.updateCurrentOrder(computeCurrentOrder());
     }
 
     /**
-     * Calculate prize o the given Order
+     * Calculate price o the given Order
      *
      * @param ordine the order to calculate
      *
-     * @return Prize calculated.
+     * @return Price calculated.
      */
-    private double computeOrderPrize(Order ordine) {
+    private double computeOrderPrice(Order ordine) {
         List<EntrySingleArticle> lista = ordine.getListaBeni();
         double output = 0;
         for (EntrySingleArticle singoloBene : lista) {

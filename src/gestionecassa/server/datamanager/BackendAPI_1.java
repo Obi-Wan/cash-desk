@@ -29,17 +29,17 @@ import java.util.List;
  */
 public interface BackendAPI_1 {
 
-    void saveListaOrdini(String id, List<Order> lista) throws IOException;
+    void saveListOfOrders(String id, List<Order> list) throws IOException;
 
-    void saveListaBeni(ArticlesList lista) throws IOException;
+    void saveArticlesList(ArticlesList list) throws IOException;
 
-    List<Article> loadListaBeni() throws IOException;
+    List<Article> loadArticlesList() throws IOException;
 
-    void saveListaAdmin(Collection<Admin> lista) throws IOException;
+    void saveAdminsList(Collection<Admin> list) throws IOException;
 
-    List<Admin> loadListaAdmin() throws IOException;
+    List<Admin> loadAdminsList() throws IOException;
 
-    void saveListaCassiere(Collection<Cassiere> lista) throws IOException;
+    void saveCassiereList(Collection<Cassiere> list) throws IOException;
 
-    List<Cassiere> loadListaCassiere() throws IOException;
+    List<Cassiere> loadCassiereList() throws IOException;
 }

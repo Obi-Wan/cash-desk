@@ -40,7 +40,7 @@ public class Order implements Serializable {
     /**
      *
      */
-    double totalPrize;
+    double totalPrice;
 
     /**
      * Default constructor (well, at most :) )
@@ -51,7 +51,7 @@ public class Order implements Serializable {
     public Order(String username, String hostname) {
         this( new Date(), new String(username), new String(hostname),
                 new ArrayList<EntrySingleArticle>());
-        totalPrize = 0;
+        totalPrice = 0;
     }
 
     /**
@@ -64,7 +64,7 @@ public class Order implements Serializable {
     public Order(Date data, String username, String hostname) {
         this( new Date(data.getTime()), new String(username), 
                 new String(hostname), new ArrayList<EntrySingleArticle>());
-        totalPrize = 0;
+        totalPrice = 0;
     }
 
     /**
@@ -104,8 +104,8 @@ public class Order implements Serializable {
      * 
      * @return
      */
-    public double getTotalPrize() {
-        return totalPrize;
+    public double getTotalPrice() {
+        return totalPrice;
     }
 
     /**
@@ -133,9 +133,9 @@ public class Order implements Serializable {
 
     /**
      * 
-     * @param totalPrize
+     * @param totalPrice
      */
-    public void setTotalPrize(double totalPrize) {
-        this.totalPrize = totalPrize;
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }

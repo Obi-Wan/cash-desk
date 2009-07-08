@@ -66,7 +66,7 @@ public class XmlDataBackend implements BackendAPI_1 {
         this.logger = Log.GESTIONECASSA_SERVER_DATAMANAGER_XML;
     }
 
-    public void saveListaOrdini(String id, List<Order> lista) throws IOException {
+    public void saveListOfOrders(String id, List<Order> list) throws IOException {
 
         final String timestamp = new SimpleDateFormat(
                 "yyyy-MM-dd_HH-mm-ss", Locale.ITALIAN).format(new Date());
@@ -76,11 +76,11 @@ public class XmlDataBackend implements BackendAPI_1 {
         Element root = document.addElement( "orders" );
         root.addAttribute("timestamp", timestamp);
 
-        for (Order ordine : lista) {
+        for (Order order : list) {
             Element temp = root.addElement("ordine");
-            temp.addElement("data").addText(ordine.getData().toString());
-            temp.addElement("prezzo_totale").addText(ordine.getTotalPrize()+"");
-            List<EntrySingleArticle> listaBeni = ordine.getListaBeni();
+            temp.addElement("data").addText(order.getData().toString());
+            temp.addElement("prezzo_totale").addText(order.getTotalPrice()+"");
+            List<EntrySingleArticle> listaBeni = order.getListaBeni();
 
             for (EntrySingleArticle singoloBene : listaBeni) {
                 Element tempBene = temp.addElement("singolo_bene");
@@ -129,11 +129,11 @@ public class XmlDataBackend implements BackendAPI_1 {
     // Lista beni functions
     //------------------------//
 
-    public void saveListaBeni(ArticlesList lista) throws IOException {
+    public void saveArticlesList(ArticlesList lista) throws IOException {
 
         Document document = DocumentHelper.createDocument();
         Element root = document.addElement( "beni" );
-        List<Article> listaVera = lista.lista;
+        List<Article> listaVera = lista.list;
         for (Article beneVenduto : listaVera) {
             Element tempBene = root.addElement("bene");
             tempBene.addElement("nome").addText(beneVenduto.getNome());
@@ -162,7 +162,7 @@ public class XmlDataBackend implements BackendAPI_1 {
         writer.close();
     }
 
-    public List<Article> loadListaBeni() throws IOException {
+    public List<Article> loadArticlesList() throws IOException {
         List<Article> output = new ArrayList<Article>();
 
         SAXReader reader = new SAXReader();
@@ -204,7 +204,7 @@ public class XmlDataBackend implements BackendAPI_1 {
     // Lista Utenti functions
     //------------------------//
 
-    public void saveListaAdmin(Collection<Admin> lista) throws IOException {
+    public void saveAdminsList(Collection<Admin> lista) throws IOException {
 
         Document document = DocumentHelper.createDocument();
         Element root = document.addElement( "admins" );
@@ -225,7 +225,7 @@ public class XmlDataBackend implements BackendAPI_1 {
         writer.close();
     }
 
-    public List<Admin> loadListaAdmin() throws IOException {
+    public List<Admin> loadAdminsList() throws IOException {
         List<Admin> output = new ArrayList<Admin>();
 
         SAXReader reader = new SAXReader();
@@ -250,7 +250,7 @@ public class XmlDataBackend implements BackendAPI_1 {
         return output;
     }
 
-    public void saveListaCassiere(Collection<Cassiere> lista) throws IOException {
+    public void saveCassiereList(Collection<Cassiere> lista) throws IOException {
 
         Document document = DocumentHelper.createDocument();
         Element root = document.addElement( "cassieri" );
@@ -271,7 +271,7 @@ public class XmlDataBackend implements BackendAPI_1 {
         writer.close();
     }
 
-    public List<Cassiere> loadListaCassiere() throws IOException {
+    public List<Cassiere> loadCassiereList() throws IOException {
         List<Cassiere> output = new ArrayList<Cassiere>();
 
         SAXReader reader = new SAXReader();

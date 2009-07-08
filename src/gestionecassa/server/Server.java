@@ -192,8 +192,8 @@ public class Server extends UnicastRemoteObject
         String password = user.getPassword();
 
         //se lo username non e' presente lo posso registrare.
-        if (dataManager.verificaUsername(username) == null) {
-            dataManager.registraUtente(user);
+        if (dataManager.verifyUsername(username) == null) {
+            dataManager.registerUser(user);
             return logga(username,password);
         } else {
             throw new ActorAlreadyExistingException();
@@ -213,7 +213,7 @@ public class Server extends UnicastRemoteObject
         /* Controlla che i dati dell'utente siano presenti nel
          * database degli utenti registrati*/
         
-        tempRecord.user = dataManager.verificaUsername(username);
+        tempRecord.user = dataManager.verifyUsername(username);
         //anche se mi son appena registrato, e' importante: fa un doppio check.
         
         if (tempRecord.user == null) {
