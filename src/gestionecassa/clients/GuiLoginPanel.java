@@ -21,11 +21,15 @@
 package gestionecassa.clients;
 
 import gestionecassa.exceptions.WrongLoginException;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import javax.swing.AbstractAction;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.KeyStroke;
 
 /**
  *
@@ -51,6 +55,14 @@ public class GuiLoginPanel extends javax.swing.JPanel {
         this.parent = parent;
 
         pulisci(owner.getOptions());
+
+        jButtonLogin.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "ENTER");
+        jButtonLogin.getActionMap().put("ENTER", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                login();
+            }
+        });
     }
 
     /** This method is called from within the constructor to
@@ -204,34 +216,7 @@ public class GuiLoginPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_jButtonPulisciActionPerformed
 
     private void jButtonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoginActionPerformed
-
-        //waiting dialog!!
-        JDialog waiting = new WaitingDialog(parent,false,"tring to login");
-        waiting.setVisible(true);
-
-        try {
-            owner.login(jTextFieldUsername.getText(), 
-                    new String(jPasswordFieldPassword.getPassword()),
-                    jTextFieldServer.getText());
-        } catch (WrongLoginException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                    "Il nome e/o la password immessi non sono validi","Errore",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
-        } catch (RemoteException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                    "RemoteException nel tentativo di connessione","Errore",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
-        } catch (MalformedURLException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                    "L'URL del server e' sbagliato","Errore",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
-        } catch (NotBoundException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                    "La classe non e' stata registrata sul server","Errore!",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
-        } finally {
-            waiting.dispose();
-        }
+        login();
     }//GEN-LAST:event_jButtonLoginActionPerformed
 
     private void jButtonAnnullaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAnnullaActionPerformed
@@ -268,5 +253,35 @@ public class GuiLoginPanel extends javax.swing.JPanel {
         jTextFieldUsername.setText(options.defaultUsername);
         jPasswordFieldPassword.setText("");
         jTextFieldServer.setText(options.defaultServer);
+    }
+
+    private void login() {
+        //waiting dialog!!
+        JDialog waiting = new WaitingDialog(parent,false,"tring to login");
+        waiting.setVisible(true);
+
+        try {
+            owner.login(jTextFieldUsername.getText(),
+                    new String(jPasswordFieldPassword.getPassword()),
+                    jTextFieldServer.getText());
+        } catch (WrongLoginException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Il nome e/o la password immessi non sono validi","Errore",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+        } catch (RemoteException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "RemoteException nel tentativo di connessione","Errore",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+        } catch (MalformedURLException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "L'URL del server e' sbagliato","Errore",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+        } catch (NotBoundException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "La classe non e' stata registrata sul server","Errore!",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+        } finally {
+            waiting.dispose();
+        }
     }
 }
