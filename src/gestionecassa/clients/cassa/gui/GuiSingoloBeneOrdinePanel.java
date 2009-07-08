@@ -55,13 +55,13 @@ public class GuiSingoloBeneOrdinePanel extends GuiAbstrSingoloBenePanel {
         jLabelPrezzo.setText("€ " + bene.getPrezzo());
 
         if (i < 10) {
-            jButtonMore.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(parent.tastiNum[i], "MORE"+i);
+            jButtonMore.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(parent.moreKeys[i], "MORE"+i);
             jButtonMore.getActionMap().put("MORE"+i, new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     more();
                 }
             });
-            jButtonLess.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(parent.tastiLet[i], "LESS"+i);
+            jButtonLess.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(parent.lessKeys[i], "LESS"+i);
             jButtonLess.getActionMap().put("LESS"+i, new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     less();

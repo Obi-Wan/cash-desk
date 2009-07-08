@@ -60,8 +60,8 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
      */
     List<recordListaBeni> tabellaBeni;
 
-    KeyStroke tastiNum[];
-    KeyStroke tastiLet[];
+    KeyStroke moreKeys[];
+    KeyStroke lessKeys[];
 
     /** 
      * Creates new form GuiNuovoOrdinePanel
@@ -73,32 +73,8 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
         this.owner = owner;
         this.parent = parent;
 
-        tastiNum = new KeyStroke[10];
-        tastiLet = new KeyStroke[10];
-
-        tastiNum[0] = KeyStroke.getKeyStroke(KeyEvent.VK_1,0);
-        tastiNum[1] = KeyStroke.getKeyStroke(KeyEvent.VK_2,0);
-        tastiNum[2] = KeyStroke.getKeyStroke(KeyEvent.VK_3,0);
-        tastiNum[3] = KeyStroke.getKeyStroke(KeyEvent.VK_4,0);
-        tastiNum[4] = KeyStroke.getKeyStroke(KeyEvent.VK_5,0);
-        tastiNum[5] = KeyStroke.getKeyStroke(KeyEvent.VK_6,0);
-        tastiNum[6] = KeyStroke.getKeyStroke(KeyEvent.VK_7,0);
-        tastiNum[7] = KeyStroke.getKeyStroke(KeyEvent.VK_8,0);
-        tastiNum[8] = KeyStroke.getKeyStroke(KeyEvent.VK_9,0);
-        tastiNum[9] = KeyStroke.getKeyStroke(KeyEvent.VK_0,0);
-
-        tastiLet[0] = KeyStroke.getKeyStroke(KeyEvent.VK_Q,0);
-        tastiLet[1] = KeyStroke.getKeyStroke(KeyEvent.VK_W,0);
-        tastiLet[2] = KeyStroke.getKeyStroke(KeyEvent.VK_E,0);
-        tastiLet[3] = KeyStroke.getKeyStroke(KeyEvent.VK_R,0);
-        tastiLet[4] = KeyStroke.getKeyStroke(KeyEvent.VK_T,0);
-        tastiLet[5] = KeyStroke.getKeyStroke(KeyEvent.VK_Y,0);
-        tastiLet[6] = KeyStroke.getKeyStroke(KeyEvent.VK_U,0);
-        tastiLet[7] = KeyStroke.getKeyStroke(KeyEvent.VK_I,0);
-        tastiLet[8] = KeyStroke.getKeyStroke(KeyEvent.VK_O,0);
-        tastiLet[9] = KeyStroke.getKeyStroke(KeyEvent.VK_P,0);
-
-        getListaBeni();
+        initKeysShortcuts();
+        fetchListaBeni();
         buildContentsList();
         buildVisualList();
 
@@ -108,7 +84,7 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
                 KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "ENTER");
         jButtonConferma.getActionMap().put("ENTER", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
-                confermaNuovoOrdine();
+                confirmAndSendNewOrder();
             }
         });
     }
@@ -241,7 +217,7 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
 
     private void jButtonAggiornaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAggiornaActionPerformed
         requestListaBeni();
-        getListaBeni();
+        fetchListaBeni();
         buildContentsList();
         buildVisualList();
     }//GEN-LAST:event_jButtonAggiornaActionPerformed
@@ -251,7 +227,7 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonPulisciActionPerformed
 
     private void jButtonConfermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfermaActionPerformed
-        confermaNuovoOrdine();
+        confirmAndSendNewOrder();
     }//GEN-LAST:event_jButtonConfermaActionPerformed
 
     private void jButtonAnnullaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAnnullaActionPerformed
@@ -270,7 +246,37 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
   // End of variables declaration//GEN-END:variables
 
     /**
-     *
+     * It assigns the keys for fast selection of chosen articles in this panel
+     */
+    private void initKeysShortcuts() {
+        moreKeys = new KeyStroke[10];
+        lessKeys = new KeyStroke[10];
+
+        moreKeys[0] = KeyStroke.getKeyStroke(KeyEvent.VK_1,0);
+        moreKeys[1] = KeyStroke.getKeyStroke(KeyEvent.VK_2,0);
+        moreKeys[2] = KeyStroke.getKeyStroke(KeyEvent.VK_3,0);
+        moreKeys[3] = KeyStroke.getKeyStroke(KeyEvent.VK_4,0);
+        moreKeys[4] = KeyStroke.getKeyStroke(KeyEvent.VK_5,0);
+        moreKeys[5] = KeyStroke.getKeyStroke(KeyEvent.VK_6,0);
+        moreKeys[6] = KeyStroke.getKeyStroke(KeyEvent.VK_7,0);
+        moreKeys[7] = KeyStroke.getKeyStroke(KeyEvent.VK_8,0);
+        moreKeys[8] = KeyStroke.getKeyStroke(KeyEvent.VK_9,0);
+        moreKeys[9] = KeyStroke.getKeyStroke(KeyEvent.VK_0,0);
+
+        lessKeys[0] = KeyStroke.getKeyStroke(KeyEvent.VK_Q,0);
+        lessKeys[1] = KeyStroke.getKeyStroke(KeyEvent.VK_W,0);
+        lessKeys[2] = KeyStroke.getKeyStroke(KeyEvent.VK_E,0);
+        lessKeys[3] = KeyStroke.getKeyStroke(KeyEvent.VK_R,0);
+        lessKeys[4] = KeyStroke.getKeyStroke(KeyEvent.VK_T,0);
+        lessKeys[5] = KeyStroke.getKeyStroke(KeyEvent.VK_Y,0);
+        lessKeys[6] = KeyStroke.getKeyStroke(KeyEvent.VK_U,0);
+        lessKeys[7] = KeyStroke.getKeyStroke(KeyEvent.VK_I,0);
+        lessKeys[8] = KeyStroke.getKeyStroke(KeyEvent.VK_O,0);
+        lessKeys[9] = KeyStroke.getKeyStroke(KeyEvent.VK_P,0);
+    }
+
+    /**
+     * Popolates the list of the panels related to each article sold.
      */
     private void buildContentsList() {
         tabellaBeni = new ArrayList<recordListaBeni>();
@@ -288,7 +294,8 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
     }
 
     /**
-     *
+     * It actually displays what the method <code>buildContentsList()</code>
+     * stored in the table of SoldArticle-"Panel showing it".
      */
     private void buildVisualList() {
 
@@ -347,14 +354,15 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
     }
 
     /**
-     *
+     * Gets the ArticleList and stores it locally.
      */
-    private void getListaBeni() {
+    private void fetchListaBeni() {
         listaBeni = owner.getListaBeni();
     }
 
     /**
-     * 
+     * it fetches the ArticleList from the server (through the CassaAPI)
+     * and makes the client store it locally
      */
     private void requestListaBeni() {
         try {
@@ -368,17 +376,17 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
     }
 
     /**
-     *
+     * If the new order is not empty, it sends it to the server and cleans the
+     * gui, ready for compiling a new order.
      */
-    private void confermaNuovoOrdine() {
+    private void confirmAndSendNewOrder() {
         try {
             Ordine nuovoOrdine = creaNuovoOrdine();
-            if (nuovoOrdine.getTotalPrize() == 0) {
-                return;
+            if (nuovoOrdine.getTotalPrize() != 0) {
+                owner.sendNuovoOrdine(nuovoOrdine);
+                parent.updateNewOrder(computeOrderPrize(nuovoOrdine));
+                this.pulisci();
             }
-            owner.sendNuovoOrdine(nuovoOrdine);
-            parent.updateNewOrder(computeOrderPrize(nuovoOrdine));
-            this.pulisci();
         } catch (RemoteException ex) {
             javax.swing.JOptionPane.showMessageDialog(this,
                 "Il server non ha risposto alla richiesta dell'invio del " +
@@ -389,7 +397,7 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
     }
 
     /**
-     * 
+     * Cleans the gui.
      */
     private void pulisci() {
         for (recordListaBeni singoloRecord : tabellaBeni) {
@@ -428,9 +436,9 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
     }
 
     /**
-     * Creates a new order
+     * Creates a new order from the chosen Articles
      *
-     * @return the creted order
+     * @return the created order
      * 
      * @throws RemoteException
      */
@@ -462,6 +470,7 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
     }
 
     /**
+     * It calculates the amount the "still to be committed" order will cost
      *
      * @return
      */
@@ -477,16 +486,18 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
     }
 
     /**
-     * 
+     * Committs the calculated prize of the current partial order to the gui.
      */
     void updateCurrentOrder() {
         parent.updateCurrentOrder(computeCurrentOrder());
     }
 
     /**
+     * Calculate prize o the given Order
      *
-     * @param ordine
-     * @return
+     * @param ordine the order to calculate
+     *
+     * @return Prize calculated.
      */
     private double computeOrderPrize(Ordine ordine) {
         List<recordSingoloBene> lista = ordine.getListaBeni();
@@ -498,8 +509,7 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
     }
 
     /**
-     * Questo metodo si occupa di gestire l'annullamento dell'ultimo ordine
-     * emesso, questo è abbastanza critico e da trattare con cautela.
+     * This cancells the last commited order. It's a function to treat carefully.
      */
     private void annullaUltimoOrdine() {
         final int result = javax.swing.JOptionPane.showConfirmDialog(this,
