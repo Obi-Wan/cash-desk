@@ -27,11 +27,15 @@ import gestionecassa.ListaBeni;
 import gestionecassa.ordine.Ordine;
 import gestionecassa.ordine.recordSingoloBene;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.AbstractAction;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
+import javax.swing.KeyStroke;
 
 /**
  *
@@ -56,6 +60,9 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
      */
     List<recordListaBeni> tabellaBeni;
 
+    KeyStroke tastiNum[];
+    KeyStroke tastiLet[];
+
     /** 
      * Creates new form GuiNuovoOrdinePanel
      *
@@ -66,11 +73,44 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
         this.owner = owner;
         this.parent = parent;
 
+        tastiNum = new KeyStroke[10];
+        tastiLet = new KeyStroke[10];
+
+        tastiNum[0] = KeyStroke.getKeyStroke(KeyEvent.VK_1,0);
+        tastiNum[1] = KeyStroke.getKeyStroke(KeyEvent.VK_2,0);
+        tastiNum[2] = KeyStroke.getKeyStroke(KeyEvent.VK_3,0);
+        tastiNum[3] = KeyStroke.getKeyStroke(KeyEvent.VK_4,0);
+        tastiNum[4] = KeyStroke.getKeyStroke(KeyEvent.VK_5,0);
+        tastiNum[5] = KeyStroke.getKeyStroke(KeyEvent.VK_6,0);
+        tastiNum[6] = KeyStroke.getKeyStroke(KeyEvent.VK_7,0);
+        tastiNum[7] = KeyStroke.getKeyStroke(KeyEvent.VK_8,0);
+        tastiNum[8] = KeyStroke.getKeyStroke(KeyEvent.VK_9,0);
+        tastiNum[9] = KeyStroke.getKeyStroke(KeyEvent.VK_0,0);
+
+        tastiLet[0] = KeyStroke.getKeyStroke(KeyEvent.VK_Q,0);
+        tastiLet[1] = KeyStroke.getKeyStroke(KeyEvent.VK_W,0);
+        tastiLet[2] = KeyStroke.getKeyStroke(KeyEvent.VK_E,0);
+        tastiLet[3] = KeyStroke.getKeyStroke(KeyEvent.VK_R,0);
+        tastiLet[4] = KeyStroke.getKeyStroke(KeyEvent.VK_T,0);
+        tastiLet[5] = KeyStroke.getKeyStroke(KeyEvent.VK_Y,0);
+        tastiLet[6] = KeyStroke.getKeyStroke(KeyEvent.VK_U,0);
+        tastiLet[7] = KeyStroke.getKeyStroke(KeyEvent.VK_I,0);
+        tastiLet[8] = KeyStroke.getKeyStroke(KeyEvent.VK_O,0);
+        tastiLet[9] = KeyStroke.getKeyStroke(KeyEvent.VK_P,0);
+
         getListaBeni();
         buildContentsList();
         buildVisualList();
 
         this.setPreferredSize(new Dimension(800, 450));
+
+        jButtonConferma.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "ENTER");
+        jButtonConferma.getActionMap().put("ENTER", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                confermaNuovoOrdine();
+            }
+        });
     }
 
     /** This method is called from within the constructor to
@@ -234,14 +274,16 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
      */
     private void buildContentsList() {
         tabellaBeni = new ArrayList<recordListaBeni>();
+        int i = 0;
         for (BeneVenduto bene : listaBeni.lista) {
             GuiAbstrSingoloBenePanel tempPanel;
             if (bene instanceof BeneConOpzione) {
                 tempPanel = new GuiSingoloBeneOpzioniOrdinePanel(this,(BeneConOpzione)bene);
             } else {
-                tempPanel = new GuiSingoloBeneOrdinePanel(this,bene);
+                tempPanel = new GuiSingoloBeneOrdinePanel(this,bene,i);
             }
             tabellaBeni.add(new recordListaBeni(bene, tempPanel));
+            i++;
         }
     }
 
@@ -331,6 +373,9 @@ public class GuiNuovoOrdinePanel extends javax.swing.JPanel {
     private void confermaNuovoOrdine() {
         try {
             Ordine nuovoOrdine = creaNuovoOrdine();
+            if (nuovoOrdine.getTotalPrize() == 0) {
+                return;
+            }
             owner.sendNuovoOrdine(nuovoOrdine);
             parent.updateNewOrder(computeOrderPrize(nuovoOrdine));
             this.pulisci();

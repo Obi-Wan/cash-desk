@@ -21,7 +21,9 @@
 package gestionecassa.clients.cassa.gui;
 
 import gestionecassa.BeneVenduto;
+import java.awt.event.ActionEvent;
 import java.text.ParseException;
+import javax.swing.AbstractAction;
 import javax.swing.SpinnerNumberModel;
 
 /**
@@ -41,7 +43,7 @@ public class GuiSingoloBeneOrdinePanel extends GuiAbstrSingoloBenePanel {
      *
      * @param nome
      */
-    public GuiSingoloBeneOrdinePanel(GuiNuovoOrdinePanel parent, BeneVenduto bene) {
+    public GuiSingoloBeneOrdinePanel(GuiNuovoOrdinePanel parent, BeneVenduto bene, int i) {
         initComponents();
         this.bene = bene;
         this.parent = parent;
@@ -51,6 +53,21 @@ public class GuiSingoloBeneOrdinePanel extends GuiAbstrSingoloBenePanel {
 
         jLabelNomeBene.setText(bene.getNome());
         jLabelPrezzo.setText("€ " + bene.getPrezzo());
+
+        if (i < 10) {
+            jButtonMore.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(parent.tastiNum[i], "MORE"+i);
+            jButtonMore.getActionMap().put("MORE"+i, new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    more();
+                }
+            });
+            jButtonLess.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(parent.tastiLet[i], "LESS"+i);
+            jButtonLess.getActionMap().put("LESS"+i, new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    less();
+                }
+            });
+        }
     }
 
     /** This method is called from within the constructor to
@@ -135,11 +152,7 @@ public class GuiSingoloBeneOrdinePanel extends GuiAbstrSingoloBenePanel {
      * @param evt
      */
     private void jButtonMoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMoreActionPerformed
-        Object next = spinnerModel.getNextValue();
-        if (next != null) {
-            jSpinnerNum.setValue(next);
-        }
-        parent.updateCurrentOrder();
+        more();
 }//GEN-LAST:event_jButtonMoreActionPerformed
 
     /**
@@ -147,11 +160,7 @@ public class GuiSingoloBeneOrdinePanel extends GuiAbstrSingoloBenePanel {
      * @param evt
      */
     private void jButtonLessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLessActionPerformed
-        Object previous = spinnerModel.getPreviousValue();
-        if (previous != null) {
-            jSpinnerNum.setValue(previous);
-        }
-        parent.updateCurrentOrder();
+        less();
     }//GEN-LAST:event_jButtonLessActionPerformed
 
 
@@ -183,4 +192,19 @@ public class GuiSingoloBeneOrdinePanel extends GuiAbstrSingoloBenePanel {
         jSpinnerNum.setValue(spinnerModel.getMinimum());
     }
 
+    public void more() {
+        Object next = spinnerModel.getNextValue();
+        if (next != null) {
+            jSpinnerNum.setValue(next);
+        }
+        parent.updateCurrentOrder();
+    }
+
+    public void less() {
+        Object previous = spinnerModel.getPreviousValue();
+        if (previous != null) {
+            jSpinnerNum.setValue(previous);
+        }
+        parent.updateCurrentOrder();
+    }
 }
