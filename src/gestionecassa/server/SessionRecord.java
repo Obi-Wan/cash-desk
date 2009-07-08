@@ -36,7 +36,7 @@ public class SessionRecord implements Serializable {
     int timeElapsed;
     
     /** the id of the user in the table */
-    int idTabella;
+    int idTable;
     
     /** Creates a new instance of SessionRecord */
     public SessionRecord() {

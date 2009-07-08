@@ -66,5 +66,5 @@ public interface ServerRMICommon extends Remote {
      *
      * returns the id of the user in the table
      */
-    public int getIdTabella(int sessionID) throws RemoteException;
+    public int getIdTable(int sessionID) throws RemoteException;
 }

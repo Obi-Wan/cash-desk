@@ -57,7 +57,7 @@ public class Server extends UnicastRemoteObject
     /**
      * reference to the timer and sessions manager.
      */
-    ServerTimer ilTimer;
+    ServerTimer timer;
     
     /**
      * reference to the dataManager
@@ -83,8 +83,8 @@ public class Server extends UnicastRemoteObject
      */
     private Server() throws  RemoteException{
         sessionList = new ArrayList<SessionRecord> ();
-        ilTimer = new ServerTimer();
-        ilTimer.start();
+        timer = new ServerTimer();
+        timer.start();
 
         // this is implementation specific. I will change it if necessary
         BackendAPI_1 dataBackend = new XmlDataBackend();
@@ -101,7 +101,7 @@ public class Server extends UnicastRemoteObject
      * The stopping Method
      */
     void stopServer() {
-        ilTimer.stopServer();
+        timer.stopServer();
     }
 
     /**
@@ -153,8 +153,8 @@ public class Server extends UnicastRemoteObject
      *
      * @return the id of the user in the table
      */
-    public int getIdTabella(int sessionID)throws  RemoteException{
-        return (sessionList.get(sessionID).idTabella);
+    public int getIdTable(int sessionID)throws  RemoteException{
+        return (sessionList.get(sessionID).idTable);
     }
     
     /**
@@ -171,7 +171,7 @@ public class Server extends UnicastRemoteObject
      */
     public int sendRMILoginData(String username, String password) 
             throws    RemoteException, WrongLoginException{
-        return logga(username,password);
+        return logIn(username,password);
     }
 
     /**
@@ -194,7 +194,7 @@ public class Server extends UnicastRemoteObject
         //se lo username non e' presente lo posso registrare.
         if (dataManager.verifyUsername(username) == null) {
             dataManager.registerUser(user);
-            return logga(username,password);
+            return logIn(username,password);
         } else {
             throw new ActorAlreadyExistingException();
         }
@@ -207,7 +207,7 @@ public class Server extends UnicastRemoteObject
      *
      * @return  the session id.
      */
-    private int logga(final String username, final String password)
+    private int logIn(final String username, final String password)
             throws    WrongLoginException, RemoteException{
         SessionRecord tempRecord = new SessionRecord();
         /* Controlla che i dati dell'utente siano presenti nel
@@ -232,7 +232,7 @@ public class Server extends UnicastRemoteObject
                 if (!((Cassiere)tempRecord.user).getPassword().equals(password))
                     throw new WrongLoginException();
                 
-                tempRecord.idTabella = ((Cassiere)tempRecord.user).getId();
+                tempRecord.idTable = ((Cassiere)tempRecord.user).getId();
                 tempRecord.username = new String(username);
 
                 srv = new ServiceRMICassiereImpl(tempRecord,dataManager,
@@ -243,7 +243,7 @@ public class Server extends UnicastRemoteObject
                 if (!((Admin)tempRecord.user).getPassword().equals(password))
                     throw new WrongLoginException();
                 
-                tempRecord.idTabella = ((Admin)tempRecord.user).getId();
+                tempRecord.idTable = ((Admin)tempRecord.user).getId();
                 tempRecord.username = new String(username);
 
                 srv = new ServiceRMIAdminImpl(tempRecord,dataManager,
@@ -259,7 +259,7 @@ public class Server extends UnicastRemoteObject
         }
         
         tempRecord.relatedThread = srv;
-        tempRecord.clientId = nuovaSessione(tempRecord);
+        tempRecord.clientId = newSession(tempRecord);
         
         try {
             Naming.rebind("Server"+tempRecord.clientId,srv);
@@ -284,7 +284,7 @@ public class Server extends UnicastRemoteObject
      *
      * @return new sessionId.
      */
-    final int nuovaSessione(SessionRecord newRecord) {
+    final int newSession(SessionRecord newRecord) {
         int id = 0;
         synchronized (sessionListSemaphore) {
             id = Server.sessionList.indexOf(newRecord);

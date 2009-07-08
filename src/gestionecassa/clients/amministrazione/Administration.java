@@ -152,7 +152,7 @@ public class Administration extends Luogo implements AdministrationAPI {
      */
     public void requestListaBeni() throws RemoteException {
         try {
-            listaBeni = server.requestListaBeni();
+            listaBeni = server.requestArticlesList();
         } catch (RemoteException ex) {
             logger.warn("Il server non ha risposto alla richiesta della lista",
                     ex);

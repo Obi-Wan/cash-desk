@@ -29,5 +29,5 @@ public interface ServiceRMICommon extends Remote {
      * @return
      * @throws java.rmi.RemoteException
      */
-    public ArticlesList requestListaBeni() throws RemoteException;
+    public ArticlesList requestArticlesList() throws RemoteException;
 }

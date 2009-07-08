@@ -68,8 +68,8 @@ public class ServiceRMICassiereImpl extends SharedServerService
      *
      * @throws java.rmi.RemoteException
      */
-    public void sendOrdine(Order nuovoOrdine) throws RemoteException {
-        dataManager.addNewOrder(sessionIdentifier, nuovoOrdine);
+    public void sendOrdine(Order newOrder) throws RemoteException {
+        dataManager.addNewOrder(sessionIdentifier, newOrder);
     }
 
     /**
@@ -77,7 +77,7 @@ public class ServiceRMICassiereImpl extends SharedServerService
      *
      * @throws java.rmi.RemoteException
      */
-    public void annullaUltimoOrdine() throws RemoteException {
+    public void cancelLastOrder() throws RemoteException {
         dataManager.delLastOrder(sessionIdentifier);
     }
 
@@ -86,7 +86,7 @@ public class ServiceRMICassiereImpl extends SharedServerService
      * @return
      * @throws RemoteException
      */
-    public ArticlesList requestListaBeni() throws RemoteException {
+    public ArticlesList requestArticlesList() throws RemoteException {
         return dataManager.getCurrentArticlesList();
     }
 
@@ -96,7 +96,7 @@ public class ServiceRMICassiereImpl extends SharedServerService
      * @return
      * @throws RemoteException
      */
-    public int getNProgressivo(String nomeBene, int n) throws RemoteException {
-        return dataManager.getNProgressivo(nomeBene,n);
+    public int getNProgressive(String articleName, int n) throws RemoteException {
+        return dataManager.getNProgressivo(articleName,n);
     }
 }

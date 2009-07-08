@@ -167,7 +167,7 @@ public class Cassa extends Luogo implements CassaAPI {
      */
     public void requestListaBeni() throws RemoteException {
         try {
-            listaBeni = server.requestListaBeni();
+            listaBeni = server.requestArticlesList();
         } catch (RemoteException ex) {
             logger.warn("Il server non ha risposto alla richiesta della lista",
                     ex);
@@ -197,7 +197,7 @@ public class Cassa extends Luogo implements CassaAPI {
      */
     public void annullaUltimoOrdine() throws RemoteException {
         try {
-            server.annullaUltimoOrdine();
+            server.cancelLastOrder();
         } catch (RemoteException ex) {
             logger.warn("Errore nella comunicazione col server",ex);
             throw ex;
@@ -215,7 +215,7 @@ public class Cassa extends Luogo implements CassaAPI {
      * @throws RemoteException
      */
     public int getNProgressivo(String nome, int n) throws RemoteException {
-        return server.getNProgressivo(nome, n);
+        return server.getNProgressive(nome, n);
     }
 
     /**

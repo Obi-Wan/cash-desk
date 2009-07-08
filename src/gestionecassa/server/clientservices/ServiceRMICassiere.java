@@ -19,7 +19,7 @@ public interface ServiceRMICassiere
 
     public void sendOrdine(Order nuovoOrdine) throws RemoteException;
 
-    void annullaUltimoOrdine() throws RemoteException;
+    void cancelLastOrder() throws RemoteException;
 
-    public int getNProgressivo(String nomeBene, int n) throws RemoteException;
+    public int getNProgressive(String nomeBene, int n) throws RemoteException;
 }
