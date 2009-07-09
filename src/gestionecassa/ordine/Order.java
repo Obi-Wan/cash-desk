@@ -85,6 +85,19 @@ public class Order implements Serializable {
     }
 
     /**
+     * Copy constructor
+     * 
+     * @param order
+     */
+    public Order(Order order) {
+        this.data = new Date(order.data.getTime());
+        this.hostname = new String(order.hostname);
+        this.username = new String(order.username);
+        this.totalPrice = order.totalPrice;
+        this.listaBeni = new ArrayList<EntrySingleArticle>(order.listaBeni);
+    }
+
+    /**
      *
      * @return
      */

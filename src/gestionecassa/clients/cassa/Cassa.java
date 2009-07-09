@@ -11,6 +11,7 @@ import gestionecassa.Log;
 import gestionecassa.ordine.Order;
 import gestionecassa.Person;
 import gestionecassa.clients.Luogo;
+import gestionecassa.clients.cassa.printing.PrinterHelper;
 import gestionecassa.exceptions.*;
 import gestionecassa.server.clientservices.ServiceRMICassiere;
 import java.io.IOException;
@@ -184,6 +185,9 @@ public class Cassa extends Luogo implements CassaAPI {
     public void sendNuovoOrdine(Order nuovoOrdine) throws RemoteException {
         try {
             server.sendOrdine(nuovoOrdine);
+
+            // This should print the order.
+            //PrinterHelper.startPrintingOrder(nuovoOrdine);
         } catch (RemoteException ex) {
             logger.warn("Errore nella comunicazione col server",ex);
             throw ex;
