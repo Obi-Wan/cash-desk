@@ -25,7 +25,7 @@ import gestionecassa.Log;
 import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.WrongLoginException;
 import gestionecassa.server.clientservices.*;
-import gestionecassa.server.datamanager.BackendAPI_1;
+import gestionecassa.server.datamanager.BackendAPI_1_5;
 import gestionecassa.server.datamanager.backends.XmlDataBackend;
 
 /** This is the main class of the server side application.
@@ -87,7 +87,7 @@ public class Server extends UnicastRemoteObject
         timer.start();
 
         // this is implementation specific. I will change it if necessary
-        BackendAPI_1 dataBackend = new XmlDataBackend();
+        BackendAPI_1_5 dataBackend = new XmlDataBackend();
         
         dataManager = new DataManager(dataBackend);
 
