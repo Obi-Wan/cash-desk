@@ -25,12 +25,12 @@ import gestionecassa.ordine.EntrySingleOption;
 import gestionecassa.ordine.EntrySingleArticle;
 import gestionecassa.ordine.EntrySingleArticleWithOption;
 import gestionecassa.server.datamanager.BackendAPI_1;
-import gestionecassa.server.datamanager.BackendAPI_1_5;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -45,7 +45,7 @@ import org.dom4j.io.XMLWriter;
  *
  * @author ben
  */
-public class XmlDataBackend implements BackendAPI_1, BackendAPI_1_5 {
+public class XmlDataBackend implements BackendAPI_1 {
 
     Logger logger;
 
@@ -77,6 +77,7 @@ public class XmlDataBackend implements BackendAPI_1, BackendAPI_1_5 {
             Element tempBene = root.addElement("bene");
             tempBene.addElement("nome").addText(beneVenduto.getNome());
             tempBene.addElement("prezzo").addText(beneVenduto.getPrezzo()+"");
+            tempBene.addElement("id").addText(beneVenduto.getId()+"");
             
             if (beneVenduto.hasOptions()) {
                 tempBene.addAttribute("opzioni", "true");
@@ -121,6 +122,7 @@ public class XmlDataBackend implements BackendAPI_1, BackendAPI_1_5 {
 
             String nome = tempRefBene.element("nome").getText();
             double prezzo = new Double(tempRefBene.element("prezzo").getText()).doubleValue();
+            int id = new Integer(tempRefBene.element("id").getText()).intValue();
 
             if (tempRefBene.attribute("opzioni").getValue().equals("true")) {
 
@@ -129,9 +131,9 @@ public class XmlDataBackend implements BackendAPI_1, BackendAPI_1_5 {
                     opzioni.add(((Element)opzione).getText());
                 }
 
-                tempBene = new ArticleWithOptions(nome, prezzo, opzioni);
+                tempBene = new ArticleWithOptions(id,nome, prezzo, opzioni);
             } else {
-                tempBene = new Article(nome, prezzo);
+                tempBene = new Article(id,nome, prezzo);
             }
             output.add(tempBene);
         }
@@ -148,10 +150,11 @@ public class XmlDataBackend implements BackendAPI_1, BackendAPI_1_5 {
         Document document = DocumentHelper.createDocument();
         Element root = document.addElement( "admins" );
         
-        for (Admin amministratore : lista) {
+        for (Admin admin : lista) {
             Element tempAdmin = root.addElement("admin");
-            tempAdmin.addElement("username").addText(amministratore.getUsername());
-            tempAdmin.addElement("password").addText(amministratore.getPassword());
+            tempAdmin.addElement("id").addText(admin.getId()+"");
+            tempAdmin.addElement("username").addText(admin.getUsername());
+            tempAdmin.addElement("password").addText(admin.getPassword());
         }
 
         // for debug purposes
@@ -183,7 +186,8 @@ public class XmlDataBackend implements BackendAPI_1, BackendAPI_1_5 {
 
             String username = tempRefAdmin.element("username").getText();
             String password = tempRefAdmin.element("password").getText();
-            output.add(new Admin(output.size(), username, password));
+            int id = new Integer(tempRefAdmin.element("id").getText()).intValue();
+            output.add(new Admin(id, username, password));
         }
 
         return output;
@@ -195,9 +199,10 @@ public class XmlDataBackend implements BackendAPI_1, BackendAPI_1_5 {
         Element root = document.addElement( "cassieri" );
         
         for (Cassiere cassiere : lista) {
-            Element tempAdmin = root.addElement("cassiere");
-            tempAdmin.addElement("username").addText(cassiere.getUsername());
-            tempAdmin.addElement("password").addText(cassiere.getPassword());
+            Element tempCassiere = root.addElement("cassiere");
+            tempCassiere.addElement("id").addText(cassiere.getId()+"");
+            tempCassiere.addElement("username").addText(cassiere.getUsername());
+            tempCassiere.addElement("password").addText(cassiere.getPassword());
         }
 
         // for debug purposes
@@ -224,12 +229,13 @@ public class XmlDataBackend implements BackendAPI_1, BackendAPI_1_5 {
 
         Element nodoRoot = document.getRootElement();
 
-        for (Object admin : nodoRoot.elements("cassiere")) {
-            Element tempRefAdmin = (Element)admin;
+        for (Object cassiere : nodoRoot.elements("cassiere")) {
+            Element tempRefCassiere = (Element)cassiere;
 
-            String username = tempRefAdmin.element("username").getText();
-            String password = tempRefAdmin.element("password").getText();
-            output.add(new Cassiere(output.size(), username, password));
+            String username = tempRefCassiere.element("username").getText();
+            String password = tempRefCassiere.element("password").getText();
+            int id = new Integer(tempRefCassiere.element("id").getText()).intValue();
+            output.add(new Cassiere(id, username, password));
         }
 
         return output;
@@ -239,7 +245,7 @@ public class XmlDataBackend implements BackendAPI_1, BackendAPI_1_5 {
     // Orders handle functions.
     //--------------------------//
 
-    public void saveListOfOrders(String id, List<Order> list) throws IOException {
+    public void saveListOfOrders(String id, ConcurrentLinkedQueue<Order> list) throws IOException {
 
         String fileName = xmlDataPath + id + ".xml";
 
@@ -298,66 +304,66 @@ public class XmlDataBackend implements BackendAPI_1, BackendAPI_1_5 {
             }
         }
     }
-
-    //--------------------------//
-    // API Version 1.5
-    //--------------------------//
-
-    public void saveNewOrder(String id, Order order) throws IOException {
-
-        SAXReader reader = new SAXReader();
-        Document document;
-        String fileName = xmlDataPath + id + ".xml";
-        try {
-            document = reader.read(fileName);
-        } catch (DocumentException ex) {
-            logger.warn("Error while reading/parsing the orders file this " +
-                    "session: "+id, ex);
-            throw new IOException("I was not able to read/parse the orders " +
-                    "file of this session: "+id, ex);
-        }
-
-        Element root = document.getRootElement();
-
-        addOrderToElement(root, order);
-        
-        // for debug purposes
-        OutputFormat format = OutputFormat.createPrettyPrint();
-
-        // lets write to a file
-        XMLWriter writer = new XMLWriter(new FileWriter(fileName),format);
-        //XMLWriter writer = new XMLWriter(new FileWriter(fileName));
-        writer.write( document );
-        writer.close();
-    }
-
-    public void delLastOrder(String id) throws IOException {
-
-        SAXReader reader = new SAXReader();
-        Document document;
-        String fileName = xmlDataPath + id + ".xml";
-        try {
-            document = reader.read(fileName);
-        } catch (DocumentException ex) {
-            logger.warn("Error while reading/parsing the orders file this " +
-                    "session: "+id, ex);
-            throw new IOException("I was not able to read/parse the orders " +
-                    "file of this session: "+id, ex);
-        }
-
-        Element root = document.getRootElement();
-
-        if (root.nodeCount() != 0) {
-            root.remove(root.node(root.nodeCount()-1));
-        }
-
-        // for debug purposes
-        OutputFormat format = OutputFormat.createPrettyPrint();
-
-        // lets write to a file
-        XMLWriter writer = new XMLWriter(new FileWriter(fileName),format);
-        //XMLWriter writer = new XMLWriter(new FileWriter(fileName));
-        writer.write( document );
-        writer.close();
-    }
+//
+//    //--------------------------//
+//    // API Version 1.5
+//    //--------------------------//
+//
+//    public void saveNewOrder(String id, Order order) throws IOException {
+//
+//        SAXReader reader = new SAXReader();
+//        Document document;
+//        String fileName = xmlDataPath + id + ".xml";
+//        try {
+//            document = reader.read(fileName);
+//        } catch (DocumentException ex) {
+//            logger.warn("Error while reading/parsing the orders file this " +
+//                    "session: "+id, ex);
+//            throw new IOException("I was not able to read/parse the orders " +
+//                    "file of this session: "+id, ex);
+//        }
+//
+//        Element root = document.getRootElement();
+//
+//        addOrderToElement(root, order);
+//
+//        // for debug purposes
+//        OutputFormat format = OutputFormat.createPrettyPrint();
+//
+//        // lets write to a file
+//        XMLWriter writer = new XMLWriter(new FileWriter(fileName),format);
+//        //XMLWriter writer = new XMLWriter(new FileWriter(fileName));
+//        writer.write( document );
+//        writer.close();
+//    }
+//
+//    public void delLastOrder(String id) throws IOException {
+//
+//        SAXReader reader = new SAXReader();
+//        Document document;
+//        String fileName = xmlDataPath + id + ".xml";
+//        try {
+//            document = reader.read(fileName);
+//        } catch (DocumentException ex) {
+//            logger.warn("Error while reading/parsing the orders file this " +
+//                    "session: "+id, ex);
+//            throw new IOException("I was not able to read/parse the orders " +
+//                    "file of this session: "+id, ex);
+//        }
+//
+//        Element root = document.getRootElement();
+//
+//        if (root.nodeCount() != 0) {
+//            root.remove(root.node(root.nodeCount()-1));
+//        }
+//
+//        // for debug purposes
+//        OutputFormat format = OutputFormat.createPrettyPrint();
+//
+//        // lets write to a file
+//        XMLWriter writer = new XMLWriter(new FileWriter(fileName),format);
+//        //XMLWriter writer = new XMLWriter(new FileWriter(fileName));
+//        writer.write( document );
+//        writer.close();
+//    }
 }

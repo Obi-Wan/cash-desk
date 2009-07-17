@@ -284,7 +284,9 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         for (Article bene : listaBeni.list) {
             GuiAbstrSingleArticlePanel tempPanel;
             if (bene instanceof ArticleWithOptions) {
-                tempPanel = new GuiOrderSingleArticleWOptionsPanel(this,(ArticleWithOptions)bene);
+                tempPanel = 
+                        new GuiOrderSingleArticleWOptionsPanel(this,
+                                                      (ArticleWithOptions)bene);
             } else {
                 tempPanel = new GuiOrderSingleArticlePanel(this,bene,i);
             }
@@ -306,7 +308,8 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
 
         /* Creo il nuovo layout in cui organizzerò i nuovi pannelli
          */
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(jPanelListaBeni);
+        javax.swing.GroupLayout layout =
+                new javax.swing.GroupLayout(jPanelListaBeni);
         jPanelListaBeni.setLayout(layout);
 
         /* Creo i due gruppi con cui organizzare i pannelli
@@ -335,7 +338,8 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         
         /* Ultimo spazio del gruppo verticale
          */
-        tempSequGroup.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
+        tempSequGroup.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE,
+                                      Short.MAX_VALUE);
 
         /* infine aggiungiamo il gruppo di elementi al layout della pagina
          * principale.
@@ -429,7 +433,8 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
          * @param bene
          * @param pannello
          */
-        public recordListaBeni(Article bene, GuiAbstrSingleArticlePanel pannello) {
+        public recordListaBeni(Article bene,
+                               GuiAbstrSingleArticlePanel pannello) {
             this.bene = bene;
             this.pannello = pannello;
         }
@@ -447,6 +452,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         Order tempOrd = new Order(owner.getUsername(), owner.getHostname());
 
         for (recordListaBeni singoloRecord : tabellaBeni) {
+
             tempNumTot = singoloRecord.pannello.getNumTot();
 
             if (singoloRecord.pannello.getNumTot() != 0) {
@@ -509,7 +515,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
     }
 
     /**
-     * This cancells the last commited order. It's a function to treat carefully.
+     * This cancells the last commited order. It's a function to treat carefully
      */
     private void annullaUltimoOrdine() {
         final int result = javax.swing.JOptionPane.showConfirmDialog(this,

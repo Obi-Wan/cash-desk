@@ -9,10 +9,8 @@
 
 package gestionecassa.server.clientservices;
 
-import gestionecassa.ArticlesList;
 import gestionecassa.Log;
 import gestionecassa.server.SessionRecord;
-import gestionecassa.server.datamanager.DataManager;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;

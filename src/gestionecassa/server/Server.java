@@ -25,7 +25,9 @@ import gestionecassa.Log;
 import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.WrongLoginException;
 import gestionecassa.server.clientservices.*;
-import gestionecassa.server.datamanager.BackendAPI_1_5;
+import gestionecassa.server.datamanager.BackendAPI_1;
+import gestionecassa.server.datamanager.BackendAPI_2;
+import gestionecassa.server.datamanager.backends.PostgreSQLDataBackend;
 import gestionecassa.server.datamanager.backends.XmlDataBackend;
 
 /** This is the main class of the server side application.
@@ -87,9 +89,10 @@ public class Server extends UnicastRemoteObject
         timer.start();
 
         // this is implementation specific. I will change it if necessary
-        BackendAPI_1_5 dataBackend = new XmlDataBackend();
+        BackendAPI_1 fallbackXML = new XmlDataBackend();
+        BackendAPI_2 dataBackend = new PostgreSQLDataBackend();
         
-        dataManager = new DataManager(dataBackend);
+        dataManager = new DataManager(dataBackend,fallbackXML);
 
         java.util.Calendar tempCal = java.util.Calendar.getInstance();
         tempCal.setTime(new java.util.Date());

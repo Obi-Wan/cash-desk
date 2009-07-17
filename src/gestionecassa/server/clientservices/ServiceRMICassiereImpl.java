@@ -5,6 +5,7 @@
 
 package gestionecassa.server.clientservices;
 
+import gestionecassa.Article;
 import gestionecassa.ArticlesList;
 import gestionecassa.ordine.Order;
 import java.rmi.RemoteException;
@@ -13,6 +14,8 @@ import gestionecassa.server.SessionRecord;
 import gestionecassa.server.datamanager.DMCassaAPI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -87,7 +90,13 @@ public class ServiceRMICassiereImpl extends SharedServerService
      * @throws RemoteException
      */
     public ArticlesList requestArticlesList() throws RemoteException {
-        return dataManager.getCurrentArticlesList();
+        List<Article> lista = new LinkedList<Article>();
+        for (Article article : dataManager.getCurrentArticlesList().list) {
+            if (article.isEnabled()) {
+                lista.add(article);
+            }
+        }
+        return new ArticlesList(lista);
     }
 
     /**

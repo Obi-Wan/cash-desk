@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author ben
  */
-public class Event {
+public class OrganizedEvent {
 
     /**
      * Titolo dell'evento.

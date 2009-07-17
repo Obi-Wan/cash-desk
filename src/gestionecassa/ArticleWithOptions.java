@@ -22,8 +22,20 @@ public class ArticleWithOptions extends Article implements ArticleWithPreparatio
      * @param prezzo
      * @param opzioni
      */
-    public ArticleWithOptions(String nome, double prezzo, List<String> opzioni) {
-        super(nome, prezzo);
+    public ArticleWithOptions(int id, String nome, double prezzo, List<String> opzioni) {
+        super(id,nome, prezzo);
+        this.opzioni = new ArrayList<String>(opzioni);
+    }
+
+    /**
+     * Explicit Constructor
+     *
+     * @param nome
+     * @param prezzo
+     * @param opzioni
+     */
+    public ArticleWithOptions(int id, String nome, double prezzo, List<String> opzioni, boolean b) {
+        super(id, nome, prezzo, b);
         this.opzioni = new ArrayList<String>(opzioni);
     }
 
@@ -33,8 +45,8 @@ public class ArticleWithOptions extends Article implements ArticleWithPreparatio
      * @param nome
      * @param prezzo
      */
-    public ArticleWithOptions(String nome, double prezzo) {
-        this(nome, prezzo, new ArrayList<String>());
+    public ArticleWithOptions(int id, String nome, double prezzo) {
+        this(id, nome, prezzo, new ArrayList<String>());
     }
 
     /**

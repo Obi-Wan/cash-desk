@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author ben
  */
-public class Order implements Serializable {
+public class Order implements Serializable, Comparable<Order> {
 
     /**
      * Data/ora in cui è stato effettuato l'ordine
@@ -121,6 +121,10 @@ public class Order implements Serializable {
         return totalPrice;
     }
 
+    public String getHostname() {
+        return hostname;
+    }
+
     /**
      * Adder helper
      *
@@ -150,5 +154,9 @@ public class Order implements Serializable {
      */
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public int compareTo(Order o) {
+        return this.data.compareTo(o.data);
     }
 }

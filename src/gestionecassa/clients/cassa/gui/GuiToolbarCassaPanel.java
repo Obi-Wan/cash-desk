@@ -20,6 +20,11 @@
 
 package gestionecassa.clients.cassa.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import javax.swing.AbstractAction;
+import javax.swing.KeyStroke;
+
 /**
  *
  * @author ben
@@ -32,6 +37,14 @@ public class GuiToolbarCassaPanel extends javax.swing.JPanel {
     public GuiToolbarCassaPanel(GuiAppFrameCassa owner) {
         initComponents();
         this.owner = owner;
+
+        jButtonLogout.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESC");
+        jButtonLogout.getActionMap().put("ESC", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                jButtonLogoutActionPerformed(e);
+            }
+        });
     }
 
     /** This method is called from within the constructor to

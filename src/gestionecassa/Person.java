@@ -23,10 +23,15 @@ public class Person {
     String password;
 
     /**
+     * 
+     */
+    boolean enabled;
+
+    /**
      * Default constructor
      */
     public Person() {
-        this(0, "", "");
+        this(0, "", "",true);
     }
 
     /**
@@ -35,10 +40,11 @@ public class Person {
      * @param password
      * @param username
      */
-    public Person(int id, String username, String password) {
+    public Person(int id, String username, String password, boolean b) {
         this.id = id;
         this.password = new String(password);
         this.username = new String(username);
+        this.enabled = b;
     }
 
     /**
@@ -65,4 +71,11 @@ public class Person {
         return username;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 }

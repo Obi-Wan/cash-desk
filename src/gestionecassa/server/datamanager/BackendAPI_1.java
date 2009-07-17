@@ -22,6 +22,7 @@ import gestionecassa.ordine.Order;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * This interface defines the basc functionalities a databackend should provide
@@ -39,7 +40,7 @@ public interface BackendAPI_1 {
      *
      * @throws IOException
      */
-    void saveListOfOrders(String id, List<Order> list) throws IOException;
+    void saveListOfOrders(String id, ConcurrentLinkedQueue<Order> list) throws IOException;
 
     /**
      * Saves the list of old articles

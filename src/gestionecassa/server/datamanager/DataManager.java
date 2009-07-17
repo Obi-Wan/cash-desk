@@ -14,10 +14,10 @@ import gestionecassa.Log;
 import gestionecassa.ordine.Order;
 import gestionecassa.Person;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import org.apache.log4j.Logger;
 
 /**
@@ -35,7 +35,17 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     /**
      * The data store backend
      */
-    BackendAPI_1_5 dataBackend;
+    BackendAPI_1 fallbackXML;
+
+    /**
+     * The data store backend
+     */
+    BackendAPI_2 dataBackendDB;
+
+    /**
+     * 
+     */
+    boolean useFallback;
 
     /**
      * List of registered users
@@ -50,7 +60,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     /**
      *
      */
-    ConcurrentHashMap<String, List<Order> > ordersTable;
+    ConcurrentHashMap<String, ConcurrentLinkedQueue<Order> > ordersTable;
 
     /**
      * list of handled good
@@ -104,15 +114,27 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     /**
      * Default constructor
      *
-     * @param dataBackend 
+     * @param fallbackXML
      */
-    public DataManager(BackendAPI_1_5 dataBackend) {
-        this.dataBackend = dataBackend;
+    public DataManager(BackendAPI_2 fallback, BackendAPI_1 dataBackend) {
+        this.fallbackXML = dataBackend;
+        this.dataBackendDB = fallback;
         this.logger = Log.GESTIONECASSA_SERVER_DATAMANAGER;
 
-        ordersTable = new ConcurrentHashMap<String, List<Order>>();
+        ordersTable = new ConcurrentHashMap<String, ConcurrentLinkedQueue<Order>>();
 
-        loadUsersList();
+        try {
+            dataBackendDB.init();
+            useFallback =false;
+            
+        } catch (IOException ex) {
+            useFallback = true;
+            System.out.println("DB non accessibile o non conforme: using XML");
+            Log.GESTIONECASSA_SERVER.error("errore nell'instanziare il db, uso XML", ex);
+        }
+
+        loadAdminsList();
+        loadCassieresList();
 
         loadArticlesList();
     }
@@ -120,31 +142,56 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     /**
      * 
      */
-    private void loadUsersList() {
+    private void loadAdminsList() {
         synchronized (listAdminsSemaphore) {
             adminsList = new TreeMap<String, Admin>();
             try {
-                List<Admin> listaAdmin = dataBackend.loadAdminsList();
-                for (Admin admin : listaAdmin) {
-                    adminsList.put(admin.getUsername(), admin);
+                List<Admin> listaAdmin;
+                if (useFallback) {
+                    listaAdmin = fallbackXML.loadAdminsList();
+                } else {
+                    listaAdmin = dataBackendDB.loadAdminsList();
+                }
+                
+                if (listaAdmin.isEmpty()) {
+                    logger.warn("no admins, creating a new blank/default list");
+                    registerUser(new Admin(adminsList.size()+1, "GCAdmin", "GCPassword"));
+                } else {
+                    for (Admin admin : listaAdmin) {
+                        adminsList.put(admin.getUsername(), admin);
+                    }
                 }
             } catch (IOException ex) {
-                logger.warn("reading Admins from file failed, creating a new " +
+                logger.warn("reading Admins was not successful, creating a new " +
                         "blank/default list", ex);
 
-                registerUser(new Admin(adminsList.size(), "admin", "password"));
+                registerUser(new Admin(adminsList.size()+1, "GCAdmin", "GCPassword"));
             }
         }
+    }
+
+    /**
+     * 
+     */
+    private void loadCassieresList() {
         synchronized (listCassieriSemaphore) {
             cassieresList = new TreeMap<String, Cassiere>();
             try {
-                List<Cassiere> listaCassiere = dataBackend.loadCassiereList();
+                List<Cassiere> listaCassiere;
+                if (useFallback) {
+                    listaCassiere = fallbackXML.loadCassiereList();
+                } else {
+                    listaCassiere = dataBackendDB.loadCassiereList();
+                }
+                
                 for (Cassiere cassiere : listaCassiere) {
                     cassieresList.put(cassiere.getUsername(), cassiere);
                 }
             } catch (IOException ex) {
                 logger.warn("reading Admins from file failed, creating a new " +
                         "blank list", ex);
+
+                registerUser(new Cassiere(cassieresList.size()+1, "bene", "male"));
             }
         }
     }
@@ -155,7 +202,12 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     private void loadArticlesList() {
         synchronized (listArticlesSemaphore) {
             try {
-                List<Article> lista = dataBackend.loadArticlesList();
+                List<Article> lista;
+                if (useFallback) {
+                    lista = fallbackXML.loadArticlesList();
+                } else {
+                    lista = dataBackendDB.loadArticlesList();
+                }
                 articlesList = new ArticlesList(lista);
 
                 synchronized (listProgressiviSemaphore) {
@@ -186,7 +238,11 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
             synchronized (listCassieriSemaphore) {
                 cassieresList.put(user.getUsername(), (Cassiere)user);
                 try {
-                    dataBackend.saveCassiereList(cassieresList.values());
+                    if (useFallback) {
+                        fallbackXML.saveCassiereList(cassieresList.values());
+                    } else {
+                        dataBackendDB.addCassiere((Cassiere)user);
+                    }
                 } catch (IOException ex) {
                     logger.error("could not save the new Cassieri list", ex);
                 }
@@ -195,7 +251,11 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
             synchronized (listAdminsSemaphore) {
                 adminsList.put(user.getUsername(), (Admin)user);
                 try {
-                    dataBackend.saveAdminsList(adminsList.values());
+                    if (useFallback) {
+                        fallbackXML.saveAdminsList(adminsList.values());
+                    } else {
+                        dataBackendDB.addAdmin((Admin)user);
+                    }
                 } catch (IOException ex) {
                     logger.error("could not save the new Admins list", ex);
                 }
@@ -214,13 +274,13 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     public Person verifyUsername(String username) {
         synchronized (listCassieriSemaphore) {
             Cassiere tempCassiere = cassieresList.get(username);
-            if (tempCassiere != null) {
+            if (tempCassiere != null && tempCassiere.isEnabled()) {
                 return new Cassiere(tempCassiere);
             }
         }
         synchronized (listAdminsSemaphore) {
             Admin tempAdmin = adminsList.get(username);
-            if (tempAdmin != null) {
+            if (tempAdmin != null && tempAdmin.isEnabled()) {
                 return new Admin(tempAdmin);
             }
             return null;
@@ -242,14 +302,15 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     //----------------------------//
 
     public void createNewCassaSession(String identifier) {
-        ordersTable.put(identifier, new ArrayList<Order>());
+        ordersTable.put(identifier, new ConcurrentLinkedQueue<Order>());
     }
 
     public void closeCassaSession(String identifier) {
         // flush to disk
-        List tempOrderList = ordersTable.get(identifier);
+        ConcurrentLinkedQueue<Order> tempOrderList = ordersTable.get(identifier);
         try {
-            dataBackend.saveListOfOrders(identifier, tempOrderList);
+            // usefull to save even if we're using a DB
+            fallbackXML.saveListOfOrders(identifier, tempOrderList);
         } catch (IOException ex) {
             logger.error("Order list could not be saved", ex);
         }
@@ -257,39 +318,27 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
 
     public void addNewOrder(String id, Order order) {
         ordersTable.get(id).add(order);
-    }
-
-    public void delLastOrder(String id) {
-        List tempOrderList = ordersTable.get(id);
-        if (tempOrderList.size() >= 0) {
-            tempOrderList.remove(tempOrderList.size() -1);
+        if (!useFallback) {
+            try {
+                dataBackendDB.addNewOrder(id, order);
+            } catch (IOException ex) {
+                logger.error("Non son riuscito a registrare l'ordine", ex);
+            }
         }
     }
 
-    public void terminate() {
-    }
-
-    //----------------------------//
-    // Administration Client handle.
-    //----------------------------//
-
-    public void saveNewArticlesList(ArticlesList list) {
-        synchronized (listArticlesSemaphore) {
-            articlesList = new ArticlesList(list.list);
-            
-            synchronized (listProgressiviSemaphore) {
-                progressivesList = new TreeMap<String, Integer>();
-
-                for (Article article : list.list) {
-                    if (article instanceof ArticleWithPreparation) {
-                        progressivesList.put(article.getNome(), 0);
-                    }
+    public void delLastOrder(String id) {
+        ConcurrentLinkedQueue<Order> tempOrderList = ordersTable.get(id);
+        if (tempOrderList.size() >= 0) {
+            tempOrderList.remove(
+                    (Order)tempOrderList.toArray()[tempOrderList.size() -1]
+                    );
+            if (!useFallback) {
+                try {
+                    dataBackendDB.delLastOrder(id);
+                } catch (IOException ex) {
+                    logger.error("Non son riuscito a eliminare l'ordine", ex);
                 }
-            }
-            try {
-                dataBackend.saveArticlesList(articlesList);
-            } catch (IOException ex) {
-                logger.error("could not save articles list", ex);
             }
         }
     }
@@ -312,5 +361,33 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
             progressivesList.put(articleName, progressiv+n);
             return progressiv.intValue();
         }
+    }
+
+    //----------------------------//
+    // Administration Client handle.
+    //----------------------------//
+
+    public void saveNewArticlesList(ArticlesList list) { // RIVEDI
+        synchronized (listArticlesSemaphore) {
+            articlesList = new ArticlesList(list.list);
+            
+            synchronized (listProgressiviSemaphore) {
+                progressivesList = new TreeMap<String, Integer>();
+
+                for (Article article : list.list) {
+                    if (article instanceof ArticleWithPreparation) {
+                        progressivesList.put(article.getNome(), 0);
+                    }
+                }
+            }
+            try {
+                fallbackXML.saveArticlesList(articlesList);
+            } catch (IOException ex) {
+                logger.error("could not save articles list", ex);
+            }
+        }
+    }
+
+    public void terminate() {
     }
 }

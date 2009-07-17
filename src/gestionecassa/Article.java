@@ -9,6 +9,8 @@ import java.io.Serializable;
  */
 public class Article implements Serializable {
 
+    int id;
+
     /**
      *
      */
@@ -20,11 +22,9 @@ public class Article implements Serializable {
     double prezzo;
 
     /**
-     * Default constructor
+     * 
      */
-    public Article() {
-        this("",0);
-    }
+    boolean enabled;
 
     /**
      * Explicit constructor
@@ -32,9 +32,22 @@ public class Article implements Serializable {
      * @param nome Name of the good
      * @param prezzo Price
      */
-    public Article(String nome, double prezzo) {
+    public Article(int id, String nome, double prezzo) {
+        this(id, nome, prezzo, true);
+    }
+
+    /**
+     * Most explicit constructor
+     * 
+     * @param nome
+     * @param prezzo
+     * @param enabled
+     */
+    public Article(int id, String nome, double prezzo, boolean enabled) {
         this.nome = new String(nome);
         this.prezzo = prezzo;
+        this.enabled = enabled;
+        this.id = id;
     }
 
     /**
@@ -61,5 +74,17 @@ public class Article implements Serializable {
 
     final public double getPrezzo() {
         return prezzo;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public int getId() {
+        return id;
     }
 }
