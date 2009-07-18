@@ -155,7 +155,8 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
                 
                 if (listaAdmin.isEmpty()) {
                     logger.warn("no admins, creating a new blank/default list");
-                    registerUser(new Admin(adminsList.size()+1, "GCAdmin", "GCPassword"));
+                    registerUser(new Admin(adminsList.size()+1, "GCAdmin",
+                                           "GCPassword"));
                 } else {
                     for (Admin admin : listaAdmin) {
                         adminsList.put(admin.getUsername(), admin);
@@ -165,7 +166,8 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
                 logger.warn("reading Admins was not successful, creating a new " +
                         "blank/default list", ex);
 
-                registerUser(new Admin(adminsList.size()+1, "GCAdmin", "GCPassword"));
+                registerUser(new Admin(adminsList.size()+1, "GCAdmin",
+                                       "GCPassword"));
             }
         }
     }
@@ -200,30 +202,30 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      * 
      */
     private void loadArticlesList() {
+        List<Article> lista;
         synchronized (listArticlesSemaphore) {
             try {
-                List<Article> lista;
                 if (useFallback) {
                     lista = fallbackXML.loadArticlesList();
                 } else {
                     lista = dataBackendDB.loadArticlesList();
                 }
                 articlesList = new ArticlesList(lista);
-
-                synchronized (listProgressiviSemaphore) {
-                    progressivesList = new TreeMap<String, Integer>();
-
-                    for (Article article : lista) {
-                        if (article instanceof ArticleWithPreparation) {
-                            progressivesList.put(article.getNome(), 0);
-                        }
-                    }
-                }
             } catch (IOException ex) {
                 logger.warn("ListaBeni could not be loaded, starting up a" +
                         " new clean list.", ex);
                 
                 articlesList = new ArticlesList();
+            } finally {
+                synchronized (listProgressiviSemaphore) {
+                    progressivesList = new TreeMap<String, Integer>();
+                
+                    for (Article article : articlesList.list) {
+                        if (article instanceof ArticleWithPreparation) {
+                            progressivesList.put(article.getNome(), 0);
+                        }
+                    }
+                }
             }
         }
     }
@@ -283,8 +285,8 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
             if (tempAdmin != null && tempAdmin.isEnabled()) {
                 return new Admin(tempAdmin);
             }
-            return null;
         }
+        return null;
     }
 
     /**
@@ -311,6 +313,9 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
         try {
             // usefull to save even if we're using a DB
             fallbackXML.saveListOfOrders(identifier, tempOrderList);
+
+            // once saved, delete it.
+            ordersTable.remove(identifier);
         } catch (IOException ex) {
             logger.error("Order list could not be saved", ex);
         }
