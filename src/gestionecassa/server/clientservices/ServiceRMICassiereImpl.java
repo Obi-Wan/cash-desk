@@ -8,6 +8,7 @@ package gestionecassa.server.clientservices;
 import gestionecassa.Article;
 import gestionecassa.ArticlesList;
 import gestionecassa.ordine.Order;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import org.apache.log4j.Logger;
 import gestionecassa.server.SessionRecord;
@@ -71,7 +72,7 @@ public class ServiceRMICassiereImpl extends SharedServerService
      *
      * @throws java.rmi.RemoteException
      */
-    public void sendOrdine(Order newOrder) throws RemoteException {
+    public void sendOrdine(Order newOrder) throws RemoteException, IOException {
         dataManager.addNewOrder(sessionIdentifier, newOrder);
     }
 
@@ -80,7 +81,7 @@ public class ServiceRMICassiereImpl extends SharedServerService
      *
      * @throws java.rmi.RemoteException
      */
-    public void cancelLastOrder() throws RemoteException {
+    public void cancelLastOrder() throws RemoteException, IOException {
         dataManager.delLastOrder(sessionIdentifier);
     }
 

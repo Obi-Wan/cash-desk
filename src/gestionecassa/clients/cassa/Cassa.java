@@ -182,14 +182,19 @@ public class Cassa extends Luogo implements CassaAPI {
      *
      * @throws java.rmi.RemoteException
      */
-    public void sendNuovoOrdine(Order nuovoOrdine) throws RemoteException {
+    public void sendNuovoOrdine(Order nuovoOrdine) throws RemoteException, IOException {
         try {
             server.sendOrdine(nuovoOrdine);
+            // This should print the order.
+            //PrinterHelper.startPrintingOrder(nuovoOrdine);
 
             // This should print the order.
             //PrinterHelper.startPrintingOrder(nuovoOrdine);
         } catch (RemoteException ex) {
             logger.warn("Errore nella comunicazione col server",ex);
+            throw ex;
+        } catch (IOException ex) {
+            logger.warn("Errore nel salvataggio sul server",ex);
             throw ex;
         }
     }
@@ -199,11 +204,14 @@ public class Cassa extends Luogo implements CassaAPI {
      *
      * @throws java.rmi.RemoteException
      */
-    public void annullaUltimoOrdine() throws RemoteException {
+    public void annullaUltimoOrdine() throws RemoteException, IOException {
         try {
             server.cancelLastOrder();
         } catch (RemoteException ex) {
             logger.warn("Errore nella comunicazione col server",ex);
+            throw ex;
+        } catch (IOException ex) {
+            logger.warn("Errore nella cancellazione sul DB del server",ex);
             throw ex;
         }
     }

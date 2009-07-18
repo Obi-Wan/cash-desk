@@ -29,6 +29,7 @@ import gestionecassa.ordine.EntrySingleArticle;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -397,6 +398,11 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
                 "nuovo ordine",
                 "Errore di comunicazione",
                 javax.swing.JOptionPane.ERROR_MESSAGE);
+        } catch (IOException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Il server ha avuto problemi col DB",
+                "Errore del Backend sul server",
+                javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -534,6 +540,11 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
                 javax.swing.JOptionPane.showMessageDialog(this,
                     "Il server non ha risposto alla richiesta di annullamento",
                     "Errore di comunicazione",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            } catch (IOException ex) {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                    "Il server ha avuto problemi col DB",
+                    "Errore del Backend sul server",
                     javax.swing.JOptionPane.ERROR_MESSAGE);
             }
         }

@@ -6,6 +6,7 @@
 package gestionecassa.server.clientservices;
 
 import gestionecassa.ordine.Order;
+import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -17,9 +18,9 @@ import java.rmi.RemoteException;
 public interface ServiceRMICassiere
         extends ServiceRMICommon, Remote, Serializable {
 
-    public void sendOrdine(Order nuovoOrdine) throws RemoteException;
+    public void sendOrdine(Order nuovoOrdine) throws RemoteException, IOException;
 
-    void cancelLastOrder() throws RemoteException;
+    void cancelLastOrder() throws RemoteException, IOException;
 
     public int getNProgressive(String nomeBene, int n) throws RemoteException;
 }

@@ -316,29 +316,21 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
         }
     }
 
-    public void addNewOrder(String id, Order order) {
+    public void addNewOrder(String id, Order order) throws IOException {
         ordersTable.get(id).add(order);
         if (!useFallback) {
-            try {
-                dataBackendDB.addNewOrder(id, order);
-            } catch (IOException ex) {
-                logger.error("Non son riuscito a registrare l'ordine", ex);
-            }
+            dataBackendDB.addNewOrder(id, order);
         }
     }
 
-    public void delLastOrder(String id) {
+    public void delLastOrder(String id) throws IOException {
         ConcurrentLinkedQueue<Order> tempOrderList = ordersTable.get(id);
         if (tempOrderList.size() >= 0) {
             tempOrderList.remove(
                     (Order)tempOrderList.toArray()[tempOrderList.size() -1]
                     );
             if (!useFallback) {
-                try {
-                    dataBackendDB.delLastOrder(id);
-                } catch (IOException ex) {
-                    logger.error("Non son riuscito a eliminare l'ordine", ex);
-                }
+                dataBackendDB.delLastOrder(id);
             }
         }
     }

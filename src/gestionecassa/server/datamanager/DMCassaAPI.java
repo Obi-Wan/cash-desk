@@ -15,6 +15,7 @@
 package gestionecassa.server.datamanager;
 
 import gestionecassa.ordine.Order;
+import java.io.IOException;
 
 /**
  *
@@ -26,9 +27,9 @@ public interface DMCassaAPI extends DMCommonAPI {
 
     void closeCassaSession(String identifier);
 
-    void addNewOrder(String id, Order order);
+    void addNewOrder(String id, Order order) throws IOException;
 
-    void delLastOrder(String id);
+    void delLastOrder(String id) throws IOException;
 
     int getNProgressivo(String nomeBene,int n);
 }
