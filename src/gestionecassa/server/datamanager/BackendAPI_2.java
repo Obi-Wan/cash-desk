@@ -27,7 +27,7 @@ import java.util.List;
  */
 public interface BackendAPI_2 {
     
-    public void init() throws IOException;
+    public void init(String url) throws IOException;
 
     //--------------------//
 

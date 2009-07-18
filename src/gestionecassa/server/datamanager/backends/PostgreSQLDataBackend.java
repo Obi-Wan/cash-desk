@@ -48,22 +48,22 @@ import org.apache.log4j.Logger;
 public class PostgreSQLDataBackend implements BackendAPI_2 {
 
     /**
-     * 
+     * reference to the logger for the DB
      */
     Logger logger;
 
     /**
-     *
+     * Connection to the DB
      */
     Connection db;
 
     /**
-     *
+     * List of tables and information on how to create them if missing
      */
     Map<String,String> tables;
 
     /**
-     *
+     * Default constructor
      */
     public PostgreSQLDataBackend() {
         logger = Log.GESTIONECASSA_SERVER_DATAMANAGER_DB;
@@ -123,52 +123,58 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
     }
 
     /**
+     * Initialization method: if it fails the DB is useless.
      *
+     * @param url Url of the DB to use
+     * 
      * @throws IOException
      */
-    public void init() throws IOException {
+    public void init(String url) throws IOException {
         try {
             Class.forName("org.postgresql.Driver");
-            String url = "jdbc:postgresql://localhost:5432/GCDB";
             String username = "gestionecassa";
             String password = "GestioneCassa";
             db = DriverManager.getConnection(url, username, password);
-        } catch (SQLException ex) {
-            logger.error("errore connessione db", ex);
-            throw new IOException(ex);
         } catch (ClassNotFoundException ex) {
             logger.error("classe non trovata", ex);
             throw new IOException(ex);
+        } catch (SQLException ex) {
+            logger.error("errore connessione db", ex);
+            throw new IOException(ex);
         }
         
-        String query =
-                "SELECT table_name" +
-                "   FROM information_schema.tables" +
-                "   WHERE table_schema='public'" +
-                "       AND table_type='BASE TABLE';";
+        String query =  "SELECT table_name" +
+                        "   FROM information_schema.tables" +
+                        "   WHERE table_schema='public'" +
+                        "       AND table_type='BASE TABLE';";
         try {
             Statement st = db.createStatement();
-            ResultSet rs = st.executeQuery(query);
-            
-            Set<String> tabelleDB = new ConcurrentSkipListSet<String>();
-            while (rs.next()) {
-                tabelleDB.add(rs.getString("table_name"));
-            }
-            rs.close();
-            
-            for (String table_ref : tables.keySet()) {
-                String table_name = table_ref.substring(3);
-                if (!tabelleDB.contains(table_name)) {
-                    logger.warn(table_name + " is not in the table list. Creating " +
-                            " blank one");
-                    st.execute("CREATE TABLE " + table_name + " ( " +
-                                    tables.get(table_ref) + " );");
-                }
-            }
-            st.close();
+            try {
+                ResultSet rs = st.executeQuery(query);
 
+                Set<String> tabelleDB = new ConcurrentSkipListSet<String>();
+                while (rs.next()) {
+                    tabelleDB.add(rs.getString("table_name"));
+                }
+                rs.close();
+
+                for (String table_ref : tables.keySet()) {
+                    String table_name = table_ref.substring(3);
+                    if (!tabelleDB.contains(table_name)) {
+                        logger.warn(table_name + " is not in the table list. Creating " +
+                                " blank one");
+                        genericCommit("CREATE TABLE " + table_name + " ( " +
+                                        tables.get(table_ref) + " );");
+                    }
+                }
+            } catch (SQLException ex) {
+                logger.error("Errore nella query: " + query, ex);
+                throw new IOException(ex);
+            } finally {
+                st.close();
+            }
         } catch (SQLException ex) {
-            logger.error("Errore", ex);
+            logger.error("Errore nella comunicazione col DB", ex);
             throw new IOException(ex);
         }
     }
@@ -191,26 +197,28 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @throws IOException
      */
     public void addArticleToList(Article article) throws IOException {
+        // Start by inserting the article in the proper table.
+        String subQueryPos = "SELECT max(num_pos) + 1 " +
+                             "  FROM articles";
         String insQuery =
-                "INSERT INTO articles (name, price, enabled, options)" +
+                "INSERT INTO articles (name, price, enabled, options, num_pos)" +
                 "VALUES ('" + article.getNome() + "', '" +
                     article.getPrezzo() + "', " + article.isEnabled() + ", '" +
-                    article.hasOptions() + "')";
-        genericAdder(insQuery);
-        
-        try {
-            Statement stIns = db.createStatement();
-            String currValQuery =
-                    "SELECT currval( 'articles_id_article_seq' );";
+                    article.hasOptions() + "', (" + subQueryPos + ") )";
+        genericCommit(insQuery);
+
+        //then just if it has options
+        if (article.hasOptions()) {
+            String currValQuery = "SELECT currval('articles_id_article_seq');";
             try {
-                ResultSet keys = stIns.executeQuery(currValQuery);
-                keys.next();
-                int idArticle = keys.getInt("currval");
-                if (article.hasOptions()) {
+                Statement stIns = db.createStatement();
+                try {
+                    ResultSet keys = stIns.executeQuery(currValQuery);
+                    keys.next();
+                    int idArticle = keys.getInt("currval");
                     List<String> opts = ((ArticleWithOptions)article).getOpzioni();
                     String insOptsQuery =
-                            "INSERT INTO options (id_article, name) " +
-                            "VALUES ";
+                            "INSERT INTO options (id_article, name) VALUES ";
                     for (Iterator<String> it = opts.iterator(); it.hasNext();) {
                         String option = it.next();
                         insOptsQuery += "('" + idArticle +
@@ -218,17 +226,18 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                                 (it.hasNext() ? "," : ";");
                     }
 
-                    genericAdder(insOptsQuery);
+                    genericCommit(insOptsQuery);
+                    
+                } catch (SQLException ex) {
+                    logger.error("Errore con la query: " + currValQuery, ex);
+                    throw new IOException(ex);
+                } finally {
+                    stIns.close();
                 }
             } catch (SQLException ex) {
-                logger.error("Errore con la query: " + currValQuery, ex);
+                logger.error("Errore nella counicazione col DB", ex);
                 throw new IOException(ex);
-            } finally {
-                stIns.close();
             }
-        } catch (SQLException ex) {
-            logger.error("Errore nella counicazione col DB", ex);
-            throw new IOException(ex);
         }
     }
 
@@ -240,10 +249,9 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @throws IOException
      */
     public void enableArticleFromList(Article article, boolean enable) throws IOException {
-        String query =
-                "SELECT enabled" +
-                "   FROM articles" +
-                "   WHERE name = '" + article.getNome() + "';";
+        String query =  "SELECT enabled" +
+                        "   FROM articles" +
+                        "   WHERE name = '" + article.getNome() + "';";
         genericEnabler(query, enable);
     }
 
@@ -255,10 +263,9 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
     public List<Article> loadArticlesList() throws IOException {
 
         List<Article> outout = new Vector<Article>();
-        String query =
-                "SELECT *" +
-                "   FROM articles" +
-                "   ORDER BY num_pos;";
+        String query =  "SELECT *" +
+                        "   FROM articles" +
+                        "   ORDER BY num_pos;";
         try {
             Statement st = db.createStatement();
             try {
@@ -297,33 +304,6 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
         return outout;
     }
 
-    private List<String> getOptionsByArticleID(int art_id) throws IOException {
-        List<String> options = new LinkedList<String>();
-        String queryOpts =
-                "SELECT name" +
-                "   FROM options" +
-                "   WHERE id_article = '" + art_id + "';";
-        try {
-            Statement stOpts = db.createStatement();
-
-            try {
-                ResultSet rsOpts = stOpts.executeQuery(queryOpts);
-                while (rsOpts.next()) {
-                    options.add(rsOpts.getString("name"));
-                }
-            } catch (SQLException ex) {
-                logger.error("Errore con la query: " + queryOpts, ex);
-                throw new IOException(ex);
-            } finally {
-                stOpts.close();
-            }
-        } catch (SQLException ex) {
-            logger.error("Errore nella counicazione col DB", ex);
-            throw new IOException(ex);
-        }
-        return options;
-    }
-
     //-----------------//
 
     /**
@@ -337,7 +317,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                 "VALUES ('" + admin.getUsername() + "', '" +
                     admin.getPassword() + "', " +
                     admin.isEnabled() + " )";
-        genericAdder(insQuery);
+        genericCommit(insQuery);
     }
 
     /**
@@ -347,9 +327,8 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      */
     public List<Admin> loadAdminsList() throws IOException {
 
-        String query =
-                "SELECT *" +
-                "   FROM admins;";
+        String query =  "SELECT *" +
+                        "   FROM admins;";
         List<Admin> outout = new LinkedList<Admin>();
         try {
             Statement st = db.createStatement();
@@ -384,10 +363,9 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @throws IOException
      */
     public void enableAdmin(Admin admin, boolean enable) throws IOException {
-        String query =
-                "SELECT enabled" +
-                "   FROM admins" +
-                "   WHERE username = '" + admin.getUsername() + "';";
+        String query =  "SELECT enabled" +
+                        "   FROM admins" +
+                        "   WHERE username = '" + admin.getUsername() + "';";
         genericEnabler(query, enable);
     }
 
@@ -402,7 +380,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                 "VALUES ('" + cassiere.getUsername() + "', '" +
                     cassiere.getPassword() + "', " +
                     cassiere.isEnabled() + " )";
-        genericAdder(insQuery);
+        genericCommit(insQuery);
     }
 
     /**
@@ -412,9 +390,8 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      */
     public List<Cassiere> loadCassiereList() throws IOException {
 
-        String query =
-                "SELECT *" +
-                "   FROM cassieres;";
+        String query =  "SELECT *" +
+                        "   FROM cassieres;";
         List<Cassiere> outout = new LinkedList<Cassiere>();
         try {
             Statement st = db.createStatement();
@@ -423,9 +400,9 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 
                 while (rs.next()) {
                     outout.add(new Cassiere(rs.getInt("id_cassiere"),
-                                         rs.getString("username"),
-                                         rs.getString("password"),
-                                         rs.getBoolean("enabled")));
+                                            rs.getString("username"),
+                                            rs.getString("password"),
+                                            rs.getBoolean("enabled")));
                 }
                 rs.close();
             } catch (SQLException ex) {
@@ -448,28 +425,32 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @throws IOException
      */
     public void enableCassiere(Cassiere cassiere, boolean enable) throws IOException {
-        String query =
-                "SELECT enabled" +
-                "   FROM cassieres" +
-                "   WHERE username = '" + cassiere.getUsername() + "';";
+        String query =  "SELECT enabled" +
+                        "   FROM cassieres" +
+                        "   WHERE username = '" + cassiere.getUsername() + "';";
         genericEnabler(query, enable);
     }
     
     //-----------------//
 
-    public void addNewOrder(String id, Order order) throws IOException {
-        String username = id.substring(0, id.lastIndexOf('@'));
+    /**
+     * 
+     * @param id
+     * @param order
+     * @throws IOException
+     */
+    public void addNewOrder(String sessionId, Order order) throws IOException {
+        String username = sessionId.substring(0, sessionId.lastIndexOf('@'));
         final String timestamp = new SimpleDateFormat(
                 "yyyy-MM-dd HH:mm:ss").format(order.getData());
 
-        String cassiereQuery =
-                "SELECT id_cassiere, enabled" +
-                "   FROM cassieres" +
-                "   WHERE username = '" + username + "'";
+        String cassQuery =  "SELECT id_cassiere, enabled" +
+                            "   FROM cassieres" +
+                            "   WHERE username = '" + username + "'";
         try {
             
             Statement stCass = db.createStatement();
-            ResultSet rsCass = stCass.executeQuery(cassiereQuery);
+            ResultSet rsCass = stCass.executeQuery(cassQuery);
             
             if (rsCass.next() && rsCass.getBoolean("enabled")) {
 
@@ -483,32 +464,34 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 
                 Statement stOrder = db.createStatement();
                 stOrder.execute(aggiuntaQuery);
-                ResultSet key = stOrder.executeQuery("SELECT currval( 'orders_id_order_seq' );");
+                ResultSet key = stOrder.executeQuery(
+                        "SELECT currval( 'orders_id_order_seq' );");
                 key.next();
+                int idOrder = key.getInt("currval");
 
-                Statement stAddArticleEntry = db.createStatement();
                 for (EntrySingleArticle entry : order.getListaBeni()) {
 
                     String addEntry =
-                        "INSERT INTO articles_in_order (id_article, id_order, " +
+                        "INSERT INTO articles_in_order (id_article, id_order, "+
                             "num_tot )" +
                         "VALUES ('" + entry.bene.getId() + "', '" +
-                            key.getInt("currval") + "', '" +
+                            idOrder + "', '" +
                             entry.numTot + "' )";
-                    stAddArticleEntry.execute(addEntry);
+                    stOrder.execute(addEntry);
 
                     if (entry.bene.hasOptions()) {
-                        ResultSet artKey = 
-                                stAddArticleEntry.executeQuery("SELECT " +
-                                    "currval('articles_in_order_id_art_in_ord_seq')");
-                        artKey.next();
+                        key = stOrder.executeQuery("SELECT " +
+                                "currval('articles_in_order_id_art_in_ord_seq')");
+                        key.next();
+                        int idArtInOrd = key.getInt("currval");
 
                         EntrySingleArticleWithOption entryOpts =
                                 (EntrySingleArticleWithOption)entry;
                         List<EntrySingleOption> opts = entryOpts.numParziale;
+                        
                         String addOpt =
-                            "INSERT INTO opts_of_article_in_order (" +
-                                "id_art_in_ord, id_option, num_parz )" +
+                            "INSERT INTO opts_of_article_in_order " +
+                                "(id_art_in_ord, id_option, num_parz )" +
                             "VALUES ";
                         Statement optionSt = db.createStatement();
 
@@ -519,10 +502,12 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                             ResultSet optRs = optionSt.executeQuery(
                                     "SELECT id_option" +
                                     "   FROM options" +
-                                    "   WHERE name = '"+option.nomeOpz+"';");
+                                    "   WHERE name = '"+option.nomeOpz+"'" +
+                                    "       AND id_article ='"+entry.bene.getId()+
+                                    "';");
                             optRs.next();
 
-                            addOpt += "('" + artKey.getInt("currval") +
+                            addOpt += "('" + idArtInOrd +
                                     "', '" + optRs.getInt("id_option") +
                                     "', '" + option.numParz + "')" +
                                     (iter.hasNext() ? "," : ";");
@@ -531,10 +516,8 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 
                         optionSt.executeUpdate(addOpt);
                         optionSt.close();
-                        artKey.close();
                     }
                 }
-                key.close();
                 stOrder.close();
             } else {
                 rsCass.close();
@@ -551,18 +534,21 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
         }
     }
 
-    public void delLastOrder(String id) throws IOException {
-        String username = id.substring(0, id.lastIndexOf('@'));
-        String rawtst = id.substring(id.lastIndexOf('@')+1);
+    /**
+     * 
+     * @param id
+     *
+     * @throws IOException
+     */
+    public void delLastOrder(String sessionId) throws IOException {
+        String username = sessionId.substring(0, sessionId.lastIndexOf('@'));
+        String rawtst = sessionId.substring(sessionId.lastIndexOf('@')+1);
         String _date = rawtst.substring(0, rawtst.lastIndexOf('_'));
         String _time = rawtst.substring(rawtst.lastIndexOf('_')+1).replace('-', ':');
         String timestampSession = _date + " " + _time;
 
-        System.out.println("delLastOrder, Username: " + username);
-        System.out.println("delLastOrder, TimestampSession: " + timestampSession);
-
         String cassiereOrderQuery =
-                "SELECT t1.id_cassiere, t2.id_order" + // , max(time_order)
+                "SELECT t1.id_cassiere, t2.id_order" +
                 "   FROM cassieres AS t1, orders AS t2" +
                 "   WHERE t1.id_cassiere = t2.id_cassiere" +
                 "       AND t1.username = '" + username + "'" +
@@ -584,24 +570,22 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
          */
         try {
             Statement st = db.createStatement();
-            ResultSet rs = st.executeQuery(cassiereOrderQuery);
-            rs.next(); // not possible to query if no orders present
-
-            String deleteQuery =
-                    "DELETE FROM orders" +
-                    "   WHERE id_order = '" + rs.getInt("id_order") + "';";
-
             try {
-                st.executeUpdate(deleteQuery);
+                ResultSet rs = st.executeQuery(cassiereOrderQuery);
+                rs.next(); // not possible to query if no orders present
 
+                String deleteQuery = "DELETE FROM orders" +
+                        "   WHERE id_order = '" + rs.getInt("id_order") + "';";
+
+                genericCommit(deleteQuery);
+            } catch (SQLException ex) {
+                logger.error("Errore con la query: " + cassiereOrderQuery, ex);
+                throw new IOException(ex);
+            } finally {
                 st.close();
-            } catch (SQLException ex1) {
-                logger.error("Errore con la query: " + deleteQuery, ex1);
-                throw new IOException(ex1);
             }
-            
         } catch (SQLException ex) {
-            logger.error("Errore con la query: " + cassiereOrderQuery, ex);
+            logger.error("Errore nella comunicazione con il DB", ex);
             throw new IOException(ex);
         }
     }
@@ -610,6 +594,17 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
     // Utility functions
     //-------------------//
 
+    /**
+     * This method just commits the passed query to the DB and then changes the
+     * status of the "enabled" field, but if something goes wrong it fails
+     * gracefully reporting what happened precisely and safely.
+     * (closing what is needed closed)
+     * 
+     * @param query The query to commit
+     * @param enable new value of the enabled field.
+     *
+     * @throws IOException
+     */
     private void genericEnabler(String query, boolean enable) throws IOException {
         try {
             Statement st = db.createStatement();
@@ -631,7 +626,16 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
         }
     }
 
-    private void genericAdder(String query) throws IOException {
+    /**
+     * This method just commits the passed query to the DB, but if something
+     * goes wrong it fails gracefully reporting what happened precisely and
+     * safely. (closing what is needed closed)
+     * 
+     * @param query The query to commit.
+     *
+     * @throws IOException
+     */
+    private void genericCommit(String query) throws IOException {
         try {
             Statement stIns = db.createStatement();
             try {
@@ -646,5 +650,41 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
             logger.error("Errore nella comunicazione col DB", ex);
             throw new IOException(ex);
         }
+    }
+
+    /**
+     * This method safely extracts the Options for a precise Article identified
+     * by the id. If it fails, it does it gracefully.
+     *
+     * @param art_id Id of the Article
+     *
+     * @return the list of the Options for the Article selected
+     *
+     * @throws IOException
+     */
+    private List<String> getOptionsByArticleID(int art_id) throws IOException {
+        List<String> options = new LinkedList<String>();
+        String queryOpts =  "SELECT name" +
+                            "   FROM options" +
+                            "   WHERE id_article = '" + art_id + "';";
+        try {
+            Statement stOpts = db.createStatement();
+
+            try {
+                ResultSet rsOpts = stOpts.executeQuery(queryOpts);
+                while (rsOpts.next()) {
+                    options.add(rsOpts.getString("name"));
+                }
+            } catch (SQLException ex) {
+                logger.error("Errore con la query: " + queryOpts, ex);
+                throw new IOException(ex);
+            } finally {
+                stOpts.close();
+            }
+        } catch (SQLException ex) {
+            logger.error("Errore nella counicazione col DB", ex);
+            throw new IOException(ex);
+        }
+        return options;
     }
 }

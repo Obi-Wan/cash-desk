@@ -124,7 +124,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
         ordersTable = new ConcurrentHashMap<String, ConcurrentLinkedQueue<Order>>();
 
         try {
-            dataBackendDB.init();
+            dataBackendDB.init("jdbc:postgresql://localhost:5432/GCDB");
             useFallback =false;
             
         } catch (IOException ex) {
