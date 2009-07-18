@@ -22,8 +22,10 @@ package gestionecassa.clients.cassa.gui;
 
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.ordine.EntrySingleOption;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.AbstractAction;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
 
@@ -40,7 +42,8 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
     GuiNewOrderPanel parent;
 
     /** Creates new form GuiOrderSingleArticleWOptionsPanel */
-    public GuiOrderSingleArticleWOptionsPanel(GuiNewOrderPanel parent, ArticleWithOptions bene) {
+    public GuiOrderSingleArticleWOptionsPanel(GuiNewOrderPanel parent, 
+            ArticleWithOptions bene, int i) {
         initComponents();
 
         this.parent = parent;
@@ -49,6 +52,21 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
         this.jLabelPrezzo.setText("€ " + bene.getPrezzo());
 
         pannelliopzioni = new ArrayList<GuiOrderSingleOptionPanel>();
+
+        if (i < 10) {
+            jButtonNuovo.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(parent.moreKeys[i], "MORE"+i);
+            jButtonNuovo.getActionMap().put("MORE"+i, new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    addNewOpzionePanel();
+                }
+            });
+            this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(parent.lessKeys[i], "LESS"+i);
+            this.getActionMap().put("LESS"+i, new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    removeLastOpzionePanel();
+                }
+            });
+        }
     }
 
     /** This method is called from within the constructor to
@@ -155,6 +173,7 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
         GuiOrderSingleOptionPanel tempPanel =
                 new GuiOrderSingleOptionPanel(this,bene.getOpzioni());
         pannelliopzioni.add(tempPanel);
+        tempPanel.more();
         rebuildListaOpzioni();
     }
 
@@ -166,6 +185,13 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
         pannelliopzioni.remove(panel);
         rebuildListaOpzioni();
         triggerUpdateCurrentOrder();
+    }
+
+    /**
+     * 
+     */
+    void removeLastOpzionePanel() {
+        removeOpzionePanel(pannelliopzioni.get(pannelliopzioni.size()-1));
     }
 
     /**

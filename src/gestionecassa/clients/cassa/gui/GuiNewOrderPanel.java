@@ -286,7 +286,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
             if (bene instanceof ArticleWithOptions) {
                 tempPanel = 
                         new GuiOrderSingleArticleWOptionsPanel(this,
-                                                      (ArticleWithOptions)bene);
+                                                    (ArticleWithOptions)bene,i);
             } else {
                 tempPanel = new GuiOrderSingleArticlePanel(this,bene,i);
             }
@@ -525,6 +525,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         if (result == javax.swing.JOptionPane.YES_OPTION) {
             try {
                 owner.annullaUltimoOrdine();
+                parent.cleanLastOrder();
                 javax.swing.JOptionPane.showMessageDialog(this,
                     "L'ultimo Ordine emesso è stato annullato",
                     "Operazione terminata",
@@ -536,6 +537,5 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
                     javax.swing.JOptionPane.ERROR_MESSAGE);
             }
         }
-        parent.cleanLastOrder();
     }
 }

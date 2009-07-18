@@ -150,11 +150,7 @@ public class GuiOrderSingleOptionPanel extends javax.swing.JPanel {
      * @param evt
      */
     private void jButtonLessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLessActionPerformed
-        Object previous = spinnerModel.getPreviousValue();
-        if (previous != null) {
-            jSpinnerNum.setValue(previous);
-        }
-        parent.triggerUpdateCurrentOrder();
+        less();
 }//GEN-LAST:event_jButtonLessActionPerformed
 
     /**
@@ -162,11 +158,7 @@ public class GuiOrderSingleOptionPanel extends javax.swing.JPanel {
      * @param evt
      */
     private void jButtonMoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMoreActionPerformed
-        Object next = spinnerModel.getNextValue();
-        if (next != null) {
-            jSpinnerNum.setValue(next);
-        }
-        parent.triggerUpdateCurrentOrder();
+        more();
 }//GEN-LAST:event_jButtonMoreActionPerformed
 
     /**
@@ -216,5 +208,27 @@ public class GuiOrderSingleOptionPanel extends javax.swing.JPanel {
      */
     public int getComboNum() {
         return comboModel.getIndexOf(comboModel.getSelectedItem());
+    }
+
+    /**
+     * 
+     */
+    void more() {
+        Object next = spinnerModel.getNextValue();
+        if (next != null) {
+            jSpinnerNum.setValue(next);
+        }
+        parent.triggerUpdateCurrentOrder();
+    }
+
+    /**
+     * 
+     */
+    void less() {
+        Object previous = spinnerModel.getPreviousValue();
+        if (previous != null) {
+            jSpinnerNum.setValue(previous);
+        }
+        parent.triggerUpdateCurrentOrder();
     }
 }
