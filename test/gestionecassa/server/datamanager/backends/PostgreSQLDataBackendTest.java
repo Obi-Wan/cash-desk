@@ -15,9 +15,10 @@
 package gestionecassa.server.datamanager.backends;
 
 import gestionecassa.Admin;
-import gestionecassa.Article;
 import gestionecassa.Cassiere;
+import gestionecassa.Person;
 import gestionecassa.ordine.Order;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -39,18 +40,42 @@ public class PostgreSQLDataBackendTest {
 
     String dbUrl;
 
-    PostgreSQLDataBackend backend;
+    static PostgreSQLDataBackend backend;
+
+    Admin testAdmin;
+
+    Cassiere testCassiere;
 
     public PostgreSQLDataBackendTest() {
         dbUrl = "jdbc:postgresql://localhost:5432/TestGCDB";
+        testAdmin = new Admin(1, "admin", "password");
+        testCassiere = new Cassiere(1, "bene", "male");
     }
 
     @BeforeClass
     public static void setUpClass() throws Exception {
+        backend = new PostgreSQLDataBackend();
     }
 
     @AfterClass
     public static void tearDownClass() throws Exception {
+        for (String table_ref : backend.tables.keySet()) {
+            String table_name = table_ref.substring(3);
+            String query = "DROP TABLE " + table_name + " CASCADE;";
+            try {
+                Statement st = backend.db.createStatement();
+                try {
+                    st.execute(query);
+                } catch (SQLException ex) {
+                    fail("Failed in Cleaning the DB: ");
+                    ex.printStackTrace();
+                } finally {
+                    st.close();
+                }
+            } catch (SQLException ex) {
+                fail("Failed in connecting to the DB");
+            }
+        }
     }
 
     @Before
@@ -67,7 +92,6 @@ public class PostgreSQLDataBackendTest {
     @Test
     public void testInit() throws Exception {
         System.out.println("init");
-        backend = new PostgreSQLDataBackend();
         backend.init(dbUrl);
 
         String query =  "SELECT table_name" +
@@ -93,11 +117,13 @@ public class PostgreSQLDataBackendTest {
                 }
             } catch (SQLException ex) {
                 fail("Failed in interrogating the DB");
+                ex.printStackTrace();
             } finally {
                 st.close();
             }
         } catch (SQLException ex) {
-            fail("Failed in initializing the DB");
+            fail("Failed in initializing the DB: ");
+            ex.printStackTrace();
         }
     }
 
@@ -107,10 +133,6 @@ public class PostgreSQLDataBackendTest {
     @Test
     public void testAddArticleToListAt() throws Exception {
         System.out.println("addArticleToListAt");
-        Article article = null;
-        int position = 0;
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -119,11 +141,6 @@ public class PostgreSQLDataBackendTest {
     @Test
     public void testAddArticleToList() throws Exception {
         System.out.println("addArticleToList");
-        Article article = null;
-        PostgreSQLDataBackend instance = new PostgreSQLDataBackend();
-        instance.addArticleToList(article);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -132,12 +149,6 @@ public class PostgreSQLDataBackendTest {
     @Test
     public void testEnableArticleFromList() throws Exception {
         System.out.println("enableArticleFromList");
-        Article article = null;
-        boolean enable = false;
-        PostgreSQLDataBackend instance = new PostgreSQLDataBackend();
-        instance.enableArticleFromList(article, enable);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -146,12 +157,6 @@ public class PostgreSQLDataBackendTest {
     @Test
     public void testLoadArticlesList() throws Exception {
         System.out.println("loadArticlesList");
-        PostgreSQLDataBackend instance = new PostgreSQLDataBackend();
-        List expResult = null;
-        List result = instance.loadArticlesList();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -160,11 +165,15 @@ public class PostgreSQLDataBackendTest {
     @Test
     public void testAddAdmin() throws Exception {
         System.out.println("addAdmin");
-        Admin admin = null;
-        PostgreSQLDataBackend instance = new PostgreSQLDataBackend();
-        instance.addAdmin(admin);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+        try {
+            backend.addAdmin(testAdmin);
+        } catch (IOException ex) {
+            fail("non sono riuscito ad aggiungere l'admin: " + ex.getMessage());
+        }
+
+        String query = "SELECT * FROM admins WHERE username = 'admin'";
+        testPersonPresence(query,testAdmin);
     }
 
     /**
@@ -173,12 +182,12 @@ public class PostgreSQLDataBackendTest {
     @Test
     public void testLoadAdminsList() throws Exception {
         System.out.println("loadAdminsList");
-        PostgreSQLDataBackend instance = new PostgreSQLDataBackend();
-        List expResult = null;
-        List result = instance.loadAdminsList();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+        List<Admin> adminList = backend.loadAdminsList();
+
+        assertNotNull(adminList);
+        assertEquals(adminList.size(), 1);
+        assertEquals(adminList.get(0), testAdmin);
     }
 
     /**
@@ -187,25 +196,35 @@ public class PostgreSQLDataBackendTest {
     @Test
     public void testEnableAdmin() throws Exception {
         System.out.println("enableAdmin");
-        Admin admin = null;
-        boolean enable = false;
-        PostgreSQLDataBackend instance = new PostgreSQLDataBackend();
-        instance.enableAdmin(admin, enable);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+        backend.enableAdmin(testAdmin, false);
+
+        List<Admin> adminList = backend.loadAdminsList();
+
+        assertTrue(!adminList.get(0).isEnabled());
+
+        backend.enableAdmin(testAdmin, true);
+
+        adminList = backend.loadAdminsList();
+
+        assertTrue(adminList.get(0).isEnabled());
     }
 
     /**
      * Test of addCassiere method, of class PostgreSQLDataBackend.
      */
     @Test
-    public void testAddCassiere() throws Exception {
+    public void testAddCassiere() {
         System.out.println("addCassiere");
-        Cassiere cassiere = null;
-        PostgreSQLDataBackend instance = new PostgreSQLDataBackend();
-        instance.addCassiere(cassiere);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+        try {
+            backend.addCassiere(testCassiere);
+        } catch (IOException ex) {
+            fail("non sono riuscito ad aggiungere il cassiere: " + ex.getMessage());
+        }
+
+        String query = "SELECT * FROM cassieres WHERE username = 'bene'";
+        testPersonPresence(query,testCassiere);
     }
 
     /**
@@ -214,12 +233,12 @@ public class PostgreSQLDataBackendTest {
     @Test
     public void testLoadCassiereList() throws Exception {
         System.out.println("loadCassiereList");
-        PostgreSQLDataBackend instance = new PostgreSQLDataBackend();
-        List expResult = null;
-        List result = instance.loadCassiereList();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+        List<Cassiere> cassiereList = backend.loadCassiereList();
+
+        assertNotNull(cassiereList);
+        assertEquals(cassiereList.size(), 1);
+        assertEquals(cassiereList.get(0), testCassiere);
     }
 
     /**
@@ -228,12 +247,18 @@ public class PostgreSQLDataBackendTest {
     @Test
     public void testEnableCassiere() throws Exception {
         System.out.println("enableCassiere");
-        Cassiere cassiere = null;
-        boolean enable = false;
-        PostgreSQLDataBackend instance = new PostgreSQLDataBackend();
-        instance.enableCassiere(cassiere, enable);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+        backend.enableCassiere(testCassiere, false);
+
+        List<Cassiere> cassiereList = backend.loadCassiereList();
+
+        assertTrue(!cassiereList.get(0).isEnabled());
+
+        backend.enableCassiere(testCassiere, true);
+
+        cassiereList = backend.loadCassiereList();
+
+        assertTrue(cassiereList.get(0).isEnabled());
     }
 
     /**
@@ -242,12 +267,8 @@ public class PostgreSQLDataBackendTest {
     @Test
     public void testAddNewOrder() throws Exception {
         System.out.println("addNewOrder");
-        String sessionId = "";
-        Order order = null;
-        PostgreSQLDataBackend instance = new PostgreSQLDataBackend();
-        instance.addNewOrder(sessionId, order);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+        Order tempOrder = new Order("bene", "hell");
     }
 
     /**
@@ -256,11 +277,26 @@ public class PostgreSQLDataBackendTest {
     @Test
     public void testDelLastOrder() throws Exception {
         System.out.println("delLastOrder");
-        String sessionId = "";
-        PostgreSQLDataBackend instance = new PostgreSQLDataBackend();
-        instance.delLastOrder(sessionId);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
+    private void testPersonPresence(String query, Person person) {
+        try {
+            Statement st = backend.db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+                assertTrue("Non c'è un risultato!",rs.next());
+                assertTrue("Non è l'ultimo!",rs.isLast());
+
+                assertEquals("La password non corrisponde!",
+                        rs.getString("password"), person.getPassword());
+            } catch (SQLException ex) {
+                fail("Failed in executing the query: " + query + "\n" + ex.getMessage());
+                ex.printStackTrace();
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            fail("Failed in connecting to the DB");
+        }
+    }
 }
