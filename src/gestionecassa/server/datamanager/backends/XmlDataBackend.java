@@ -83,7 +83,7 @@ public class XmlDataBackend implements BackendAPI_1 {
                 tempBene.addAttribute("opzioni", "true");
                 Element tempOpzioni = tempBene.addElement("opzioni");
 
-                List<String> listOpzioni = ((ArticleWithOptions)beneVenduto).getOpzioni();
+                List<String> listOpzioni = ((ArticleWithOptions)beneVenduto).getOptions();
                 for (String nomeOpzione : listOpzioni) {
                     tempOpzioni.addElement("opzione").addText(nomeOpzione);
                 }

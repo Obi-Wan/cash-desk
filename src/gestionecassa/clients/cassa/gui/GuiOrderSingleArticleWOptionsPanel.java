@@ -171,7 +171,7 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
      */
     private void addNewOpzionePanel() {
         GuiOrderSingleOptionPanel tempPanel =
-                new GuiOrderSingleOptionPanel(this,bene.getOpzioni());
+                new GuiOrderSingleOptionPanel(this,bene.getOptions());
         pannelliopzioni.add(tempPanel);
         tempPanel.more();
         rebuildListaOpzioni();

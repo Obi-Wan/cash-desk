@@ -11,20 +11,20 @@ import java.util.List;
 public class ArticleWithOptions extends Article implements ArticleWithPreparation {
 
     /**
-     * Lista delle opzioni disponibili per questo bene.
+     * Lista delle options disponibili per questo bene.
      */
-    List<String> opzioni;
+    List<String> options;
 
     /**
      * Explicit Constructor
      *
      * @param nome
      * @param prezzo
-     * @param opzioni
+     * @param options
      */
-    public ArticleWithOptions(int id, String nome, double prezzo, List<String> opzioni) {
-        super(id,nome, prezzo);
-        this.opzioni = new ArrayList<String>(opzioni);
+    public ArticleWithOptions(int id, String name, double price, List<String> options) {
+        super(id,name, price);
+        this.options = new ArrayList<String>(options);
     }
 
     /**
@@ -32,11 +32,11 @@ public class ArticleWithOptions extends Article implements ArticleWithPreparatio
      *
      * @param nome
      * @param prezzo
-     * @param opzioni
+     * @param options
      */
-    public ArticleWithOptions(int id, String nome, double prezzo, List<String> opzioni, boolean b) {
+    public ArticleWithOptions(int id, String nome, double prezzo, List<String> options, boolean b) {
         super(id, nome, prezzo, b);
-        this.opzioni = new ArrayList<String>(opzioni);
+        this.options = new ArrayList<String>(options);
     }
 
     /**
@@ -62,7 +62,7 @@ public class ArticleWithOptions extends Article implements ArticleWithPreparatio
     @Override
     public String getPrintableFormat() {
         String output = new String(super.getPrintableFormat() + "\n");
-        for (String string : opzioni) {
+        for (String string : options) {
             output += new String("  .\t "+ string + "\n");
         }
         output += "--";
@@ -73,7 +73,7 @@ public class ArticleWithOptions extends Article implements ArticleWithPreparatio
      * 
      * @return
      */
-    public List<String> getOpzioni() {
-        return opzioni;
+    public List<String> getOptions() {
+        return options;
     }
 }
