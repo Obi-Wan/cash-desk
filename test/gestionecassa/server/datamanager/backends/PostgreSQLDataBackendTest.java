@@ -15,6 +15,8 @@
 package gestionecassa.server.datamanager.backends;
 
 import gestionecassa.Admin;
+import gestionecassa.Article;
+import gestionecassa.ArticleWithOptions;
 import gestionecassa.Cassiere;
 import gestionecassa.Person;
 import gestionecassa.ordine.Order;
@@ -24,6 +26,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 import java.util.concurrent.ConcurrentSkipListSet;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -46,10 +49,22 @@ public class PostgreSQLDataBackendTest {
 
     Cassiere testCassiere;
 
+    List<Article> articles;
+
     public PostgreSQLDataBackendTest() {
         dbUrl = "jdbc:postgresql://localhost:5432/TestGCDB";
         testAdmin = new Admin(1, "admin", "password");
         testCassiere = new Cassiere(1, "bene", "male");
+
+        articles = new Vector<Article>();
+        List<String> options = new Vector<String>();
+        options.add("corta");
+        options.add("media");
+        options.add("lunga");
+        articles.add(new Article(articles.size()+1, "gatto", 5.5));
+        articles.add(new Article(articles.size()+1, "cane", 10));
+        articles.add(new ArticleWithOptions(articles.size()+1, "falce", 4.25, options));
+        articles.add(new Article(articles.size()+1, "vanga", 0.2));
     }
 
     @BeforeClass
@@ -128,27 +143,51 @@ public class PostgreSQLDataBackendTest {
     }
 
     /**
-     * Test of addArticleToListAt method, of class PostgreSQLDataBackend.
-     */
-    @Test
-    public void testAddArticleToListAt() throws Exception {
-        System.out.println("addArticleToListAt");
-    }
-
-    /**
      * Test of addArticleToList method, of class PostgreSQLDataBackend.
      */
     @Test
     public void testAddArticleToList() throws Exception {
         System.out.println("addArticleToList");
+        
+        Article temp = articles.get(0);
+
+        backend.addArticleToList(temp);
+
+        String query = "SELECT * FROM articles WHERE name = '"+
+                temp.getNome() + "'";
+        testArticlePresence(query,temp);
+
+        temp = articles.get(2);
+
+        backend.addArticleToList(temp);
+
+        query = "SELECT * FROM articles WHERE name = '"+
+                temp.getNome() + "'";
+        testArticlePresence(query,temp);
+
+        temp = articles.get(1);
+
+        backend.addArticleToList(temp);
+
+        query = "SELECT * FROM articles WHERE name = '"+
+                temp.getNome() + "'";
+        testArticlePresence(query,temp);
     }
 
     /**
-     * Test of enableArticleFromList method, of class PostgreSQLDataBackend.
+     * Test of addArticleToListAt method, of class PostgreSQLDataBackend.
      */
     @Test
-    public void testEnableArticleFromList() throws Exception {
-        System.out.println("enableArticleFromList");
+    public void testAddArticleToListAt() throws Exception {
+        System.out.println("addArticleToListAt");
+
+        Article temp = articles.get(3);
+
+        backend.addArticleToListAt(temp,2);
+
+        String query = "SELECT * FROM articles WHERE name = '"+
+                temp.getNome() + "'";
+        testArticlePresence(query,temp);
     }
 
     /**
@@ -157,6 +196,38 @@ public class PostgreSQLDataBackendTest {
     @Test
     public void testLoadArticlesList() throws Exception {
         System.out.println("loadArticlesList");
+
+        List<Article> articleList = backend.loadArticlesList();
+
+        assertNotNull(articleList);
+        assertEquals(articleList.size(), 3);
+        assertEquals(articleList.get(0), articles.get(0));
+        assertEquals(articleList.get(1), articles.get(2));
+        assertEquals(articleList.get(1).getId(), 2);
+        assertEquals(articleList.get(2), articles.get(1));
+        assertEquals(articleList.get(2).getId(), 3);
+    }
+
+    /**
+     * Test of enableArticleFromList method, of class PostgreSQLDataBackend.
+     */
+    @Test
+    public void testEnableArticleFromList() throws Exception {
+        System.out.println("enableArticleFromList");
+        
+        Article temp = articles.get(0);
+
+        backend.enableArticleFromList(temp, false);
+
+        List<Article> articleList = backend.loadArticlesList();
+
+        assertTrue(!articleList.get(0).isEnabled());
+
+        backend.enableArticleFromList(temp, true);
+
+        articleList = backend.loadArticlesList();
+
+        assertTrue(articleList.get(0).isEnabled());
     }
 
     /**
@@ -279,6 +350,11 @@ public class PostgreSQLDataBackendTest {
         System.out.println("delLastOrder");
     }
 
+    /**
+     * 
+     * @param query
+     * @param person
+     */
     private void testPersonPresence(String query, Person person) {
         try {
             Statement st = backend.db.createStatement();
@@ -289,6 +365,58 @@ public class PostgreSQLDataBackendTest {
 
                 assertEquals("La password non corrisponde!",
                         rs.getString("password"), person.getPassword());
+            } catch (SQLException ex) {
+                fail("Failed in executing the query: " + query + "\n" + ex.getMessage());
+                ex.printStackTrace();
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            fail("Failed in connecting to the DB");
+        }
+    }
+
+    private void testArticlePresence(String query, Article testArticle) {
+        try {
+            Statement st = backend.db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+                assertTrue("Non c'è un risultato!",rs.next());
+                assertTrue("Non è l'ultimo!",rs.isLast());
+
+                assertEquals("Il prezzo non corrisponde!",
+                        testArticle.getPrezzo(),rs.getDouble("price"),0);
+                assertEquals(testArticle.hasOptions()
+                                ? "Dovrebbe aver opzioni ma non ne ha!"
+                                : "Non dovrebbe aver opzioni ma ne ha!",
+                             testArticle.hasOptions(),rs.getBoolean("options"));
+                if (testArticle.hasOptions()) {
+                    for (String option : ((ArticleWithOptions)testArticle).getOptions()) {
+                        testOptionPresence(option);
+                    }
+                }
+            } catch (SQLException ex) {
+                fail("Failed in executing the query: " + query + "\n" + ex.getMessage());
+                ex.printStackTrace();
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            fail("Failed in connecting to the DB");
+        }
+    }
+    
+    private void testOptionPresence(String option) {
+        String query = "SELECT * FROM options WHERE name = '" + option + "'";
+        try {
+            Statement st = backend.db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+                assertTrue("Non c'è un risultato!",rs.next());
+                assertTrue("Non è l'ultimo!",rs.isLast());
+
+                assertEquals("l'opzione non corrisponde!",
+                             option,rs.getString("name"));
             } catch (SQLException ex) {
                 fail("Failed in executing the query: " + query + "\n" + ex.getMessage());
                 ex.printStackTrace();

@@ -216,7 +216,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                     ResultSet keys = stIns.executeQuery(currValQuery);
                     keys.next();
                     int idArticle = keys.getInt("currval");
-                    List<String> opts = ((ArticleWithOptions)article).getOptions();
+                    List<String> opts = ((ArticleWithOptions)article).getOpzioni();
                     String insOptsQuery =
                             "INSERT INTO options (id_article, name) VALUES ";
                     for (Iterator<String> it = opts.iterator(); it.hasNext();) {
@@ -272,9 +272,13 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                 ResultSet rs = st.executeQuery(query);
 
                 while (rs.next()) {
+                    int position = rs.getInt("num_pos");
                     int idArticle = rs.getInt("id_article");
                     
-                    outout.add(rs.getBoolean("options")
+                    outout.add(position > outout.size()
+                                    ? outout.size()
+                                    : position,
+                               rs.getBoolean("opzioni")
                                     ? new ArticleWithOptions(idArticle,
                                             rs.getString("name"),
                                             rs.getDouble("price"),
