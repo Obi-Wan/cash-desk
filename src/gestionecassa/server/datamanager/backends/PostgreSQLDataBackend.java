@@ -249,7 +249,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @throws IOException
      */
     public void enableArticleFromList(Article article, boolean enable) throws IOException {
-        String query =  "SELECT enabled" +
+        String query =  "SELECT id_article, enabled" +
                         "   FROM articles" +
                         "   WHERE name = '" + article.getNome() + "';";
         genericEnabler(query, enable);
@@ -363,7 +363,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @throws IOException
      */
     public void enableAdmin(Admin admin, boolean enable) throws IOException {
-        String query =  "SELECT enabled" +
+        String query =  "SELECT id_admin, enabled" +
                         "   FROM admins" +
                         "   WHERE username = '" + admin.getUsername() + "';";
         genericEnabler(query, enable);
@@ -376,7 +376,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      */
     public void addCassiere(Cassiere cassiere) throws IOException {
         String insQuery =
-                "INSERT INTO admins (username, password, enabled)" +
+                "INSERT INTO cassieres (username, password, enabled)" +
                 "VALUES ('" + cassiere.getUsername() + "', '" +
                     cassiere.getPassword() + "', " +
                     cassiere.isEnabled() + " )";
@@ -425,7 +425,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @throws IOException
      */
     public void enableCassiere(Cassiere cassiere, boolean enable) throws IOException {
-        String query =  "SELECT enabled" +
+        String query =  "SELECT id_cassiere, enabled" +
                         "   FROM cassieres" +
                         "   WHERE username = '" + cassiere.getUsername() + "';";
         genericEnabler(query, enable);
@@ -607,11 +607,13 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      */
     private void genericEnabler(String query, boolean enable) throws IOException {
         try {
-            Statement st = db.createStatement();
+            Statement st = db.createStatement(ResultSet.TYPE_FORWARD_ONLY,
+                                              ResultSet.CONCUR_UPDATABLE);
             try {
                 ResultSet rs = st.executeQuery(query);
                 rs.next();
                 rs.updateBoolean("enabled", enable);
+                rs.updateRow();
                 rs.close();
             } catch (SQLException ex) {
                 logger.error("Errore con query: " + query + " o con update", ex);
