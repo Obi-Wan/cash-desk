@@ -78,4 +78,20 @@ public class Person {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return ((obj instanceof Person) && 
+                (this.id == ((Person)obj).id) &&
+                (this.username.equals(((Person)obj).username)) &&
+                (this.password.equals(((Person)obj).password)));
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 97 * hash + this.id;
+        hash = 97 * hash + (this.username != null ? this.username.hashCode() : 0);
+        return hash;
+    }
 }

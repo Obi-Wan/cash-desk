@@ -14,10 +14,17 @@
 
 package gestionecassa.server.datamanager;
 
+import gestionecassa.Admin;
+import gestionecassa.Article;
+import gestionecassa.ArticleWithOptions;
 import gestionecassa.ArticlesList;
+import gestionecassa.Cassiere;
 import gestionecassa.Person;
 import gestionecassa.stubs.BackendStub_1;
 import gestionecassa.stubs.BackendStub_2;
+import java.io.IOException;
+import java.util.List;
+import java.util.Vector;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -32,10 +39,10 @@ import static org.junit.Assert.*;
 public class DataManagerTest {
 
     DataManager dataManager;
-
-    public DataManagerTest() {
         BackendAPI_1 backend_1 = new BackendStub_1();
         BackendAPI_2 backend_2 = new BackendStub_2();
+
+    public DataManagerTest() {
         dataManager = new DataManager(backend_2, backend_1);
     }
 
@@ -49,6 +56,8 @@ public class DataManagerTest {
 
     @Before
     public void setUp() {
+        Cassiere temp = new Cassiere(0, "bene", "male");
+        dataManager.cassieresList.put("bene", temp);
     }
 
     @After
@@ -59,42 +68,52 @@ public class DataManagerTest {
      * Test of registerUser method, of class DataManager.
      */
     @Test
-    public void testRegisterUser() {
-        System.out.println("registerUser");
-        Person user = null;
-        DataManager instance = null;
-        instance.registerUser(user);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testRegisterCasssiere() {
+        System.out.println("registerUser: Cassiere's part");
+        Cassiere temp = new Cassiere(dataManager.cassieresList.size(), "yeah", "bhoo");
+        dataManager.registerUser(temp);
+        assertEquals(temp, dataManager.cassieresList.get(temp.getUsername()));
+    }
+
+    /**
+     * Test of registerUser method, of class DataManager.
+     */
+    @Test
+    public void testRegisterAdmin() {
+        System.out.println("registerUser: Admin's part");
+        Admin temp = new Admin(dataManager.adminsList.size(), "yeah", "bhoo");
+        dataManager.registerUser(temp);
+        assertEquals(temp, dataManager.adminsList.get(temp.getUsername()));
     }
 
     /**
      * Test of verifyUsername method, of class DataManager.
      */
     @Test
-    public void testVerifyUsername() {
-        System.out.println("verifyUsername");
-        String username = "";
-        DataManager instance = null;
-        Person expResult = null;
-        Person result = instance.verifyUsername(username);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testVerifyUsernamePresent() {
+        System.out.println("verifyUsername: Test searching for a present one");
+        Person temp = dataManager.verifyUsername("bene");
+        assertNotNull(temp);
+        assertEquals(temp, dataManager.cassieresList.get("bene"));
+    }
+
+    /**
+     * Test of verifyUsername method, of class DataManager.
+     */
+    @Test
+    public void testVerifyUsernameNotPresent() {
+        System.out.println("verifyUsername: Test searching for a not present one");
+        assertNull(dataManager.verifyUsername("male"));
     }
 
     /**
      * Test of getCurrentArticlesList method, of class DataManager.
      */
     @Test
-    public void testGetCurrentArticlesList() {
+    public void testGetCurrentArticlesList() throws IOException {
         System.out.println("getCurrentArticlesList");
-        DataManager instance = null;
-        ArticlesList expResult = null;
-        ArticlesList result = instance.getCurrentArticlesList();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(dataManager.getCurrentArticlesList().list.equals(
+                backend_1.loadArticlesList()));
     }
 
     /**
@@ -103,11 +122,6 @@ public class DataManagerTest {
     @Test
     public void testCreateNewCassaSession() {
         System.out.println("createNewCassaSession");
-        String identifier = "";
-        DataManager instance = null;
-        instance.createNewCassaSession(identifier);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -116,11 +130,6 @@ public class DataManagerTest {
     @Test
     public void testCloseCassaSession() {
         System.out.println("closeCassaSession");
-        String identifier = "";
-        DataManager instance = null;
-        instance.closeCassaSession(identifier);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -145,39 +154,31 @@ public class DataManagerTest {
     @Test
     public void testGetNProgressivo() {
         System.out.println("getNProgressivo");
-        String articleName = "";
-        int n = 0;
-        DataManager instance = null;
-        int expResult = 0;
-        int result = instance.getNProgressivo(articleName, n);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
      * Test of saveNewArticlesList method, of class DataManager.
      */
     @Test
-    public void testSaveNewArticlesList() {
+    public void testSaveNewArticlesList() throws IOException {
         System.out.println("saveNewArticlesList");
-        ArticlesList list = null;
-        DataManager instance = null;
-        instance.saveNewArticlesList(list);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
-    /**
-     * Test of terminate method, of class DataManager.
-     */
-    @Test
-    public void testTerminate() {
-        System.out.println("terminate");
-        DataManager instance = null;
-        instance.terminate();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        List<Article> oldArticles = dataManager.articlesList.list;
+        
+        List<Article> articles = new Vector<Article>();
+        List<String> listaOpzioni = new Vector<String>();
+        listaOpzioni.add("cacca secca");
+        listaOpzioni.add("cacca liquida");
+        articles.add(new Article(1,"fagiolo", 25));
+        articles.add(new Article(2,"blabla", 35));
+        articles.add(new Article(3,"merda dello stige", 5.5));
+        articles.add(new ArticleWithOptions(4,"yeah", 10.25, listaOpzioni));
+
+        dataManager.saveNewArticlesList(new ArticlesList(articles));
+
+        assertTrue(dataManager.articlesList.list.equals(articles));
+        assertTrue(backend_1.loadArticlesList().equals(articles));
+        assertTrue(!backend_1.loadArticlesList().equals(oldArticles));
     }
 
 }

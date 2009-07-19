@@ -36,4 +36,14 @@ public class Admin extends Person {
     public Admin(int idAmministratore, String username, String password) {
         super(idAmministratore, username, password,true);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Admin) && super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

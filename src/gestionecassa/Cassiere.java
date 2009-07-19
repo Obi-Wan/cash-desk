@@ -37,4 +37,14 @@ public class Cassiere extends Person {
     public Cassiere(int idCassiere, String username, String password) {
         super(idCassiere, username, password,true);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Cassiere) && super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

@@ -341,7 +341,8 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     }
 
     /**
-     * Used to ask "n" progressive numbers to associate to the BeniConPreparazione
+     * Used to ask "n" progressive numbers to associate to the 
+     * <code>ArticleWithPreparation</code>
      *
      * @param nomeBene
      *
