@@ -87,4 +87,21 @@ public class Article implements Serializable {
     public int getId() {
         return id;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Article) &&
+                (this.nome.equals(((Article)obj).nome)) &&
+                (this.prezzo == (((Article)obj).prezzo));
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + this.id;
+        hash = 37 * hash + (this.nome != null ? this.nome.hashCode() : 0);
+        hash = 37 * hash + (int) (Double.doubleToLongBits(this.prezzo) ^
+                                (Double.doubleToLongBits(this.prezzo) >>> 32));
+        return hash;
+    }
 }

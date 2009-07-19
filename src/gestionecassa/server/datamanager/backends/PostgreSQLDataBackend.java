@@ -198,8 +198,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      */
     public void addArticleToList(Article article) throws IOException {
         // Start by inserting the article in the proper table.
-        String subQueryPos = "SELECT max(num_pos) + 1 " +
-                             "  FROM articles";
+        String subQueryPos = "SELECT currval('articles_id_article_seq') + 1";
         String insQuery =
                 "INSERT INTO articles (name, price, enabled, options, num_pos)" +
                 "VALUES ('" + article.getNome() + "', '" +
@@ -216,7 +215,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                     ResultSet keys = stIns.executeQuery(currValQuery);
                     keys.next();
                     int idArticle = keys.getInt("currval");
-                    List<String> opts = ((ArticleWithOptions)article).getOpzioni();
+                    List<String> opts = ((ArticleWithOptions)article).getOptions();
                     String insOptsQuery =
                             "INSERT INTO options (id_article, name) VALUES ";
                     for (Iterator<String> it = opts.iterator(); it.hasNext();) {
@@ -272,13 +271,9 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                 ResultSet rs = st.executeQuery(query);
 
                 while (rs.next()) {
-                    int position = rs.getInt("num_pos");
                     int idArticle = rs.getInt("id_article");
                     
-                    outout.add(position > outout.size()
-                                    ? outout.size()
-                                    : position,
-                               rs.getBoolean("opzioni")
+                    outout.add(rs.getBoolean("options")
                                     ? new ArticleWithOptions(idArticle,
                                             rs.getString("name"),
                                             rs.getDouble("price"),

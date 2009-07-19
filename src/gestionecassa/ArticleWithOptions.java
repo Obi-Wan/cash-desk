@@ -76,4 +76,18 @@ public class ArticleWithOptions extends Article implements ArticleWithPreparatio
     public List<String> getOptions() {
         return options;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return ((obj instanceof ArticleWithOptions) &&
+                (options.equals(((ArticleWithOptions)obj).options)) &&
+                super.equals(obj));
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 61 * hash + (this.options != null ? this.options.hashCode() : 0);
+        return hash + super.hashCode();
+    }
 }
