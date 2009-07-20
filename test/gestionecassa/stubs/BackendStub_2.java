@@ -40,6 +40,10 @@ public class BackendStub_2 extends BackendStub implements BackendAPI_2 {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    public void moveArticleAt(Article article, int position) throws IOException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     public void enableArticleFromList(Article article, boolean enable) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -60,7 +64,7 @@ public class BackendStub_2 extends BackendStub implements BackendAPI_2 {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public void addNewOrder(String id, Order order) throws IOException {
+    public void addNewOrder(Order order) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

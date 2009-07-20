@@ -19,11 +19,13 @@ import gestionecassa.Article;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.Cassiere;
 import gestionecassa.Person;
+import gestionecassa.ordine.EntrySingleOption;
 import gestionecassa.ordine.Order;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -161,16 +163,14 @@ public class PostgreSQLDataBackendTest {
 
         backend.addArticleToList(temp);
 
-        query = "SELECT * FROM articles WHERE name = '"+
-                temp.getNome() + "'";
+        query = "SELECT * FROM articles WHERE name = '" + temp.getNome() + "'";
         testArticlePresence(query,temp);
 
         temp = articles.get(1);
 
         backend.addArticleToList(temp);
 
-        query = "SELECT * FROM articles WHERE name = '"+
-                temp.getNome() + "'";
+        query = "SELECT * FROM articles WHERE name = '" + temp.getNome() + "'";
         testArticlePresence(query,temp);
     }
 
@@ -200,12 +200,18 @@ public class PostgreSQLDataBackendTest {
         List<Article> articleList = backend.loadArticlesList();
 
         assertNotNull(articleList);
-        assertEquals(articleList.size(), 3);
+        assertEquals(articleList.size(), 4);
+        // gatto
         assertEquals(articleList.get(0), articles.get(0));
+        // falce
         assertEquals(articleList.get(1), articles.get(2));
         assertEquals(articleList.get(1).getId(), 2);
-        assertEquals(articleList.get(2), articles.get(1));
-        assertEquals(articleList.get(2).getId(), 3);
+        // vanga
+        assertEquals(articleList.get(2), articles.get(3));
+        assertEquals(articleList.get(2).getId(), 4);
+        // cane
+        assertEquals(articleList.get(3), articles.get(1));
+        assertEquals(articleList.get(3).getId(), 3);
     }
 
     /**
@@ -339,8 +345,115 @@ public class PostgreSQLDataBackendTest {
     public void testAddNewOrder() throws Exception {
         System.out.println("addNewOrder");
 
-        Order tempOrder = new Order("bene", "hell");
+        Order tempOrder = new Order(testCassiere.getUsername(), "hell");
+        tempOrder.addBeneVenduto(articles.get(0), 3);
+        tempOrder.addBeneVenduto(articles.get(3), 2);
+        
+        backend.addNewOrder(tempOrder);
+
+        // verify presence
+        String query =  "SELECT c.username AS username, o.time_order AS time, " +
+                            "o.price_tot AS price" +
+                        "   FROM orders AS o, cassieres AS c" +
+                        "   WHERE o.id_cassiere = c.id_cassiere;";
+        try {
+            Statement st = backend.db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+                
+                assertTrue(rs.next());
+                assertTrue(rs.isLast());
+
+                assertEquals(tempOrder.getUsername(), rs.getString("username"));
+                assertEquals(tempOrder.getTotalPrice(), rs.getDouble("price"),0);
+                assertEquals(new Timestamp(tempOrder.getData().getTime()),
+                        rs.getTimestamp("time"));
+                
+            } catch (SQLException ex) {
+                fail("Failed in interrogating the DB");
+                ex.printStackTrace();
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            fail("Failed in initializing the DB: ");
+            ex.printStackTrace();
+        }
+
+        // verify presence
+        query = "SELECT c.username AS u_name, a.name AS a_name, " +
+                    "aio.num_tot AS num_tot, a.price AS price" +
+                "   FROM cassieres AS c, orders AS o, articles AS a, " +
+                    "articles_in_order AS aio" +
+                "   WHERE o.id_order = aio.id_order" +
+                "       AND aio.id_article = a.id_article" +
+                "       AND c.id_cassiere = o.id_cassiere;";
+        try {
+            Statement st = backend.db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+
+                assertTrue(rs.next());
+                assertTrue(!rs.isLast());
+
+                assertEquals(tempOrder.getUsername(), rs.getString("u_name"));
+                assertEquals(tempOrder.getListaBeni().get(0).bene.getPrezzo(),
+                                rs.getDouble("price"),0);
+                assertEquals(tempOrder.getListaBeni().get(0).bene.getNome(),
+                                rs.getString("a_name"));
+                assertEquals(tempOrder.getListaBeni().get(0).numTot,
+                                rs.getInt("num_tot"));
+
+                assertTrue(rs.next());
+                assertTrue(rs.isLast());
+
+                assertEquals(tempOrder.getUsername(), rs.getString("u_name"));
+                assertEquals(tempOrder.getListaBeni().get(1).bene.getPrezzo(),
+                                rs.getDouble("price"),0);
+                assertEquals(tempOrder.getListaBeni().get(1).bene.getNome(),
+                                rs.getString("a_name"));
+                assertEquals(tempOrder.getListaBeni().get(1).numTot,
+                                rs.getInt("num_tot"));
+
+            } catch (SQLException ex) {
+                fail("Failed in interrogating the DB" + ex.getMessage());
+                ex.printStackTrace();
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            fail("Failed in initializing the DB: ");
+            ex.printStackTrace();
+        }
+
+        tempOrder = new Order(testCassiere.getUsername(), "hell");
+        tempOrder.addBeneVenduto(articles.get(0), 3);
+        tempOrder.addBeneVenduto(articles.get(3), 2);
+
+        backend.addNewOrder(tempOrder);
     }
+
+    /**
+     * Test of addNewOrder method, of class PostgreSQLDataBackend.
+     */
+    @Test
+    public void testAddNewOrderWithOptions() throws Exception {
+        System.out.println("delLastOrder");
+
+        List<EntrySingleOption> optionsList = new Vector<EntrySingleOption>();
+        optionsList.add(new EntrySingleOption(
+                ((ArticleWithOptions)articles.get(2)).getOptions().get(0), 2));
+        optionsList.add(new EntrySingleOption(
+                ((ArticleWithOptions)articles.get(2)).getOptions().get(1), 3));
+
+        Order tempOrder = new Order(testCassiere.getUsername(), "hell");
+        tempOrder.addBeneConOpzione(
+                (ArticleWithOptions)articles.get(2), 5, 0, optionsList);
+
+        backend.addNewOrder(tempOrder);
+    }
+
+
 
     /**
      * Test of delLastOrder method, of class PostgreSQLDataBackend.
