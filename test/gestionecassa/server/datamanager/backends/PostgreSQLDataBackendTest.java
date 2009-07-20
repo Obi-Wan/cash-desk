@@ -389,7 +389,7 @@ public class PostgreSQLDataBackendTest {
                 assertEquals(testArticle.hasOptions()
                                 ? "Dovrebbe aver opzioni ma non ne ha!"
                                 : "Non dovrebbe aver opzioni ma ne ha!",
-                             testArticle.hasOptions(),rs.getBoolean("options"));
+                             testArticle.hasOptions(),rs.getBoolean("has_options"));
                 if (testArticle.hasOptions()) {
                     for (String option : ((ArticleWithOptions)testArticle).getOptions()) {
                         testOptionPresence(option);

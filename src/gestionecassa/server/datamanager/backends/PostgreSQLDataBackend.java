@@ -104,7 +104,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                 "id_article serial PRIMARY KEY, " +
                 "name text UNIQUE, " +
                 "enabled boolean, " +
-                "options boolean, " +
+                "has_options boolean, " +
                 "price numeric, " +
                 "num_pos integer NOT NULL ");
         tables.put("08_options",
@@ -200,7 +200,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
         // Start by inserting the article in the proper table.
         String subQueryPos = "SELECT currval('articles_id_article_seq') + 1";
         String insQuery =
-                "INSERT INTO articles (name, price, enabled, options, num_pos)" +
+                "INSERT INTO articles (name, price, enabled, has_options, num_pos)" +
                 "VALUES ('" + article.getNome() + "', '" +
                     article.getPrezzo() + "', " + article.isEnabled() + ", '" +
                     article.hasOptions() + "', (" + subQueryPos + ") );";
@@ -273,7 +273,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                 while (rs.next()) {
                     int idArticle = rs.getInt("id_article");
                     
-                    outout.add(rs.getBoolean("options")
+                    outout.add(rs.getBoolean("has_options")
                                     ? new ArticleWithOptions(idArticle,
                                             rs.getString("name"),
                                             rs.getDouble("price"),
