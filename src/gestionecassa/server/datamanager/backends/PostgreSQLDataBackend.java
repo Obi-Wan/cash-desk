@@ -188,7 +188,49 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @throws IOException
      */
     public void addArticleToListAt(Article article, int position) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
+        addArticleToList(article);
+
+        moveArticleAt(article, position);
+    }
+
+    /**
+     * 
+     * @param article
+     * @param position
+     * @throws IOException
+     */
+    public void moveArticleAt(Article article, int position) throws IOException {
+        
+        String orderQuery = "SELECT id_article, name, num_pos" +
+                            "   FROM articles;";
+        try {
+            Statement stIns = db.createStatement(ResultSet.TYPE_FORWARD_ONLY,
+                                                 ResultSet.CONCUR_UPDATABLE);
+            try {
+                ResultSet rs = stIns.executeQuery(orderQuery);
+                while (rs.next()) {
+                    if (rs.getString("name").equals(article.getNome())) {
+                        rs.updateInt("num_pos", position);
+                        rs.updateRow();
+                    } else {
+                        int currPos = rs.getInt("num_pos");
+                        if (currPos >= position) {
+                            rs.updateInt("num_pos", currPos+1);
+                            rs.updateRow();
+                        }
+                    }
+                }
+            } catch (SQLException ex) {
+                logger.error("Errore con la query: " + orderQuery, ex);
+                throw new IOException(ex);
+            } finally {
+                stIns.close();
+            }
+        } catch (SQLException ex) {
+            logger.error("Errore nella counicazione col DB", ex);
+            throw new IOException(ex);
+        }
     }
 
     /**
@@ -198,7 +240,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      */
     public void addArticleToList(Article article) throws IOException {
         // Start by inserting the article in the proper table.
-        String subQueryPos = "SELECT currval('articles_id_article_seq') + 1";
+        String subQueryPos = "SELECT currval('articles_id_article_seq') -1";
         String insQuery =
                 "INSERT INTO articles (name, price, enabled, has_options, num_pos)" +
                 "VALUES ('" + article.getNome() + "', '" +
