@@ -60,16 +60,16 @@ public interface BackendAPI_2 {
      *
      * @throws IOException
      */
-    void addNewOrder(String id, Order order) throws IOException;
+    public void addNewOrder( Order order) throws IOException;
 
     /**
-     * Deletes the last saved order of the session id
+     * Deletes the last saved order of the cassiere recorded in the order
      *
-     * @param id
+     * @param order
      *
      * @throws IOException
      */
-    void delLastOrder(String id) throws IOException;
+    public void delLastOrder(Order order) throws IOException;
 
     //--------------------//
 
@@ -99,4 +99,12 @@ public interface BackendAPI_2 {
      * @throws IOException
      */
     List<Cassiere> loadCassiereList() throws IOException;
+
+    /**
+     *
+     * @param article
+     * @param position
+     * @throws IOException
+     */
+    void moveArticleAt(Article article, int position) throws IOException;
 }

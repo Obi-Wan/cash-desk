@@ -30,7 +30,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
+import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -430,60 +430,39 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 
     /**
      * 
-     * @param id
      * @param order
      * @throws IOException
      */
-    public void addNewOrder(String sessionId, Order order) throws IOException {
-        String username = sessionId.substring(0, sessionId.lastIndexOf('@'));
-        final String timestamp = new SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss").format(order.getData());
+    public void addNewOrder( Order order) throws IOException {
 
-        String cassQuery =  "SELECT id_cassiere, enabled" +
-                            "   FROM cassieres" +
-                            "   WHERE username = '" + username + "'";
-        try {
-            
-            Statement stCass = db.createStatement();
-            ResultSet rsCass = stCass.executeQuery(cassQuery);
-            
-            if (rsCass.next() && rsCass.getBoolean("enabled")) {
+        int idCassiere = getIdCassiereByUsername(order.getUsername());
+        int idOrder = addOrderToOrdersTable(order, idCassiere);
 
-                String aggiuntaQuery =
-                    "INSERT INTO orders (time_order, id_cassiere, " +
-                            "price_tot, hostname)" +
-                    "VALUES ('" + timestamp + "', '" +
-                        rsCass.getInt("id_cassiere") + "', '" +
-                        order.getTotalPrice() + "', '"+
-                        order.getHostname() + "' )";
+        for (EntrySingleArticle entry : order.getListaBeni()) {
 
+            int idArticle = getIdArticleByName(entry.bene.getNome());
+            try {
                 Statement stOrder = db.createStatement();
-                stOrder.execute(aggiuntaQuery);
-                ResultSet key = stOrder.executeQuery(
-                        "SELECT currval( 'orders_id_order_seq' );");
-                key.next();
-                int idOrder = key.getInt("currval");
-
-                for (EntrySingleArticle entry : order.getListaBeni()) {
+                try {
 
                     String addEntry =
                         "INSERT INTO articles_in_order (id_article, id_order, "+
                             "num_tot )" +
-                        "VALUES ('" + entry.bene.getId() + "', '" +
+                        "VALUES ('" + idArticle + "', '" +
                             idOrder + "', '" +
                             entry.numTot + "' )";
                     stOrder.execute(addEntry);
 
                     if (entry.bene.hasOptions()) {
-                        key = stOrder.executeQuery("SELECT " +
-                                "currval('articles_in_order_id_art_in_ord_seq')");
+                        ResultSet key = stOrder.executeQuery("SELECT " +
+                                "currval('articles_in_order_id_art_in_ord_seq');");
                         key.next();
                         int idArtInOrd = key.getInt("currval");
 
                         EntrySingleArticleWithOption entryOpts =
                                 (EntrySingleArticleWithOption)entry;
                         List<EntrySingleOption> opts = entryOpts.numParziale;
-                        
+
                         String addOpt =
                             "INSERT INTO opts_of_article_in_order " +
                                 "(id_art_in_ord, id_option, num_parz )" +
@@ -498,7 +477,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                                     "SELECT id_option" +
                                     "   FROM options" +
                                     "   WHERE name = '"+option.nomeOpz+"'" +
-                                    "       AND id_article ='"+entry.bene.getId()+
+                                    "       AND id_article = '" + idArticle +
                                     "';");
                             optRs.next();
 
@@ -512,77 +491,39 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                         optionSt.executeUpdate(addOpt);
                         optionSt.close();
                     }
+                } catch (SQLException ex) {
+                    logger.error("Errore", ex);
+                    throw new IOException(ex);
+                } finally {
+                    stOrder.close();
                 }
-                stOrder.close();
-            } else {
-                rsCass.close();
-                stCass.close();
-                throw new IOException("The cassiere is not on the list, " +
-                        "or is disabled");
+            } catch (SQLException ex) {
+                logger.error("Errore", ex);
+                throw new IOException(ex);
             }
-
-            rsCass.close();
-            stCass.close();
-        } catch (SQLException ex) {
-            logger.error("Errore", ex);
-            throw new IOException(ex);
         }
     }
 
     /**
      * 
-     * @param id
+     * @param order 
      *
      * @throws IOException
      */
-    public void delLastOrder(String sessionId) throws IOException {
-        String username = sessionId.substring(0, sessionId.lastIndexOf('@'));
-        String rawtst = sessionId.substring(sessionId.lastIndexOf('@')+1);
-        String _date = rawtst.substring(0, rawtst.lastIndexOf('_'));
-        String _time = rawtst.substring(rawtst.lastIndexOf('_')+1).replace('-', ':');
-        String timestampSession = _date + " " + _time;
+    public void delLastOrder(Order order) throws IOException {
+        final String timestamp = new Timestamp(order.getData().getTime()).toString();
 
         String cassiereOrderQuery =
-                "SELECT t1.id_cassiere, t2.id_order" +
+                "SELECT t2.id_order" +
                 "   FROM cassieres AS t1, orders AS t2" +
                 "   WHERE t1.id_cassiere = t2.id_cassiere" +
-                "       AND t1.username = '" + username + "'" +
-                "       AND t2.time_order > '" + timestampSession + "'" +
-                "   ORDER BY t2.time_order DESC;";
-        /* Molto scomodo prendere il primo di tanti, magari è meglio rpenderlo
-         * direttamente con una query di questo tipo:
-         *
-         * SELECT t1.id_cassiere, t2.id_order
-         *    FROM cassieres AS t1, orders AS t2
-         *    WHERE t1.id_cassiere = t2.id_cassiere
-         *        AND t1.username = 'bene'
-         *        AND t2.time_order =
-         *          (   SELECT max( time_order )
-         *                  FROM orders
-         *                  WHERE id_cassiere = t1.id_cassiere
-         *                      AND time_order > '2009-07-17 20:42:00' )
-         *    ORDER BY t2.time_order DESC;
-         */
-        try {
-            Statement st = db.createStatement();
-            try {
-                ResultSet rs = st.executeQuery(cassiereOrderQuery);
-                rs.next(); // not possible to query if no orders present
-
-                String deleteQuery = "DELETE FROM orders" +
-                        "   WHERE id_order = '" + rs.getInt("id_order") + "';";
-
-                genericCommit(deleteQuery);
-            } catch (SQLException ex) {
-                logger.error("Errore con la query: " + cassiereOrderQuery, ex);
-                throw new IOException(ex);
-            } finally {
-                st.close();
-            }
-        } catch (SQLException ex) {
-            logger.error("Errore nella comunicazione con il DB", ex);
-            throw new IOException(ex);
-        }
+                "       AND t1.username = '" + order.getUsername() + "'" +
+                "       AND t2.time_order = '" + timestamp + "'" +
+                "   ORDER BY t2.time_order DESC";
+        String deleteQuery = "DELETE FROM orders" +
+                "   WHERE id_order = (" + cassiereOrderQuery + ");";
+        
+        genericCommit(deleteQuery);
     }
     
     //-------------------//
@@ -683,5 +624,120 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
             throw new IOException(ex);
         }
         return options;
+    }
+
+    /**
+     *
+     * @param username
+     * @return
+     * @throws IOException
+     */
+    private int getIdCassiereByUsername(String username) throws IOException {
+
+        String query =  "SELECT id_cassiere, enabled" +
+                            "   FROM cassieres" +
+                            "   WHERE username = '" + username + "'";
+        int idCassiere;
+        try {
+            Statement st = db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+
+                if (rs.next() && rs.getBoolean("enabled")) {
+                    idCassiere = rs.getInt("id_cassiere");
+                } else {
+                    rs.close();
+                    st.close();
+                    throw new IOException("The cassiere is not on the list, " +
+                            "or is disabled");
+                }
+            } catch (SQLException ex) {
+                logger.error("Errore con la query: " + query, ex);
+                throw new IOException(ex);
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            logger.error("Errore nel connettermi al DB", ex);
+            throw new IOException(ex);
+        }
+        return idCassiere;
+    }
+
+    /**
+     *
+     * @param order 
+     * @return
+     * @throws IOException
+     */
+    private int addOrderToOrdersTable(Order order, int idCassiere) throws IOException {
+        
+        final String timestamp = new Timestamp(order.getData().getTime()).toString();
+        
+        String query =
+            "INSERT INTO orders (time_order, id_cassiere, " +
+                    "price_tot, hostname)" +
+            "VALUES ('" + timestamp + "', '" +
+                idCassiere + "', '" +
+                order.getTotalPrice() + "', '"+
+                order.getHostname() + "' )";
+        int idOrder;
+        try {
+            Statement st = db.createStatement();
+            try {
+                st.execute(query);
+                ResultSet key = st.executeQuery(
+                        "SELECT currval( 'orders_id_order_seq' );");
+                key.next();
+                idOrder = key.getInt("currval");
+            } catch (SQLException ex) {
+                logger.error("Errore con la query: " + query, ex);
+                throw new IOException(ex);
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            logger.error("Errore nel connettermi al DB", ex);
+            throw new IOException(ex);
+        }
+        return idOrder;
+    }
+
+    /**
+     * 
+     * @param name
+     * @return
+     * @throws IOException
+     */
+    private int getIdArticleByName(String name) throws IOException {
+
+        String query =  "SELECT id_article, enabled" +
+                            "   FROM articles" +
+                            "   WHERE name = '" + name + "'";
+        int idArticle;
+        try {
+            Statement st = db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+
+                if (rs.next() && rs.getBoolean("enabled")) {
+                    idArticle = rs.getInt("id_article");
+                } else {
+                    rs.close();
+                    st.close();
+                    throw new IOException("The article is not on the list, " +
+                            "or is disabled");
+                }
+            } catch (SQLException ex) {
+                logger.error("Errore con la query: " + query, ex);
+                throw new IOException(ex);
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            logger.error("Errore nel connettermi al DB", ex);
+            throw new IOException(ex);
+        }
+        return idArticle;
     }
 }

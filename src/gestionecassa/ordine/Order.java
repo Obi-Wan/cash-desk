@@ -121,8 +121,20 @@ public class Order implements Serializable, Comparable<Order> {
         return totalPrice;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getHostname() {
         return hostname;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public String getUsername() {
+        return username;
     }
 
     /**
