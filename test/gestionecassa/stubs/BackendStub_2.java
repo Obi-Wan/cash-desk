@@ -17,7 +17,7 @@ package gestionecassa.stubs;
 import gestionecassa.Admin;
 import gestionecassa.Article;
 import gestionecassa.Cassiere;
-import gestionecassa.ordine.Order;
+import gestionecassa.order.Order;
 import gestionecassa.server.datamanager.BackendAPI_2;
 import java.io.IOException;
 import java.util.List;

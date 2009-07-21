@@ -14,7 +14,7 @@
 
 package gestionecassa.clients.cassa.printing;
 
-import gestionecassa.ordine.Order;
+import gestionecassa.order.Order;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;

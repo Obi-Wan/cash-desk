@@ -18,7 +18,7 @@ import gestionecassa.Admin;
 import gestionecassa.Article;
 import gestionecassa.ArticlesList;
 import gestionecassa.Cassiere;
-import gestionecassa.ordine.Order;
+import gestionecassa.order.Order;
 import gestionecassa.server.datamanager.BackendAPI_1;
 import java.io.IOException;
 import java.util.Collection;

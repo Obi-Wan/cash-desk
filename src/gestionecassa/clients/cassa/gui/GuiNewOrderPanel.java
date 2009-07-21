@@ -24,8 +24,8 @@ import gestionecassa.clients.cassa.*;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.Article;
 import gestionecassa.ArticlesList;
-import gestionecassa.ordine.Order;
-import gestionecassa.ordine.EntrySingleArticle;
+import gestionecassa.order.Order;
+import gestionecassa.order.EntrySingleArticle;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -57,7 +57,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
     ArticlesList listaBeni;
 
     /**
-     * Lista appoggio che per ogni bene associa un pannello
+     * Lista appoggio che per ogni article associa un pannello
      */
     List<recordListaBeni> tabellaBeni;
 
@@ -436,7 +436,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         /**
          * Explicit constructor
          *
-         * @param bene
+         * @param article
          * @param pannello
          */
         public recordListaBeni(Article bene,
@@ -466,14 +466,14 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
                 if (singoloRecord.bene.hasOptions()) {
 
                     int progressive = owner.getNProgressivo(
-                            singoloRecord.bene.getNome(), tempNumTot);
-                    tempOrd.addBeneConOpzione(
+                            singoloRecord.bene.getName(), tempNumTot);
+                    tempOrd.addArticleWithOptions(
                             (ArticleWithOptions)singoloRecord.bene,
                             tempNumTot, progressive,
                             ((GuiOrderSingleArticleWOptionsPanel)
                                 (singoloRecord.pannello)).getListaParziali());
                 } else {
-                    tempOrd.addBeneVenduto(singoloRecord.bene,tempNumTot);
+                    tempOrd.addArticle(singoloRecord.bene,tempNumTot);
                 }
             }
         }
@@ -491,7 +491,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         for (recordListaBeni singoloRecord : tabellaBeni) {
             if (singoloRecord.pannello.getNumTot() != 0) {
                 output += singoloRecord.pannello.getNumTot() *
-                        singoloRecord.bene.getPrezzo();
+                        singoloRecord.bene.getPrice();
             }
         }
         return output;
@@ -515,7 +515,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         List<EntrySingleArticle> lista = ordine.getListaBeni();
         double output = 0;
         for (EntrySingleArticle singoloBene : lista) {
-            output += singoloBene.numTot * singoloBene.bene.getPrezzo();
+            output += singoloBene.numTot * singoloBene.article.getPrice();
         }
         return output;
     }

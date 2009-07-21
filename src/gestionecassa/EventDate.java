@@ -14,7 +14,7 @@
 
 package gestionecassa;
 
-import gestionecassa.ordine.Order;
+import gestionecassa.order.Order;
 import java.util.Date;
 import java.util.List;
 

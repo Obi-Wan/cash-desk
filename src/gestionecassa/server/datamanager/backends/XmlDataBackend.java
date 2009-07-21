@@ -20,10 +20,10 @@ import gestionecassa.Article;
 import gestionecassa.Cassiere;
 import gestionecassa.ArticlesList;
 import gestionecassa.Log;
-import gestionecassa.ordine.Order;
-import gestionecassa.ordine.EntrySingleOption;
-import gestionecassa.ordine.EntrySingleArticle;
-import gestionecassa.ordine.EntrySingleArticleWithOption;
+import gestionecassa.order.Order;
+import gestionecassa.order.EntrySingleOption;
+import gestionecassa.order.EntrySingleArticle;
+import gestionecassa.order.EntrySingleArticleWithOption;
 import gestionecassa.server.datamanager.BackendAPI_1;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -75,8 +75,8 @@ public class XmlDataBackend implements BackendAPI_1 {
         List<Article> listaVera = lista.list;
         for (Article beneVenduto : listaVera) {
             Element tempBene = root.addElement("bene");
-            tempBene.addElement("nome").addText(beneVenduto.getNome());
-            tempBene.addElement("prezzo").addText(beneVenduto.getPrezzo()+"");
+            tempBene.addElement("nome").addText(beneVenduto.getName());
+            tempBene.addElement("prezzo").addText(beneVenduto.getPrice()+"");
             tempBene.addElement("id").addText(beneVenduto.getId()+"");
             
             if (beneVenduto.hasOptions()) {
@@ -275,28 +275,28 @@ public class XmlDataBackend implements BackendAPI_1 {
         for (EntrySingleArticle singleArticle : listaBeni) {
             Element xmlArticle = xmlOrder.addElement("singolo_bene");
 
-            xmlArticle.addElement("nome").addText(singleArticle.bene.getNome());
-            xmlArticle.addElement("prezzo").addText(singleArticle.bene.getPrezzo()+"");
+            xmlArticle.addElement("nome").addText(singleArticle.article.getName());
+            xmlArticle.addElement("prezzo").addText(singleArticle.article.getPrice()+"");
             xmlArticle.addElement("numero").addText(singleArticle.numTot+"");
 
-            if (singleArticle.bene.hasOptions()) {
+            if (singleArticle.article.hasOptions()) {
                 xmlArticle.addAttribute("opzioni", "true");
                 Element xmlOptions = xmlArticle.addElement("opzioni");
                 int progressivo =
-                        ((EntrySingleArticleWithOption)singleArticle).startProgressivo;
+                        ((EntrySingleArticleWithOption)singleArticle).startProgressive;
                 List<EntrySingleOption> options =
-                        ((EntrySingleArticleWithOption)singleArticle).numParziale;
+                        ((EntrySingleArticleWithOption)singleArticle).numPartial;
 
                 for (EntrySingleOption option : options) {
 
                     String stringaProgressivi = new String((progressivo++) + "");
-                    for (int i = 1; i < option.numParz; i++) {
+                    for (int i = 1; i < option.numPartial; i++) {
                         stringaProgressivi += ", " + progressivo++;
                     }
                     Element xmlOption = xmlOptions.addElement("opzione");
-                    xmlOption.addElement("nome").addText(option.nomeOpz);
+                    xmlOption.addElement("nome").addText(option.optionName);
                     xmlOption.addElement("numero").addText(
-                            ""+option.numParz);
+                            ""+option.numPartial);
                     xmlOption.addElement("n_progressivi").addText(stringaProgressivi);
                 }
             } else {

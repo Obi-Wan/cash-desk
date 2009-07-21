@@ -51,8 +51,8 @@ public class GuiOrderSingleArticlePanel extends GuiAbstrSingleArticlePanel {
         spinnerModel = new SpinnerNumberModel(0, 0, 255, 1);
         jSpinnerNum.setModel(spinnerModel);
 
-        jLabelNomeBene.setText(bene.getNome());
-        jLabelPrezzo.setText("€ " + bene.getPrezzo());
+        jLabelNomeBene.setText(bene.getName());
+        jLabelPrezzo.setText("€ " + bene.getPrice());
 
         if (i < 10) {
             jButtonMore.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(parent.moreKeys[i], "MORE"+i);

@@ -19,8 +19,8 @@ import gestionecassa.Article;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.Cassiere;
 import gestionecassa.Person;
-import gestionecassa.ordine.EntrySingleOption;
-import gestionecassa.ordine.Order;
+import gestionecassa.order.EntrySingleOption;
+import gestionecassa.order.Order;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -156,21 +156,21 @@ public class PostgreSQLDataBackendTest {
         backend.addArticleToList(temp);
 
         String query = "SELECT * FROM articles WHERE name = '"+
-                temp.getNome() + "'";
+                temp.getName() + "'";
         testArticlePresence(query,temp);
 
         temp = articles.get(2);
 
         backend.addArticleToList(temp);
 
-        query = "SELECT * FROM articles WHERE name = '" + temp.getNome() + "'";
+        query = "SELECT * FROM articles WHERE name = '" + temp.getName() + "'";
         testArticlePresence(query,temp);
 
         temp = articles.get(1);
 
         backend.addArticleToList(temp);
 
-        query = "SELECT * FROM articles WHERE name = '" + temp.getNome() + "'";
+        query = "SELECT * FROM articles WHERE name = '" + temp.getName() + "'";
         testArticlePresence(query,temp);
     }
 
@@ -186,7 +186,7 @@ public class PostgreSQLDataBackendTest {
         backend.addArticleToListAt(temp,2);
 
         String query = "SELECT * FROM articles WHERE name = '"+
-                temp.getNome() + "'";
+                temp.getName() + "'";
         testArticlePresence(query,temp);
     }
 
@@ -348,8 +348,8 @@ public class PostgreSQLDataBackendTest {
         articles = backend.loadArticlesList();
 
         Order tempOrder = new Order(testCassiere.getUsername(), "hell");
-        tempOrder.addBeneVenduto(articles.get(0), 3);
-        tempOrder.addBeneVenduto(articles.get(3), 2);
+        tempOrder.addArticle(articles.get(0), 3);
+        tempOrder.addArticle(articles.get(3), 2);
         
         backend.addNewOrder(tempOrder);
 
@@ -399,9 +399,9 @@ public class PostgreSQLDataBackendTest {
                 assertTrue(!rs.isLast());
 
                 assertEquals(tempOrder.getUsername(), rs.getString("u_name"));
-                assertEquals(tempOrder.getListaBeni().get(0).bene.getPrezzo(),
+                assertEquals(tempOrder.getListaBeni().get(0).article.getPrice(),
                                 rs.getDouble("price"),0);
-                assertEquals(tempOrder.getListaBeni().get(0).bene.getNome(),
+                assertEquals(tempOrder.getListaBeni().get(0).article.getName(),
                                 rs.getString("a_name"));
                 assertEquals(tempOrder.getListaBeni().get(0).numTot,
                                 rs.getInt("num_tot"));
@@ -410,9 +410,9 @@ public class PostgreSQLDataBackendTest {
                 assertTrue(rs.isLast());
 
                 assertEquals(tempOrder.getUsername(), rs.getString("u_name"));
-                assertEquals(tempOrder.getListaBeni().get(1).bene.getPrezzo(),
+                assertEquals(tempOrder.getListaBeni().get(1).article.getPrice(),
                                 rs.getDouble("price"),0);
-                assertEquals(tempOrder.getListaBeni().get(1).bene.getNome(),
+                assertEquals(tempOrder.getListaBeni().get(1).article.getName(),
                                 rs.getString("a_name"));
                 assertEquals(tempOrder.getListaBeni().get(1).numTot,
                                 rs.getInt("num_tot"));
@@ -429,8 +429,8 @@ public class PostgreSQLDataBackendTest {
         }
 
         tempOrder = new Order(testCassiere.getUsername(), "hell");
-        tempOrder.addBeneVenduto(articles.get(0), 3);
-        tempOrder.addBeneVenduto(articles.get(3), 2);
+        tempOrder.addArticle(articles.get(0), 3);
+        tempOrder.addArticle(articles.get(3), 2);
 
         backend.addNewOrder(tempOrder);
     }
@@ -451,7 +451,7 @@ public class PostgreSQLDataBackendTest {
                 ((ArticleWithOptions)articles.get(1)).getOptions().get(1), 3));
 
         Order tempOrder = new Order(testCassiere.getUsername(), "hell");
-        tempOrder.addBeneConOpzione(
+        tempOrder.addArticleWithOptions(
                 (ArticleWithOptions)articles.get(1), 5, 0, optionsList);
 
         backend.addNewOrder(tempOrder);
@@ -502,7 +502,7 @@ public class PostgreSQLDataBackendTest {
                 assertTrue("Non è l'ultimo!",rs.isLast());
 
                 assertEquals("Il prezzo non corrisponde!",
-                        testArticle.getPrezzo(),rs.getDouble("price"),0);
+                        testArticle.getPrice(),rs.getDouble("price"),0);
                 assertEquals(testArticle.hasOptions()
                                 ? "Dovrebbe aver opzioni ma non ne ha!"
                                 : "Non dovrebbe aver opzioni ma ne ha!",

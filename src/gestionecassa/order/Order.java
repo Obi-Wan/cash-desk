@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package gestionecassa.ordine;
+package gestionecassa.order;
 
 import gestionecassa.*;
 import java.io.Serializable;
@@ -20,7 +20,7 @@ public class Order implements Serializable, Comparable<Order> {
     /**
      * Data/ora in cui è stato effettuato l'ordine
      */
-    Date data;
+    Date date;
 
     /**
      * 
@@ -35,7 +35,7 @@ public class Order implements Serializable, Comparable<Order> {
     /**
      * Lista dei beni per il singolo ordine.
      */
-    List<EntrySingleArticle> listaBeni;
+    List<EntrySingleArticle> articlesList;
 
     /**
      *
@@ -57,7 +57,7 @@ public class Order implements Serializable, Comparable<Order> {
     /**
      * Explicit constructor of the date
      *
-     * @param data
+     * @param date
      * @param username
      * @param hostname
      */
@@ -71,15 +71,15 @@ public class Order implements Serializable, Comparable<Order> {
      * Completely explicit constructor (it's not good to use it.)
      *
      * @param nOrdine
-     * @param data
+     * @param date
      * @param username
      * @param hostname
-     * @param listaBeni
+     * @param articlesList
      */
-    private Order( Date data, String username, String hostname,
+    private Order( Date date, String username, String hostname,
             List<EntrySingleArticle> listaBeni) {
-        this.data = data;
-        this.listaBeni = listaBeni;
+        this.date = date;
+        this.articlesList = listaBeni;
         this.username = username;
         this.hostname = hostname;
     }
@@ -90,11 +90,11 @@ public class Order implements Serializable, Comparable<Order> {
      * @param order
      */
     public Order(Order order) {
-        this.data = new Date(order.data.getTime());
+        this.date = new Date(order.date.getTime());
         this.hostname = new String(order.hostname);
         this.username = new String(order.username);
         this.totalPrice = order.totalPrice;
-        this.listaBeni = new ArrayList<EntrySingleArticle>(order.listaBeni);
+        this.articlesList = new ArrayList<EntrySingleArticle>(order.articlesList);
     }
 
     /**
@@ -102,7 +102,7 @@ public class Order implements Serializable, Comparable<Order> {
      * @return
      */
     public Date getData() {
-        return data;
+        return date;
     }
 
     /**
@@ -110,7 +110,7 @@ public class Order implements Serializable, Comparable<Order> {
      * @return
      */
     public List<EntrySingleArticle> getListaBeni() {
-        return listaBeni;
+        return articlesList;
     }
 
     /**
@@ -140,24 +140,24 @@ public class Order implements Serializable, Comparable<Order> {
     /**
      * Adder helper
      *
-     * @param bene
+     * @param article 
      * @param numTot
      */
-    public void addBeneVenduto(Article bene, int numTot) {
-        listaBeni.add(new EntrySingleArticle(bene, numTot));
+    public void addArticle(Article article, int numTot) {
+        articlesList.add(new EntrySingleArticle(article, numTot));
     }
 
     /**
      * Adder helper
      *
-     * @param bene
+     * @param article
      * @param numTot
-     * @param listaParziale
+     * @param partialsList 
      */
-    public void addBeneConOpzione(ArticleWithOptions bene, int numTot, int progressive,
-            List<EntrySingleOption> listaParziale) {
-        listaBeni.add(new EntrySingleArticleWithOption(bene, numTot, progressive,
-                listaParziale));
+    public void addArticleWithOptions(ArticleWithOptions article, int numTot,
+            int progressive, List<EntrySingleOption> partialsList) {
+        articlesList.add(new EntrySingleArticleWithOption(article, numTot, progressive,
+                partialsList));
     }
 
     /**
@@ -169,6 +169,6 @@ public class Order implements Serializable, Comparable<Order> {
     }
 
     public int compareTo(Order o) {
-        return this.data.compareTo(o.data);
+        return this.date.compareTo(o.date);
     }
 }

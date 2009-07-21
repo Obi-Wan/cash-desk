@@ -14,12 +14,12 @@ public class Article implements Serializable {
     /**
      *
      */
-    String nome;
+    String name;
 
     /**
      *
      */
-    double prezzo;
+    double price;
 
     /**
      * 
@@ -29,23 +29,23 @@ public class Article implements Serializable {
     /**
      * Explicit constructor
      *
-     * @param nome Name of the good
-     * @param prezzo Price
+     * @param name Name of the good
+     * @param price Price
      */
-    public Article(int id, String nome, double prezzo) {
-        this(id, nome, prezzo, true);
+    public Article(int id, String name, double price) {
+        this(id, name, price, true);
     }
 
     /**
      * Most explicit constructor
      * 
-     * @param nome
-     * @param prezzo
+     * @param name
+     * @param price
      * @param enabled
      */
-    public Article(int id, String nome, double prezzo, boolean enabled) {
-        this.nome = new String(nome);
-        this.prezzo = prezzo;
+    public Article(int id, String name, double price, boolean enabled) {
+        this.name = new String(name);
+        this.price = price;
         this.enabled = enabled;
         this.id = id;
     }
@@ -65,15 +65,15 @@ public class Article implements Serializable {
      * @return The string describing the good.
      */
     public String getPrintableFormat() {
-        return new String("- " + nome + "\t € " + prezzo);
+        return new String("- " + name + "\t € " + price);
     }
 
-    final public String getNome() {
-        return nome;
+    final public String getName() {
+        return name;
     }
 
-    final public double getPrezzo() {
-        return prezzo;
+    final public double getPrice() {
+        return price;
     }
 
     public void setEnabled(boolean enabled) {
@@ -91,17 +91,17 @@ public class Article implements Serializable {
     @Override
     public boolean equals(Object obj) {
         return (obj instanceof Article) &&
-                (this.nome.equals(((Article)obj).nome)) &&
-                (this.prezzo == (((Article)obj).prezzo));
+                (this.name.equals(((Article)obj).name)) &&
+                (this.price == (((Article)obj).price));
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
         hash = 37 * hash + this.id;
-        hash = 37 * hash + (this.nome != null ? this.nome.hashCode() : 0);
-        hash = 37 * hash + (int) (Double.doubleToLongBits(this.prezzo) ^
-                                (Double.doubleToLongBits(this.prezzo) >>> 32));
+        hash = 37 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 37 * hash + (int) (Double.doubleToLongBits(this.price) ^
+                                (Double.doubleToLongBits(this.price) >>> 32));
         return hash;
     }
 }

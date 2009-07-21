@@ -14,7 +14,7 @@
 
 package gestionecassa.server.datamanager;
 
-import gestionecassa.ordine.Order;
+import gestionecassa.order.Order;
 import java.io.IOException;
 
 /**

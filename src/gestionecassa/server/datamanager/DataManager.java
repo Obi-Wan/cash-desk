@@ -11,7 +11,7 @@ import gestionecassa.Article;
 import gestionecassa.Cassiere;
 import gestionecassa.ArticlesList;
 import gestionecassa.Log;
-import gestionecassa.ordine.Order;
+import gestionecassa.order.Order;
 import gestionecassa.Person;
 import java.io.IOException;
 import java.util.List;
@@ -222,7 +222,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
                 
                     for (Article article : articlesList.list) {
                         if (article instanceof ArticleWithPreparation) {
-                            progressivesList.put(article.getNome(), 0);
+                            progressivesList.put(article.getName(), 0);
                         }
                     }
                 }
@@ -373,7 +373,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
 
                 for (Article article : list.list) {
                     if (article instanceof ArticleWithPreparation) {
-                        progressivesList.put(article.getNome(), 0);
+                        progressivesList.put(article.getName(), 0);
                     }
                 }
             }

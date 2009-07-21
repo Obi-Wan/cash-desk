@@ -11,30 +11,30 @@ public class Admin extends Person {
      *
      * @param tempPersona
      */
-    public Admin(Person tempPersona) {
-        this(tempPersona.id, tempPersona.username, tempPersona.password, tempPersona.enabled);
+    public Admin(Person tempPerson) {
+        this(tempPerson.id, tempPerson.username, tempPerson.password, tempPerson.enabled);
     }
 
     /**
      * Creates an Admin from from specified fields
      *
-     * @param idAmministratore the id of Admin
+     * @param idAdmin the id of Admin
      * @param username the username of the Admin
      * @param the password of the Admin
      */
-    public Admin(int idAmministratore, String username, String password, boolean enabled) {
-        super(idAmministratore, username, password,enabled);
+    public Admin(int idAdmin, String username, String password, boolean enabled) {
+        super(idAdmin, username, password,enabled);
     }
 
     /**
      * Creates an Admin from from specified fields
      *
-     * @param idAmministratore the id of Admin
+     * @param idAdmin the id of Admin
      * @param username the username of the Admin
      * @param the password of the Admin
      */
-    public Admin(int idAmministratore, String username, String password) {
-        super(idAmministratore, username, password,true);
+    public Admin(int idAdmin, String username, String password) {
+        super(idAdmin, username, password,true);
     }
 
     @Override

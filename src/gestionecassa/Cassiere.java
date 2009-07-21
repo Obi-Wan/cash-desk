@@ -12,8 +12,8 @@ public class Cassiere extends Person {
      *
      * @param tempPersona
      */
-    public Cassiere(Person tempPersona) {
-        this(tempPersona.id,tempPersona.username,tempPersona.password,tempPersona.enabled);
+    public Cassiere(Person tempPerson) {
+        this(tempPerson.id,tempPerson.username,tempPerson.password,tempPerson.enabled);
     }
 
     /**
@@ -23,8 +23,8 @@ public class Cassiere extends Person {
      * @param username the username of cassiere
      * @param the password of cassiere.
      */
-    public Cassiere(int idCassiere, String username, String password, boolean enalbed) {
-        super(idCassiere, username, password,enalbed);
+    public Cassiere(int idCassiere, String username, String password, boolean enabled) {
+        super(idCassiere, username, password,enabled);
     }
 
     /**

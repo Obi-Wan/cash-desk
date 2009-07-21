@@ -7,7 +7,7 @@ package gestionecassa.server.clientservices;
 
 import gestionecassa.Article;
 import gestionecassa.ArticlesList;
-import gestionecassa.ordine.Order;
+import gestionecassa.order.Order;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import org.apache.log4j.Logger;

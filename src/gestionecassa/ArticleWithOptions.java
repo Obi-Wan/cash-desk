@@ -18,8 +18,8 @@ public class ArticleWithOptions extends Article implements ArticleWithPreparatio
     /**
      * Explicit Constructor
      *
-     * @param nome
-     * @param prezzo
+     * @param name 
+     * @param price
      * @param options
      */
     public ArticleWithOptions(int id, String name, double price, List<String> options) {
@@ -30,23 +30,23 @@ public class ArticleWithOptions extends Article implements ArticleWithPreparatio
     /**
      * Explicit Constructor
      *
-     * @param nome
-     * @param prezzo
+     * @param name 
+     * @param price
      * @param options
      */
-    public ArticleWithOptions(int id, String nome, double prezzo, List<String> options, boolean b) {
-        super(id, nome, prezzo, b);
+    public ArticleWithOptions(int id, String name, double price, List<String> options, boolean b) {
+        super(id, name, price, b);
         this.options = new ArrayList<String>(options);
     }
 
     /**
      * Explicit base constructor
      *
-     * @param nome
-     * @param prezzo
+     * @param name
+     * @param price 
      */
-    public ArticleWithOptions(int id, String nome, double prezzo) {
-        this(id, nome, prezzo, new ArrayList<String>());
+    public ArticleWithOptions(int id, String name, double price) {
+        this(id, name, price, new ArrayList<String>());
     }
 
     /**

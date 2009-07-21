@@ -18,7 +18,7 @@ import gestionecassa.Admin;
 import gestionecassa.Article;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.Cassiere;
-import gestionecassa.ordine.Order;
+import gestionecassa.order.Order;
 import java.util.List;
 import java.util.Vector;
 

@@ -21,7 +21,7 @@
 package gestionecassa.clients.cassa.gui;
 
 import gestionecassa.ArticleWithOptions;
-import gestionecassa.ordine.EntrySingleOption;
+import gestionecassa.order.EntrySingleOption;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +48,8 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
 
         this.parent = parent;
         this.bene = bene;
-        this.jLabelNome.setText(bene.getNome());
-        this.jLabelPrezzo.setText("€ " + bene.getPrezzo());
+        this.jLabelNome.setText(bene.getName());
+        this.jLabelPrezzo.setText("€ " + bene.getPrice());
 
         pannelliopzioni = new ArrayList<GuiOrderSingleOptionPanel>();
 

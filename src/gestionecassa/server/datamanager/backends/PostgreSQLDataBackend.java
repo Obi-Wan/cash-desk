@@ -19,10 +19,10 @@ import gestionecassa.Article;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.Cassiere;
 import gestionecassa.Log;
-import gestionecassa.ordine.EntrySingleArticle;
-import gestionecassa.ordine.EntrySingleArticleWithOption;
-import gestionecassa.ordine.EntrySingleOption;
-import gestionecassa.ordine.Order;
+import gestionecassa.order.EntrySingleArticle;
+import gestionecassa.order.EntrySingleArticleWithOption;
+import gestionecassa.order.EntrySingleOption;
+import gestionecassa.order.Order;
 import gestionecassa.server.datamanager.BackendAPI_2;
 import java.io.IOException;
 import java.sql.Connection;
@@ -210,7 +210,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
             try {
                 ResultSet rs = stIns.executeQuery(orderQuery);
                 while (rs.next()) {
-                    if (rs.getString("name").equals(article.getNome())) {
+                    if (rs.getString("name").equals(article.getName())) {
                         rs.updateInt("num_pos", position);
                         rs.updateRow();
                     } else {
@@ -243,8 +243,8 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
         String subQueryPos = "SELECT currval('articles_id_article_seq') -1";
         String insQuery =
                 "INSERT INTO articles (name, price, enabled, has_options, num_pos)" +
-                "VALUES ('" + article.getNome() + "', '" +
-                    article.getPrezzo() + "', " + article.isEnabled() + ", '" +
+                "VALUES ('" + article.getName() + "', '" +
+                    article.getPrice() + "', " + article.isEnabled() + ", '" +
                     article.hasOptions() + "', (" + subQueryPos + ") );";
         genericCommit(insQuery);
 
@@ -292,7 +292,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
     public void enableArticleFromList(Article article, boolean enable) throws IOException {
         String query =  "SELECT id_article, enabled" +
                         "   FROM articles" +
-                        "   WHERE name = '" + article.getNome() + "';";
+                        "   WHERE name = '" + article.getName() + "';";
         genericEnabler(query, enable);
     }
 
@@ -482,7 +482,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 
         for (EntrySingleArticle entry : order.getListaBeni()) {
 
-            //int idArticle = getIdArticleByName(entry.bene.getNome());
+            //int idArticle = getIdArticleByName(entry.article.getName());
             try {
                 Statement st = db.createStatement();
                 try {
@@ -491,12 +491,12 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                         "INSERT INTO articles_in_order (id_article, id_order, "+
                             "num_tot )" +
 //                        "VALUES ('" + idArticle + "', '" +
-                        "VALUES ('" + entry.bene.getId() + "', '" +
+                        "VALUES ('" + entry.article.getId() + "', '" +
                             idOrder + "', '" +
                             entry.numTot + "' )";
                     st.execute(addEntry);
 
-                    if (entry.bene.hasOptions()) {
+                    if (entry.article.hasOptions()) {
                         ResultSet key = st.executeQuery("SELECT " +
                                 "currval('articles_in_order_id_art_in_ord_seq');");
                         key.next();
@@ -504,7 +504,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 
                         EntrySingleArticleWithOption entryOpts =
                                 (EntrySingleArticleWithOption)entry;
-                        List<EntrySingleOption> opts = entryOpts.numParziale;
+                        List<EntrySingleOption> opts = entryOpts.numPartial;
 
                         String addOpt =
                             "INSERT INTO opts_of_article_in_order " +
@@ -519,15 +519,15 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                             ResultSet optRs = optionSt.executeQuery(
                                     "SELECT id_option" +
                                     "   FROM options" +
-                                    "   WHERE name = '"+option.nomeOpz+"'" +
+                                    "   WHERE name = '"+option.optionName+"'" +
 //                                    "       AND id_article = '" + idArticle +
-                                    "       AND id_article = '" + entry.bene.getId() +
+                                    "       AND id_article = '" + entry.article.getId() +
                                     "';");
                             optRs.next();
 
                             addOpt += "('" + idArtInOrd +
                                     "', '" + optRs.getInt("id_option") +
-                                    "', '" + option.numParz + "')" +
+                                    "', '" + option.numPartial + "')" +
                                     (iter.hasNext() ? "," : ";");
                             optRs.close();
                         }
