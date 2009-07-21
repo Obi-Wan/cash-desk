@@ -19,6 +19,7 @@ import gestionecassa.Article;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.Cassiere;
 import gestionecassa.Person;
+import gestionecassa.order.EntrySingleArticleWithOption;
 import gestionecassa.order.EntrySingleOption;
 import gestionecassa.order.Order;
 import java.io.IOException;
@@ -455,6 +456,130 @@ public class PostgreSQLDataBackendTest {
                 (ArticleWithOptions)articles.get(1), 5, 0, optionsList);
 
         backend.addNewOrder(tempOrder);
+
+        // verify presence
+        String query =  "SELECT c.username AS username, o.time_order AS time, " +
+                            "o.price_tot AS price" +
+                        "   FROM orders AS o, cassieres AS c" +
+                        "   WHERE o.id_cassiere = c.id_cassiere;";
+        try {
+            Statement st = backend.db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+
+                assertTrue(rs.next());
+                assertTrue(rs.next());
+                assertTrue(rs.next());
+                assertTrue(rs.isLast());
+
+                assertEquals(tempOrder.getUsername(), rs.getString("username"));
+                assertEquals(tempOrder.getTotalPrice(), rs.getDouble("price"),0);
+                assertEquals(new Timestamp(tempOrder.getData().getTime()),
+                        rs.getTimestamp("time"));
+
+            } catch (SQLException ex) {
+                fail("Failed in interrogating the DB");
+                ex.printStackTrace();
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            fail("Failed in initializing the DB: ");
+            ex.printStackTrace();
+        }
+
+        // verify presence
+        query = "SELECT c.username AS u_name, a.name AS a_name, " +
+                    "aio.num_tot AS num_tot, a.price AS price" +
+                "   FROM cassieres AS c, orders AS o, articles AS a, " +
+                    "articles_in_order AS aio" +
+                "   WHERE o.id_order = aio.id_order" +
+                "       AND aio.id_article = a.id_article" +
+                "       AND c.id_cassiere = o.id_cassiere;";
+        try {
+            Statement st = backend.db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+
+                assertTrue(rs.next());
+                assertTrue(rs.next());
+                assertTrue(rs.next());
+                assertTrue(rs.next());
+                assertTrue(rs.next());
+                assertTrue(rs.isLast());
+
+                assertEquals(tempOrder.getUsername(), rs.getString("u_name"));
+                assertEquals(tempOrder.getListaBeni().get(0).article.getPrice(),
+                                rs.getDouble("price"),0);
+                assertEquals(tempOrder.getListaBeni().get(0).article.getName(),
+                                rs.getString("a_name"));
+                assertEquals(tempOrder.getListaBeni().get(0).numTot,
+                                rs.getInt("num_tot"));
+
+            } catch (SQLException ex) {
+                fail("Failed in interrogating the DB" + ex.getMessage());
+                ex.printStackTrace();
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            fail("Failed in initializing the DB: ");
+            ex.printStackTrace();
+        }
+
+        // verify presence
+        query = "SELECT a.name AS a_name, op.name AS op_name, o.time_order AS time, " +
+                    "oao.num_parz AS num_parz" +
+                "   FROM orders AS o, articles AS a, articles_in_order AS aio, " +
+                    "options AS op, opts_of_article_in_order AS oao" +
+                "   WHERE o.id_order = aio.id_order" +
+                "       AND aio.id_article = a.id_article" +
+                "       AND oao.id_art_in_ord = aio.id_art_in_ord" +
+                "       AND oao.id_option = op.id_option" +
+                "       AND a.has_options = TRUE;";
+        try {
+            Statement st = backend.db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+
+                assertTrue(rs.next());
+                assertTrue(!rs.isLast());
+
+                assertEquals(tempOrder.getData().getTime(),
+                                rs.getTimestamp("time").getTime());
+                assertEquals(tempOrder.getListaBeni().get(0).article.getName(),
+                                rs.getString("a_name"));
+                assertEquals(
+                        ((EntrySingleArticleWithOption)tempOrder.getListaBeni().get(0)).numPartial.get(0).numPartial,
+                                rs.getInt("num_parz"));
+                assertEquals(
+                        ((EntrySingleArticleWithOption)tempOrder.getListaBeni().get(0)).numPartial.get(0).optionName,
+                                rs.getString("op_name"));
+
+                assertTrue(rs.next());
+                assertTrue(rs.isLast());
+
+                assertEquals(tempOrder.getData().getTime(),
+                                rs.getTimestamp("time").getTime());
+                assertEquals(tempOrder.getListaBeni().get(0).article.getName(),
+                                rs.getString("a_name"));
+                assertEquals(
+                        ((EntrySingleArticleWithOption)tempOrder.getListaBeni().get(0)).numPartial.get(1).numPartial,
+                                rs.getInt("num_parz"));
+                assertEquals(
+                        ((EntrySingleArticleWithOption)tempOrder.getListaBeni().get(0)).numPartial.get(1).optionName,
+                                rs.getString("op_name"));
+
+            } catch (SQLException ex) {
+                fail("Failed in interrogating the DB" + ex.getMessage());
+                ex.printStackTrace();
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            fail("Failed in initializing the DB: ");
+            ex.printStackTrace();
+        }
     }
 
 
@@ -465,6 +590,142 @@ public class PostgreSQLDataBackendTest {
     @Test
     public void testDelLastOrder() throws Exception {
         System.out.println("delLastOrder");
+
+        articles = backend.loadArticlesList();
+
+        Order tempOrder = new Order(testCassiere.getUsername(), "hell");
+        tempOrder.addArticle(articles.get(0), 3);
+        tempOrder.addArticle(articles.get(3), 2);
+
+        backend.addNewOrder(tempOrder);
+
+        String query = "SELECT count( id_order ) FROM orders;";
+        try {
+            Statement st = backend.db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+
+                assertTrue(rs.next());
+
+                assertEquals(rs.getInt("count"), 4);
+
+            } catch (SQLException ex) {
+                fail("Failed in interrogating the DB" + ex.getMessage());
+                ex.printStackTrace();
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            fail("Failed in initializing the DB: ");
+            ex.printStackTrace();
+        }
+
+        query = "SELECT count( id_art_in_ord ) FROM articles_in_order;";
+        try {
+            Statement st = backend.db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+
+                assertTrue(rs.next());
+
+                assertEquals(rs.getInt("count"), 7);
+
+            } catch (SQLException ex) {
+                fail("Failed in interrogating the DB" + ex.getMessage());
+                ex.printStackTrace();
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            fail("Failed in initializing the DB: ");
+            ex.printStackTrace();
+        }
+
+        query = "SELECT count( id_option ) FROM opts_of_article_in_order;";
+        try {
+            Statement st = backend.db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+
+                assertTrue(rs.next());
+
+                assertEquals(rs.getInt("count"), 2);
+
+            } catch (SQLException ex) {
+                fail("Failed in interrogating the DB" + ex.getMessage());
+                ex.printStackTrace();
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            fail("Failed in initializing the DB: ");
+            ex.printStackTrace();
+        }
+
+        backend.delLastOrder(tempOrder);
+
+        query = "SELECT count( id_order ) FROM orders;";
+        try {
+            Statement st = backend.db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+
+                assertTrue(rs.next());
+
+                assertEquals(rs.getInt("count"), 3);
+
+            } catch (SQLException ex) {
+                fail("Failed in interrogating the DB" + ex.getMessage());
+                ex.printStackTrace();
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            fail("Failed in initializing the DB: ");
+            ex.printStackTrace();
+        }
+
+        query = "SELECT count( id_art_in_ord ) FROM articles_in_order;";
+        try {
+            Statement st = backend.db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+
+                assertTrue(rs.next());
+
+                assertEquals(rs.getInt("count"), 5);
+
+            } catch (SQLException ex) {
+                fail("Failed in interrogating the DB" + ex.getMessage());
+                ex.printStackTrace();
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            fail("Failed in initializing the DB: ");
+            ex.printStackTrace();
+        }
+
+        query = "SELECT count( id_option ) FROM opts_of_article_in_order;";
+        try {
+            Statement st = backend.db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+
+                assertTrue(rs.next());
+
+                assertEquals(rs.getInt("count"), 2);
+
+            } catch (SQLException ex) {
+                fail("Failed in interrogating the DB" + ex.getMessage());
+                ex.printStackTrace();
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            fail("Failed in initializing the DB: ");
+            ex.printStackTrace();
+        }
     }
 
     /**
