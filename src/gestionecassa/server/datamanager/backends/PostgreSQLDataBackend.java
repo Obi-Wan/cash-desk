@@ -73,7 +73,9 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                 "id_cassiere serial PRIMARY KEY, " +
                 "username text UNIQUE, " +
                 "password text, " +
-                "enabled boolean ");
+                "enabled boolean " +
+//                "trusted boolean " +
+                "");
         tables.put("02_viewers",
                 "id_viewer serial PRIMARY KEY, " +
                 "username text UNIQUE, " +
@@ -482,7 +484,13 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 
         for (EntrySingleArticle entry : order.getListaBeni()) {
 
-            //int idArticle = getIdArticleByName(entry.article.getName());
+            int idArticle; // if trusted is > 0, otherwise < 0
+//            if (idCassiere > 0) {
+                idArticle = entry.article.getId();
+//            } else {
+//                idArticle = getIdArticleByName(entry.article.getName());
+//                idCassiere = - idCassiere;
+//            }
             try {
                 Statement st = db.createStatement();
                 try {
@@ -490,8 +498,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                     String addEntry =
                         "INSERT INTO articles_in_order (id_article, id_order, "+
                             "num_tot )" +
-//                        "VALUES ('" + idArticle + "', '" +
-                        "VALUES ('" + entry.article.getId() + "', '" +
+                        "VALUES ('" + idArticle + "', '" +
                             idOrder + "', '" +
                             entry.numTot + "' )";
                     st.execute(addEntry);
@@ -520,8 +527,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                                     "SELECT id_option" +
                                     "   FROM options" +
                                     "   WHERE name = '"+option.optionName+"'" +
-//                                    "       AND id_article = '" + idArticle +
-                                    "       AND id_article = '" + entry.article.getId() +
+                                    "       AND id_article = '" + idArticle +
                                     "';");
                             optRs.next();
 
@@ -689,6 +695,9 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 
                 if (rs.next() && rs.getBoolean("enabled")) {
                     idCassiere = rs.getInt("id_cassiere");
+//                    if (!rs.getBoolean("trusted")) {
+//                        idCassiere = - idCassiere;
+//                    }
                 } else {
                     rs.close();
                     st.close();
