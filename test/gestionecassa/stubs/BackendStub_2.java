@@ -68,7 +68,7 @@ public class BackendStub_2 extends BackendStub implements BackendAPI_2 {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public void delLastOrder(String id) throws IOException {
+    public void delLastOrder(Order order) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
