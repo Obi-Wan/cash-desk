@@ -482,7 +482,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 
         for (EntrySingleArticle entry : order.getListaBeni()) {
 
-            int idArticle = getIdArticleByName(entry.bene.getNome());
+            //int idArticle = getIdArticleByName(entry.bene.getNome());
             try {
                 Statement stOrder = db.createStatement();
                 try {
@@ -490,7 +490,8 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                     String addEntry =
                         "INSERT INTO articles_in_order (id_article, id_order, "+
                             "num_tot )" +
-                        "VALUES ('" + idArticle + "', '" +
+//                        "VALUES ('" + idArticle + "', '" +
+                        "VALUES ('" + entry.bene.getId() + "', '" +
                             idOrder + "', '" +
                             entry.numTot + "' )";
                     stOrder.execute(addEntry);
@@ -519,7 +520,8 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                                     "SELECT id_option" +
                                     "   FROM options" +
                                     "   WHERE name = '"+option.nomeOpz+"'" +
-                                    "       AND id_article = '" + idArticle +
+//                                    "       AND id_article = '" + idArticle +
+                                    "       AND id_article = '" + entry.bene.getId() +
                                     "';");
                             optRs.next();
 
@@ -707,6 +709,44 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
     }
 
     /**
+     * 
+     * @param name
+     * @return
+     * @throws IOException
+     */
+    private int getIdArticleByName(String name) throws IOException {
+
+        String query =  "SELECT id_article, enabled" +
+                            "   FROM articles" +
+                            "   WHERE name = '" + name + "'";
+        int idArticle;
+        try {
+            Statement st = db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+
+                if (rs.next() && rs.getBoolean("enabled")) {
+                    idArticle = rs.getInt("id_article");
+                } else {
+                    rs.close();
+                    st.close();
+                    throw new IOException("The article is not on the list, " +
+                            "or is disabled");
+                }
+            } catch (SQLException ex) {
+                logger.error("Errore con la query: " + query, ex);
+                throw new IOException(ex);
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            logger.error("Errore nel connettermi al DB", ex);
+            throw new IOException(ex);
+        }
+        return idArticle;
+    }
+
+    /**
      *
      * @param order 
      * @return
@@ -743,43 +783,5 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
             throw new IOException(ex);
         }
         return idOrder;
-    }
-
-    /**
-     * 
-     * @param name
-     * @return
-     * @throws IOException
-     */
-    private int getIdArticleByName(String name) throws IOException {
-
-        String query =  "SELECT id_article, enabled" +
-                            "   FROM articles" +
-                            "   WHERE name = '" + name + "'";
-        int idArticle;
-        try {
-            Statement st = db.createStatement();
-            try {
-                ResultSet rs = st.executeQuery(query);
-
-                if (rs.next() && rs.getBoolean("enabled")) {
-                    idArticle = rs.getInt("id_article");
-                } else {
-                    rs.close();
-                    st.close();
-                    throw new IOException("The article is not on the list, " +
-                            "or is disabled");
-                }
-            } catch (SQLException ex) {
-                logger.error("Errore con la query: " + query, ex);
-                throw new IOException(ex);
-            } finally {
-                st.close();
-            }
-        } catch (SQLException ex) {
-            logger.error("Errore nel connettermi al DB", ex);
-            throw new IOException(ex);
-        }
-        return idArticle;
     }
 }

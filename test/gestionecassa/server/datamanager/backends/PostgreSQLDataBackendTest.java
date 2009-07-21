@@ -345,6 +345,8 @@ public class PostgreSQLDataBackendTest {
     public void testAddNewOrder() throws Exception {
         System.out.println("addNewOrder");
 
+        articles = backend.loadArticlesList();
+
         Order tempOrder = new Order(testCassiere.getUsername(), "hell");
         tempOrder.addBeneVenduto(articles.get(0), 3);
         tempOrder.addBeneVenduto(articles.get(3), 2);
@@ -440,15 +442,17 @@ public class PostgreSQLDataBackendTest {
     public void testAddNewOrderWithOptions() throws Exception {
         System.out.println("delLastOrder");
 
+        articles = backend.loadArticlesList();
+
         List<EntrySingleOption> optionsList = new Vector<EntrySingleOption>();
         optionsList.add(new EntrySingleOption(
-                ((ArticleWithOptions)articles.get(2)).getOptions().get(0), 2));
+                ((ArticleWithOptions)articles.get(1)).getOptions().get(0), 2));
         optionsList.add(new EntrySingleOption(
-                ((ArticleWithOptions)articles.get(2)).getOptions().get(1), 3));
+                ((ArticleWithOptions)articles.get(1)).getOptions().get(1), 3));
 
         Order tempOrder = new Order(testCassiere.getUsername(), "hell");
         tempOrder.addBeneConOpzione(
-                (ArticleWithOptions)articles.get(2), 5, 0, optionsList);
+                (ArticleWithOptions)articles.get(1), 5, 0, optionsList);
 
         backend.addNewOrder(tempOrder);
     }
