@@ -484,7 +484,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 
             //int idArticle = getIdArticleByName(entry.bene.getNome());
             try {
-                Statement stOrder = db.createStatement();
+                Statement st = db.createStatement();
                 try {
 
                     String addEntry =
@@ -494,10 +494,10 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                         "VALUES ('" + entry.bene.getId() + "', '" +
                             idOrder + "', '" +
                             entry.numTot + "' )";
-                    stOrder.execute(addEntry);
+                    st.execute(addEntry);
 
                     if (entry.bene.hasOptions()) {
-                        ResultSet key = stOrder.executeQuery("SELECT " +
+                        ResultSet key = st.executeQuery("SELECT " +
                                 "currval('articles_in_order_id_art_in_ord_seq');");
                         key.next();
                         int idArtInOrd = key.getInt("currval");
@@ -536,13 +536,13 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                         optionSt.close();
                     }
                 } catch (SQLException ex) {
-                    logger.error("Errore", ex);
+                    logger.error("Errore con le commit", ex);
                     throw new IOException(ex);
                 } finally {
-                    stOrder.close();
+                    st.close();
                 }
             } catch (SQLException ex) {
-                logger.error("Errore", ex);
+                logger.error("Errore nella comunciazione col DB", ex);
                 throw new IOException(ex);
             }
         }
