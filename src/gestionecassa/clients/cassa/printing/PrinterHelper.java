@@ -14,6 +14,7 @@
 
 package gestionecassa.clients.cassa.printing;
 
+import gestionecassa.Log;
 import gestionecassa.order.Order;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
@@ -23,12 +24,17 @@ import javax.print.attribute.Attribute;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.Destination;
+import javax.print.attribute.standard.Media;
+import javax.print.attribute.standard.MediaSizeName;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author ben
  */
 public class PrinterHelper extends Thread {
+
+    static Logger logger = Log.GESTIONECASSA_CASSA_PRINTING;
     
     Order order;
 
@@ -53,12 +59,16 @@ public class PrinterHelper extends Thread {
     public void run() {
         super.run();
         PrinterJob job = PrinterJob.getPrinterJob();
-        job.setPrintable(new Painter());
+        job.setPrintable(new Painter(order));
 
         // Debug output (during develop phase)
-        Destination dest = new Destination(new File("out.ps").toURI());
         PrintRequestAttributeSet attribs = new HashPrintRequestAttributeSet();
+        
+        Destination dest = new Destination(new File("out.ps").toURI());
         attribs.add(dest);
+
+        Media media = MediaSizeName.ISO_A9;
+        attribs.add(media);
 
         // needed only in the develop phase
         boolean ok = job.printDialog(attribs);
@@ -78,7 +88,7 @@ public class PrinterHelper extends Thread {
             try {
                 job.print();
             } catch (PrinterException ex) {
-                /* The job did not successfully complete */
+                logger.error("Errore nel tentativo di stampa", ex);
             }
         }
     }

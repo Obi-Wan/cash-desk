@@ -28,6 +28,10 @@ public class Log {
     static public final Logger GESTIONECASSA_CASSA_GUI =
             Logger.getLogger("gestionecassa.cassa.gui");
 
+    /** Logger for package gestionecassa.cassa.gui */
+    static public final Logger GESTIONECASSA_CASSA_PRINTING =
+            Logger.getLogger("gestionecassa.cassa.printing");
+
     /** Logger for package gestionecassa.server */
     static public final Logger GESTIONECASSA_SERVER =
             Logger.getLogger("gestionecassa.server");

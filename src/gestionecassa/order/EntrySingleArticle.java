@@ -20,7 +20,6 @@ public class EntrySingleArticle implements Serializable {
     public int numTot;
 
     public EntrySingleArticle(Article article, int numTot) {
-        super();
         this.article = article;
         this.numTot = numTot;
     }

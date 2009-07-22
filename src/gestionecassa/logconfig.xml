@@ -55,16 +55,19 @@
         </category>
 	<category additivity="false" name="gestionecassa.amministrazione">
 	  <appender-ref ref="FILE_LOGGER"/>
-	</category>	
+	</category>
 	<category additivity="false" name="gestionecassa.amministrazione.gui">
 	  <appender-ref ref="FILE_LOGGER"/>
 	</category>
 	<category additivity="false" name="gestionecassa.cassa">
 	  <appender-ref ref="FILE_LOGGER"/>
-	</category>	
+	</category>
 	<category additivity="false" name="gestionecassa.cassa.gui">
 	  <appender-ref ref="FILE_LOGGER"/>
-	</category>	
+	</category>
+	<category additivity="false" name="gestionecassa.cassa.printing">
+	  <appender-ref ref="FILE_LOGGER"/>
+	</category>
 	<category additivity="false" name="gestionecassa.server">
 	  <appender-ref ref="FILE_LOGGER"/>
 	</category>
