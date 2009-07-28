@@ -5,8 +5,8 @@
 
 package gestionecassa;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Vector;
 
 /**
  *
@@ -17,20 +17,31 @@ public class OrganizedEvent {
     /**
      * Titolo dell'evento.
      */
-    String titolo;
-
-    /**
-     * Data in cui inizia.
-     */
-    Date dataInizio;
-
-    /**
-     * Data in cui finisce.
-     */
-    Date dataFine;
+    public String name;
 
     /**
      * Lista delle date dell'evento.
      */
-    List<EventDate> listaDate;
+    public List<EventDate> datesList;
+
+    public OrganizedEvent(String title) {
+        this.name = new String(title);
+        this.datesList = new Vector<EventDate>();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return ((obj instanceof OrganizedEvent) &&
+                (this.name.equals(((OrganizedEvent)obj).name)) &&
+                (this.datesList.equals(((OrganizedEvent)obj).datesList))
+                );
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 37 * hash + (this.datesList != null ? this.datesList.hashCode() : 0);
+        return hash;
+    }
 }

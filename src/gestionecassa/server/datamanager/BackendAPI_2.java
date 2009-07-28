@@ -17,6 +17,8 @@ package gestionecassa.server.datamanager;
 import gestionecassa.Admin;
 import gestionecassa.Article;
 import gestionecassa.Cassiere;
+import gestionecassa.EventDate;
+import gestionecassa.OrganizedEvent;
 import gestionecassa.order.Order;
 import java.io.IOException;
 import java.util.List;
@@ -107,4 +109,12 @@ public interface BackendAPI_2 {
      * @throws IOException
      */
     void moveArticleAt(Article article, int position) throws IOException;
+
+    List<EventDate> getDatesOfOrgEvent(String name) throws IOException;
+
+    List<OrganizedEvent> getOrganizedEvents() throws IOException;
+
+    void addOrganizedEvent(OrganizedEvent ev) throws IOException;
+
+    void addDateToOrgEvent(EventDate evd, String title) throws IOException;
 }

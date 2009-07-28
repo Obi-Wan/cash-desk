@@ -14,9 +14,7 @@
 
 package gestionecassa;
 
-import gestionecassa.order.Order;
 import java.util.Date;
-import java.util.List;
 
 /**
  *
@@ -27,15 +25,51 @@ public class EventDate {
     /**
      * Title of this specific date.
      */
-    String titoloData;
+    public String titleDate;
 
     /**
-     * Data
+     * Time/date at which the event date will start
      */
-    Date data;
+    public Date startDate;
 
     /**
-     * Lista degli ordini avuti all'evento
+     * Time/date at which the event date will stop
      */
-    List<Order> listaOrdini;
+    public Date endDate;
+
+    /**
+     * Explicit constructor
+     * 
+     * @param title
+     * @param startDate
+     * @param endDate
+     */
+    public EventDate(String title, long startDate, long endDate) {
+        this.titleDate = new String(title);
+        this.startDate = new Date(startDate);
+        this.endDate = new Date(endDate);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return ((obj instanceof EventDate) &&
+                (this.titleDate.equals(((EventDate)obj).titleDate)) &&
+                (this.startDate.equals(((EventDate)obj).startDate)) &&
+                (this.endDate.equals(((EventDate)obj).endDate))
+                );
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 73 * hash + (this.titleDate != null ? this.titleDate.hashCode() : 0);
+        hash = 73 * hash + (this.startDate != null ? this.startDate.hashCode() : 0);
+        hash = 73 * hash + (this.endDate != null ? this.endDate.hashCode() : 0);
+        return hash;
+    }
+
+//    /**
+//     * Lista degli ordini avuti all'evento
+//     */
+//    List<Order> listaOrdini;
 }

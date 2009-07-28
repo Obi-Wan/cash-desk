@@ -18,7 +18,9 @@ import gestionecassa.Admin;
 import gestionecassa.Article;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.Cassiere;
+import gestionecassa.EventDate;
 import gestionecassa.Log;
+import gestionecassa.OrganizedEvent;
 import gestionecassa.order.EntrySingleArticle;
 import gestionecassa.order.EntrySingleArticleWithOption;
 import gestionecassa.order.EntrySingleOption;
@@ -31,6 +33,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -86,19 +89,19 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                 "username text UNIQUE, " +
                 "password text, " +
                 "enabled boolean ");
-//        tables.put("04_events",
-//                "id_event serial PRIMARY KEY, " +
-//                "name text UNIQUE, " +
-//                "start_date date UNIQUE, " +
-//                "stop_date date UNIQUE ");
-//        tables.put("05_date_event",
-//                "id_date_event serial PRIMARY KEY, " +
-//                "id_event integer REFERENCES events, " +
-//                "title text, " +
-//                "data date UNIQUE");
+        tables.put("04_events",
+                "id_event serial PRIMARY KEY, " +
+                "name text UNIQUE ");
+        tables.put("05_dates_event",
+                "id_date_event serial PRIMARY KEY, " +
+                "id_event integer REFERENCES events, " +
+                "title text, " +
+                "start_date timestamp UNIQUE, " +
+                "end_date timestamp UNIQUE ");
         tables.put("06_orders",
                 "id_order serial PRIMARY KEY, " +
                 "time_order timestamp, " +
+                "id_date_event integer NOT NULL, " +
                 "hostname text, " +
                 "id_cassiere integer REFERENCES cassieres ON DELETE RESTRICT, " +
                 "price_tot numeric ");
@@ -169,6 +172,23 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                                         tables.get(table_ref) + " );");
                     }
                 }
+
+                String queryEvent = "SELECT * FROM events WHERE id_event = '0';";
+                rs = st.executeQuery(queryEvent);
+                if (!rs.next()) {
+                    queryEvent = "INSERT INTO events (name) VALUES ('other');";
+                    genericCommit(queryEvent);
+                    Timestamp date = new Timestamp(new Date().getTime());
+                    queryEvent = "INSERT INTO dates_event " +
+                            "   (title, id_event, start_date, end_date ) " +
+                            "VALUES ('other', '1', '" + date.toString() +
+                            "', '" + date.toString() + "' )";
+                    genericCommit(queryEvent);
+                } else if (!rs.getString("name").equals("other")) {
+                    st.close();
+                    throw new IOException("Strange format of events");
+                }
+
             } catch (SQLException ex) {
                 logger.error("Errore nella query: " + query, ex);
                 throw new IOException(ex);
@@ -473,6 +493,141 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
     //-----------------//
 
     /**
+     *
+     * @param ev
+     * @throws IOException
+     */
+    public void addOrganizedEvent(OrganizedEvent ev) throws IOException {
+        String query = "INSERT INTO events (name) VALUES ('" + ev.name + "');";
+        genericCommit(query);
+
+        List<EventDate> dates = ev.datesList;
+
+        query = "INSERT INTO dates_event (id_event, start_date, end_date, " +
+                "title) VALUES ";
+        String idEventQuery = "(SELECT id_event FROM events WHERE name = '" +
+                ev.name + "')";
+        for (Iterator<EventDate> it = dates.iterator(); it.hasNext();) {
+            EventDate eventDate = it.next();
+            query += "( " + idEventQuery + " , '" +
+                    new Timestamp(eventDate.startDate.getTime()).toString() +
+                    "', '" +
+                    new Timestamp(eventDate.endDate.getTime()).toString() +
+                    "', '" + eventDate.titleDate + "')" +
+                    (it.hasNext() ? "," : ";");
+        }
+        genericCommit(query);
+    }
+
+    /**
+     * 
+     * @param evd
+     * @param title
+     * @throws IOException
+     */
+    public void addDateToOrgEvent(EventDate evd, String title) throws IOException {
+
+        String idEventQuery = "(SELECT id_event FROM events WHERE name = '" +
+                title + "')";
+        String query = "INSERT INTO dates_event (id_event, start_date, " +
+                "end_date, title) " +
+                "VALUES ( " + idEventQuery + ",  '" +
+                    new Timestamp(evd.startDate.getTime()).toString() +
+                    "', '" +
+                    new Timestamp(evd.endDate.getTime()).toString() +
+                    "', '" + evd.titleDate + "');";
+        genericCommit(query);
+    }
+
+    /**
+     *
+     * @param name
+     * @return
+     * @throws IOException
+     */
+    public List<EventDate> getDatesOfOrgEvent(String name) throws IOException {
+        List<EventDate> output = new LinkedList<EventDate>();
+
+        String query = "SELECT d.title AS title, d.start_date AS start, " +
+                            "d.end_date AS end" +
+                "   FROM events AS e, dates_event AS d" +
+                "   WHERE e.name = '" + name + "'" +
+                "       AND e.id_event = d.id_event";
+        try {
+            Statement st = db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+                while (rs.next()) {
+                    output.add(new EventDate(rs.getString("title"),
+                            rs.getTimestamp("start").getTime(),
+                            rs.getTimestamp("end").getTime()));
+                }
+            } catch (SQLException ex) {
+                logger.error("Errore con la query: " + query, ex);
+                throw new IOException(ex);
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            logger.error("Errore nel connettermi al DB", ex);
+            throw new IOException(ex);
+        }
+        return output;
+    }
+
+    /**
+     *
+     * @return
+     * @throws IOException
+     */
+    public List<OrganizedEvent> getOrganizedEvents() throws IOException {
+        List<OrganizedEvent> output = new LinkedList<OrganizedEvent>();
+
+        String query = "SELECT e.name AS name, d.title AS title, " +
+                            "d.start_date AS start, d.end_date AS end" +
+                "   FROM events AS e, dates_event AS d" +
+                "   WHERE e.name <> 'other'" +
+                "       AND e.id_event = d.id_event";
+        try {
+            Statement st = db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+                if (rs.next()) {
+                    OrganizedEvent ev = new OrganizedEvent(rs.getString("name"));
+                    ev.datesList.add(new EventDate(rs.getString("title"),
+                            rs.getTimestamp("start").getTime(),
+                            rs.getTimestamp("end").getTime()));
+                    while (rs.next()) {
+                        if (ev.name.equals(rs.getString("name"))) {
+                            ev.datesList.add(new EventDate(rs.getString("title"),
+                                    rs.getTimestamp("start").getTime(),
+                                    rs.getTimestamp("end").getTime()));
+                        } else {
+                            output.add(ev);
+                            ev = new OrganizedEvent(rs.getString("name"));
+                            ev.datesList.add(new EventDate(rs.getString("title"),
+                                    rs.getTimestamp("start").getTime(),
+                                    rs.getTimestamp("end").getTime()));
+                        }
+                    }
+                    output.add(ev);
+                }
+            } catch (SQLException ex) {
+                logger.error("Errore con la query: " + query, ex);
+                throw new IOException(ex);
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            logger.error("Errore nel connettermi al DB", ex);
+            throw new IOException(ex);
+        }
+        return output;
+    }
+    
+    //-----------------//
+
+    /**
      * 
      * @param order
      * @throws IOException
@@ -764,14 +919,38 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
     private int addOrderToOrdersTable(Order order, int idCassiere) throws IOException {
         
         final String timestamp = new Timestamp(order.getData().getTime()).toString();
-        
-        String query =
-            "INSERT INTO orders (time_order, id_cassiere, " +
-                    "price_tot, hostname)" +
-            "VALUES ('" + timestamp + "', '" +
-                idCassiere + "', '" +
-                order.getTotalPrice() + "', '"+
-                order.getHostname() + "' )";
+        int idDateEvent = 1;
+
+        // Add it to the tabe of events
+        String query = "SELECT id_date_event " +
+                "   FROM dates_event" +
+                "   WHERE start_date < '" + timestamp + "'" +
+                "       AND end_date > '" + timestamp + "'";
+        try {
+            Statement st = db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+                if (rs.next()) {
+                    idDateEvent = rs.getInt("id_date_event");
+                }
+            } catch (SQLException ex) {
+                logger.error("Errore con la query: " + query, ex);
+                throw new IOException(ex);
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            logger.error("Errore nel connettermi al DB", ex);
+            throw new IOException(ex);
+        }
+
+        // and the order to the table of orders
+        query = "INSERT INTO orders (time_order, id_cassiere, " +
+                    "price_tot, hostname, id_date_event)" +
+                "VALUES ('" + timestamp + "', '" +
+                    idCassiere + "', '" +
+                    order.getTotalPrice() + "', '" +
+                    order.getHostname() + "', '" + idDateEvent + "' )";
         int idOrder;
         try {
             Statement st = db.createStatement();

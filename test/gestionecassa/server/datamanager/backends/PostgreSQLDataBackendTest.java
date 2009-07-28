@@ -18,6 +18,8 @@ import gestionecassa.Admin;
 import gestionecassa.Article;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.Cassiere;
+import gestionecassa.EventDate;
+import gestionecassa.OrganizedEvent;
 import gestionecassa.Person;
 import gestionecassa.order.EntrySingleArticleWithOption;
 import gestionecassa.order.EntrySingleOption;
@@ -27,6 +29,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -54,6 +61,10 @@ public class PostgreSQLDataBackendTest {
 
     List<Article> articles;
 
+    OrganizedEvent event;
+
+    List<EventDate> dates;
+
     public PostgreSQLDataBackendTest() {
         dbUrl = "jdbc:postgresql://localhost:5432/TestGCDB";
         testAdmin = new Admin(1, "admin", "password");
@@ -68,6 +79,54 @@ public class PostgreSQLDataBackendTest {
         articles.add(new Article(articles.size()+1, "cane", 10));
         articles.add(new ArticleWithOptions(articles.size()+1, "falce", 4.25, options));
         articles.add(new Article(articles.size()+1, "vanga", 0.2));
+
+        dates = new LinkedList<EventDate>();
+        DateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Date startDate, endDate;
+        try {
+            startDate = date.parse("2009-09-03 12:00:00");
+            endDate = date.parse("2009-09-04 11:59:59");
+        } catch (ParseException ex) {
+            startDate = new Date();
+            endDate = new Date();
+            System.out.println("Mancata inizializzazione delle date: " +
+                    ex.getLocalizedMessage());
+        }
+        dates.add(new EventDate("i marci", startDate.getTime(), endDate.getTime()));
+        try {
+            startDate = date.parse("2009-09-04 12:00:00");
+            endDate = date.parse("2009-09-05 11:59:59");
+        } catch (ParseException ex) {
+            startDate = new Date();
+            endDate = new Date();
+            System.out.println("Mancata inizializzazione delle date: " +
+                    ex.getLocalizedMessage());
+        }
+        dates.add(new EventDate("i brutti", startDate.getTime(), endDate.getTime()));
+        try {
+            startDate = date.parse("2009-09-05 12:00:00");
+            endDate = date.parse("2009-09-06 11:59:59");
+        } catch (ParseException ex) {
+            startDate = new Date();
+            endDate = new Date();
+            System.out.println("Mancata inizializzazione delle date: " +
+                    ex.getLocalizedMessage());
+        }
+        dates.add(new EventDate("gli orendi", startDate.getTime(), endDate.getTime()));
+
+        event = new OrganizedEvent("Festa dell oscenita");
+        event.datesList.addAll(dates);
+
+        try {
+            startDate = date.parse("2009-09-06 12:00:00");
+            endDate = date.parse("2009-09-07 11:59:59");
+        } catch (ParseException ex) {
+            startDate = new Date();
+            endDate = new Date();
+            System.out.println("Mancata inizializzazione delle date: " +
+                    ex.getLocalizedMessage());
+        }
+        dates.add(new EventDate("gli oribbili", startDate.getTime(), endDate.getTime()));
     }
 
     @BeforeClass
@@ -337,6 +396,53 @@ public class PostgreSQLDataBackendTest {
         cassiereList = backend.loadCassiereList();
 
         assertTrue(cassiereList.get(0).isEnabled());
+    }
+
+    /**
+     * Test of addOrganizedEvent method, of class PostgreSQLDataBackend.
+     */
+    @Test
+    public void testAddOrganizedEvent() throws Exception {
+        System.out.println("addOrganizedEvent");
+        
+        backend.addOrganizedEvent(event);
+    }
+
+    /**
+     * Test of getOrganizedEvents method, of class PostgreSQLDataBackend.
+     */
+    @Test
+    public void testGetOrganizedEvents() throws Exception {
+        System.out.println("getOrganizedEvents");
+
+        List<OrganizedEvent> events = backend.getOrganizedEvents();
+        assertNotNull(events);
+        assertTrue(events.size() == 1);
+        assertEquals(events.get(0), event);
+        assertEquals(events.get(0).datesList, event.datesList);
+    }
+
+    /**
+     * Test of addDateToOrgEvent method, of class PostgreSQLDataBackend.
+     */
+    @Test
+    public void testAddDateToOrgEvent() throws Exception {
+        System.out.println("addDateToOrgEvent");
+
+        backend.addDateToOrgEvent(dates.get(dates.size()-1), event.name);
+    }
+
+    /**
+     * Test of getDatesOfOrgEvent method, of class PostgreSQLDataBackend.
+     */
+    @Test
+    public void testGetDatesOfOrgEvent() throws Exception {
+        System.out.println("getDatesOfOrgEvent");
+
+        List<EventDate> evDates = backend.getDatesOfOrgEvent(event.name);
+        assertNotNull(evDates);
+        assertTrue(evDates.size() == 4);
+        assertEquals(evDates, dates);
     }
 
     /**
@@ -804,5 +910,13 @@ public class PostgreSQLDataBackendTest {
         } catch (SQLException ex) {
             fail("Failed in connecting to the DB");
         }
+    }
+
+    /**
+     * Test of moveArticleAt method, of class PostgreSQLDataBackend.
+     */
+    @Test
+    public void testMoveArticleAt() throws Exception {
+        System.out.println("moveArticleAt");
     }
 }
