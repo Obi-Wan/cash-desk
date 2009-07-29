@@ -535,11 +535,47 @@ public class PostgreSQLDataBackendTest {
             ex.printStackTrace();
         }
 
-        tempOrder = new Order(testCassiere.getUsername(), "hell");
+        SimpleDateFormat date = new SimpleDateFormat("yyyyMMddhhmmss");
+        tempOrder = new Order(date.parse("20090904213000"),testCassiere.getUsername(), "hell");
         tempOrder.addArticle(articles.get(0), 3);
         tempOrder.addArticle(articles.get(3), 2);
 
         backend.addNewOrder(tempOrder);
+
+        // verify presence
+        query = "SELECT e.name AS e_name, d.title AS d_title, " +
+                    "c.username AS u_name, o.time_order AS o_time, " +
+                    "o.price_tot AS o_price" +
+                "   FROM cassieres AS c, orders AS o, events AS e, " +
+                        "dates_event AS d" +
+                "   WHERE o.id_cassiere = c.id_cassiere" +
+                "       AND o.id_date_event = d.id_date_event" +
+                "       AND e.id_event = d.id_event" +
+                "       AND e.name <> 'other';";
+        try {
+            Statement st = backend.db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+
+                assertTrue(rs.next());
+                assertTrue(rs.isLast());
+
+                assertEquals(tempOrder.getUsername(), rs.getString("u_name"));
+                assertEquals(tempOrder.getTotalPrice(),
+                                rs.getDouble("o_price"),0);
+                assertEquals(event.name,rs.getString("e_name"));
+                assertEquals(event.datesList.get(1).titleDate,rs.getString("d_title"));
+
+            } catch (SQLException ex) {
+                fail("Failed in interrogating the DB" + ex.getMessage());
+                ex.printStackTrace();
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            fail("Failed in initializing the DB: ");
+            ex.printStackTrace();
+        }
     }
 
     /**
