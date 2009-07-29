@@ -173,7 +173,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                     }
                 }
 
-                String queryEvent = "SELECT * FROM events WHERE id_event = '0';";
+                String queryEvent = "SELECT * FROM events WHERE id_event = '1';";
                 rs = st.executeQuery(queryEvent);
                 if (!rs.next()) {
                     queryEvent = "INSERT INTO events (name) VALUES ('other');";
