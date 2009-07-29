@@ -94,14 +94,14 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                 "name text UNIQUE ");
         tables.put("05_dates_event",
                 "id_date_event serial PRIMARY KEY, " +
-                "id_event integer REFERENCES events, " +
+                "id_event integer REFERENCES events ON DELETE CASCADE, " +
                 "title text, " +
                 "start_date timestamp UNIQUE, " +
                 "end_date timestamp UNIQUE ");
         tables.put("06_orders",
                 "id_order serial PRIMARY KEY, " +
                 "time_order timestamp, " +
-                "id_date_event integer NOT NULL, " +
+                "id_date_event integer DEFAULT '1' REFERENCES dates_event ON DELETE SET DEFAULT, " +
                 "hostname text, " +
                 "id_cassiere integer REFERENCES cassieres ON DELETE RESTRICT, " +
                 "price_tot numeric ");
