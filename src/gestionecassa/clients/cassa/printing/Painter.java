@@ -15,8 +15,8 @@
 package gestionecassa.clients.cassa.printing;
 
 import gestionecassa.Article;
-import gestionecassa.order.EntrySingleArticle;
-import gestionecassa.order.Order;
+import gestionecassa.ArticleWithOptions;
+import gestionecassa.order.EntrySingleArticleWithOption;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.print.PageFormat;
@@ -29,34 +29,48 @@ import java.awt.print.PrinterException;
  */
 public class Painter implements Printable {
 
-    Order order;
+    Article article;
 
-    final int numPages;
+    final int progressive;
 
-    public Painter(Order order) {
-        this.order = order;
-        numPages = countPages(order);
+    final String option;
+
+    /**
+     * Constructor for <code>ArticleWithOption</code>
+     * 
+     * @param entry
+     */
+    public Painter(ArticleWithOptions article, int prog, String option) {
+        this.article = article;
+        this.progressive = prog;
+        this.option = option;
     }
 
+    /**
+     * Constructor for <code>Article</code>
+     *
+     * @param article
+     */
+    public Painter(Article article) {
+        this.article = article;
+        this.progressive = 0;
+        this.option = "";
+    }
+
+    /**
+     * 
+     * @param graphics
+     * @param pageFormat
+     * @param pageIndex
+     * @return
+     * @throws PrinterException
+     */
     public int print(Graphics graphics, PageFormat pageFormat, int pageIndex)
             throws PrinterException {
-        if (pageIndex > numPages) {
+        if (pageIndex > 0) {
             return NO_SUCH_PAGE;
         }
-        /* Devo scoprire di che articolo si tratta */
-        Article art = null;
-        for(int posArticle = 0; posArticle < order.getListaBeni().size();
-                    posArticle++) {
-            pageIndex -= order.getListaBeni().get(posArticle).numTot;
-            if (pageIndex < 0) {
-                art = order.getListaBeni().get(posArticle).article;
-                break;
-            }
-        }
-        if (art == null) {
-            throw new PrinterException("c'è stato un errore nel conteggio " +
-                    "degli articoli da stampare");
-        }
+
 
         /* User (0,0) is typically outside the imageable area, so we must
          * translate by the X and Y values in the PageFormat to avoid clipping
@@ -67,18 +81,15 @@ public class Painter implements Printable {
         /* Now we perform our rendering. This should take account of the type
          * of the article.
          */
-        graphics.drawString(art.getPrintableFormat(), 100, 100);
+        if (article.hasOptions()) {
+            graphics.drawRect(0, 0, 100, 65);
+            graphics.drawString(option, 5, 25);
+            graphics.drawString(article.getName(), 5, 10);
+        } else {
+            graphics.drawString(article.getName(), 5, 10);
+        }
 
         /* tell the caller that this page is part of the printed document */
         return PAGE_EXISTS;
     }
-
-    private int countPages(Order order) {
-        int count = 0;
-        for( EntrySingleArticle entry : order.getListaBeni()) {
-            count += entry.numTot;
-        }
-        return count;
-    }
-
 }

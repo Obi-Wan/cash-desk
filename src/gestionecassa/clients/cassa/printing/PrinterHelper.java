@@ -14,7 +14,11 @@
 
 package gestionecassa.clients.cassa.printing;
 
+import gestionecassa.ArticleWithOptions;
 import gestionecassa.Log;
+import gestionecassa.order.EntrySingleArticle;
+import gestionecassa.order.EntrySingleArticleWithOption;
+import gestionecassa.order.EntrySingleOption;
 import gestionecassa.order.Order;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
@@ -59,38 +63,55 @@ public class PrinterHelper extends Thread {
     public void run() {
         super.run();
         PrinterJob job = PrinterJob.getPrinterJob();
-        job.setPrintable(new Painter(order));
 
-        // Debug output (during develop phase)
         PrintRequestAttributeSet attribs = new HashPrintRequestAttributeSet();
         
+        // Debug output (during develop phase)
         Destination dest = new Destination(new File("out.ps").toURI());
         attribs.add(dest);
 
         Media media = MediaSizeName.ISO_A9;
         attribs.add(media);
 
-        // needed only in the develop phase
-        boolean ok = job.printDialog(attribs);
-
-        // Develop output to individuate the attributes to apply
-        Attribute[] attribsArray = attribs.toArray();
-        for (Attribute attribute : attribsArray) {
-            System.out.println(attribute.getName() + ": " + attribute.getCategory().getSimpleName());
-            Method[] methods = attribute.getCategory().getMethods();
-            System.out.println(" Method:");
-            for (Method method : methods) {
-                System.out.println("   - "+ method.toString());
+        for (EntrySingleArticle entrySingleArticle : order.getListaBeni()) {
+            if (entrySingleArticle.article.hasOptions()) {
+                EntrySingleArticleWithOption entry =
+                        (EntrySingleArticleWithOption)entrySingleArticle;
+                int prog = entry.startProgressive;
+                for (EntrySingleOption entrySingleOption : entry.numPartial) {
+                    for (int i = 0; i < entrySingleOption.numPartial; i++) {
+                        job.setPrintable(new Painter(
+                                (ArticleWithOptions)entrySingleArticle.article,
+                                prog++, entrySingleOption.optionName));
+                    }
+                }
+            } else {
+                job.setPrintable(new Painter(entrySingleArticle.article));
+                job.setCopies(entrySingleArticle.numTot);
             }
-        }
+            // needed only in the develop phase
+            //boolean ok = job.printDialog(attribs);
 
-        if (ok) {
+            //if (ok) {
             try {
-                job.print();
+                //job.print();
+                job.print(attribs);
             } catch (PrinterException ex) {
                 logger.error("Errore nel tentativo di stampa", ex);
             }
+            //}
         }
+
+        // Develop output to individuate the attributes to apply
+//        Attribute[] attribsArray = attribs.toArray();
+//        for (Attribute attribute : attribsArray) {
+//            System.out.println(attribute.getName() + ": " + attribute.getCategory().getSimpleName());
+//            Method[] methods = attribute.getCategory().getMethods();
+//            System.out.println(" Method:");
+//            for (Method method : methods) {
+//                System.out.println("   - "+ method.toString());
+//            }
+//        }
     }
 
 }
