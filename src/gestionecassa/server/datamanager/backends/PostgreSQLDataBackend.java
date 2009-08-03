@@ -262,45 +262,26 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      */
     public void addArticleToList(Article article) throws IOException {
         // Start by inserting the article in the proper table.
-        String subQueryPos = "SELECT currval('articles_id_article_seq') -1";
+        int idArticle = getNextId("articles_id_article_seq");
         String insQuery =
-                "INSERT INTO articles (name, price, enabled, has_options, num_pos)" +
-                "VALUES ('" + article.getName() + "', '" +
+                "INSERT INTO articles (id_article, name, price, enabled, " +
+                    "has_options, num_pos)" +
+                "VALUES ('" + idArticle + "', '" + article.getName() + "', '" +
                     article.getPrice() + "', " + article.isEnabled() + ", '" +
-                    article.hasOptions() + "', (" + subQueryPos + ") );";
+                    article.hasOptions() + "', (" + (idArticle -1) + ") );";
         genericCommit(insQuery);
 
         //then just if it has options
         if (article.hasOptions()) {
-            String currValQuery = "SELECT currval('articles_id_article_seq');";
-            try {
-                Statement stIns = db.createStatement();
-                try {
-                    ResultSet keys = stIns.executeQuery(currValQuery);
-                    keys.next();
-                    int idArticle = keys.getInt("currval");
-                    List<String> opts = ((ArticleWithOptions)article).getOptions();
-                    String insOptsQuery =
-                            "INSERT INTO options (id_article, name) VALUES ";
-                    for (Iterator<String> it = opts.iterator(); it.hasNext();) {
-                        String option = it.next();
-                        insOptsQuery += "('" + idArticle +
-                                "', '" + option + "')" +
-                                (it.hasNext() ? "," : ";");
-                    }
-
-                    genericCommit(insOptsQuery);
-                    
-                } catch (SQLException ex) {
-                    logger.error("Errore con la query: " + currValQuery, ex);
-                    throw new IOException(ex);
-                } finally {
-                    stIns.close();
-                }
-            } catch (SQLException ex) {
-                logger.error("Errore nella counicazione col DB", ex);
-                throw new IOException(ex);
+            List<String> opts = ((ArticleWithOptions)article).getOptions();
+            String insOptsQuery =
+                    "INSERT INTO options (id_article, name) VALUES ";
+            for (Iterator<String> it = opts.iterator(); it.hasNext();) {
+                String option = it.next();
+                insOptsQuery += "('" + idArticle + "', '" + option + "')" +
+                        (it.hasNext() ? "," : ";");
             }
+            genericCommit(insOptsQuery);
         }
     }
 
@@ -649,20 +630,17 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
             try {
                 Statement st = db.createStatement();
                 try {
+                    int idArtInOrd = getNextId(
+                            "articles_in_order_id_art_in_ord_seq");
 
                     String addEntry =
-                        "INSERT INTO articles_in_order (id_article, id_order, "+
-                            "num_tot )" +
-                        "VALUES ('" + idArticle + "', '" +
-                            idOrder + "', '" +
-                            entry.numTot + "' )";
+                        "INSERT INTO articles_in_order (id_art_in_ord, " +
+                            "id_article, id_order, num_tot )" +
+                        "VALUES ('" + idArtInOrd + "', '" + idArticle + "', '" +
+                            idOrder + "', '" + entry.numTot + "' )";
                     st.execute(addEntry);
 
                     if (entry.article.hasOptions()) {
-                        ResultSet key = st.executeQuery("SELECT " +
-                                "currval('articles_in_order_id_art_in_ord_seq');");
-                        key.next();
-                        int idArtInOrd = key.getInt("currval");
 
                         EntrySingleArticleWithOption entryOpts =
                                 (EntrySingleArticleWithOption)entry;
@@ -919,6 +897,22 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
     private int addOrderToOrdersTable(Order order, int idCassiere) throws IOException {
         
         final String timestamp = new Timestamp(order.getData().getTime()).toString();
+        int idDateEvent = getIdDateEvent(timestamp);
+        
+        int idOrder = getNextId("orders_id_order_seq");
+
+        // and the order to the table of orders
+        String query = "INSERT INTO orders (id_order, time_order, id_cassiere, " +
+                    "price_tot, hostname, id_date_event)" +
+                "VALUES ('" + idOrder + "', '" + timestamp + "', '" +
+                    idCassiere + "', '" + order.getTotalPrice() + "', '" +
+                    order.getHostname() + "', '" + idDateEvent + "' )";
+        genericCommit(query);
+        
+        return idOrder;
+    }
+
+    private int getIdDateEvent(String timestamp) throws IOException {
         int idDateEvent = 1;
 
         // Add it to the tabe of events
@@ -943,23 +937,17 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
             logger.error("Errore nel connettermi al DB", ex);
             throw new IOException(ex);
         }
+        return idDateEvent;
+    }
 
-        // and the order to the table of orders
-        query = "INSERT INTO orders (time_order, id_cassiere, " +
-                    "price_tot, hostname, id_date_event)" +
-                "VALUES ('" + timestamp + "', '" +
-                    idCassiere + "', '" +
-                    order.getTotalPrice() + "', '" +
-                    order.getHostname() + "', '" + idDateEvent + "' )";
-        int idOrder;
+    private int getNextId(String sequence) throws IOException {
+        String query = "SELECT nextval('" + sequence + "') AS id;";
         try {
             Statement st = db.createStatement();
             try {
-                st.execute(query);
-                ResultSet key = st.executeQuery(
-                        "SELECT currval( 'orders_id_order_seq' );");
+                ResultSet key = st.executeQuery(query);
                 key.next();
-                idOrder = key.getInt("currval");
+                return  key.getInt("id");
             } catch (SQLException ex) {
                 logger.error("Errore con la query: " + query, ex);
                 throw new IOException(ex);
@@ -970,6 +958,5 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
             logger.error("Errore nel connettermi al DB", ex);
             throw new IOException(ex);
         }
-        return idOrder;
     }
 }
