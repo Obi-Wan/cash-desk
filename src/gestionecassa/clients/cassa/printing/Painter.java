@@ -16,7 +16,9 @@ package gestionecassa.clients.cassa.printing;
 
 import gestionecassa.Article;
 import gestionecassa.ArticleWithOptions;
-import gestionecassa.order.EntrySingleArticleWithOption;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.print.PageFormat;
@@ -28,6 +30,14 @@ import java.awt.print.PrinterException;
  * @author ben
  */
 public class Painter implements Printable {
+
+    static final Font centralFont;
+    static final Font marginalFont;
+
+    static {
+        centralFont = new Font("Dialog", Font.PLAIN, 18);
+        marginalFont = new Font("Dialog", Font.PLAIN, 12);
+    }
 
     Article article;
 
@@ -71,6 +81,8 @@ public class Painter implements Printable {
             return NO_SUCH_PAGE;
         }
 
+        Dimension dims = new Dimension((int)pageFormat.getImageableWidth(),
+                                        (int)pageFormat.getImageableHeight());
 
         /* User (0,0) is typically outside the imageable area, so we must
          * translate by the X and Y values in the PageFormat to avoid clipping
@@ -81,13 +93,45 @@ public class Painter implements Printable {
         /* Now we perform our rendering. This should take account of the type
          * of the article.
          */
+        // debug
+        graphics.drawRect(0, 0, dims.width, dims.height);
+//DEBUGONLY        graphics.drawString(dims.width + ", " + dims.height, 0, dims.height);
+        // end debug
+
+        String centralString = article.getName();
+
         if (article.hasOptions()) {
-            graphics.drawRect(0, 0, 100, 65);
-            graphics.drawString(option, 5, 25);
-            graphics.drawString(article.getName(), 5, 10);
-        } else {
-            graphics.drawString(article.getName(), 5, 10);
+            //debug only
+            if (option.equals("")) {
+                if (!((ArticleWithOptions)article).getOptions().contains("")) {
+                    throw new RuntimeException(
+                            "Option was not passed but the article has some, " +
+                            "different from the empty");
+                }
+            }
+            //end debug only
+
+            centralString += ": " + option;
+
+            String progStr = String.format("%03d", progressive);
+            
+            graphics.setFont(marginalFont);
+            FontMetrics margMetr = graphics.getFontMetrics(marginalFont);
+            Dimension margDims = new Dimension(margMetr.stringWidth(progStr)+2,
+                                            margMetr.getAscent()+2);
+            
+            graphics.drawString(progStr, dims.width - margDims.width,
+                                margDims.height);
         }
+        centralString = centralString.toUpperCase();
+
+        graphics.setFont(centralFont);
+        FontMetrics metrics = graphics.getFontMetrics(centralFont);
+        Dimension centralStrSize = new Dimension(metrics.stringWidth(centralString)+2,
+                                        metrics.getAscent()+2);
+
+        graphics.drawString(centralString, (dims.width / 2) - (centralStrSize.width / 2),
+                (dims.height / 2) + (centralStrSize.height / 2));
 
         /* tell the caller that this page is part of the printed document */
         return PAGE_EXISTS;

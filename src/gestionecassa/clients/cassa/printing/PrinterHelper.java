@@ -23,13 +23,14 @@ import gestionecassa.order.Order;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
-import java.lang.reflect.Method;
-import javax.print.attribute.Attribute;
+//import java.lang.reflect.Method;
+//import javax.print.attribute.Attribute;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.Destination;
 import javax.print.attribute.standard.Media;
 import javax.print.attribute.standard.MediaSizeName;
+import javax.print.attribute.standard.OrientationRequested;
 import org.apache.log4j.Logger;
 
 /**
@@ -69,9 +70,13 @@ public class PrinterHelper extends Thread {
         // Debug output (during develop phase)
         Destination dest = new Destination(new File("out.ps").toURI());
         attribs.add(dest);
+        // end debug output
 
-        Media media = MediaSizeName.ISO_A9;
+        Media media = MediaSizeName.ISO_A7;
         attribs.add(media);
+
+        OrientationRequested orient = OrientationRequested.LANDSCAPE;
+        attribs.add(orient);
 
         for (EntrySingleArticle entrySingleArticle : order.getListaBeni()) {
             if (entrySingleArticle.article.hasOptions()) {
@@ -83,6 +88,7 @@ public class PrinterHelper extends Thread {
                         job.setPrintable(new Painter(
                                 (ArticleWithOptions)entrySingleArticle.article,
                                 prog++, entrySingleOption.optionName));
+                        job.setCopies(2);
                     }
                 }
             } else {
