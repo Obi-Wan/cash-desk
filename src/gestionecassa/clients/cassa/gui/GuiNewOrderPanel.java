@@ -512,7 +512,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
      * @return Price calculated.
      */
     private double computeOrderPrice(Order ordine) {
-        List<EntrySingleArticle> lista = ordine.getListaBeni();
+        List<EntrySingleArticle> lista = ordine.getArticlesSold();
         double output = 0;
         for (EntrySingleArticle singoloBene : lista) {
             output += singoloBene.numTot * singoloBene.article.getPrice();

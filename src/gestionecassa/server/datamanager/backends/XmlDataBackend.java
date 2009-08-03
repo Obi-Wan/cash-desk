@@ -270,7 +270,7 @@ public class XmlDataBackend implements BackendAPI_1 {
         Element xmlOrder = root.addElement("ordine");
         xmlOrder.addElement("data").addText(order.getData().toString());
         xmlOrder.addElement("prezzo_totale").addText(order.getTotalPrice()+"");
-        List<EntrySingleArticle> listaBeni = order.getListaBeni();
+        List<EntrySingleArticle> listaBeni = order.getArticlesSold();
 
         for (EntrySingleArticle singleArticle : listaBeni) {
             Element xmlArticle = xmlOrder.addElement("singolo_bene");

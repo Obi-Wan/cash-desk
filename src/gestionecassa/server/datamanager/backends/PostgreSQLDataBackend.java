@@ -618,7 +618,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
         int idCassiere = getIdCassiereByUsername(order.getUsername());
         int idOrder = addOrderToOrdersTable(order, idCassiere);
 
-        for (EntrySingleArticle entry : order.getListaBeni()) {
+        for (EntrySingleArticle entry : order.getArticlesSold()) {
 
             int idArticle; // if trusted is > 0, otherwise < 0
 //            if (idCassiere > 0) {

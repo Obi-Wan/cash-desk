@@ -109,7 +109,7 @@ public class Order implements Serializable, Comparable<Order> {
      * 
      * @return
      */
-    public List<EntrySingleArticle> getListaBeni() {
+    public List<EntrySingleArticle> getArticlesSold() {
         return articlesList;
     }
 

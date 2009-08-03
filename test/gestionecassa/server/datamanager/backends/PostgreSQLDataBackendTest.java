@@ -514,22 +514,22 @@ public class PostgreSQLDataBackendTest {
                 assertTrue(!rs.isLast());
 
                 assertEquals(tempOrder.getUsername(), rs.getString("u_name"));
-                assertEquals(tempOrder.getListaBeni().get(0).article.getPrice(),
+                assertEquals(tempOrder.getArticlesSold().get(0).article.getPrice(),
                                 rs.getDouble("price"),0);
-                assertEquals(tempOrder.getListaBeni().get(0).article.getName(),
+                assertEquals(tempOrder.getArticlesSold().get(0).article.getName(),
                                 rs.getString("a_name"));
-                assertEquals(tempOrder.getListaBeni().get(0).numTot,
+                assertEquals(tempOrder.getArticlesSold().get(0).numTot,
                                 rs.getInt("num_tot"));
 
                 assertTrue(rs.next());
                 assertTrue(rs.isLast());
 
                 assertEquals(tempOrder.getUsername(), rs.getString("u_name"));
-                assertEquals(tempOrder.getListaBeni().get(1).article.getPrice(),
+                assertEquals(tempOrder.getArticlesSold().get(1).article.getPrice(),
                                 rs.getDouble("price"),0);
-                assertEquals(tempOrder.getListaBeni().get(1).article.getName(),
+                assertEquals(tempOrder.getArticlesSold().get(1).article.getName(),
                                 rs.getString("a_name"));
-                assertEquals(tempOrder.getListaBeni().get(1).numTot,
+                assertEquals(tempOrder.getArticlesSold().get(1).numTot,
                                 rs.getInt("num_tot"));
 
             } catch (SQLException ex) {
@@ -659,11 +659,11 @@ public class PostgreSQLDataBackendTest {
                 assertTrue(rs.isLast());
 
                 assertEquals(tempOrder.getUsername(), rs.getString("u_name"));
-                assertEquals(tempOrder.getListaBeni().get(0).article.getPrice(),
+                assertEquals(tempOrder.getArticlesSold().get(0).article.getPrice(),
                                 rs.getDouble("price"),0);
-                assertEquals(tempOrder.getListaBeni().get(0).article.getName(),
+                assertEquals(tempOrder.getArticlesSold().get(0).article.getName(),
                                 rs.getString("a_name"));
-                assertEquals(tempOrder.getListaBeni().get(0).numTot,
+                assertEquals(tempOrder.getArticlesSold().get(0).numTot,
                                 rs.getInt("num_tot"));
 
             } catch (SQLException ex) {
@@ -697,13 +697,13 @@ public class PostgreSQLDataBackendTest {
 
                 assertEquals(tempOrder.getData().getTime(),
                                 rs.getTimestamp("time").getTime());
-                assertEquals(tempOrder.getListaBeni().get(0).article.getName(),
+                assertEquals(tempOrder.getArticlesSold().get(0).article.getName(),
                                 rs.getString("a_name"));
                 assertEquals(
-                        ((EntrySingleArticleWithOption)tempOrder.getListaBeni().get(0)).numPartial.get(0).numPartial,
+                        ((EntrySingleArticleWithOption)tempOrder.getArticlesSold().get(0)).numPartial.get(0).numPartial,
                                 rs.getInt("num_parz"));
                 assertEquals(
-                        ((EntrySingleArticleWithOption)tempOrder.getListaBeni().get(0)).numPartial.get(0).optionName,
+                        ((EntrySingleArticleWithOption)tempOrder.getArticlesSold().get(0)).numPartial.get(0).optionName,
                                 rs.getString("op_name"));
 
                 assertTrue(rs.next());
@@ -711,13 +711,13 @@ public class PostgreSQLDataBackendTest {
 
                 assertEquals(tempOrder.getData().getTime(),
                                 rs.getTimestamp("time").getTime());
-                assertEquals(tempOrder.getListaBeni().get(0).article.getName(),
+                assertEquals(tempOrder.getArticlesSold().get(0).article.getName(),
                                 rs.getString("a_name"));
                 assertEquals(
-                        ((EntrySingleArticleWithOption)tempOrder.getListaBeni().get(0)).numPartial.get(1).numPartial,
+                        ((EntrySingleArticleWithOption)tempOrder.getArticlesSold().get(0)).numPartial.get(1).numPartial,
                                 rs.getInt("num_parz"));
                 assertEquals(
-                        ((EntrySingleArticleWithOption)tempOrder.getListaBeni().get(0)).numPartial.get(1).optionName,
+                        ((EntrySingleArticleWithOption)tempOrder.getArticlesSold().get(0)).numPartial.get(1).optionName,
                                 rs.getString("op_name"));
 
             } catch (SQLException ex) {

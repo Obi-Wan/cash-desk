@@ -78,7 +78,7 @@ public class PrinterHelper extends Thread {
         OrientationRequested orient = OrientationRequested.LANDSCAPE;
         attribs.add(orient);
 
-        for (EntrySingleArticle entrySingleArticle : order.getListaBeni()) {
+        for (EntrySingleArticle entrySingleArticle : order.getArticlesSold()) {
             if (entrySingleArticle.article.hasOptions()) {
                 EntrySingleArticleWithOption entry =
                         (EntrySingleArticleWithOption)entrySingleArticle;
