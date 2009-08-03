@@ -34,6 +34,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -627,62 +628,64 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 //                idArticle = getIdArticleByName(entry.article.getName());
 //                idCassiere = - idCassiere;
 //            }
-            try {
-                Statement st = db.createStatement();
-                try {
-                    int idArtInOrd = getNextId(
-                            "articles_in_order_id_art_in_ord_seq");
 
-                    String addEntry =
-                        "INSERT INTO articles_in_order (id_art_in_ord, " +
-                            "id_article, id_order, num_tot )" +
-                        "VALUES ('" + idArtInOrd + "', '" + idArticle + "', '" +
-                            idOrder + "', '" + entry.numTot + "' )";
-                    st.execute(addEntry);
+            int idArtInOrd = getNextId("articles_in_order_id_art_in_ord_seq");
+            String addEntry =
+                "INSERT INTO articles_in_order (id_art_in_ord, id_article, " +
+                    "id_order, num_tot )" +
+                "VALUES ('" + idArtInOrd + "', '" + idArticle + "', '" + idOrder
+                    + "', '" + entry.numTot + "' )";
+            genericCommit(addEntry);
 
-                    if (entry.article.hasOptions()) {
+            if (entry.article.hasOptions()) {
 
-                        EntrySingleArticleWithOption entryOpts =
-                                (EntrySingleArticleWithOption)entry;
-                        List<EntrySingleOption> opts = entryOpts.numPartial;
-
-                        String addOpt =
-                            "INSERT INTO opts_of_article_in_order " +
-                                "(id_art_in_ord, id_option, num_parz )" +
-                            "VALUES ";
-                        Statement optionSt = db.createStatement();
-
-                        for (Iterator<EntrySingleOption> iter = opts.iterator();
-                                iter.hasNext();)
-                        {
-                            EntrySingleOption option = iter.next();
-                            ResultSet optRs = optionSt.executeQuery(
-                                    "SELECT id_option" +
+                EntrySingleArticleWithOption entryOpts =
+                        (EntrySingleArticleWithOption)entry;
+                List<EntrySingleOption> opts = entryOpts.numPartial;
+                String optionsQuery = "SELECT name, id_option" +
                                     "   FROM options" +
-                                    "   WHERE name = '"+option.optionName+"'" +
-                                    "       AND id_article = '" + idArticle +
-                                    "';");
-                            optRs.next();
-
-                            addOpt += "('" + idArtInOrd +
-                                    "', '" + optRs.getInt("id_option") +
-                                    "', '" + option.numPartial + "')" +
-                                    (iter.hasNext() ? "," : ";");
-                            optRs.close();
+                                    "   WHERE id_article = '" + idArticle + "'"+
+                                    "       AND name IN (";
+                for (Iterator<EntrySingleOption> it = opts.iterator();
+                     it.hasNext();)
+                {
+                    EntrySingleOption opt = it.next();
+                    optionsQuery += " '" + opt.optionName + "'" +
+                                    (it.hasNext() ? "," : " ");
+                }
+                optionsQuery += ");";
+                Map<String,Integer> optsReq = new HashMap<String,Integer>();
+                try {
+                    Statement optionSt = db.createStatement();
+                    try {
+                        ResultSet rs = optionSt.executeQuery(optionsQuery);
+                        while (rs.next()) {
+                            optsReq.put(rs.getString("name"),
+                                        rs.getInt("id_option"));
                         }
-
-                        optionSt.executeUpdate(addOpt);
+                    } catch (SQLException ex) {
+                        logger.error("Errore con le commit", ex);
+                        throw new IOException(ex);
+                    } finally {
                         optionSt.close();
                     }
                 } catch (SQLException ex) {
-                    logger.error("Errore con le commit", ex);
+                    logger.error("Errore nella comunciazione col DB", ex);
                     throw new IOException(ex);
-                } finally {
-                    st.close();
                 }
-            } catch (SQLException ex) {
-                logger.error("Errore nella comunciazione col DB", ex);
-                throw new IOException(ex);
+
+                String addOpt = "INSERT INTO opts_of_article_in_order " +
+                                "(id_art_in_ord, id_option, num_parz ) VALUES ";
+                for (Iterator<EntrySingleOption> iter = opts.iterator();
+                     iter.hasNext();)
+                {
+                    EntrySingleOption option = iter.next();
+                    addOpt += "('" + idArtInOrd + "', '" +
+                            optsReq.get(option.optionName) + "', '" +
+                            option.numPartial + "')" +
+                            (iter.hasNext() ? "," : ";");
+                }
+                genericCommit(addOpt);
             }
         }
     }
