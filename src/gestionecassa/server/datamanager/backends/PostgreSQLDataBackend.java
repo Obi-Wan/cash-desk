@@ -641,47 +641,17 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 
                 EntrySingleArticleWithOption entryOpts =
                         (EntrySingleArticleWithOption)entry;
-                List<EntrySingleOption> opts = entryOpts.numPartial;
-                String optionsQuery = "SELECT name, id_option" +
-                                    "   FROM options" +
-                                    "   WHERE id_article = '" + idArticle + "'"+
-                                    "       AND name IN (";
-                for (Iterator<EntrySingleOption> it = opts.iterator();
-                     it.hasNext();)
-                {
-                    EntrySingleOption opt = it.next();
-                    optionsQuery += " '" + opt.optionName + "'" +
-                                    (it.hasNext() ? "," : " ");
-                }
-                optionsQuery += ");";
-                Map<String,Integer> optsReq = new HashMap<String,Integer>();
-                try {
-                    Statement optionSt = db.createStatement();
-                    try {
-                        ResultSet rs = optionSt.executeQuery(optionsQuery);
-                        while (rs.next()) {
-                            optsReq.put(rs.getString("name"),
-                                        rs.getInt("id_option"));
-                        }
-                    } catch (SQLException ex) {
-                        logger.error("Errore con le commit", ex);
-                        throw new IOException(ex);
-                    } finally {
-                        optionSt.close();
-                    }
-                } catch (SQLException ex) {
-                    logger.error("Errore nella comunciazione col DB", ex);
-                    throw new IOException(ex);
-                }
+                Map<String,Integer> neededOpts =
+                        getNeededOpts(idArticle, entryOpts);
 
                 String addOpt = "INSERT INTO opts_of_article_in_order " +
                                 "(id_art_in_ord, id_option, num_parz ) VALUES ";
-                for (Iterator<EntrySingleOption> iter = opts.iterator();
-                     iter.hasNext();)
+                for (Iterator<EntrySingleOption> iter =
+                        entryOpts.numPartial.iterator(); iter.hasNext(); )
                 {
                     EntrySingleOption option = iter.next();
                     addOpt += "('" + idArtInOrd + "', '" +
-                            optsReq.get(option.optionName) + "', '" +
+                            neededOpts.get(option.optionName) + "', '" +
                             option.numPartial + "')" +
                             (iter.hasNext() ? "," : ";");
                 }
@@ -915,14 +885,19 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
         return idOrder;
     }
 
+    /**
+     * 
+     * @param timestamp
+     * @return
+     * @throws IOException
+     */
     private int getIdDateEvent(String timestamp) throws IOException {
         int idDateEvent = 1;
 
         // Add it to the tabe of events
-        String query = "SELECT id_date_event " +
+        String query = "SELECT id_date_event" +
                 "   FROM dates_event" +
-                "   WHERE start_date < '" + timestamp + "'" +
-                "       AND end_date > '" + timestamp + "'";
+                "   WHERE '" + timestamp + "' BETWEEN start_date AND end_date;";
         try {
             Statement st = db.createStatement();
             try {
@@ -943,6 +918,12 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
         return idDateEvent;
     }
 
+    /**
+     * 
+     * @param sequence
+     * @return
+     * @throws IOException
+     */
     private int getNextId(String sequence) throws IOException {
         String query = "SELECT nextval('" + sequence + "') AS id;";
         try {
@@ -961,5 +942,47 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
             logger.error("Errore nel connettermi al DB", ex);
             throw new IOException(ex);
         }
+    }
+
+    /**
+     * 
+     * @param idArticle
+     * @param entry
+     * @return
+     * @throws IOException
+     */
+    private Map<String,Integer> getNeededOpts(int idArticle,
+            EntrySingleArticleWithOption entry) throws IOException {
+        
+        List<EntrySingleOption> opts = entry.numPartial;
+        String optionsQuery = "SELECT name, id_option" +
+                            "   FROM options" +
+                            "   WHERE id_article = '" + idArticle + "'"+
+                            "       AND name IN (";
+        for (Iterator<EntrySingleOption> it = opts.iterator(); it.hasNext();) {
+            EntrySingleOption opt = it.next();
+            optionsQuery += " '"+opt.optionName+"'" + (it.hasNext() ? "," : "");
+        }
+        optionsQuery += " );";
+        Map<String,Integer> neededOpts = new HashMap<String,Integer>();
+        try {
+            Statement optionSt = db.createStatement();
+            try {
+                ResultSet rs = optionSt.executeQuery(optionsQuery);
+                while (rs.next()) {
+                    neededOpts.put(rs.getString("name"),
+                                   rs.getInt("id_option"));
+                }
+            } catch (SQLException ex) {
+                logger.error("Errore con le commit", ex);
+                throw new IOException(ex);
+            } finally {
+                optionSt.close();
+            }
+        } catch (SQLException ex) {
+            logger.error("Errore nella comunciazione col DB", ex);
+            throw new IOException(ex);
+        }
+        return neededOpts;
     }
 }
