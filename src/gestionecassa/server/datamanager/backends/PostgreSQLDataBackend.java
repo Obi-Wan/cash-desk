@@ -307,7 +307,6 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      */
     public List<Article> loadArticlesList() throws IOException {
 
-        List<Article> outout = new Vector<Article>();
         String query =  "SELECT *" +
                         "   FROM articles" +
                         "   ORDER BY num_pos;";
@@ -316,6 +315,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
             try {
                 ResultSet rs = st.executeQuery(query);
 
+                List<Article> outout = new Vector<Article>();
                 while (rs.next()) {
                     int idArticle = rs.getInt("id_article");
                     
@@ -331,6 +331,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                                             rs.getBoolean("enabled"))
                                );
                 }
+                return outout;
             } catch (SQLException ex) {
                 logger.error("Errore con la query: " + query, ex);
                 throw new IOException(ex);
@@ -342,7 +343,6 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
             logger.error("Errore nella counicazione col DB", ex);
             throw new IOException(ex);
         }
-        return outout;
     }
 
     //-----------------//
@@ -353,11 +353,10 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @throws IOException
      */
     public void addAdmin(Admin admin) throws IOException {
-        String insQuery =
-                "INSERT INTO admins (username, password, enabled)" +
-                "VALUES ('" + admin.getUsername() + "', '" +
-                    admin.getPassword() + "', " +
-                    admin.isEnabled() + " )";
+        String insQuery = "INSERT INTO admins (username, password, enabled)" +
+                          "VALUES ('" + admin.getUsername() + "', '" +
+                              admin.getPassword() + "', " +
+                              admin.isEnabled() + " )";
         genericCommit(insQuery);
     }
 
@@ -370,31 +369,29 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 
         String query =  "SELECT *" +
                         "   FROM admins;";
-        List<Admin> outout = new LinkedList<Admin>();
         try {
             Statement st = db.createStatement();
             try {
                 ResultSet rs = st.executeQuery(query);
 
+                List<Admin> outout = new LinkedList<Admin>();
                 while (rs.next()) {
                     outout.add(new Admin(rs.getInt("id_admin"),
                                          rs.getString("username"),
                                          rs.getString("password"),
                                          rs.getBoolean("enabled")));
                 }
-                rs.close();
+                return outout;
             } catch (SQLException ex) {
                 logger.error("Errore con la query: " + query, ex);
                 throw new IOException(ex);
             } finally {
                 st.close();
             }
-
         } catch (SQLException ex) {
             logger.error("Errore nella comunicazione col DB", ex);
             throw new IOException(ex);
         }
-        return outout;
     }
 
     /**
@@ -416,11 +413,10 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @throws IOException
      */
     public void addCassiere(Cassiere cassiere) throws IOException {
-        String insQuery =
-                "INSERT INTO cassieres (username, password, enabled)" +
-                "VALUES ('" + cassiere.getUsername() + "', '" +
-                    cassiere.getPassword() + "', " +
-                    cassiere.isEnabled() + " )";
+        String insQuery = "INSERT INTO cassieres (username, password, enabled)"+
+                          "VALUES ('" + cassiere.getUsername() + "', '" +
+                              cassiere.getPassword() + "', " +
+                              cassiere.isEnabled() + " )";
         genericCommit(insQuery);
     }
 
@@ -433,19 +429,19 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 
         String query =  "SELECT *" +
                         "   FROM cassieres;";
-        List<Cassiere> outout = new LinkedList<Cassiere>();
         try {
             Statement st = db.createStatement();
             try {
                 ResultSet rs = st.executeQuery(query);
 
+                List<Cassiere> outout = new LinkedList<Cassiere>();
                 while (rs.next()) {
                     outout.add(new Cassiere(rs.getInt("id_cassiere"),
                                             rs.getString("username"),
                                             rs.getString("password"),
                                             rs.getBoolean("enabled")));
                 }
-                rs.close();
+                return outout;
             } catch (SQLException ex) {
                 logger.error("Errore con la query: " + query, ex);
                 throw new IOException(ex);
@@ -456,7 +452,6 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
             logger.error("Errore di comunicazione col DB", ex);
             throw new IOException(ex);
         }
-        return outout;
     }
 
     /**
@@ -541,8 +536,8 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                 ResultSet rs = st.executeQuery(query);
                 while (rs.next()) {
                     output.add(new EventDate(rs.getString("title"),
-                            rs.getTimestamp("start").getTime(),
-                            rs.getTimestamp("end").getTime()));
+                                             rs.getTimestamp("start").getTime(),
+                                             rs.getTimestamp("end").getTime()));
                 }
             } catch (SQLException ex) {
                 logger.error("Errore con la query: " + query, ex);
@@ -706,14 +701,12 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                 rs.next();
                 rs.updateBoolean("enabled", enable);
                 rs.updateRow();
-                rs.close();
             } catch (SQLException ex) {
                 logger.error("Errore con query: " + query + " o con update", ex);
                 throw new IOException(ex);
             } finally {
                 st.close();
             }
-            st.close();
         } catch (SQLException ex) {
             logger.error("Errore", ex);
             throw new IOException(ex);
@@ -757,7 +750,6 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @throws IOException
      */
     private List<String> getOptionsByArticleID(int art_id) throws IOException {
-        List<String> options = new LinkedList<String>();
         String queryOpts =  "SELECT name" +
                             "   FROM options" +
                             "   WHERE id_article = '" + art_id + "';";
@@ -766,9 +758,11 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 
             try {
                 ResultSet rsOpts = stOpts.executeQuery(queryOpts);
+                List<String> options = new LinkedList<String>();
                 while (rsOpts.next()) {
                     options.add(rsOpts.getString("name"));
                 }
+                return options;
             } catch (SQLException ex) {
                 logger.error("Errore con la query: " + queryOpts, ex);
                 throw new IOException(ex);
@@ -779,7 +773,6 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
             logger.error("Errore nella counicazione col DB", ex);
             throw new IOException(ex);
         }
-        return options;
     }
 
     /**
@@ -793,19 +786,18 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
         String query =  "SELECT id_cassiere, enabled" +
                             "   FROM cassieres" +
                             "   WHERE username = '" + username + "'";
-        int idCassiere;
         try {
             Statement st = db.createStatement();
             try {
                 ResultSet rs = st.executeQuery(query);
 
                 if (rs.next() && rs.getBoolean("enabled")) {
-                    idCassiere = rs.getInt("id_cassiere");
 //                    if (!rs.getBoolean("trusted")) {
-//                        idCassiere = - idCassiere;
+//                        return (- rs.getInt("id_cassiere"));
+//                    else {
+                    return rs.getInt("id_cassiere");
 //                    }
                 } else {
-                    rs.close();
                     st.close();
                     throw new IOException("The cassiere is not on the list, " +
                             "or is disabled");
@@ -820,7 +812,6 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
             logger.error("Errore nel connettermi al DB", ex);
             throw new IOException(ex);
         }
-        return idCassiere;
     }
 
     /**
@@ -834,16 +825,14 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
         String query =  "SELECT id_article, enabled" +
                             "   FROM articles" +
                             "   WHERE name = '" + name + "'";
-        int idArticle;
         try {
             Statement st = db.createStatement();
             try {
                 ResultSet rs = st.executeQuery(query);
 
                 if (rs.next() && rs.getBoolean("enabled")) {
-                    idArticle = rs.getInt("id_article");
+                    return rs.getInt("id_article");
                 } else {
-                    rs.close();
                     st.close();
                     throw new IOException("The article is not on the list, " +
                             "or is disabled");
@@ -858,7 +847,6 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
             logger.error("Errore nel connettermi al DB", ex);
             throw new IOException(ex);
         }
-        return idArticle;
     }
 
     /**
