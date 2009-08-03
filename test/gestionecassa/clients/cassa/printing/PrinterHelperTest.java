@@ -16,6 +16,7 @@ package gestionecassa.clients.cassa.printing;
 
 import gestionecassa.Article;
 import gestionecassa.ArticleWithOptions;
+import gestionecassa.order.EntrySingleOption;
 import gestionecassa.order.Order;
 import java.util.List;
 import java.util.Vector;
@@ -52,8 +53,13 @@ public class PrinterHelperTest {
         articles.add(new ArticleWithOptions(articles.size()+1, "falce", 4.25, options));
         articles.add(new Article(articles.size()+1, "vanga", 0.2));
 
+        List<EntrySingleOption> partialList = new Vector<EntrySingleOption>();
+        partialList.add(new EntrySingleOption(options.get(0), 2));
+        partialList.add(new EntrySingleOption(options.get(1), 3));
+
         order.addArticle(articles.get(0), 3);
         order.addArticle(articles.get(3), 2);
+        order.addArticleWithOptions((ArticleWithOptions)articles.get(2), 5, 12, partialList);
     }
 
     @AfterClass
