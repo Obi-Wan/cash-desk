@@ -251,6 +251,14 @@ public class PostgreSQLDataBackendTest {
     }
 
     /**
+     * Test of moveArticleAt method, of class PostgreSQLDataBackend.
+     */
+    @Test
+    public void testMoveArticleAt() throws Exception {
+        System.out.println("moveArticleAt");
+    }
+
+    /**
      * Test of loadArticlesList method, of class PostgreSQLDataBackend.
      */
     @Test
@@ -869,6 +877,10 @@ public class PostgreSQLDataBackendTest {
             ex.printStackTrace();
         }
     }
+    
+    /* -------------------------------------------- *
+     *  Utility Functions                           *
+     * -------------------------------------------- */
 
     /**
      * 
@@ -896,6 +908,11 @@ public class PostgreSQLDataBackendTest {
         }
     }
 
+    /**
+     *
+     * @param query
+     * @param testArticle
+     */
     private void testArticlePresence(String query, Article testArticle) {
         try {
             Statement st = backend.db.createStatement();
@@ -925,7 +942,11 @@ public class PostgreSQLDataBackendTest {
             fail("Failed in connecting to the DB");
         }
     }
-    
+
+    /**
+     * 
+     * @param option
+     */
     private void testOptionPresence(String option) {
         String query = "SELECT * FROM options WHERE name = '" + option + "'";
         try {
@@ -947,12 +968,13 @@ public class PostgreSQLDataBackendTest {
             fail("Failed in connecting to the DB");
         }
     }
+    
+    /* -------------------------------------------- *
+     *  Performance / Security / Concurrency Tests  *
+     * -------------------------------------------- */
 
-    /**
-     * Test of moveArticleAt method, of class PostgreSQLDataBackend.
-     */
     @Test
-    public void testMoveArticleAt() throws Exception {
-        System.out.println("moveArticleAt");
+    public void testPerformanceSubqueriesVSSeparateQueries() {
+        
     }
 }
