@@ -9,7 +9,6 @@ import gestionecassa.clients.cassa.gui.GuiAppFrameCassa;
 import gestionecassa.clients.cassa.gui.GuiNewOrderPanel;
 import gestionecassa.Log;
 import gestionecassa.order.Order;
-import gestionecassa.Person;
 import gestionecassa.clients.GuiLoginPanel;
 import gestionecassa.clients.Luogo;
 import gestionecassa.clients.cassa.printing.PrinterHelper;
@@ -121,28 +120,6 @@ public class Cassa extends Luogo implements CassaAPI {
         } catch (IOException ex) {
             logger.warn("Unable to write data to configfile", ex);
         }
-    }
-
-    /**
-     * Registers the user, logs in and returns a usable environment
-     *
-     * @param user
-     * @param serverName
-     *
-     * @throws gestionecassa.exceptions.ActorAlreadyExistingException
-     * @throws gestionecassa.exceptions.WrongLoginException
-     * @throws java.rmi.RemoteException
-     * @throws java.net.MalformedURLException
-     * @throws java.rmi.NotBoundException
-     */
-    public void registerUser(Person user, String serverName)
-            throws ActorAlreadyExistingException, WrongLoginException,
-                RemoteException, MalformedURLException, NotBoundException
-    {
-        server = (ServiceRMICassiere)
-                sendDatiRegistrazione(user, serverName);
-
-        setupAfterLogin(user.getUsername());
     }
 
     /**

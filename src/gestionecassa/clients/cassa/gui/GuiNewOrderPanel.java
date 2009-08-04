@@ -362,7 +362,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
      * Gets the ArticleList and stores it locally.
      */
     private void fetchListaBeni() {
-        listaBeni = owner.getListaBeni();
+        listaBeni = owner.getArticlesList();
     }
 
     /**

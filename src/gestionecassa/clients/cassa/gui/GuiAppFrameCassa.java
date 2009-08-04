@@ -126,7 +126,7 @@ public class GuiAppFrameCassa extends GuiAppFrame {
     void selectedDialogListaBeni() {
         if (dialogListaBeni == null) {
             dialogListaBeni = new GuiArticlesListDialog(this, false);
-            dialogListaBeni.setListaBeni(owner.getListaBeni());
+            dialogListaBeni.setListaBeni(owner.getArticlesList());
             dialogListaBeni.setVisible(true);
         } else {
             dialogListaBeni.setVisible(true);

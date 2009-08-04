@@ -316,7 +316,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
      *
      * @return List of goods
      */
-    public ArticlesList getListaBeni() {
+    public ArticlesList getArticlesList() {
         return listaBeni;
     }
 
