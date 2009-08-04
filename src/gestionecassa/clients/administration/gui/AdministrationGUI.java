@@ -12,13 +12,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package gestionecassa.clients.amministrazione.gui;
+package gestionecassa.clients.administration.gui;
 
 import gestionecassa.Log;
 import gestionecassa.clients.GUIClientAPI;
 import gestionecassa.clients.GuiLoginPanel;
-import gestionecassa.clients.amministrazione.Administration;
-import gestionecassa.clients.amministrazione.AdministrationAPI;
+import gestionecassa.clients.administration.Administration;
+import gestionecassa.clients.administration.AdministrationAPI;
 import java.rmi.RemoteException;
 import org.apache.log4j.Logger;
 

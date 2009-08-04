@@ -18,7 +18,7 @@
  * Created on 21-mag-2009, 19.59.58
  */
 
-package gestionecassa.clients.amministrazione.gui;
+package gestionecassa.clients.administration.gui;
 
 import gestionecassa.clients.GUIClientAPI;
 import gestionecassa.clients.GuiAppFrame;

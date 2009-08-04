@@ -12,10 +12,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package gestionecassa.clients.amministrazione.cli;
+package gestionecassa.clients.administration.cli;
 
-import gestionecassa.clients.amministrazione.Administration;
-import gestionecassa.clients.amministrazione.AdministrationAPI;
+import gestionecassa.clients.administration.Administration;
+import gestionecassa.clients.administration.AdministrationAPI;
 import gestionecassa.exceptions.WrongLoginException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -25,8 +25,6 @@ import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

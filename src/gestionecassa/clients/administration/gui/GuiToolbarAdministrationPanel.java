@@ -18,7 +18,7 @@
  * Created on 6-lug-2009, 15.51.25
  */
 
-package gestionecassa.clients.amministrazione.gui;
+package gestionecassa.clients.administration.gui;
 
 /**
  *

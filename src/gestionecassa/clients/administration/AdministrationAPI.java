@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package gestionecassa.clients.amministrazione;
+package gestionecassa.clients.administration;
 
 import gestionecassa.Person;
 import gestionecassa.clients.ClientAPI;
