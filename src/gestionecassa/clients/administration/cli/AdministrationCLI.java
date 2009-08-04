@@ -17,11 +17,7 @@ package gestionecassa.clients.administration.cli;
 import gestionecassa.clients.administration.Administration;
 import gestionecassa.clients.administration.AdministrationAPI;
 import gestionecassa.exceptions.WrongLoginException;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.Console;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -32,8 +28,10 @@ import java.rmi.RemoteException;
  */
 public class AdministrationCLI extends Administration {
 
-    BufferedWriter ow = new BufferedWriter(new OutputStreamWriter(System.out));
-    BufferedReader ir = new BufferedReader(new InputStreamReader(System.in));
+    /**
+     * 
+     */
+    Console c = System.console();
 
     /**
      * Constructor
@@ -71,46 +69,56 @@ public class AdministrationCLI extends Administration {
      */
     @Override
     public void run() {
-        try {
-            // login / greeting stuff goes here.
-            ow.write("Please log in.");
-            ow.newLine();
-            ow.write("Username: ");
-            String inUsername = ir.readLine();
-            ow.newLine();
-            ow.write("Password: ");
-            String password = ir.readLine();
-            ow.newLine();
-            ow.write("Servername: ");
-            String serverName = ir.readLine();
-            
-            try {
-                login(inUsername, password, serverName);
+        // login / greeting stuff goes here.
+        String inUsername = c.readLine("Please log in.\nUsername: ");
+        String password = new String(c.readPassword("Password: "));
+        String serverName = c.readLine("Servername: ");
 
-                super.run();
-            } catch (WrongLoginException ex) {
-                String error = "Wrong login!";
-                logger.warn(error, ex);
-                ow.newLine();
-                ow.write(error);
-            } catch (RemoteException ex) {
-                String error = "Error in comunicating with the server";
-                logger.error(error, ex);
-                ow.newLine();
-                ow.write(error);
-            } catch (MalformedURLException ex) {
-                String error = "Wrong URL of the server";
-                logger.error(error, ex);
-                ow.newLine();
-                ow.write(error);
-            } catch (NotBoundException ex) {
-                String error = "Not existing bound on the server";
-                logger.error(error, ex);
-                ow.newLine();
-                ow.write(error);
-            }
-        } catch (IOException ex) {
-            logger.warn("error in initializing the console: quitting", ex);
+        try {
+            login(inUsername, password, serverName);
+
+            //super.run();
+        } catch (WrongLoginException ex) {
+            String error = "Wrong login!";
+            logger.warn(error, ex);
+            c.writer().println(error);
+        } catch (RemoteException ex) {
+            String error = "Error in comunicating with the server";
+            logger.error(error, ex);
+            c.writer().println(error);
+        } catch (MalformedURLException ex) {
+            String error = "Wrong URL of the server";
+            logger.error(error, ex);
+            c.writer().println(error);
+        } catch (NotBoundException ex) {
+            String error = "Not existing bound on the server";
+            logger.error(error, ex);
+            c.writer().println(error);
         }
+    }
+
+    @Override
+    protected void setupAfterLogin(String username) throws RemoteException {
+        super.setupAfterLogin(username);
+
+        printMainMenu();
+    }
+
+    private void printMainMenu() {
+        String mainMenu = "You can now choose between these alternatives:\n" +
+                " - a - Show/Modify list of Articles\n" +
+                " - q - Quit\n" +
+                "Choice: ";
+        char choice;
+        do {
+            choice = c.readLine(mainMenu).charAt(0);
+            switch (choice) {
+                case 'a': {
+                    break;
+                }
+            }
+        } while(choice != 'q');
+
+        this.stopClient();
     }
 }
