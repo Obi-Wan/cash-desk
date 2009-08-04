@@ -10,6 +10,7 @@ import gestionecassa.clients.cassa.gui.GuiNewOrderPanel;
 import gestionecassa.Log;
 import gestionecassa.order.Order;
 import gestionecassa.Person;
+import gestionecassa.clients.GuiLoginPanel;
 import gestionecassa.clients.Luogo;
 import gestionecassa.clients.cassa.printing.PrinterHelper;
 import gestionecassa.exceptions.*;
@@ -19,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 
 /**
@@ -36,6 +38,16 @@ public class Cassa extends Luogo implements CassaAPI {
      * Specific Server
      */
     ServiceRMICassiere server;
+
+    /**
+     *
+     */
+    protected final Logger loggerGUI;
+    
+    /**
+     * 
+     */
+    protected GuiAppFrameCassa appFrame;
 
     /**
      * Public method that grants the singleton
@@ -62,7 +74,8 @@ public class Cassa extends Luogo implements CassaAPI {
      * Creates a new instance of Cassa.
      */
     private Cassa(String nomeLuogo) {
-        super(nomeLuogo, Log.GESTIONECASSA_CASSA, Log.GESTIONECASSA_CASSA_GUI);
+        super(nomeLuogo, Log.GESTIONECASSA_CASSA);
+        loggerGUI = Log.GESTIONECASSA_CASSA_GUI;
     }
 
     /**
@@ -95,6 +108,9 @@ public class Cassa extends Luogo implements CassaAPI {
         }
         // avvia la fase di login
         appFrame = new GuiAppFrameCassa(this);
+        // concludi fase preparatoria al login
+        appFrame.setContentPanel(new GuiLoginPanel(appFrame, this, hostname));
+        appFrame.setVisible(true);
 
         // esecuzione principale
         super.run();
@@ -119,7 +135,7 @@ public class Cassa extends Luogo implements CassaAPI {
      * @throws java.net.MalformedURLException
      * @throws java.rmi.NotBoundException
      */
-    public void registra(Person user, String serverName)
+    public void registerUser(Person user, String serverName)
             throws ActorAlreadyExistingException, WrongLoginException,
                 RemoteException, MalformedURLException, NotBoundException
     {
@@ -156,9 +172,10 @@ public class Cassa extends Luogo implements CassaAPI {
     protected void setupAfterLogin(String username) throws RemoteException {
         super.setupAfterLogin(username);
 
-        ((GuiAppFrameCassa)appFrame).enableListaBeni(true);
-        appFrame.setContentPanel(new GuiNewOrderPanel(this,(GuiAppFrameCassa)appFrame));
-        ((GuiAppFrameCassa)appFrame).updateUsernameStatus(username);
+        appFrame.enableLogout(true);
+        appFrame.enableListaBeni(true);
+        appFrame.setContentPanel(new GuiNewOrderPanel(this,appFrame));
+        appFrame.updateUsernameStatus(username);
     }
 
     /**
@@ -166,7 +183,7 @@ public class Cassa extends Luogo implements CassaAPI {
      *
      * @throws java.rmi.RemoteException
      */
-    public void requestListaBeni() throws RemoteException {
+    public void getRMIArticlesList() throws RemoteException {
         try {
             listaBeni = server.requestArticlesList();
         } catch (RemoteException ex) {
@@ -178,13 +195,13 @@ public class Cassa extends Luogo implements CassaAPI {
 
     /**
      *
-     * @param nuovoOrdine
+     * @param newOrder 
      *
      * @throws java.rmi.RemoteException
      */
-    public void sendNuovoOrdine(Order nuovoOrdine) throws RemoteException, IOException {
+    public void sendRMINewOrder(Order newOrder) throws RemoteException, IOException {
         try {
-            server.sendOrdine(nuovoOrdine);
+            server.sendOrdine(newOrder);
             // This should print the order.
             //PrinterHelper.startPrintingOrder(nuovoOrdine);
 
@@ -204,7 +221,7 @@ public class Cassa extends Luogo implements CassaAPI {
      *
      * @throws java.rmi.RemoteException
      */
-    public void annullaUltimoOrdine() throws RemoteException, IOException {
+    public void delRMILastOrder() throws RemoteException, IOException {
         try {
             server.cancelLastOrder();
         } catch (RemoteException ex) {
@@ -236,9 +253,18 @@ public class Cassa extends Luogo implements CassaAPI {
      */
     @Override
     public void logout() throws RemoteException {
-        ((GuiAppFrameCassa)appFrame).enableListaBeni(false);
-        ((GuiAppFrameCassa)appFrame).resetStatus();
+        appFrame.enableLogout(false);
+        appFrame.enableListaBeni(false);
+        appFrame.resetStatus();
         listaBeni = null;
         super.logout();
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public Logger getLoggerGUI() {
+        return loggerGUI;
     }
 }

@@ -371,7 +371,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
      */
     private void requestListaBeni() {
         try {
-            owner.requestListaBeni();
+            owner.getRMIArticlesList();
         } catch (RemoteException ex) {
             javax.swing.JOptionPane.showMessageDialog(this,
                 "Il server non ha risposto alla richiesta della lista",
@@ -388,7 +388,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         try {
             Order nuovoOrdine = creaNuovoOrdine();
             if (nuovoOrdine.getTotalPrice() != 0) {
-                owner.sendNuovoOrdine(nuovoOrdine);
+                owner.sendRMINewOrder(nuovoOrdine);
                 parent.updateNewOrder(computeOrderPrice(nuovoOrdine));
                 this.pulisci();
             }
@@ -530,7 +530,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
                 javax.swing.JOptionPane.WARNING_MESSAGE);
         if (result == javax.swing.JOptionPane.YES_OPTION) {
             try {
-                owner.annullaUltimoOrdine();
+                owner.delRMILastOrder();
                 parent.cleanLastOrder();
                 javax.swing.JOptionPane.showMessageDialog(this,
                     "L'ultimo Ordine emesso è stato annullato",

@@ -64,7 +64,7 @@ public interface ClientAPI {
      * @throws java.net.MalformedURLException
      * @throws java.rmi.NotBoundException
      */
-    public void registra(Person user, String serverName)
+    public void registerUser(Person user, String serverName)
             throws ActorAlreadyExistingException, WrongLoginException,
                 RemoteException, MalformedURLException, NotBoundException;
 
@@ -107,7 +107,7 @@ public interface ClientAPI {
      *
      * @throws java.rmi.RemoteException
      */
-    public void requestListaBeni() throws RemoteException;
+    public void getRMIArticlesList() throws RemoteException;
 
     /**
      * 

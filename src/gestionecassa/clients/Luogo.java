@@ -55,19 +55,9 @@ abstract public class Luogo extends Thread implements ClientAPI {
     protected final Logger logger;
 
     /**
-     * Chosen Logger for the GUI elements
-     */
-    protected final Logger loggerGUI;
-
-    /**
      * Daemon that keeps connection with server alive.
      */
     protected DaemonReestablishConnection threadConnessione;
-
-    /**
-     * The frame that display the Applictaion GUI
-     */
-    protected GuiAppFrame appFrame;
 
     /**
      *
@@ -84,10 +74,9 @@ abstract public class Luogo extends Thread implements ClientAPI {
      *
      * @param hostname
      */
-    protected Luogo(String nome, Logger logger, Logger loggerGUI) {
+    protected Luogo(String nome, Logger logger) {
         this.hostname = nome;
         this.logger = logger;
-        this.loggerGUI = loggerGUI;
         this.stopApp = false;
         this.sessionID = -1;
         this.serverCentrale = null;
@@ -108,9 +97,6 @@ abstract public class Luogo extends Thread implements ClientAPI {
      */
     @Override
     public void run() {
-        // concludi fase preparatoria al login
-        appFrame.setContentPanel(new GuiLoginPanel(appFrame, this, hostname));
-        appFrame.setVisible(true);
         
         // Comincia l'esecuzione normale
         try {
@@ -132,6 +118,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
             logout();
         } catch (RemoteException ex) {
             /* mando il messaggio all'utente */
+            logger.warn("Disconnessione avvenuta con errore", ex);
             ex.printStackTrace();
         }
         stopApp = true;
@@ -144,15 +131,6 @@ abstract public class Luogo extends Thread implements ClientAPI {
      */
     public Logger getLogger() {
         return logger;
-    }
-
-    /**
-     * Returns chosen logger for the GUI objects
-     *
-     * @return
-     */
-    public Logger getLoggerGUI() {
-        return loggerGUI;
     }
 
     /**
@@ -276,11 +254,10 @@ abstract public class Luogo extends Thread implements ClientAPI {
     protected void setupAfterLogin(String username) throws RemoteException {
         logger.info("Connessione avvenuta con id: " + sessionID);
 
-        appFrame.enableLogout(true);
         this.username = new String(username);
         avviaDemoneConnessione();
         try {
-            requestListaBeni();
+            getRMIArticlesList();
         } catch (RemoteException ex) {
             logger.warn("Il server non ha risposto alla richiesta della " +
                     "lista beni, subio dopo la connessione", ex);
@@ -330,7 +307,6 @@ abstract public class Luogo extends Thread implements ClientAPI {
             stopDemoneConnessione();
             sessionID = -1;
             serverCentrale = null;
-            appFrame.enableLogout(false);
             username = "";
         }
     }

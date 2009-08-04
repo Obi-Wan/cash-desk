@@ -8,6 +8,7 @@ package gestionecassa.clients.amministrazione;
 import gestionecassa.clients.amministrazione.gui.GuiAppFrameAdministration;
 import gestionecassa.Log;
 import gestionecassa.Person;
+import gestionecassa.clients.GuiLoginPanel;
 import gestionecassa.clients.Luogo;
 import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.WrongLoginException;
@@ -16,6 +17,7 @@ import gestionecassa.server.ServerRMIAdmin;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -32,6 +34,16 @@ public class Administration extends Luogo implements AdministrationAPI {
      *
      */
     ServiceRMIAdminAPI server;
+    
+    /**
+     * 
+     */
+    protected final Logger loggerGUI;
+
+    /**
+     * 
+     */
+    protected GuiAppFrameAdministration appFrame;
 
     /**
      * Creator of the singleton
@@ -46,12 +58,13 @@ public class Administration extends Luogo implements AdministrationAPI {
         }
         return businessLogicLocale;
     }
+
     /**
      * Creates a new instance of Administration.
      */
     private Administration(String nomeLuogo) {
-        super(nomeLuogo, Log.GESTIONECASSA_AMMINISTRAZIONE,
-                Log.GESTIONECASSA_AMMINISTRAZIONE_GUI);
+        super(nomeLuogo, Log.GESTIONECASSA_AMMINISTRAZIONE);
+        loggerGUI = Log.GESTIONECASSA_AMMINISTRAZIONE_GUI;
     }
 
     /**
@@ -73,6 +86,10 @@ public class Administration extends Luogo implements AdministrationAPI {
     public void run() {
         // avvia la fase di login
         appFrame = new GuiAppFrameAdministration(this);
+
+        // concludi fase preparatoria al login
+        appFrame.setContentPanel(new GuiLoginPanel(appFrame, this, hostname));
+        appFrame.setVisible(true);
         
         super.run();
     }
@@ -89,7 +106,7 @@ public class Administration extends Luogo implements AdministrationAPI {
      * @throws java.net.MalformedURLException
      * @throws java.rmi.NotBoundException
      */
-    public void registra(Person user, String serverName)
+    public void registerUser(Person user, String serverName)
             throws ActorAlreadyExistingException, WrongLoginException,
                 RemoteException, MalformedURLException, NotBoundException
     {
@@ -127,6 +144,7 @@ public class Administration extends Luogo implements AdministrationAPI {
         super.setupAfterLogin(username);
 
         // fai quel che devi fare
+        appFrame.enableLogout(true);
     }
 
     /**
@@ -150,7 +168,7 @@ public class Administration extends Luogo implements AdministrationAPI {
      *
      * @throws java.rmi.RemoteException
      */
-    public void requestListaBeni() throws RemoteException {
+    public void getRMIArticlesList() throws RemoteException {
         try {
             listaBeni = server.requestArticlesList();
         } catch (RemoteException ex) {
@@ -158,5 +176,24 @@ public class Administration extends Luogo implements AdministrationAPI {
                     ex);
             throw ex;
         }
+    }
+
+    /**
+     *
+     * @throws RemoteException
+     */
+    @Override
+    public void logout() throws RemoteException {
+        appFrame.enableLogout(false);
+        listaBeni = null;
+        super.logout();
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public Logger getLoggerGUI() {
+        return loggerGUI;
     }
 }

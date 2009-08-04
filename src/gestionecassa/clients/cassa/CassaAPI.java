@@ -21,7 +21,7 @@ public interface CassaAPI extends ClientAPI {
      *
      * @throws java.rmi.RemoteException
      */
-    void annullaUltimoOrdine() throws RemoteException, IOException;
+    void delRMILastOrder() throws RemoteException, IOException;
 
     /**
      *
@@ -29,7 +29,7 @@ public interface CassaAPI extends ClientAPI {
      *
      * @throws java.rmi.RemoteException
      */
-    void sendNuovoOrdine(Order nuovoOrdine) throws RemoteException, IOException;
+    void sendRMINewOrder(Order nuovoOrdine) throws RemoteException, IOException;
 
     /**
      * Asks to the server for a new bunch of progressive numbers.
