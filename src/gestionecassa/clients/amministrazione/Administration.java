@@ -95,25 +95,25 @@ public class Administration extends Luogo implements AdministrationAPI {
     }
 
     /**
-     * Registers the user, logs in and returns a usable environment
+     * Registers the user into the Server's list
      *
-     * @param user
-     * @param serverName
+     * @param user Data of the user who wants to be registered.
      *
      * @throws gestionecassa.exceptions.ActorAlreadyExistingException
-     * @throws gestionecassa.exceptions.WrongLoginException
      * @throws java.rmi.RemoteException
-     * @throws java.net.MalformedURLException
-     * @throws java.rmi.NotBoundException
      */
-    public void registerUser(Person user, String serverName)
-            throws ActorAlreadyExistingException, WrongLoginException,
-                RemoteException, MalformedURLException, NotBoundException
+    public void registerUser(Person user)
+            throws ActorAlreadyExistingException, RemoteException
     {
-        server = (ServiceRMIAdminAPI)
-                sendDatiRegistrazione(user, serverName);
+        try {
+            server.sendRMIDatiRegistrazione(user);
+            // FIXME ora dovre recuperar la nuova lista di utenti e mostrarla
 
-        setupAfterLogin(user.getUsername());
+        } catch (RemoteException e) {
+
+            logger.warn("RemoteException nel tentativo di connessione",e);
+            throw e;
+        }
     }
 
     /**
@@ -139,6 +139,11 @@ public class Administration extends Luogo implements AdministrationAPI {
         setupAfterLogin(username);
     }
 
+    /**
+     * 
+     * @param username
+     * @throws RemoteException
+     */
     @Override
     protected void setupAfterLogin(String username) throws RemoteException {
         super.setupAfterLogin(username);

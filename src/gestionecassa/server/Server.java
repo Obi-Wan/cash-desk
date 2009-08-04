@@ -11,7 +11,6 @@ package gestionecassa.server;
 
 import gestionecassa.server.datamanager.DataManager;
 import gestionecassa.Admin;
-import gestionecassa.Person;
 import gestionecassa.Cassiere;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -22,7 +21,6 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 import gestionecassa.Log;
-import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.WrongLoginException;
 import gestionecassa.server.clientservices.*;
 import gestionecassa.server.datamanager.BackendAPI_1;
@@ -174,44 +172,7 @@ public class Server extends UnicastRemoteObject
      */
     public int sendRMILoginData(String username, String password) 
             throws    RemoteException, WrongLoginException{
-        return logIn(username,password);
-    }
-
-    /**
-     * Method which both the clients use to register themselves in.
-     *
-     * @param   user    The user who want's to be registered.
-     *
-     * @throws RemoteException Throws a remote exception, because we are aon RMI context.
-     * @throws ActorAlreadyExistingException
-     * @throws WrongLoginException
-     *
-     * @return  The id of the user, which is used in comunication, once logged.
-     */
-    public int sendRMIDatiRegistrazione(Person user)
-            throws    RemoteException, ActorAlreadyExistingException, WrongLoginException{
-
-        String username = user.getUsername();
-        String password = user.getPassword();
-
-        //se lo username non e' presente lo posso registrare.
-        if (dataManager.verifyUsername(username) == null) {
-            dataManager.registerUser(user);
-            return logIn(username,password);
-        } else {
-            throw new ActorAlreadyExistingException();
-        }
-    }
-    
-    /** Logs a user, through his username and password.
-     *
-     * @param   username    user's username.
-     * @param   password    user's password
-     *
-     * @return  the session id.
-     */
-    private int logIn(final String username, final String password)
-            throws    WrongLoginException, RemoteException{
+        
         SessionRecord tempRecord = new SessionRecord();
         /* Controlla che i dati dell'utente siano presenti nel
          * database degli utenti registrati*/

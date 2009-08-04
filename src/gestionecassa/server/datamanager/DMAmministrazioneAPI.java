@@ -15,12 +15,13 @@
 package gestionecassa.server.datamanager;
 
 import gestionecassa.ArticlesList;
+import gestionecassa.Person;
 
 /**
  *
  * @author ben
  */
-public interface DMAmministrazioneAPI extends DMCommonAPI {
+public interface DMAmministrazioneAPI extends DMCommonAPI, DMServerAPI {
 
     /**
      * Saves the new list of goods sold.
@@ -28,5 +29,12 @@ public interface DMAmministrazioneAPI extends DMCommonAPI {
      * @param lista
      */
     void saveNewArticlesList(ArticlesList lista);
+
+    /**
+     *
+     * @param user
+     * @return
+     */
+    void registerUser(Person user);
 
 }

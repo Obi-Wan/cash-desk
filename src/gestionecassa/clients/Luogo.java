@@ -6,8 +6,6 @@
 package gestionecassa.clients;
 
 import gestionecassa.ArticlesList;
-import gestionecassa.Person;
-import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.WrongLoginException;
 import gestionecassa.server.ServerRMICommon;
 import java.net.MalformedURLException;
@@ -149,54 +147,6 @@ abstract public class Luogo extends Thread implements ClientAPI {
      */
     public String getUsername() {
         return username;
-    }
-    
-    /**
-     * Method that makes LocalBusinessLogic send registration data
-     * to the server.
-     *
-     * @param user Data of the user who wants to be registered.
-     * @param serverName Hostname of the server
-     * 
-     * @return Reference to the server
-     * 
-     * @throws gestionecassa.exceptions.ActorAlreadyExistingException
-     * @throws gestionecassa.exceptions.WrongLoginException
-     * @throws java.rmi.RemoteException
-     * @throws java.net.MalformedURLException
-     * @throws java.rmi.NotBoundException
-     */
-    protected Remote sendDatiRegistrazione(Person user, String serverName)
-            throws ActorAlreadyExistingException, WrongLoginException,
-                RemoteException, MalformedURLException, NotBoundException
-    {
-        try {
-            /* Login phase */
-            serverCentrale = (ServerRMICommon)
-                Naming.lookup("//" + serverName + "/ServerRMI");
-
-            /* faccio il raise dell'id solo a scopo di debug. */
-            sessionID = serverCentrale.sendRMIDatiRegistrazione(user);
-
-            /*quando il client si connette e il server crea il sessionID, il server creer
-             *un nuovo thread che si chiama sessionID, il client far poi la lookup al suo sessionID
-             *e cos comunica cn il suo thread
-             */
-            return Naming.lookup("//" + serverName + "/Server" + sessionID);
-
-        } catch (RemoteException e) {
-
-            logger.warn("RemoteException nel tentativo di connessione",e);
-            throw e;
-        } catch (MalformedURLException e) {
-
-            logger.warn("MalformedURLException nel tentativo di connessione",e);
-            throw e;
-        } catch (NotBoundException e) {
-
-            logger.warn("NotBoundException nel tentativo di connessione",e);
-            throw e;
-        }
     }
     
     /**

@@ -9,8 +9,6 @@ import gestionecassa.Person;
 import gestionecassa.clients.ClientAPI;
 import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.WrongLoginException;
-import java.net.MalformedURLException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 /**
@@ -39,7 +37,7 @@ public interface AdministrationAPI extends ClientAPI {
      * @throws java.net.MalformedURLException
      * @throws java.rmi.NotBoundException
      */
-    public void registerUser(Person user, String serverName)
+    public void registerUser(Person user)
             throws ActorAlreadyExistingException, WrongLoginException,
-                RemoteException, MalformedURLException, NotBoundException;
+                RemoteException;
 }

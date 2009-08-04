@@ -23,13 +23,6 @@ import gestionecassa.Person;
 public interface DMServerAPI {
 
     /**
-     *
-     * @param user
-     * @return
-     */
-    void registerUser(Person user);
-
-    /**
      * Verifies a username exists, and if is the case,
      * it creates a new read only copy of the user to prevent problems in syncronization
      *

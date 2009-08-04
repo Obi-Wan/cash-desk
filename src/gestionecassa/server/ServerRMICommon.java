@@ -5,8 +5,6 @@
 
 package gestionecassa.server;
 
-import gestionecassa.Person;
-import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.WrongLoginException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -30,19 +28,6 @@ public interface ServerRMICommon extends Remote {
      */
     public int sendRMILoginData(String username, String password) 
             throws   RemoteException, WrongLoginException;
-
-    /** Method which both the clients use to register themselves in.
-     *
-     * @param   user    The user who want's to be registered.
-     *
-     * @throws RemoteException Throws a remote exception, because we are aon RMI context.
-     * @throws ActorAlreadyExistingException Signals if the actor already exists.
-     * @throws WrongLoginException 
-     *
-     * @return  The id of the user, which is used in comunication, once logged.
-     */
-    public int sendRMIDatiRegistrazione(Person user)
-            throws   RemoteException, ActorAlreadyExistingException, WrongLoginException;
     
     /**
      * Method that tell's the server that the client still

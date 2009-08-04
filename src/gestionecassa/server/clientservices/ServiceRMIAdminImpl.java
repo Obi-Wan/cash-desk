@@ -6,6 +6,8 @@
 package gestionecassa.server.clientservices;
 
 import gestionecassa.ArticlesList;
+import gestionecassa.Person;
+import gestionecassa.exceptions.ActorAlreadyExistingException;
 import java.rmi.RemoteException;
 import gestionecassa.server.SessionRecord;
 import gestionecassa.server.datamanager.DMAmministrazioneAPI;
@@ -44,5 +46,27 @@ public class ServiceRMIAdminImpl extends SharedServerService
      */
     public ArticlesList requestArticlesList() throws RemoteException {
         return dataManager.getCurrentArticlesList();
+    }
+
+    /**
+     * Method which both the clients use to register themselves in.
+     *
+     * @param   user    The user who want's to be registered.
+     *
+     * @throws RemoteException Throws a remote exception, because we are aon RMI context.
+     * @throws ActorAlreadyExistingException
+     * @throws WrongLoginException
+     *
+     * @return  The id of the user, which is used in comunication, once logged.
+     */
+    public void sendRMIDatiRegistrazione(Person user)
+            throws    RemoteException, ActorAlreadyExistingException {
+
+        //se lo username non e' presente lo posso registrare.
+        if (dataManager.verifyUsername(user.getUsername()) == null) {
+            dataManager.registerUser(user);
+        } else {
+            throw new ActorAlreadyExistingException();
+        }
     }
 }
