@@ -50,7 +50,7 @@ public class Log {
 
     static {
         // config da file
-        org.apache.log4j.xml.DOMConfigurator.configure("src/gestionecassa/logconfig.xml");
+        org.apache.log4j.xml.DOMConfigurator.configure("logconfig.xml");
 
         // config manuale
         if (GESTIONECASSA.isDebugEnabled()) {
