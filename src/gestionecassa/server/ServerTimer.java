@@ -9,7 +9,7 @@
 
 package gestionecassa.server;
 
-import gestionecassa.Log;
+import org.apache.log4j.Logger;
 
 /** This class is a sort of timer: it manages threads' life.
  *
@@ -19,12 +19,15 @@ class ServerTimer extends Thread {
     
     /** boolean that says when to stop the app. */
     private boolean stopApp;
+
+    Logger logger;
     
     /**
      * Creates a new instance of ServerTimer
      */
-    public ServerTimer() {
+    public ServerTimer(Logger logger) {
         stopApp = false;
+        this.logger = logger;
     }
     
     /** Main of the thread: cycle that every minute updates
@@ -44,8 +47,8 @@ class ServerTimer extends Thread {
             }
             System.out.println("Exiting");
         } catch (InterruptedException ex) {
-            Log.GESTIONECASSA_SERVER.warn("Il server e' stato interrotto" +
-                    "da una InterruptedException",ex);
+            logger.warn("Il server e' stato interrottoda una " +
+                    "InterruptedException",ex);
         }
     }
     
@@ -55,31 +58,31 @@ class ServerTimer extends Thread {
      * is no more useful, and i is erased. (set to -1)
      */
     private void aggiornaTimeElapsed() {
-        Log.GESTIONECASSA_SERVER.debug("faccio il check delle sessioni attive.");
+        logger.debug("faccio il check delle sessioni attive.");
         synchronized (Server.sessionListSemaphore) {
-            for (SessionRecord elem : Server.sessionList) {
+            for (SessionRecord elem : Server.localBLogic.sessionList) {
                 /*se supera il timeout distrugge il thread e rimuove la sessione*/
-                Log.GESTIONECASSA_SERVER.debug("elemento con session id: "+
+                logger.debug("elemento con session id: "+
                         elem.clientId + "ed elapsedtime: "+elem.timeElapsed);
                 if (++elem.timeElapsed > 14) {
-                    Log.GESTIONECASSA_SERVER.debug("eliminato sess con id: "+
+                    logger.debug("eliminato sess con id: "+
                             elem.clientId);
-                    Server.businessLogicLocale.eraseSession(elem);
+                    Server.localBLogic.eraseSession(elem);
                 }
             }
             /*se l'ultimo corrisponde a una sessione non piu' valida
              lo rimuovo, cosi' ad ogni minuto comprimo piano la
              lista delle sessioni, senza toglier troppi record, nel
              caso possa esserci un rapido picco di login*/
-            int lastPos = Server.sessionList.size()-1;
+            int lastPos = Server.localBLogic.sessionList.size()-1;
             if (lastPos >= 0) {
-                SessionRecord last = Server.sessionList.get(lastPos);
+                SessionRecord last = Server.localBLogic.sessionList.get(lastPos);
                 if (last.clientId == -1) {
-                    Server.sessionList.remove(lastPos);
+                    Server.localBLogic.sessionList.remove(lastPos);
                 }
             }
         }
-        Log.GESTIONECASSA_SERVER.debug("finito il check delle sessioni attive.");
+        logger.debug("finito il check delle sessioni attive.");
     }
     
     /** The stopping Method */

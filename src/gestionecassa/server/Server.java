@@ -27,6 +27,7 @@ import gestionecassa.server.datamanager.BackendAPI_1;
 import gestionecassa.server.datamanager.BackendAPI_2;
 import gestionecassa.server.datamanager.backends.PostgreSQLDataBackend;
 import gestionecassa.server.datamanager.backends.XmlDataBackend;
+import org.apache.log4j.Logger;
 
 /** This is the main class of the server side application.
  *
@@ -36,14 +37,14 @@ public class Server extends UnicastRemoteObject
         implements ServerRMICommon, ServerRMIAdmin {
     
     /**
-     * reference to the main local business logic (serverBL)
+     * reference to the main local business logic
      */
-    public static Server businessLogicLocale;
+    public static Server localBLogic;
     
     /**
      * List of the opened sessions
      */
-    static List<SessionRecord> sessionList;
+    List<SessionRecord> sessionList;
 
     /**
      * Semaphore for the list of opened sessions
@@ -63,19 +64,28 @@ public class Server extends UnicastRemoteObject
      * reference to the dataManager
      */
     DataManager dataManager;
+
+    /**
+     * 
+     */
+    static Logger logger;
+
+    static {
+        logger = Log.GESTIONECASSA_SERVER;
+    }
     
     /**
      * Method that grants the creation of a singleton.
      */
     public synchronized static Server avvia() {
-        if (businessLogicLocale == null) {
+        if (localBLogic == null) {
             try {
-                businessLogicLocale = new Server();
+                localBLogic = new Server();
             } catch (RemoteException ex) {
                 ex.printStackTrace();
             }
         }
-        return businessLogicLocale;
+        return localBLogic;
     }
     
     /**
@@ -83,7 +93,7 @@ public class Server extends UnicastRemoteObject
      */
     private Server() throws  RemoteException{
         sessionList = new ArrayList<SessionRecord> ();
-        timer = new ServerTimer();
+        timer = new ServerTimer(logger);
         timer.start();
 
         // this is implementation specific. I will change it if necessary
@@ -95,7 +105,7 @@ public class Server extends UnicastRemoteObject
         java.util.Calendar tempCal = java.util.Calendar.getInstance();
         tempCal.setTime(new java.util.Date());
         final String stringaData = String.format("%1$tY-%1$tm-%1te",tempCal);
-        Log.GESTIONECASSA_SERVER.info("Server created: " + stringaData);
+        logger.info("Server created: " + stringaData);
     }
     
     /**
@@ -103,6 +113,7 @@ public class Server extends UnicastRemoteObject
      */
     void stopServer() {
         timer.stopServer();
+        localBLogic = null;
     }
 
     /**
@@ -127,25 +138,25 @@ public class Server extends UnicastRemoteObject
             LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
             
             try {
-                Naming.rebind("ServerRMI",businessLogicLocale);
+                Naming.rebind("ServerRMI",localBLogic);
 
                 // ora avvia gli altri servizi
                 System.out.println("Service Up and Running");
 
             } catch (MalformedURLException ex) {
-                Log.GESTIONECASSA_SERVER.error("l'indirizzo e' sbagliato: ",ex);
+                logger.error("l'indirizzo e' sbagliato: ",ex);
 
-                businessLogicLocale.stopServer();
+                localBLogic.stopServer();
             } catch (RemoteException ex) {
-                Log.GESTIONECASSA_SERVER.error("Impossibile accedere al registry: ",ex);
+                logger.error("Impossibile accedere al registry: ",ex);
 
-                businessLogicLocale.stopServer();
+                localBLogic.stopServer();
             }
         } catch (Exception ex) {
-            Log.GESTIONECASSA_SERVER.warn("Impossibile avviare un nuovo"+
+            logger.warn("Impossibile avviare un nuovo"+
                     " registry (e' forse gia' in esecuzione?)",ex);
             
-            businessLogicLocale.stopServer();
+            localBLogic.stopServer();
         }
     }
     
@@ -199,8 +210,7 @@ public class Server extends UnicastRemoteObject
                 tempRecord.idTable = ((Cassiere)tempRecord.user).getId();
                 tempRecord.username = new String(username);
 
-                srv = new ServiceRMICassiereImpl(tempRecord,dataManager,
-                            Log.GESTIONECASSA_SERVER);
+                srv = new ServiceRMICassiereImpl(tempRecord,dataManager,logger);
             } else if(tempRecord.user instanceof Admin){
                 
                 // se la password non e' giusta lo dico al client
@@ -210,14 +220,13 @@ public class Server extends UnicastRemoteObject
                 tempRecord.idTable = ((Admin)tempRecord.user).getId();
                 tempRecord.username = new String(username);
 
-                srv = new ServiceRMIAdminImpl(tempRecord,dataManager,
-                        Log.GESTIONECASSA_SERVER);
+                srv = new ServiceRMIAdminImpl(tempRecord,dataManager,logger);
             } else {
                 // Se non appartiene a nessuna delle classi di client, errore.
                 throw new WrongLoginException();
             }
         } catch (RemoteException ex) {
-            Log.GESTIONECASSA_SERVER.error("Errore nell'instanziazione dell'" +
+            logger.error("Errore nell'instanziazione dell'" +
                     "oggetto del working thread",ex);
             throw ex;
         }
@@ -227,13 +236,13 @@ public class Server extends UnicastRemoteObject
         
         try {
             Naming.rebind("Server"+tempRecord.clientId,srv);
-            Log.GESTIONECASSA_SERVER.debug("Registrato nuovo working thread" +
+            logger.debug("Registrato nuovo working thread" +
                     " raggiungibile a: /Server"+tempRecord.clientId);
         } catch (MalformedURLException ex) {
-            Log.GESTIONECASSA_SERVER.error("L'indirzzo verso cui fare il" +
+            logger.error("L'indirzzo verso cui fare il" +
                     " bind del working thread e' sbagliato",ex);
         } catch (RemoteException ex) {
-            Log.GESTIONECASSA_SERVER.error("non e' stato possible registrare" +
+            logger.error("non e' stato possible registrare" +
                     " la classe del working thread: remote exception",ex);
             throw ex;
         }
@@ -251,7 +260,7 @@ public class Server extends UnicastRemoteObject
     final int newSession(SessionRecord newRecord) {
         int id = 0;
         synchronized (sessionListSemaphore) {
-            id = Server.sessionList.indexOf(newRecord);
+            id = sessionList.indexOf(newRecord);
             /* se non lo trova, mi restituisce -1 */
             if (id == -1) {
                 /*vedo se esistono posti intermedi liberi.
@@ -274,7 +283,7 @@ public class Server extends UnicastRemoteObject
             } else {
                 /*se lo trova vuol dire che si sta riconnettendo..
                  gli assegno lo stesso id*/
-                Server.sessionList.set(id,newRecord);
+                sessionList.set(id,newRecord);
             }
         }
         return id;
@@ -291,8 +300,7 @@ public class Server extends UnicastRemoteObject
             session.username = new String("");
             session.relatedThread.stopThread();
         }
-        Log.GESTIONECASSA_SERVER.debug("Eliminata la sessione scaduta o" +
-                " terminata");
+        logger.debug("Eliminata la sessione scaduta o terminata");
     }
     
     /** Method that tell's the server that the client still
