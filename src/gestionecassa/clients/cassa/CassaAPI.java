@@ -6,7 +6,7 @@
 package gestionecassa.clients.cassa;
 
 import gestionecassa.order.Order;
-import gestionecassa.clients.ClientAPI;
+import gestionecassa.clients.GUIClientAPI;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
@@ -14,7 +14,7 @@ import java.rmi.RemoteException;
  *
  * @author ben
  */
-public interface CassaAPI extends ClientAPI {
+public interface CassaAPI extends GUIClientAPI {
 
     /**
      *

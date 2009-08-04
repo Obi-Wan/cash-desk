@@ -20,7 +20,7 @@
 
 package gestionecassa.clients.amministrazione.gui;
 
-import gestionecassa.clients.ClientAPI;
+import gestionecassa.clients.GUIClientAPI;
 import gestionecassa.clients.GuiAppFrame;
 import java.awt.BorderLayout;
 
@@ -45,7 +45,7 @@ public class GuiAppFrameAdministration extends GuiAppFrame {
      * 
      * @param owner 
      */
-    public GuiAppFrameAdministration(ClientAPI owner) {
+    public GuiAppFrameAdministration(GUIClientAPI owner) {
         super(owner);
         initComponents();
 

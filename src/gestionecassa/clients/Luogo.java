@@ -257,6 +257,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
             stopDemoneConnessione();
             sessionID = -1;
             serverCentrale = null;
+            listaBeni = null;
             username = "";
         }
     }

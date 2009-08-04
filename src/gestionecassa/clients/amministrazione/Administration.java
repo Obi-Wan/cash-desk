@@ -5,10 +5,8 @@
 
 package gestionecassa.clients.amministrazione;
 
-import gestionecassa.clients.amministrazione.gui.GuiAppFrameAdministration;
 import gestionecassa.Log;
 import gestionecassa.Person;
-import gestionecassa.clients.GuiLoginPanel;
 import gestionecassa.clients.Luogo;
 import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.WrongLoginException;
@@ -17,7 +15,6 @@ import gestionecassa.server.ServerRMIAdmin;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import org.apache.log4j.Logger;
 
 /**
  *
@@ -26,72 +23,15 @@ import org.apache.log4j.Logger;
 public class Administration extends Luogo implements AdministrationAPI {
 
     /**
-     * Local store of himself, with restrictions
-     */
-    static AdministrationAPI businessLogicLocale;
-
-    /**
      *
      */
     ServiceRMIAdminAPI server;
-    
-    /**
-     * 
-     */
-    protected final Logger loggerGUI;
-
-    /**
-     * 
-     */
-    protected GuiAppFrameAdministration appFrame;
-
-    /**
-     * Creator of the singleton
-     *
-     * @return reference to the singleton
-     */
-    public static synchronized AdministrationAPI crea() {
-        // Fase di set-up
-        if (businessLogicLocale == null) {
-            Administration tempClient = new Administration(System.getenv("HOSTNAME"));
-            businessLogicLocale = tempClient;
-        }
-        return businessLogicLocale;
-    }
 
     /**
      * Creates a new instance of Administration.
      */
-    private Administration(String nomeLuogo) {
+    protected Administration(String nomeLuogo) {
         super(nomeLuogo, Log.GESTIONECASSA_AMMINISTRAZIONE);
-        loggerGUI = Log.GESTIONECASSA_AMMINISTRAZIONE_GUI;
-    }
-
-    /**
-     * The main of the Amministratore Client side application.
-     *
-     * @param args Useless. Not considered yet.
-     */
-    public static void main(String[] args) {
-
-        // cominciamo l'esecuzione del thread principale
-        Administration.crea().avvia();
-
-    }
-
-    /**
-     * The Real Main of he application.
-     */
-    @Override
-    public void run() {
-        // avvia la fase di login
-        appFrame = new GuiAppFrameAdministration(this);
-
-        // concludi fase preparatoria al login
-        appFrame.setContentPanel(new GuiLoginPanel(appFrame, this, hostname));
-        appFrame.setVisible(true);
-        
-        super.run();
     }
 
     /**
@@ -149,7 +89,6 @@ public class Administration extends Luogo implements AdministrationAPI {
         super.setupAfterLogin(username);
 
         // fai quel che devi fare
-        appFrame.enableLogout(true);
     }
 
     /**
@@ -181,24 +120,5 @@ public class Administration extends Luogo implements AdministrationAPI {
                     ex);
             throw ex;
         }
-    }
-
-    /**
-     *
-     * @throws RemoteException
-     */
-    @Override
-    public void logout() throws RemoteException {
-        appFrame.enableLogout(false);
-        listaBeni = null;
-        super.logout();
-    }
-
-    /**
-     * 
-     * @return
-     */
-    public Logger getLoggerGUI() {
-        return loggerGUI;
     }
 }

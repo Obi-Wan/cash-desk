@@ -35,7 +35,7 @@ abstract public class GuiAppFrame extends javax.swing.JFrame {
     /**
      * The owner of this frame.
      */
-    protected ClientAPI owner;
+    protected GUIClientAPI owner;
 
     /**
      * 
@@ -47,7 +47,7 @@ abstract public class GuiAppFrame extends javax.swing.JFrame {
      * 
      * @param owner
      */
-    public GuiAppFrame(ClientAPI owner) {
+    public GuiAppFrame(GUIClientAPI owner) {
         initComponents();
         this.owner = owner;
         

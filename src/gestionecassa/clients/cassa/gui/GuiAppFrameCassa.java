@@ -21,6 +21,7 @@
 package gestionecassa.clients.cassa.gui;
 
 import gestionecassa.clients.ClientAPI;
+import gestionecassa.clients.GUIClientAPI;
 import gestionecassa.clients.GuiAppFrame;
 import gestionecassa.clients.GuiOptionsDialog;
 import java.awt.BorderLayout;
@@ -51,7 +52,7 @@ public class GuiAppFrameCassa extends GuiAppFrame {
      *
      * @param owner
      */
-    public GuiAppFrameCassa(ClientAPI owner) {
+    public GuiAppFrameCassa(GUIClientAPI owner) {
         super(owner);
         initComponents();
 

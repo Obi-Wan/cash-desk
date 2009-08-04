@@ -233,7 +233,7 @@ public class Cassa extends Luogo implements CassaAPI {
         appFrame.enableLogout(false);
         appFrame.enableListaBeni(false);
         appFrame.resetStatus();
-        listaBeni = null;
+        
         super.logout();
     }
 

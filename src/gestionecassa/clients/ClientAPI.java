@@ -31,13 +31,6 @@ public interface ClientAPI {
     Logger getLogger();
 
     /**
-     * Returns the chosen logger for the GUI objects
-     *
-     * @return
-     */
-    Logger getLoggerGUI();
-
-    /**
      * Returns the hostname
      *
      * @return
