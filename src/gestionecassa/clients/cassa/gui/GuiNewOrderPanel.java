@@ -282,7 +282,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
     private void buildContentsList() {
         tabellaBeni = new ArrayList<recordListaBeni>();
         int i = 0;
-        for (Article bene : listaBeni.list) {
+        for (Article bene : listaBeni.getList()) {
             GuiAbstrSingleArticlePanel tempPanel;
             if (bene instanceof ArticleWithOptions) {
                 tempPanel = 

@@ -72,7 +72,7 @@ public class XmlDataBackend implements BackendAPI_1 {
 
         Document document = DocumentHelper.createDocument();
         Element root = document.addElement( "beni" );
-        List<Article> listaVera = lista.list;
+        List<Article> listaVera = lista.getList();
         for (Article beneVenduto : listaVera) {
             Element tempBene = root.addElement("bene");
             tempBene.addElement("nome").addText(beneVenduto.getName());

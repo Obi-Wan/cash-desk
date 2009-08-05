@@ -77,8 +77,9 @@ public class Article implements Serializable {
         return price;
     }
 
-    public void setEnabled(boolean enabled) {
+    public Article setEnabled(boolean enabled) {
         this.enabled = enabled;
+        return this;
     }
 
     public boolean isEnabled() {

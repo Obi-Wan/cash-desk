@@ -6,8 +6,8 @@
 package gestionecassa;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 /**
  *
@@ -18,13 +18,13 @@ public class ArticlesList implements Serializable {
     /**
      * Lista dei beni vendibili
      */
-    public List<Article> list;
+    List<Article> list;
 
     /**
      * Costruttore di default
      */
     public ArticlesList() {
-        this(new ArrayList<Article>());
+        this(new Vector<Article>());
     }
 
     /**
@@ -32,8 +32,8 @@ public class ArticlesList implements Serializable {
      *
      * @param list
      */
-    public ArticlesList(List<Article> lista) {
-        this.list = new ArrayList<Article>(lista);
+    public ArticlesList(List<Article> list) {
+        this.list = new Vector<Article>(list);
     }
 
     /**
@@ -48,5 +48,73 @@ public class ArticlesList implements Serializable {
             output += String.format("%2d %s\n",i,article.getPrintableFormat());
         }
         return output;
+    }
+
+    /**
+     * Adder
+     * 
+     * @param article
+     */
+    public void addArticle(Article article) {
+        list.add(article);
+    }
+
+    /**
+     *
+     * @param pos
+     * @param enable
+     */
+    public Article enableArticle(int pos, boolean enable) {
+        return list.get(pos).setEnabled(enable);
+    }
+
+    /**
+     *
+     * @param art
+     * @param enable
+     */
+    public Article enableArticle(Article art, boolean enable) {
+        for (Article article : list) {
+            if (article.equals(art)) {
+                article.setEnabled(enable);
+                return article;
+            }
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @param oldPos
+     * @param newPos
+     */
+    public Article moveArticleAt(int oldPos, int newPos) {
+        Article temp = list.remove(oldPos);
+        list.add(newPos,temp);
+        return temp;
+    }
+
+    /**
+     *
+     * @param a
+     * @param newPos
+     */
+    public Article moveArticleAt(Article a, int newPos) {
+        for (Article article : list) {
+            if (article.equals(a)) {
+                list.remove(article);
+                list.add(newPos, article);
+                return article;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    final public List<Article> getList() {
+        return list;
     }
 }

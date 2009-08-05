@@ -220,7 +220,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
                 synchronized (listProgressiviSemaphore) {
                     progressivesList = new TreeMap<String, Integer>();
                 
-                    for (Article article : articlesList.list) {
+                    for (Article article : articlesList.getList()) {
                         if (article instanceof ArticleWithPreparation) {
                             progressivesList.put(article.getName(), 0);
                         }
@@ -366,12 +366,12 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
 
     public void saveNewArticlesList(ArticlesList list) { // RIVEDI
         synchronized (listArticlesSemaphore) {
-            articlesList = new ArticlesList(list.list);
+            articlesList = new ArticlesList(list.getList());
             
             synchronized (listProgressiviSemaphore) {
                 progressivesList = new TreeMap<String, Integer>();
 
-                for (Article article : list.list) {
+                for (Article article : list.getList()) {
                     if (article instanceof ArticleWithPreparation) {
                         progressivesList.put(article.getName(), 0);
                     }
