@@ -61,11 +61,10 @@ public class ArticleWithOptions extends Article implements ArticleWithPreparatio
 
     @Override
     public String getPrintableFormat() {
-        String output = new String(super.getPrintableFormat() + "\n");
-        for (String string : options) {
-            output += new String("  .\t "+ string + "\n");
+        String output = new String(super.getPrintableFormat());
+        for (String option : options) {
+            output += String.format("\n\t      . %10s", option);
         }
-        output += "--";
         return output;
     }
 

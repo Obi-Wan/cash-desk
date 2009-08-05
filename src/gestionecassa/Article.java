@@ -65,7 +65,8 @@ public class Article implements Serializable {
      * @return The string describing the good.
      */
     public String getPrintableFormat() {
-        return new String("- " + name + "\t € " + price);
+        return String.format("- %s - %10s -€ %05.2f",
+                             (enabled ? "Enabled " : "Disabled"), name, price);
     }
 
     final public String getName() {

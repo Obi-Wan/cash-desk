@@ -42,9 +42,10 @@ public class ArticlesList implements Serializable {
      * @return a written description of the list
      */
     public String getPrintableFormat() {
-        String output = new String("Lista dei beni venduti:\n");
-        for (Article beneVenduto : list) {
-            output += new String(beneVenduto.getPrintableFormat() + "\n");
+        String output = new String("Lista degli articoli venduti:\n");
+        for (int i = 0; i < list.size(); i++) {
+            Article article = list.get(i);
+            output += String.format("%2d %s\n",i,article.getPrintableFormat());
         }
         return output;
     }
