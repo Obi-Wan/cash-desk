@@ -5,6 +5,7 @@
 
 package gestionecassa.clients.administration;
 
+import gestionecassa.Article;
 import gestionecassa.Person;
 import gestionecassa.clients.ClientAPI;
 import gestionecassa.exceptions.ActorAlreadyExistingException;
@@ -40,4 +41,6 @@ public interface AdministrationAPI extends ClientAPI {
     public void registerUser(Person user)
             throws ActorAlreadyExistingException, WrongLoginException,
                 RemoteException;
+
+    public void addArticle(Article article) throws RemoteException;
 }

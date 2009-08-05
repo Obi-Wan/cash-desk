@@ -5,6 +5,7 @@
 
 package gestionecassa.clients.administration;
 
+import gestionecassa.Article;
 import gestionecassa.Log;
 import gestionecassa.Person;
 import gestionecassa.clients.Luogo;
@@ -120,5 +121,9 @@ public class Administration extends Luogo implements AdministrationAPI {
                     ex);
             throw ex;
         }
+    }
+
+    public void addArticle(Article article) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

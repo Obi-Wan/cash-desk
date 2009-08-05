@@ -385,6 +385,111 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
         }
     }
 
+    public void addArticle(Article article) {
+        synchronized (listArticlesSemaphore) {
+            articlesList.addArticle(article);
+
+            if (!useFallback) {
+                try {
+                    dataBackendDB.addArticleToList(article);
+                } catch (IOException ex) {
+                    logger.error("could not save new article to DB", ex);
+                }
+            }
+
+            if (article instanceof ArticleWithPreparation) {
+                synchronized (listProgressiviSemaphore) {
+                    progressivesList.put(article.getName(), 0);
+                }
+            }
+            try {
+                fallbackXML.saveArticlesList(articlesList);
+            } catch (IOException ex) {
+                logger.error("could not save articles list to XML", ex);
+            }
+        }
+    }
+
+    public void enableArticle(int position, boolean enable) {
+        synchronized (listArticlesSemaphore) {
+            Article temp = articlesList.enableArticle(position, enable);
+
+            if (!useFallback) {
+                try {
+                    dataBackendDB.enableArticleFromList(temp, enable);
+                } catch (IOException ex) {
+                    logger.error("could not save new article to DB", ex);
+                }
+            }
+            
+            try {
+                fallbackXML.saveArticlesList(articlesList);
+            } catch (IOException ex) {
+                logger.error("could not save articles list to XML", ex);
+            }
+        }
+    }
+
+    public void enableArticle(Article article, boolean enable) {
+        synchronized (listArticlesSemaphore) {
+            Article temp = articlesList.enableArticle(article, enable);
+
+            if (!useFallback) {
+                try {
+                    dataBackendDB.enableArticleFromList(temp, enable);
+                } catch (IOException ex) {
+                    logger.error("could not save new article to DB", ex);
+                }
+            }
+
+            try {
+                fallbackXML.saveArticlesList(articlesList);
+            } catch (IOException ex) {
+                logger.error("could not save articles list to XML", ex);
+            }
+        }
+    }
+
+    public void moveArticle(int oldPos, int newPos) {
+        synchronized (listArticlesSemaphore) {
+            Article temp = articlesList.moveArticleAt(oldPos, newPos);
+
+            if (!useFallback) {
+                try {
+                    dataBackendDB.moveArticleAt(temp, newPos);
+                } catch (IOException ex) {
+                    logger.error("could not save new article to DB", ex);
+                }
+            }
+
+            try {
+                fallbackXML.saveArticlesList(articlesList);
+            } catch (IOException ex) {
+                logger.error("could not save articles list to XML", ex);
+            }
+        }
+    }
+
+    public void moveArticle(Article article, int newPos) {
+        synchronized (listArticlesSemaphore) {
+            Article temp = articlesList.moveArticleAt(article, newPos);
+
+            if (!useFallback) {
+                try {
+                    dataBackendDB.moveArticleAt(temp, newPos);
+                } catch (IOException ex) {
+                    logger.error("could not save new article to DB", ex);
+                }
+            }
+
+            try {
+                fallbackXML.saveArticlesList(articlesList);
+            } catch (IOException ex) {
+                logger.error("could not save articles list to XML", ex);
+            }
+        }
+    }
+
     public void terminate() {
     }
 }
