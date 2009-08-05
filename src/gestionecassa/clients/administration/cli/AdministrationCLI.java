@@ -23,15 +23,17 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 /**
- *
+ * Command Line Interface driven application for administering data and users
+ * on the server.
+ * 
  * @author ben
  */
 public class AdministrationCLI extends Administration {
 
     /**
-     * 
+     * The system console, that makes it possible to interact with the user.
      */
-    Console c = System.console();
+    Console con = System.console();
 
     /**
      * Constructor
@@ -70,9 +72,97 @@ public class AdministrationCLI extends Administration {
     @Override
     public void run() {
         // login / greeting stuff goes here.
-        String inUsername = c.readLine("Please log in.\nUsername: ");
-        String password = new String(c.readPassword("Password: "));
-        String serverName = c.readLine("Servername: ");
+        printGreeting();
+        printMainMenu();
+    }
+
+    /**
+     * Does the class specific operations after a successful login.
+     *
+     * @param username The username of the just logged in Admin.
+     *
+     * @throws RemoteException
+     */
+    @Override
+    protected void setupAfterLogin(String username) throws RemoteException {
+        super.setupAfterLogin(username);
+
+        printMainAdminMenu();
+    }
+
+    /**
+     * Once logged in, it shows the admin possibilities of the admin, and
+     * manages them.
+     * 
+     * @throws RemoteException
+     */
+    private void printMainAdminMenu() throws RemoteException {
+        String menu = "You can now choose between these alternatives:\n" +
+                " - a - Show/Modify list of Articles\n" +
+                " - u - Show/Modify list of Users\n" +
+                " - l - Logout\n" +
+                "Choice: ";
+        char choice;
+        do {
+            choice = con.readLine(menu).charAt(0);
+            switch (choice) {
+                case 'a': {
+                    CLIAdminArtices temp = new CLIAdminArtices(this, con);
+                    temp.printMenuArticles();
+                    break;
+                }
+                case 'l': {
+                    con.writer().print("Logging out.. ");
+                    break;
+                }
+                default: {
+                    con.writer().println("Wrong input.\n");
+                }
+            }
+        } while(choice != 'l');
+
+        this.logout();
+
+        con.writer().println("done!\n");
+    }
+
+    /**
+     * Prints the main menu, and reacts on user input.
+     */
+    private void printMainMenu() {
+        String menu = "You can now choose between these alternatives:\n" +
+                " - l - Login\n" +
+                " - o - Options\n" +
+                " - q - Quit\n" +
+                "Choice: ";
+        char choice;
+        do {
+            choice = con.readLine(menu).charAt(0);
+            switch (choice) {
+                case 'l': {
+                    startLogin();
+                    break;
+                }
+                case 'o': {
+                    break;
+                }
+                default: {
+                    
+                }
+            }
+        } while(choice != 'q');
+
+        this.stopClient();
+
+    }
+
+    /**
+     * Collects info and logs into the server.
+     */
+    private void startLogin() {
+        String inUsername = con.readLine("\nPlease log in.\nUsername: ");
+        String password = new String(con.readPassword("Password: "));
+        String serverName = con.readLine("Servername: ");
 
         try {
             login(inUsername, password, serverName);
@@ -81,44 +171,28 @@ public class AdministrationCLI extends Administration {
         } catch (WrongLoginException ex) {
             String error = "Wrong login!";
             logger.warn(error, ex);
-            c.writer().println(error);
+            con.writer().println(error);
         } catch (RemoteException ex) {
             String error = "Error in comunicating with the server";
             logger.error(error, ex);
-            c.writer().println(error);
+            con.writer().println(error);
         } catch (MalformedURLException ex) {
             String error = "Wrong URL of the server";
             logger.error(error, ex);
-            c.writer().println(error);
+            con.writer().println(error);
         } catch (NotBoundException ex) {
             String error = "Not existing bound on the server";
             logger.error(error, ex);
-            c.writer().println(error);
+            con.writer().println(error);
         }
     }
 
-    @Override
-    protected void setupAfterLogin(String username) throws RemoteException {
-        super.setupAfterLogin(username);
-
-        printMainMenu();
-    }
-
-    private void printMainMenu() {
-        String mainMenu = "You can now choose between these alternatives:\n" +
-                " - a - Show/Modify list of Articles\n" +
-                " - q - Quit\n" +
-                "Choice: ";
-        char choice;
-        do {
-            choice = c.readLine(mainMenu).charAt(0);
-            switch (choice) {
-                case 'a': {
-                    break;
-                }
-            }
-        } while(choice != 'q');
-
-        this.stopClient();
+    /**
+     * Just prints the Greeting message on the screen.
+     */
+    private void printGreeting() {
+        String greeting = "This is the CLI administrative client of Cash-Desk" +
+                " project.";
+        con.writer().println(greeting);
     }
 }
