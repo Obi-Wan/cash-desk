@@ -34,19 +34,22 @@ public interface DMAmministrazioneAPI extends DMCommonAPI, DMServerAPI {
     void saveNewArticlesList(ArticlesList lista);
 
     /**
-     * 
+     * Adds an article to the common list.
+     *
      * @param article
      */
     void addArticle(Article article);
 
     /**
-     * 
+     * Enables/disables an article at the index specified by position.
+     *
      * @param position
      * @param enable
      */
     void enableArticle(int position, boolean enable);
 
     /**
+     * Enables/disables the article.
      *
      * @param article
      * @param enable
@@ -54,16 +57,18 @@ public interface DMAmministrazioneAPI extends DMCommonAPI, DMServerAPI {
     void enableArticle(Article article, boolean enable);
 
     /**
+     * Moves an article
      *
-     * @param oldPos
-     * @param newPos
+     * @param oldPos Old position
+     * @param newPos New position
      */
     void moveArticle(int oldPos, int newPos);
 
     /**
+     * Moves the specified article
      *
-     * @param article
-     * @param newPos
+     * @param article Article to move
+     * @param newPos New position
      */
     void moveArticle(Article article, int newPos);
 

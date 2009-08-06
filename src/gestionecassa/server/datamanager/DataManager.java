@@ -385,6 +385,11 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
         }
     }
 
+    /**
+     * Adds an article to the common list.
+     *
+     * @param article
+     */
     public void addArticle(Article article) {
         synchronized (listArticlesSemaphore) {
             articlesList.addArticle(article);
@@ -410,6 +415,12 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
         }
     }
 
+    /**
+     * Enables/disables an article at the index specified by position.
+     *
+     * @param position
+     * @param enable
+     */
     public void enableArticle(int position, boolean enable) {
         synchronized (listArticlesSemaphore) {
             Article temp = articlesList.enableArticle(position, enable);
@@ -430,6 +441,12 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
         }
     }
 
+    /**
+     * Enables/disables the article.
+     *
+     * @param article
+     * @param enable
+     */
     public void enableArticle(Article article, boolean enable) {
         synchronized (listArticlesSemaphore) {
             Article temp = articlesList.enableArticle(article, enable);
@@ -450,6 +467,12 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
         }
     }
 
+    /**
+     * Moves an article
+     *
+     * @param oldPos Old position
+     * @param newPos New position
+     */
     public void moveArticle(int oldPos, int newPos) {
         synchronized (listArticlesSemaphore) {
             Article temp = articlesList.moveArticleAt(oldPos, newPos);
@@ -470,6 +493,12 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
         }
     }
 
+    /**
+     * Moves the specified article
+     *
+     * @param article Article to move
+     * @param newPos New position
+     */
     public void moveArticle(Article article, int newPos) {
         synchronized (listArticlesSemaphore) {
             Article temp = articlesList.moveArticleAt(article, newPos);
