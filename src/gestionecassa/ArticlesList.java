@@ -16,12 +16,12 @@ import java.util.Vector;
 public class ArticlesList implements Serializable {
 
     /**
-     * Lista dei beni vendibili
+     * List of the articles sold.
      */
     List<Article> list;
 
     /**
-     * Costruttore di default
+     * Default constructor
      */
     public ArticlesList() {
         this(new Vector<Article>());
@@ -51,27 +51,29 @@ public class ArticlesList implements Serializable {
     }
 
     /**
-     * Adder
+     * Adds an article
      * 
-     * @param article
+     * @param article The article to add.
      */
     public void addArticle(Article article) {
         list.add(article);
     }
 
     /**
+     * Enables/disables a specified article
      *
-     * @param pos
-     * @param enable
+     * @param pos Position of the article
+     * @param enable Enable/disable
      */
     public Article enableArticle(int pos, boolean enable) {
         return list.get(pos).setEnabled(enable);
     }
 
     /**
+     * Enables/disables a specified article
      *
-     * @param art
-     * @param enable
+     * @param art The article to modify
+     * @param enable Enable/disable
      */
     public Article enableArticle(Article art, boolean enable) {
         for (Article article : list) {
@@ -84,9 +86,10 @@ public class ArticlesList implements Serializable {
     }
 
     /**
+     * Moves an article
      *
-     * @param oldPos
-     * @param newPos
+     * @param oldPos Old position
+     * @param newPos New position
      */
     public Article moveArticleAt(int oldPos, int newPos) {
         Article temp = list.remove(oldPos);
@@ -95,9 +98,10 @@ public class ArticlesList implements Serializable {
     }
 
     /**
+     * Moves the specified article
      *
-     * @param a
-     * @param newPos
+     * @param a Article to move
+     * @param newPos New position
      */
     public Article moveArticleAt(Article a, int newPos) {
         for (Article article : list) {
@@ -111,8 +115,9 @@ public class ArticlesList implements Serializable {
     }
 
     /**
+     * Getter for the list
      * 
-     * @return
+     * @return the list in a <code>java.util.List</code> form.
      */
     final public List<Article> getList() {
         return list;
