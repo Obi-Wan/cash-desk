@@ -5,6 +5,7 @@
 
 package gestionecassa.server.clientservices;
 
+import gestionecassa.Article;
 import gestionecassa.Person;
 import gestionecassa.exceptions.ActorAlreadyExistingException;
 import java.io.Serializable;
@@ -27,5 +28,57 @@ public interface ServiceRMIAdminAPI
      * @throws WrongLoginException
      */
     public void sendRMIDatiRegistrazione(Person user)
-            throws   RemoteException, ActorAlreadyExistingException;
+            throws RemoteException, ActorAlreadyExistingException;
+
+
+    //--------- Articles API ---------//
+
+    /**
+     * Adds an article to the common list.
+     *
+     * @param article
+     *
+     * @throws RemoteException
+     */
+    void addRMIArticle(Article article) throws RemoteException;
+
+    /**
+     * Enables/disables an article at the index specified by position.
+     *
+     * @param position
+     * @param enable
+     *
+     * @throws RemoteException
+     */
+    void enableRMIArticle(int position, boolean enable) throws RemoteException;
+
+    /**
+     * Enables/disables the article.
+     *
+     * @param article
+     * @param enable
+     *
+     * @throws RemoteException
+     */
+    void enableRMIArticle(Article article, boolean enable) throws RemoteException;
+
+    /**
+     * Moves an article
+     *
+     * @param oldPos Old position
+     * @param newPos New position
+     *
+     * @throws RemoteException
+     */
+    void moveRMIArticle(int oldPos, int newPos) throws RemoteException;
+
+    /**
+     * Moves the specified article
+     *
+     * @param article Article to move
+     * @param newPos New position
+     *
+     * @throws RemoteException
+     */
+    void moveRMIArticle(Article article, int newPos) throws RemoteException;
 }
