@@ -123,7 +123,64 @@ public class Administration extends Luogo implements AdministrationAPI {
         }
     }
 
-    public void addArticle(Article article) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    //--------- Articles API ---------//
+
+    /**
+     * Adds an article to the common list.
+     *
+     * @param article
+     *
+     * @throws RemoteException
+     */
+    public void addRMIArticle(Article article) throws RemoteException {
+        server.addRMIArticle(article);
+    }
+
+    /**
+     * Enables/disables an article at the index specified by position.
+     *
+     * @param position
+     * @param enable
+     *
+     * @throws RemoteException
+     */
+    public void enableRMIArticle(int position, boolean enable) throws RemoteException {
+        server.enableRMIArticle(position, enable);
+    }
+
+    /**
+     * Enables/disables the article.
+     *
+     * @param article
+     * @param enable
+     *
+     * @throws RemoteException
+     */
+    public void enableRMIArticle(Article article, boolean enable) throws RemoteException {
+        server.enableRMIArticle(article, enable);
+    }
+
+    /**
+     * Moves an article
+     *
+     * @param oldPos Old position
+     * @param newPos New position
+     *
+     * @throws RemoteException
+     */
+    public void moveRMIArticle(int oldPos, int newPos) throws RemoteException {
+        server.moveRMIArticle(oldPos, newPos);
+    }
+
+    /**
+     * Moves the specified article
+     *
+     * @param article Article to move
+     * @param newPos New position
+     *
+     * @throws RemoteException
+     */
+    public void moveRMIArticle(Article article, int newPos) throws RemoteException {
+        server.moveRMIArticle(article, newPos);
     }
 }
