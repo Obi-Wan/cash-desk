@@ -62,7 +62,6 @@ public class PrinterHelper extends Thread {
      */
     @Override
     public void run() {
-        super.run();
         PrinterJob job = PrinterJob.getPrinterJob();
 
         PrintRequestAttributeSet attribs = new HashPrintRequestAttributeSet();
@@ -95,29 +94,12 @@ public class PrinterHelper extends Thread {
                 job.setPrintable(new Painter(entrySingleArticle.article));
                 job.setCopies(entrySingleArticle.numTot);
             }
-            // needed only in the develop phase
-            //boolean ok = job.printDialog(attribs);
 
-            //if (ok) {
             try {
-                //job.print();
                 job.print(attribs);
             } catch (PrinterException ex) {
                 logger.error("Errore nel tentativo di stampa", ex);
             }
-            //}
         }
-
-        // Develop output to individuate the attributes to apply
-//        Attribute[] attribsArray = attribs.toArray();
-//        for (Attribute attribute : attribsArray) {
-//            System.out.println(attribute.getName() + ": " + attribute.getCategory().getSimpleName());
-//            Method[] methods = attribute.getCategory().getMethods();
-//            System.out.println(" Method:");
-//            for (Method method : methods) {
-//                System.out.println("   - "+ method.toString());
-//            }
-//        }
     }
-
 }
