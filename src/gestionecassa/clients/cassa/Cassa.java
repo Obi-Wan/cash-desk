@@ -149,10 +149,7 @@ public class Cassa extends Luogo implements CassaAPI {
     protected void setupAfterLogin(String username) throws RemoteException {
         super.setupAfterLogin(username);
 
-        appFrame.enableLogout(true);
-        appFrame.enableListaBeni(true);
-        appFrame.setContentPanel(new GuiNewOrderPanel(this,appFrame));
-        appFrame.updateUsernameStatus(username);
+        appFrame.setupAfterLogin(this,username);
     }
 
     /**
@@ -182,8 +179,8 @@ public class Cassa extends Luogo implements CassaAPI {
             // This should print the order.
             //PrinterHelper.startPrintingOrder(nuovoOrdine);
 
-            // This should print the order.
-            //PrinterHelper.startPrintingOrder(nuovoOrdine);
+//             This should print the order.
+            PrinterHelper.startPrintingOrder(newOrder);
         } catch (RemoteException ex) {
             logger.warn("Errore nella comunicazione col server",ex);
             throw ex;
@@ -230,9 +227,7 @@ public class Cassa extends Luogo implements CassaAPI {
      */
     @Override
     public void logout() throws RemoteException {
-        appFrame.enableLogout(false);
-        appFrame.enableListaBeni(false);
-        appFrame.resetStatus();
+        appFrame.setdownAfterLogout();
         
         super.logout();
     }

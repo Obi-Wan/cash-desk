@@ -81,9 +81,9 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
 
         this.setPreferredSize(new Dimension(800, 450));
 
-        jButtonConferma.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
+        this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "ENTER");
-        jButtonConferma.getActionMap().put("ENTER", new AbstractAction() {
+        this.getActionMap().put("ENTER", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
                 confirmAndSendNewOrder();
             }
@@ -100,12 +100,6 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
   private void initComponents() {
 
     jPanelListaBeni = new javax.swing.JPanel();
-    jPanelBottoni1 = new javax.swing.JPanel();
-    jButtonConferma = new javax.swing.JButton();
-    jButtonPulisci = new javax.swing.JButton();
-    jPanelBottoni2 = new javax.swing.JPanel();
-    jButtonAnnulla = new javax.swing.JButton();
-    jButtonAggiorna = new javax.swing.JButton();
 
     setMinimumSize(new java.awt.Dimension(150, 150));
 
@@ -117,132 +111,23 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
     );
     jPanelListaBeniLayout.setVerticalGroup(
       jPanelListaBeniLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 315, Short.MAX_VALUE)
-    );
-
-    jButtonConferma.setText("Conferma");
-    jButtonConferma.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButtonConfermaActionPerformed(evt);
-      }
-    });
-
-    jButtonPulisci.setText("Pulisci");
-    jButtonPulisci.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButtonPulisciActionPerformed(evt);
-      }
-    });
-
-    javax.swing.GroupLayout jPanelBottoni1Layout = new javax.swing.GroupLayout(jPanelBottoni1);
-    jPanelBottoni1.setLayout(jPanelBottoni1Layout);
-    jPanelBottoni1Layout.setHorizontalGroup(
-      jPanelBottoni1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanelBottoni1Layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(jButtonConferma)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 342, Short.MAX_VALUE)
-        .addComponent(jButtonPulisci)
-        .addContainerGap())
-    );
-    jPanelBottoni1Layout.setVerticalGroup(
-      jPanelBottoni1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanelBottoni1Layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(jPanelBottoni1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jButtonConferma)
-          .addComponent(jButtonPulisci))
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-    );
-
-    jButtonAnnulla.setText("Annulla Ultimo Ordine");
-    jButtonAnnulla.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButtonAnnullaActionPerformed(evt);
-      }
-    });
-
-    jButtonAggiorna.setText("Aggiorna Lista");
-    jButtonAggiorna.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButtonAggiornaActionPerformed(evt);
-      }
-    });
-
-    javax.swing.GroupLayout jPanelBottoni2Layout = new javax.swing.GroupLayout(jPanelBottoni2);
-    jPanelBottoni2.setLayout(jPanelBottoni2Layout);
-    jPanelBottoni2Layout.setHorizontalGroup(
-      jPanelBottoni2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelBottoni2Layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(jButtonAggiorna)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 212, Short.MAX_VALUE)
-        .addComponent(jButtonAnnulla)
-        .addContainerGap())
-    );
-    jPanelBottoni2Layout.setVerticalGroup(
-      jPanelBottoni2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanelBottoni2Layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(jPanelBottoni2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jButtonAnnulla)
-          .addComponent(jButtonAggiorna))
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+      .addGap(0, 443, Short.MAX_VALUE)
     );
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
     this.setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(jPanelBottoni2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addContainerGap())
-      .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(jPanelBottoni1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addContainerGap())
       .addComponent(jPanelListaBeni, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addComponent(jPanelListaBeni, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(jPanelBottoni1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jPanelBottoni2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap())
+      .addComponent(jPanelListaBeni, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
     );
   }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonAggiornaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAggiornaActionPerformed
-        requestListaBeni();
-        fetchListaBeni();
-        buildContentsList();
-        buildVisualList();
-    }//GEN-LAST:event_jButtonAggiornaActionPerformed
-
-    private void jButtonPulisciActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPulisciActionPerformed
-        pulisci();
-    }//GEN-LAST:event_jButtonPulisciActionPerformed
-
-    private void jButtonConfermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfermaActionPerformed
-        confirmAndSendNewOrder();
-    }//GEN-LAST:event_jButtonConfermaActionPerformed
-
-    private void jButtonAnnullaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAnnullaActionPerformed
-        annullaUltimoOrdine();
-    }//GEN-LAST:event_jButtonAnnullaActionPerformed
-
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JButton jButtonAggiorna;
-  private javax.swing.JButton jButtonAnnulla;
-  private javax.swing.JButton jButtonConferma;
-  private javax.swing.JButton jButtonPulisci;
-  private javax.swing.JPanel jPanelBottoni1;
-  private javax.swing.JPanel jPanelBottoni2;
   private javax.swing.JPanel jPanelListaBeni;
   // End of variables declaration//GEN-END:variables
 
@@ -369,7 +254,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
      * it fetches the ArticleList from the server (through the CassaAPI)
      * and makes the client store it locally
      */
-    private void requestListaBeni() {
+    void requestListaBeni() {
         try {
             owner.getRMIArticlesList();
         } catch (RemoteException ex) {
@@ -384,7 +269,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
      * If the new order is not empty, it sends it to the server and cleans the
      * gui, ready for compiling a new order.
      */
-    private void confirmAndSendNewOrder() {
+    void confirmAndSendNewOrder() {
         try {
             Order nuovoOrdine = createNewOrder();
             if (nuovoOrdine.getTotalPrice() != 0) {
@@ -530,7 +415,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
     /**
      * This cancells the last commited order. It's a function to treat carefully
      */
-    private void annullaUltimoOrdine() {
+    void undoLastOrder() {
         final int result = javax.swing.JOptionPane.showConfirmDialog(this,
                 "Vuoi veramente annullare l'ultimo ordine emesso?",
                 "Annulla ultimo Ordine", javax.swing.JOptionPane.YES_NO_OPTION,

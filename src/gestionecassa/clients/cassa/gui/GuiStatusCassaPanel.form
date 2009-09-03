@@ -19,6 +19,7 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="jPanelButtons" alignment="0" max="32767" attributes="0"/>
                   <Component id="jPanelCurrentOrder" alignment="0" max="32767" attributes="0"/>
                   <Component id="jPanelLastOrder" alignment="0" max="32767" attributes="0"/>
                   <Component id="jPanelMachineStatus" alignment="1" max="32767" attributes="0"/>
@@ -36,7 +37,9 @@
               <Component id="jPanelLastOrder" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="jPanelCurrentOrder" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="160" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jPanelButtons" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -155,7 +158,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabelPrize" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jTextFieldPrize" pref="140" max="32767" attributes="0"/>
+                          <Component id="jTextFieldPrice" pref="141" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -173,7 +176,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabelPrize" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jTextFieldPrize" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jTextFieldPrice" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -193,10 +196,10 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelPrize">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Prize"/>
+            <Property name="text" type="java.lang.String" value="Price"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextFieldPrize">
+        <Component class="javax.swing.JTextField" name="jTextFieldPrice">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
           </Properties>
@@ -217,7 +220,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLabelPrizeCurrent" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jTextFieldPrizeCurrent" pref="140" max="32767" attributes="0"/>
+                  <Component id="jTextFieldPriceCurrent" pref="141" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -228,7 +231,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabelPrizeCurrent" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jTextFieldPrizeCurrent" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jTextFieldPriceCurrent" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -238,13 +241,81 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="jLabelPrizeCurrent">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Prize"/>
+            <Property name="text" type="java.lang.String" value="Price"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jTextFieldPrizeCurrent">
+        <Component class="javax.swing.JTextField" name="jTextFieldPriceCurrent">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
           </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPanel" name="jPanelButtons">
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jButtonConferma" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jButtonAnnulla" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jButtonAggiorna" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jButtonPulisci" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="20" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jButtonConferma" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="57" max="32767" attributes="0"/>
+                  <Component id="jButtonPulisci" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jButtonAggiorna" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="jButtonAnnulla" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JButton" name="jButtonConferma">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Conferma"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonConfermaActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="jButtonPulisci">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Pulisci"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonPulisciActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="jButtonAggiorna">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Aggiorna Lista"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonAggiornaActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="jButtonAnnulla">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Annulla Ultimo Ordine"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonAnnullaActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

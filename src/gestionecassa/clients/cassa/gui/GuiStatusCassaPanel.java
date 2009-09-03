@@ -30,10 +30,14 @@ import java.util.Locale;
  */
 public class GuiStatusCassaPanel extends javax.swing.JPanel {
 
+    GuiNewOrderPanel orderPanel;
+
     /** Creates new form GuiStatusCassaPanel */
     public GuiStatusCassaPanel(String hostname) {
         initComponents();
         jTextFieldHostname.setText(new String(hostname));
+
+        enableButtons(false);
     }
 
     /** This method is called from within the constructor to
@@ -55,11 +59,16 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
     jPanelLastOrder = new javax.swing.JPanel();
     jLabelTime = new javax.swing.JLabel();
     jTextFieldTime = new javax.swing.JTextField();
-    jLabelPrice = new javax.swing.JLabel();
+    jLabelPrize = new javax.swing.JLabel();
     jTextFieldPrice = new javax.swing.JTextField();
     jPanelCurrentOrder = new javax.swing.JPanel();
-    jLabelPriceCurrent = new javax.swing.JLabel();
+    jLabelPrizeCurrent = new javax.swing.JLabel();
     jTextFieldPriceCurrent = new javax.swing.JTextField();
+    jPanelButtons = new javax.swing.JPanel();
+    jButtonConferma = new javax.swing.JButton();
+    jButtonPulisci = new javax.swing.JButton();
+    jButtonAggiorna = new javax.swing.JButton();
+    jButtonAnnulla = new javax.swing.JButton();
 
     jPanelMachineStatus.setBorder(javax.swing.BorderFactory.createTitledBorder("Client Status"));
 
@@ -123,7 +132,7 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
 
     jTextFieldTime.setEditable(false);
 
-    jLabelPrice.setText("Price");
+    jLabelPrize.setText("Price");
 
     jTextFieldPrice.setEditable(false);
 
@@ -139,9 +148,9 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jTextFieldTime, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE))
           .addGroup(jPanelLastOrderLayout.createSequentialGroup()
-            .addComponent(jLabelPrice)
+            .addComponent(jLabelPrize)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jTextFieldPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)))
+            .addComponent(jTextFieldPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)))
         .addContainerGap())
     );
     jPanelLastOrderLayout.setVerticalGroup(
@@ -153,14 +162,14 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
           .addComponent(jTextFieldTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(jPanelLastOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabelPrice)
+          .addComponent(jLabelPrize)
           .addComponent(jTextFieldPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
 
     jPanelCurrentOrder.setBorder(javax.swing.BorderFactory.createTitledBorder("Current Order"));
 
-    jLabelPriceCurrent.setText("Price");
+    jLabelPrizeCurrent.setText("Price");
 
     jTextFieldPriceCurrent.setEditable(false);
 
@@ -170,9 +179,9 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
       jPanelCurrentOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanelCurrentOrderLayout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(jLabelPriceCurrent)
+        .addComponent(jLabelPrizeCurrent)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jTextFieldPriceCurrent, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+        .addComponent(jTextFieldPriceCurrent, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
         .addContainerGap())
     );
     jPanelCurrentOrderLayout.setVerticalGroup(
@@ -180,9 +189,67 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
       .addGroup(jPanelCurrentOrderLayout.createSequentialGroup()
         .addContainerGap()
         .addGroup(jPanelCurrentOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabelPriceCurrent)
+          .addComponent(jLabelPrizeCurrent)
           .addComponent(jTextFieldPriceCurrent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+    );
+
+    jButtonConferma.setText("Conferma");
+    jButtonConferma.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonConfermaActionPerformed(evt);
+      }
+    });
+
+    jButtonPulisci.setText("Pulisci");
+    jButtonPulisci.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonPulisciActionPerformed(evt);
+      }
+    });
+
+    jButtonAggiorna.setText("Aggiorna Lista");
+    jButtonAggiorna.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonAggiornaActionPerformed(evt);
+      }
+    });
+
+    jButtonAnnulla.setText("Annulla Ultimo Ordine");
+    jButtonAnnulla.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonAnnullaActionPerformed(evt);
+      }
+    });
+
+    javax.swing.GroupLayout jPanelButtonsLayout = new javax.swing.GroupLayout(jPanelButtons);
+    jPanelButtons.setLayout(jPanelButtonsLayout);
+    jPanelButtonsLayout.setHorizontalGroup(
+      jPanelButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanelButtonsLayout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(jPanelButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(jButtonConferma)
+          .addComponent(jButtonAnnulla)
+          .addComponent(jButtonAggiorna)
+          .addComponent(jButtonPulisci))
+        .addContainerGap(20, Short.MAX_VALUE))
+    );
+
+    jPanelButtonsLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jButtonAggiorna, jButtonAnnulla, jButtonConferma, jButtonPulisci});
+
+    jPanelButtonsLayout.setVerticalGroup(
+      jPanelButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanelButtonsLayout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(jButtonConferma)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+        .addComponent(jButtonPulisci)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(jButtonAggiorna)
+        .addGap(18, 18, 18)
+        .addComponent(jButtonAnnulla)
+        .addContainerGap())
     );
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -192,6 +259,7 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+          .addComponent(jPanelButtons, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(jPanelCurrentOrder, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(jPanelLastOrder, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(jPanelMachineStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -206,18 +274,41 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
         .addComponent(jPanelLastOrder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
         .addComponent(jPanelCurrentOrder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap(160, Short.MAX_VALUE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(jPanelButtons, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .addContainerGap())
     );
   }// </editor-fold>//GEN-END:initComponents
 
+    private void jButtonConfermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfermaActionPerformed
+        orderPanel.confirmAndSendNewOrder();
+}//GEN-LAST:event_jButtonConfermaActionPerformed
+
+    private void jButtonPulisciActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPulisciActionPerformed
+        orderPanel.cleanDataFields();
+}//GEN-LAST:event_jButtonPulisciActionPerformed
+
+    private void jButtonAggiornaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAggiornaActionPerformed
+        orderPanel.updateList();
+}//GEN-LAST:event_jButtonAggiornaActionPerformed
+
+    private void jButtonAnnullaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAnnullaActionPerformed
+        orderPanel.undoLastOrder();
+}//GEN-LAST:event_jButtonAnnullaActionPerformed
+
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JButton jButtonAggiorna;
+  private javax.swing.JButton jButtonAnnulla;
+  private javax.swing.JButton jButtonConferma;
+  private javax.swing.JButton jButtonPulisci;
   private javax.swing.JLabel jLabelHostname;
   private javax.swing.JLabel jLabelLogged;
-  private javax.swing.JLabel jLabelPrice;
-  private javax.swing.JLabel jLabelPriceCurrent;
+  private javax.swing.JLabel jLabelPrize;
+  private javax.swing.JLabel jLabelPrizeCurrent;
   private javax.swing.JLabel jLabelTime;
   private javax.swing.JLabel jLabelUser;
+  private javax.swing.JPanel jPanelButtons;
   private javax.swing.JPanel jPanelCurrentOrder;
   private javax.swing.JPanel jPanelLastOrder;
   private javax.swing.JPanel jPanelMachineStatus;
@@ -273,5 +364,16 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
         final String timestamp = new SimpleDateFormat(
                 "HH:mm:ss", Locale.ITALIAN).format(new Date());
         jTextFieldTime.setText(timestamp);
+    }
+
+    public void enableButtons(boolean b) {
+        jButtonAggiorna.setEnabled(b);
+        jButtonAnnulla.setEnabled(b);
+        jButtonConferma.setEnabled(b);
+        jButtonPulisci.setEnabled(b);
+    }
+
+    public void setOrderPanel(GuiNewOrderPanel orderPanel) {
+        this.orderPanel = orderPanel;
     }
 }

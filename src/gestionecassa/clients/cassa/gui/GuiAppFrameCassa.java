@@ -20,10 +20,10 @@
 
 package gestionecassa.clients.cassa.gui;
 
-import gestionecassa.clients.ClientAPI;
 import gestionecassa.clients.GUIClientAPI;
 import gestionecassa.clients.GuiAppFrame;
 import gestionecassa.clients.GuiOptionsDialog;
+import gestionecassa.clients.cassa.CassaAPI;
 import java.awt.BorderLayout;
 
 /**
@@ -114,7 +114,7 @@ public class GuiAppFrameCassa extends GuiAppFrame {
      *
      * @param value
      */
-    public void enableListaBeni(boolean value) {
+    private void enableListaBeni(boolean value) {
         toolbar.enableListaBeni(value);
         if (!value) {
             this.dialogListaBeni = null;
@@ -144,21 +144,6 @@ public class GuiAppFrameCassa extends GuiAppFrame {
 
     /**
      *
-     * @param username
-     */
-    public void updateUsernameStatus(String username) {
-        statusPanel.setLogin(username);
-    }
-
-    /**
-     * 
-     */
-    public void resetStatus() {
-        statusPanel.reset();
-    }
-
-    /**
-     *
      * @param price
      */
     void updateCurrentOrder(double price) {
@@ -178,5 +163,31 @@ public class GuiAppFrameCassa extends GuiAppFrame {
      */
     void cleanLastOrder() {
         statusPanel.cleanLastOrder();
+    }
+
+    /**
+     *
+     * @param cassaAPI
+     * @param username
+     */
+    public void setupAfterLogin(CassaAPI cassaAPI, String username) {
+        this.enableLogout(true);
+        this.enableListaBeni(true);
+        GuiNewOrderPanel orderPanel = new GuiNewOrderPanel(cassaAPI,this);
+        this.setContentPanel(orderPanel);
+        statusPanel.setOrderPanel(orderPanel);
+        statusPanel.enableButtons(true);
+        statusPanel.setLogin(username);
+    }
+
+    /**
+     *
+     */
+    public void setdownAfterLogout() {
+        statusPanel.setOrderPanel(null);
+        statusPanel.enableButtons(false);
+        this.enableLogout(false);
+        this.enableListaBeni(false);
+        statusPanel.reset();
     }
 }
