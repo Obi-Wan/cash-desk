@@ -118,6 +118,10 @@ abstract public class GuiAppFrame extends javax.swing.JFrame {
      */
     public void setContentPanel(JPanel content) {
         jScrollPanelMain.setViewportView(content);
+        jScrollPanelMain.setVerticalScrollBarPolicy(
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        jScrollPanelMain.setHorizontalScrollBarPolicy(
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         Dimension tempDim = content.getPreferredSize();
         tempDim.height = tempDim.height + 10;
