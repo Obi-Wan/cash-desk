@@ -67,6 +67,8 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
                 }
             });
         }
+
+        jLabelNum.setText((i + 1) + ".");
     }
 
     /** This method is called from within the constructor to
@@ -82,6 +84,7 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
     jLabelPrezzo = new javax.swing.JLabel();
     jButtonNuovo = new javax.swing.JButton();
     jPanelOpzioni = new javax.swing.JPanel();
+    jLabelNum = new javax.swing.JLabel();
 
     setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -102,7 +105,7 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
     jPanelOpzioni.setLayout(jPanelOpzioniLayout);
     jPanelOpzioniLayout.setHorizontalGroup(
       jPanelOpzioniLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 360, Short.MAX_VALUE)
+      .addGap(0, 342, Short.MAX_VALUE)
     );
     jPanelOpzioniLayout.setVerticalGroup(
       jPanelOpzioniLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -113,20 +116,22 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
     this.setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-          .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-            .addGap(24, 24, 24)
-            .addComponent(jPanelOpzioni, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+      .addGroup(layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(layout.createSequentialGroup()
-            .addContainerGap()
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addGroup(layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(jButtonNuovo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(12, 12, 12)
+            .addComponent(jButtonNuovo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+          .addGroup(layout.createSequentialGroup()
+            .addComponent(jLabelNum)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+              .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(jPanelOpzioni, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
               .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabelNome)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 295, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 289, Short.MAX_VALUE)
                 .addComponent(jLabelPrezzo)))))
         .addContainerGap())
     );
@@ -135,8 +140,9 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabelNome)
-          .addComponent(jLabelPrezzo))
+          .addComponent(jLabelPrezzo)
+          .addComponent(jLabelNum)
+          .addComponent(jLabelNome))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jPanelOpzioni, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -153,6 +159,7 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton jButtonNuovo;
   private javax.swing.JLabel jLabelNome;
+  private javax.swing.JLabel jLabelNum;
   private javax.swing.JLabel jLabelPrezzo;
   private javax.swing.JPanel jPanelOpzioni;
   // End of variables declaration//GEN-END:variables
@@ -191,7 +198,9 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
      * 
      */
     void removeLastOpzionePanel() {
-        removeOpzionePanel(pannelliopzioni.get(pannelliopzioni.size()-1));
+        if (pannelliopzioni.size() > 0) {
+            removeOpzionePanel(pannelliopzioni.get(pannelliopzioni.size()-1));
+        }
     }
 
     /**

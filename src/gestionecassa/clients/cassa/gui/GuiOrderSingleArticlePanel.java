@@ -68,6 +68,8 @@ public class GuiOrderSingleArticlePanel extends GuiAbstrSingleArticlePanel {
                 }
             });
         }
+
+        jLabelNum.setText((i + 1) + ".");
     }
 
     /** This method is called from within the constructor to
@@ -84,6 +86,7 @@ public class GuiOrderSingleArticlePanel extends GuiAbstrSingleArticlePanel {
     jSpinnerNum = new javax.swing.JSpinner();
     jButtonLess = new javax.swing.JButton();
     jLabelPrezzo = new javax.swing.JLabel();
+    jLabelNum = new javax.swing.JLabel();
 
     setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -122,8 +125,10 @@ public class GuiOrderSingleArticlePanel extends GuiAbstrSingleArticlePanel {
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
+        .addComponent(jLabelNum)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jLabelNomeBene)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 196, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 190, Short.MAX_VALUE)
         .addComponent(jLabelPrezzo)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jButtonLess, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -142,7 +147,8 @@ public class GuiOrderSingleArticlePanel extends GuiAbstrSingleArticlePanel {
           .addComponent(jButtonMore, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jSpinnerNum, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jButtonLess, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jLabelPrezzo))
+          .addComponent(jLabelPrezzo)
+          .addComponent(jLabelNum))
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
   }// </editor-fold>//GEN-END:initComponents
@@ -168,6 +174,7 @@ public class GuiOrderSingleArticlePanel extends GuiAbstrSingleArticlePanel {
   private javax.swing.JButton jButtonLess;
   private javax.swing.JButton jButtonMore;
   private javax.swing.JLabel jLabelNomeBene;
+  private javax.swing.JLabel jLabelNum;
   private javax.swing.JLabel jLabelPrezzo;
   private javax.swing.JSpinner jSpinnerNum;
   // End of variables declaration//GEN-END:variables

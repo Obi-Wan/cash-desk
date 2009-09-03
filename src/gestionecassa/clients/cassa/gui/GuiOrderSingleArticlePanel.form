@@ -24,9 +24,11 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jLabelNum" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabelNomeBene" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="196" max="32767" attributes="0"/>
+              <EmptySpace pref="190" max="32767" attributes="0"/>
               <Component id="jLabelPrezzo" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jButtonLess" min="-2" max="-2" attributes="0"/>
@@ -48,6 +50,7 @@
                   <Component id="jSpinnerNum" alignment="3" min="-2" pref="21" max="-2" attributes="0"/>
                   <Component id="jButtonLess" alignment="3" min="-2" pref="21" max="-2" attributes="0"/>
                   <Component id="jLabelPrezzo" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelNum" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -112,6 +115,8 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Prezzo"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelNum">
     </Component>
   </SubComponents>
 </Form>
