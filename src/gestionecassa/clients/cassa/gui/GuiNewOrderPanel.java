@@ -52,12 +52,12 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
     GuiAppFrameCassa parent;
 
     /**
-     * Local Reference to the goods list.
+     * Local Reference to the articles list.
      */
     ArticlesList articlesList;
 
     /**
-     * Lista appoggio che per ogni article associa un panel
+     * List that associates a panel to each article
      */
     List<RecordPanelsOfArticles> articlesTable;
 
@@ -99,36 +99,22 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
 
-    jPanelArticlesList = new javax.swing.JPanel();
-
     setMinimumSize(new java.awt.Dimension(150, 150));
-
-    javax.swing.GroupLayout jPanelArticlesListLayout = new javax.swing.GroupLayout(jPanelArticlesList);
-    jPanelArticlesList.setLayout(jPanelArticlesListLayout);
-    jPanelArticlesListLayout.setHorizontalGroup(
-      jPanelArticlesListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 559, Short.MAX_VALUE)
-    );
-    jPanelArticlesListLayout.setVerticalGroup(
-      jPanelArticlesListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 443, Short.MAX_VALUE)
-    );
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
     this.setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(jPanelArticlesList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+      .addGap(0, 559, Short.MAX_VALUE)
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(jPanelArticlesList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+      .addGap(0, 443, Short.MAX_VALUE)
     );
   }// </editor-fold>//GEN-END:initComponents
 
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JPanel jPanelArticlesList;
   // End of variables declaration//GEN-END:variables
 
     /**
@@ -190,13 +176,13 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         /* Prima di tutto rimuoviamo i pannelli di prima che se no incasinano
          * tutto
          */
-        jPanelArticlesList.removeAll();
+        this.removeAll();
 
         /* Creo il nuovo layout in cui organizzerò i nuovi pannelli
          */
         javax.swing.GroupLayout layout =
-                new javax.swing.GroupLayout(jPanelArticlesList);
-        jPanelArticlesList.setLayout(layout);
+                new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
 
         /* Creo i due gruppi con cui organizzare i pannelli
          */
@@ -363,7 +349,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
                             (ArticleWithOptions)singoloRecord.article,
                             tempNumTot, progressive,
                             ((GuiOrderSingleArticleWOptionsPanel)
-                                (singoloRecord.panel)).getListaParziali());
+                                (singoloRecord.panel)).getPatialsList());
                 } else {
                     tempOrd.addArticle(singoloRecord.article,tempNumTot);
                 }
