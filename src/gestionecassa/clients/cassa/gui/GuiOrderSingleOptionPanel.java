@@ -231,4 +231,14 @@ public class GuiOrderSingleOptionPanel extends javax.swing.JPanel {
         }
         parent.triggerUpdateCurrentOrder();
     }
+
+    /**
+     * 
+     * @param option
+     * @return
+     */
+    public boolean hasSelected(String option) {
+        return (((String)jComboBoxOpzione.getSelectedItem()).equals(option)) ?
+            true : false;
+    }
 }

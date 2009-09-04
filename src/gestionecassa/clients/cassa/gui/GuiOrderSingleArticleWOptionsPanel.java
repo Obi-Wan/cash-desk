@@ -64,13 +64,15 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
                     parent.moreKeys[index], "MORE"+index);
             jButtonNuovo.getActionMap().put("MORE"+index, new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    addNewOpzionePanel();
+//                    addNewOptionPanel();
+                    modifyOptions();
                 }
             });
             this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(parent.lessKeys[index], "LESS"+index);
             this.getActionMap().put("LESS"+index, new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-                    removeLastOpzionePanel();
+//                    removeLastOptionPanel();
+                    modifyOptions();
                 }
             });
         }
@@ -159,7 +161,8 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
   }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonNuovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNuovoActionPerformed
-        addNewOpzionePanel();
+//        addNewOptionPanel();
+        modifyOptions();
     }//GEN-LAST:event_jButtonNuovoActionPerformed
 
 
@@ -180,14 +183,34 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
         rebuildListaOpzioni();
     }
 
+    private void modifyOptions() {
+        GuiOptionsHelperDialog dialog =
+                new GuiOptionsHelperDialog(parent.parent, this);
+        dialog.setVisible(true);
+    }
+
     /**
      *
      */
-    private void addNewOpzionePanel() {
+    @Deprecated
+    private void addNewOptionPanel() {
         GuiOrderSingleOptionPanel tempPanel =
                 new GuiOrderSingleOptionPanel(this,article.getOptions());
         optionsPanels.add(tempPanel);
         tempPanel.more();
+        rebuildListaOpzioni();
+    }
+
+    /**
+     *
+     */
+    void addNewOptionPanel(String choice, int num) {
+        GuiOrderSingleOptionPanel tempPanel =
+                new GuiOrderSingleOptionPanel(this,article.getOptions());
+        tempPanel.spinnerModel.setValue(num);
+        tempPanel.comboModel.setSelectedItem(choice);
+        
+        optionsPanels.add(tempPanel);
         rebuildListaOpzioni();
     }
 
@@ -204,7 +227,8 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
     /**
      * 
      */
-    void removeLastOpzionePanel() {
+    @Deprecated
+    private void removeLastOptionPanel() {
         if (optionsPanels.size() > 0) {
             removeOptionPanel(optionsPanels.get(optionsPanels.size()-1));
         }
@@ -291,5 +315,14 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
      */
     void triggerUpdateCurrentOrder() {
         parent.updateCurrentOrder();
+    }
+
+    public GuiOrderSingleOptionPanel getSingleOptionPanel( String option ) {
+        for (GuiOrderSingleOptionPanel panel : optionsPanels) {
+            if (panel.hasSelected(option)) {
+                return panel;
+            }
+        }
+        return null;
     }
 }
