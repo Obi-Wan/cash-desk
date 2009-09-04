@@ -16,13 +16,13 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
+          <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="jPanelButtons" alignment="0" max="32767" attributes="0"/>
-                  <Component id="jPanelCurrentOrder" alignment="0" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jPanelLastOrder" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jPanelButtons" alignment="0" max="32767" attributes="0"/>
                   <Component id="jPanelMachineStatus" alignment="1" max="32767" attributes="0"/>
+                  <Component id="jPanelCurrentOrder" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -35,10 +35,10 @@
               <Component id="jPanelMachineStatus" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="jPanelLastOrder" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="jPanelCurrentOrder" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPanelButtons" max="32767" attributes="0"/>
+              <Component id="jPanelCurrentOrder" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="jPanelButtons" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -150,16 +150,15 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="jLabelTime" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jTextFieldTime" pref="139" max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="jLabelPrize" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jTextFieldPrice" pref="141" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="jLabelTime" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelPrize" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabelStatus" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jTextFieldPrice" alignment="1" pref="131" max="32767" attributes="0"/>
+                      <Component id="jTextFieldTime" alignment="0" pref="131" max="32767" attributes="0"/>
+                      <Component id="jTextFieldStatus" alignment="0" pref="131" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -177,6 +176,11 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabelPrize" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jTextFieldPrice" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="jLabelStatus" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jTextFieldStatus" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -202,6 +206,19 @@
         <Component class="javax.swing.JTextField" name="jTextFieldPrice">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Dialog" size="36" style="1"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabelStatus">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Status"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="jTextFieldStatus">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -209,7 +226,7 @@
     <Container class="javax.swing.JPanel" name="jPanelCurrentOrder">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="javax.swing.BorderFactory.createTitledBorder(&quot;Current Order&quot;)" type="code"/>
+          <Connection code="javax.swing.BorderFactory.createTitledBorder(&quot;Partial Order&quot;)" type="code"/>
         </Property>
       </Properties>
 
@@ -273,7 +290,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButtonConferma" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="57" max="32767" attributes="0"/>
+                  <EmptySpace pref="28" max="32767" attributes="0"/>
                   <Component id="jButtonPulisci" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButtonAggiorna" min="-2" max="-2" attributes="0"/>
