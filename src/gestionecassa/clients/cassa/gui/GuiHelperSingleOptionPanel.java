@@ -29,12 +29,12 @@ import javax.swing.SpinnerNumberModel;
  *
  * @author ben
  */
-public class GuiHelperSingleOptionPanel extends javax.swing.JPanel {
+public class GuiHelperSingleOptionPanel extends GuiAbstrSingleArticlePanel {
 
     SpinnerNumberModel spinnerModel;
 
     /** Creates new form GuiHelperSingleOptionPanel */
-    public GuiHelperSingleOptionPanel(GuiOptionsHelperDialog parent,
+    public GuiHelperSingleOptionPanel(GuiOptionsHelperPanel parent,
             String option, int countOption, int countPanel) {
         initComponents();
 
@@ -181,5 +181,10 @@ public class GuiHelperSingleOptionPanel extends javax.swing.JPanel {
             jSpinnerNum.setValue(spinnerModel.getValue());
         }
         return spinnerModel.getNumber().intValue();
+    }
+
+    @Override
+    public void clean() {
+        // useless, just to preserve ompatibility with GuiAbstrSingleArticlePanel
     }
 }

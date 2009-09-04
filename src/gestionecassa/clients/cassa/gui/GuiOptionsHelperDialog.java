@@ -20,31 +20,18 @@
 
 package gestionecassa.clients.cassa.gui;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import gestionecassa.clients.GuiCentredDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.List;
-import java.util.Vector;
 import javax.swing.AbstractAction;
-import javax.swing.GroupLayout.ParallelGroup;
-import javax.swing.GroupLayout.SequentialGroup;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
 /**
  *
  * @author ben
  */
-public class GuiOptionsHelperDialog extends javax.swing.JDialog {
-
-    KeyStroke moreKeys[];
-    KeyStroke lessKeys[];
-
-    GuiOrderSingleArticleWOptionsPanel targetPanel;
-
-    List<RecordPanelsOfOptions> options;
+public class GuiOptionsHelperDialog extends GuiCentredDialog {
 
     /** Creates new form GuiOptionsHelperDialog */
     public GuiOptionsHelperDialog(java.awt.Frame parent,
@@ -53,16 +40,16 @@ public class GuiOptionsHelperDialog extends javax.swing.JDialog {
         initComponents();
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-        this.targetPanel = targetPanel;
-
         jScrollPaneMain.setBorder(
                 javax.swing.BorderFactory.createTitledBorder(
                                                 targetPanel.article.getName()));
-        jScrollPaneMain.setViewportView(new JPanel());
+        
+        GuiOptionsHelperPanel panel = new GuiOptionsHelperPanel(targetPanel);
+        jScrollPaneMain.setViewportView(panel);
 
-        initKeysShortcuts();
-        buildContentsList();
-        buildVisualList();
+        panel.initKeysShortcuts();
+        panel.buildContentsList();
+        panel.buildVisualList(panel);
 
         jScrollPaneMain.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "ENTER");
@@ -170,195 +157,14 @@ public class GuiOptionsHelperDialog extends javax.swing.JDialog {
   private javax.swing.JScrollPane jScrollPaneMain;
   // End of variables declaration//GEN-END:variables
 
-
-    /**
-     * Inner class that defines a record of the table of options.
-     *
-     * @author ben
-     */
-    class RecordPanelsOfOptions {
-
-        /**
-         *
-         */
-        final String option;
-
-        /**
-         *
-         */
-        final GuiOrderSingleOptionPanel originalPanel;
-
-        /**
-         * 
-         */
-        final GuiHelperSingleOptionPanel dialogPanel;
-
-        /**
-         * Explicit constructor
-         *
-         * @param article
-         * @param panel
-         */
-        public RecordPanelsOfOptions(String option,
-                GuiOrderSingleOptionPanel origPanel,
-                GuiHelperSingleOptionPanel diagPanel) {
-            this.option = option;
-            this.originalPanel = origPanel;
-            this.dialogPanel = diagPanel;
-        }
-    }
-
-    /**
-     * Popolates the list of the panels related to each article sold.
-     */
-    private void buildContentsList() {
-        options = new Vector<RecordPanelsOfOptions>();
-        int i = 0;
-        for (String option : targetPanel.article.getOptions()) {
-            GuiHelperSingleOptionPanel tempDiagPanel;
-            GuiOrderSingleOptionPanel tempOrigPanel = targetPanel.getSingleOptionPanel(option);
-            
-            tempDiagPanel = new GuiHelperSingleOptionPanel(this, option,
-                    (tempOrigPanel == null) ? 0 : tempOrigPanel.getNumParziale(),
-                    i
-                        );
-
-            options.add(new RecordPanelsOfOptions(option, tempOrigPanel, tempDiagPanel));
-            i++;
-        }
-    }
-
-    /**
-     * It actually displays what the method <code>buildContentsList()</code>
-     * stored in the table of SoldArticle-"Panel showing it".
-     */
-    private void buildVisualList() {
-
-        /* Prima di tutto rimuoviamo i pannelli di prima che se no incasinano
-         * tutto
-         */
-        JPanel mainPanel = ((JPanel)jScrollPaneMain.getViewport().getView());
-        mainPanel.removeAll();
-
-        /* Creo il nuovo layout in cui organizzerò i nuovi pannelli
-         */
-        javax.swing.GroupLayout layout =
-                new javax.swing.GroupLayout(mainPanel);
-        mainPanel.setLayout(layout);
-
-        /* Creo i due gruppi con cui organizzare i pannelli
-         */
-        ParallelGroup tempHorizGroup = layout.createParallelGroup(
-                javax.swing.GroupLayout.Alignment.LEADING);
-        SequentialGroup tempSequGroup = layout.createSequentialGroup()
-            .addContainerGap();
-
-        /* Ciclo in cui aggiungo i pannelli ai gruppi con le impostazioni giuste
-         */
-        for (RecordPanelsOfOptions singleRecord : options) {
-
-            tempHorizGroup.addComponent(singleRecord.dialogPanel,
-                    javax.swing.GroupLayout.DEFAULT_SIZE,
-                    javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
-
-            tempSequGroup
-                .addComponent(singleRecord.dialogPanel,
-                    javax.swing.GroupLayout.PREFERRED_SIZE,
-                    javax.swing.GroupLayout.DEFAULT_SIZE,
-                    javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(
-                    javax.swing.LayoutStyle.ComponentPlacement.RELATED);
-        }
-
-        /* Ultimo spazio del gruppo verticale
-         */
-        tempSequGroup.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE,
-                                      Short.MAX_VALUE);
-
-        /* infine aggiungiamo il gruppo di elementi al layout della pagina
-         * principale.
-         */
-        layout.setHorizontalGroup(
-          layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(tempHorizGroup)
-                .addContainerGap() )
-        );
-        layout.setVerticalGroup(
-          layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(tempSequGroup)
-        );
-    }
-
-    /**
-     * It assigns the keys for fast selection of chosen articles in this panel
-     */
-    private void initKeysShortcuts() {
-        moreKeys = new KeyStroke[10];
-        lessKeys = new KeyStroke[10];
-
-        moreKeys[0] = KeyStroke.getKeyStroke(KeyEvent.VK_1,0);
-        moreKeys[1] = KeyStroke.getKeyStroke(KeyEvent.VK_2,0);
-        moreKeys[2] = KeyStroke.getKeyStroke(KeyEvent.VK_3,0);
-        moreKeys[3] = KeyStroke.getKeyStroke(KeyEvent.VK_4,0);
-        moreKeys[4] = KeyStroke.getKeyStroke(KeyEvent.VK_5,0);
-        moreKeys[5] = KeyStroke.getKeyStroke(KeyEvent.VK_6,0);
-        moreKeys[6] = KeyStroke.getKeyStroke(KeyEvent.VK_7,0);
-        moreKeys[7] = KeyStroke.getKeyStroke(KeyEvent.VK_8,0);
-        moreKeys[8] = KeyStroke.getKeyStroke(KeyEvent.VK_9,0);
-        moreKeys[9] = KeyStroke.getKeyStroke(KeyEvent.VK_0,0);
-
-        lessKeys[0] = KeyStroke.getKeyStroke(KeyEvent.VK_Q,0);
-        lessKeys[1] = KeyStroke.getKeyStroke(KeyEvent.VK_W,0);
-        lessKeys[2] = KeyStroke.getKeyStroke(KeyEvent.VK_E,0);
-        lessKeys[3] = KeyStroke.getKeyStroke(KeyEvent.VK_R,0);
-        lessKeys[4] = KeyStroke.getKeyStroke(KeyEvent.VK_T,0);
-        lessKeys[5] = KeyStroke.getKeyStroke(KeyEvent.VK_Y,0);
-        lessKeys[6] = KeyStroke.getKeyStroke(KeyEvent.VK_U,0);
-        lessKeys[7] = KeyStroke.getKeyStroke(KeyEvent.VK_I,0);
-        lessKeys[8] = KeyStroke.getKeyStroke(KeyEvent.VK_O,0);
-        lessKeys[9] = KeyStroke.getKeyStroke(KeyEvent.VK_P,0);
-    }
     
     private void pressedOk() {
-        for (RecordPanelsOfOptions record : options) {
-            if (record.dialogPanel.spinnerModel.getValue().equals(
-                    record.dialogPanel.spinnerModel.getMinimum())) {
-                if (record.originalPanel != null) {
-                    targetPanel.removeOptionPanel(record.originalPanel);
-                }
-            } else {
-                if (record.originalPanel == null) {
-                    targetPanel.addNewOptionPanel(record.option,
-                            record.dialogPanel.getNumTot());
-                } else {
-                    record.originalPanel.spinnerModel.setValue(
-                            record.dialogPanel.spinnerModel.getValue());
-                }
-            }
-        }
+        ((GuiOptionsHelperPanel)
+                jScrollPaneMain.getViewport().getView()).apply();
         this.dispose();
     }
 
     private void pressedCancel() {
         this.dispose();
-    }
-    
-    /**
-     *
-     */
-    protected void packAndCenter() {
-        this.pack();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension frameSize = this.getSize();
-        if (frameSize.height > screenSize.height) {
-            frameSize.height = screenSize.height;
-        }
-        if (frameSize.width > screenSize.width) {
-            frameSize.width = screenSize.width;
-        }
-        this.setSize(frameSize);
-        this.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
     }
 }

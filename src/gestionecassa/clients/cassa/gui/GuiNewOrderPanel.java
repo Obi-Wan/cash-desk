@@ -31,18 +31,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 import javax.swing.AbstractAction;
-import javax.swing.GroupLayout.ParallelGroup;
-import javax.swing.GroupLayout.SequentialGroup;
 import javax.swing.KeyStroke;
 
 /**
  *
  * @author ben
  */
-public class GuiNewOrderPanel extends javax.swing.JPanel {
+public class GuiNewOrderPanel extends GuiVariableListPanel {
 
     /**
      * Reference alla classe della business logic
@@ -55,14 +53,6 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
      * Local Reference to the articles list.
      */
     ArticlesList articlesList;
-
-    /**
-     * List that associates a panel to each article
-     */
-    List<RecordPanelsOfArticles> articlesTable;
-
-    KeyStroke moreKeys[];
-    KeyStroke lessKeys[];
 
     /** 
      * Creates new form GuiNewOrderPanel
@@ -77,7 +67,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         initKeysShortcuts();
         fetchArticlesList();
         buildContentsList();
-        buildVisualList();
+        buildVisualList(this);
 
         this.setPreferredSize(new Dimension(800, 450));
 
@@ -117,41 +107,12 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
   // Variables declaration - do not modify//GEN-BEGIN:variables
   // End of variables declaration//GEN-END:variables
 
-    /**
-     * It assigns the keys for fast selection of chosen articles in this panel
-     */
-    private void initKeysShortcuts() {
-        moreKeys = new KeyStroke[10];
-        lessKeys = new KeyStroke[10];
-
-        moreKeys[0] = KeyStroke.getKeyStroke(KeyEvent.VK_1,0);
-        moreKeys[1] = KeyStroke.getKeyStroke(KeyEvent.VK_2,0);
-        moreKeys[2] = KeyStroke.getKeyStroke(KeyEvent.VK_3,0);
-        moreKeys[3] = KeyStroke.getKeyStroke(KeyEvent.VK_4,0);
-        moreKeys[4] = KeyStroke.getKeyStroke(KeyEvent.VK_5,0);
-        moreKeys[5] = KeyStroke.getKeyStroke(KeyEvent.VK_6,0);
-        moreKeys[6] = KeyStroke.getKeyStroke(KeyEvent.VK_7,0);
-        moreKeys[7] = KeyStroke.getKeyStroke(KeyEvent.VK_8,0);
-        moreKeys[8] = KeyStroke.getKeyStroke(KeyEvent.VK_9,0);
-        moreKeys[9] = KeyStroke.getKeyStroke(KeyEvent.VK_0,0);
-
-        lessKeys[0] = KeyStroke.getKeyStroke(KeyEvent.VK_Q,0);
-        lessKeys[1] = KeyStroke.getKeyStroke(KeyEvent.VK_W,0);
-        lessKeys[2] = KeyStroke.getKeyStroke(KeyEvent.VK_E,0);
-        lessKeys[3] = KeyStroke.getKeyStroke(KeyEvent.VK_R,0);
-        lessKeys[4] = KeyStroke.getKeyStroke(KeyEvent.VK_T,0);
-        lessKeys[5] = KeyStroke.getKeyStroke(KeyEvent.VK_Y,0);
-        lessKeys[6] = KeyStroke.getKeyStroke(KeyEvent.VK_U,0);
-        lessKeys[7] = KeyStroke.getKeyStroke(KeyEvent.VK_I,0);
-        lessKeys[8] = KeyStroke.getKeyStroke(KeyEvent.VK_O,0);
-        lessKeys[9] = KeyStroke.getKeyStroke(KeyEvent.VK_P,0);
-    }
 
     /**
      * Popolates the list of the panels related to each article sold.
      */
-    private void buildContentsList() {
-        articlesTable = new ArrayList<RecordPanelsOfArticles>();
+    protected void buildContentsList() {
+        panelsTable = new Vector<RecordPanels>();//<RecordPanelsOfArticles>();
         int i = 0;
         for (Article bene : articlesList.getList()) {
             GuiAbstrSingleArticlePanel tempPanel;
@@ -162,71 +123,15 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
             } else {
                 tempPanel = new GuiOrderSingleArticlePanel(this,bene,i);
             }
-            articlesTable.add(new RecordPanelsOfArticles(bene, tempPanel));
+            panelsTable.add(new RecordPanelsOfArticles(bene, tempPanel));
             i++;
         }
     }
 
-    /**
-     * It actually displays what the method <code>buildContentsList()</code>
-     * stored in the table of SoldArticle-"Panel showing it".
-     */
-    private void buildVisualList() {
-
-        /* Prima di tutto rimuoviamo i pannelli di prima che se no incasinano
-         * tutto
-         */
-        this.removeAll();
-
-        /* Creo il nuovo layout in cui organizzerò i nuovi pannelli
-         */
-        javax.swing.GroupLayout layout =
-                new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-
-        /* Creo i due gruppi con cui organizzare i pannelli
-         */
-        ParallelGroup tempHorizGroup = layout.createParallelGroup(
-                javax.swing.GroupLayout.Alignment.LEADING);
-        SequentialGroup tempSequGroup = layout.createSequentialGroup()
-            .addContainerGap();
-
-        /* Ciclo in cui aggiungo i pannelli ai gruppi con le impostazioni giuste
-         */
-        for (RecordPanelsOfArticles singoloRecord : articlesTable) {
-
-            tempHorizGroup.addComponent(singoloRecord.panel,
-                    javax.swing.GroupLayout.DEFAULT_SIZE,
-                    javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
-
-            tempSequGroup
-                .addComponent(singoloRecord.panel,
-                    javax.swing.GroupLayout.PREFERRED_SIZE,
-                    javax.swing.GroupLayout.DEFAULT_SIZE,
-                    javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(
-                    javax.swing.LayoutStyle.ComponentPlacement.RELATED);
-        }
-        
-        /* Ultimo spazio del gruppo verticale
-         */
-        tempSequGroup.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE,
-                                      Short.MAX_VALUE);
-
-        /* infine aggiungiamo il gruppo di elementi al layout della pagina
-         * principale.
-         */
-        layout.setHorizontalGroup(
-          layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(tempHorizGroup)
-                .addContainerGap() )
-        );
-        layout.setVerticalGroup(
-          layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(tempSequGroup)
-        );
+    @Override
+    void cleanDataFields() {
+        super.cleanDataFields();
+        parent.updateCurrentOrder(0);
     }
 
     /**
@@ -277,21 +182,11 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         }
     }
 
-    /**
-     * Cleans the gui.
-     */
-    void cleanDataFields() {
-        for (RecordPanelsOfArticles singoloRecord : articlesTable) {
-            singoloRecord.panel.clean();
-        }
-        parent.updateCurrentOrder(0);
-    }
-
     void updateList() {
         forceRMIRequestArticlesList();
         fetchArticlesList();
         buildContentsList();
-        buildVisualList();
+        buildVisualList(this);
     }
 
     /**
@@ -299,17 +194,12 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
      *
      * @author ben
      */
-    class RecordPanelsOfArticles {
+    protected class RecordPanelsOfArticles extends RecordPanels {
 
         /**
          *
          */
         final Article article;
-
-        /**
-         *
-         */
-        final GuiAbstrSingleArticlePanel panel;
 
         /**
          * Explicit constructor
@@ -319,8 +209,8 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
          */
         public RecordPanelsOfArticles(Article art,
                                       GuiAbstrSingleArticlePanel pan) {
+            super(pan);
             this.article = art;
-            this.panel = pan;
         }
     }
 
@@ -335,23 +225,25 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         int tempNumTot = 0;
         Order tempOrd = new Order(owner.getUsername(), owner.getHostname());
 
-        for (RecordPanelsOfArticles singoloRecord : articlesTable) {
+        for (RecordPanels tempRecord : panelsTable) {
+            RecordPanelsOfArticles singleRecord =
+                    (RecordPanelsOfArticles) tempRecord;
 
-            tempNumTot = singoloRecord.panel.getNumTot();
+            tempNumTot = singleRecord.displayedPanel.getNumTot();
 
-            if (singoloRecord.panel.getNumTot() != 0) {
+            if (singleRecord.displayedPanel.getNumTot() != 0) {
 
-                if (singoloRecord.article.hasOptions()) {
+                if (singleRecord.article.hasOptions()) {
 
                     int progressive = owner.getNProgressivo(
-                            singoloRecord.article.getName(), tempNumTot);
+                            singleRecord.article.getName(), tempNumTot);
                     tempOrd.addArticleWithOptions(
-                            (ArticleWithOptions)singoloRecord.article,
+                            (ArticleWithOptions)singleRecord.article,
                             tempNumTot, progressive,
                             ((GuiOrderSingleArticleWOptionsPanel)
-                                (singoloRecord.panel)).getPatialsList());
+                                (singleRecord.displayedPanel)).getPatialsList());
                 } else {
-                    tempOrd.addArticle(singoloRecord.article,tempNumTot);
+                    tempOrd.addArticle(singleRecord.article,tempNumTot);
                 }
             }
         }
@@ -366,10 +258,13 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
      */
     private double computeCurrentOrder() {
         double output = 0;
-        for (RecordPanelsOfArticles singoloRecord : articlesTable) {
-            if (singoloRecord.panel.getNumTot() != 0) {
-                output += singoloRecord.panel.getNumTot() *
-                        singoloRecord.article.getPrice();
+        for (RecordPanels tempRecord : panelsTable) {
+            RecordPanelsOfArticles singleRecord =
+                    (RecordPanelsOfArticles) tempRecord;
+            
+            if (singleRecord.displayedPanel.getNumTot() != 0) {
+                output += singleRecord.displayedPanel.getNumTot() *
+                        singleRecord.article.getPrice();
             }
         }
         return output;

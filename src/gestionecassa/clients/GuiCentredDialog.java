@@ -1,5 +1,5 @@
 /*
- * GuiOptionsDialog.java
+ * GuiCentredDialog.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,26 +13,25 @@
  */
 
 /*
- * GuiOptionsDialog.java
+ * GuiCentredDialog.java
  *
- * Created on 3-lug-2009, 21.44.19
+ * Created on 4-set-2009, 18.12.07
  */
 
 package gestionecassa.clients;
+
+import java.awt.Dimension;
+import java.awt.Toolkit;
 
 /**
  *
  * @author ben
  */
-public class GuiOptionsDialog extends GuiCentredDialog {
+public class GuiCentredDialog extends javax.swing.JDialog {
 
-    /** Creates new form GuiOptionsDialog */
-    public GuiOptionsDialog(java.awt.Frame parent, boolean modal, ClientAPI owner) {
+    /** Creates new form GuiCentredDialog */
+    public GuiCentredDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        initComponents();
-
-        this.setContentPane(new GuiOptionsPanel(this, owner));
-        packAndCenter();
     }
 
     /** This method is called from within the constructor to
@@ -64,4 +63,22 @@ public class GuiOptionsDialog extends GuiCentredDialog {
   // Variables declaration - do not modify//GEN-BEGIN:variables
   // End of variables declaration//GEN-END:variables
 
+
+    /**
+     *
+     */
+    protected void packAndCenter() {
+        this.pack();
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension frameSize = this.getSize();
+        if (frameSize.height > screenSize.height) {
+            frameSize.height = screenSize.height;
+        }
+        if (frameSize.width > screenSize.width) {
+            frameSize.width = screenSize.width;
+        }
+        this.setSize(frameSize);
+        this.setLocation((screenSize.width - frameSize.width) / 2,
+                (screenSize.height - frameSize.height) / 2);
+    }
 }
