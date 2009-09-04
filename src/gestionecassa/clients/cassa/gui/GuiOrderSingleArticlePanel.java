@@ -32,7 +32,7 @@ import javax.swing.SpinnerNumberModel;
  */
 public class GuiOrderSingleArticlePanel extends GuiAbstrSingleArticlePanel {
 
-    Article bene;
+    Article article;
 
     SpinnerNumberModel spinnerModel;
 
@@ -45,14 +45,14 @@ public class GuiOrderSingleArticlePanel extends GuiAbstrSingleArticlePanel {
      */
     public GuiOrderSingleArticlePanel(GuiNewOrderPanel parent, Article bene, int i) {
         initComponents();
-        this.bene = bene;
+        this.article = bene;
         this.parent = parent;
 
         spinnerModel = new SpinnerNumberModel(0, 0, 255, 1);
         jSpinnerNum.setModel(spinnerModel);
 
-        jLabelNomeBene.setText(bene.getName());
-        jLabelPrezzo.setText("€ " + bene.getPrice());
+        jLabelNameArticle.setText(bene.getName());
+        jLabelPrice.setText("€ " + bene.getPrice());
 
         if (i < 10) {
             jButtonMore.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(parent.moreKeys[i], "MORE"+i);
@@ -81,16 +81,16 @@ public class GuiOrderSingleArticlePanel extends GuiAbstrSingleArticlePanel {
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
 
-    jLabelNomeBene = new javax.swing.JLabel();
+    jLabelNameArticle = new javax.swing.JLabel();
     jButtonMore = new javax.swing.JButton();
     jSpinnerNum = new javax.swing.JSpinner();
     jButtonLess = new javax.swing.JButton();
-    jLabelPrezzo = new javax.swing.JLabel();
+    jLabelPrice = new javax.swing.JLabel();
     jLabelNum = new javax.swing.JLabel();
 
     setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-    jLabelNomeBene.setText("Nome");
+    jLabelNameArticle.setText("Nome");
 
     jButtonMore.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestionecassa/resources/list-add.png"))); // NOI18N
     jButtonMore.setFocusable(false);
@@ -117,7 +117,7 @@ public class GuiOrderSingleArticlePanel extends GuiAbstrSingleArticlePanel {
       }
     });
 
-    jLabelPrezzo.setText("Prezzo");
+    jLabelPrice.setText("Prezzo");
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
     this.setLayout(layout);
@@ -127,9 +127,9 @@ public class GuiOrderSingleArticlePanel extends GuiAbstrSingleArticlePanel {
         .addContainerGap()
         .addComponent(jLabelNum)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jLabelNomeBene)
+        .addComponent(jLabelNameArticle)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 190, Short.MAX_VALUE)
-        .addComponent(jLabelPrezzo)
+        .addComponent(jLabelPrice)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jButtonLess, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -143,11 +143,11 @@ public class GuiOrderSingleArticlePanel extends GuiAbstrSingleArticlePanel {
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabelNomeBene)
+          .addComponent(jLabelNameArticle)
           .addComponent(jButtonMore, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jSpinnerNum, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jButtonLess, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jLabelPrezzo)
+          .addComponent(jLabelPrice)
           .addComponent(jLabelNum))
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
@@ -173,9 +173,9 @@ public class GuiOrderSingleArticlePanel extends GuiAbstrSingleArticlePanel {
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton jButtonLess;
   private javax.swing.JButton jButtonMore;
-  private javax.swing.JLabel jLabelNomeBene;
+  private javax.swing.JLabel jLabelNameArticle;
   private javax.swing.JLabel jLabelNum;
-  private javax.swing.JLabel jLabelPrezzo;
+  private javax.swing.JLabel jLabelPrice;
   private javax.swing.JSpinner jSpinnerNum;
   // End of variables declaration//GEN-END:variables
 

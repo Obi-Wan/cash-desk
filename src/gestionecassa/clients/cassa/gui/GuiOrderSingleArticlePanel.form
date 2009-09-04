@@ -27,9 +27,9 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabelNum" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jLabelNomeBene" min="-2" max="-2" attributes="0"/>
+              <Component id="jLabelNameArticle" min="-2" max="-2" attributes="0"/>
               <EmptySpace pref="190" max="32767" attributes="0"/>
-              <Component id="jLabelPrezzo" min="-2" max="-2" attributes="0"/>
+              <Component id="jLabelPrice" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jButtonLess" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -45,11 +45,11 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabelNomeBene" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelNameArticle" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jButtonMore" alignment="3" min="-2" pref="21" max="-2" attributes="0"/>
                   <Component id="jSpinnerNum" alignment="3" min="-2" pref="21" max="-2" attributes="0"/>
                   <Component id="jButtonLess" alignment="3" min="-2" pref="21" max="-2" attributes="0"/>
-                  <Component id="jLabelPrezzo" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelPrice" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabelNum" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
@@ -58,7 +58,7 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JLabel" name="jLabelNomeBene">
+    <Component class="javax.swing.JLabel" name="jLabelNameArticle">
       <Properties>
         <Property name="text" type="java.lang.String" value="Nome"/>
       </Properties>
@@ -111,7 +111,7 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonLessActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabelPrezzo">
+    <Component class="javax.swing.JLabel" name="jLabelPrice">
       <Properties>
         <Property name="text" type="java.lang.String" value="Prezzo"/>
       </Properties>
