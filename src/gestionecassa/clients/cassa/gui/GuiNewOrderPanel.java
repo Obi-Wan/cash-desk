@@ -54,12 +54,12 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
     /**
      * Local Reference to the goods list.
      */
-    ArticlesList listaBeni;
+    ArticlesList articlesList;
 
     /**
      * Lista appoggio che per ogni article associa un panel
      */
-    List<RecordPanelsOfArticles> tabellaBeni;
+    List<RecordPanelsOfArticles> articlesTable;
 
     KeyStroke moreKeys[];
     KeyStroke lessKeys[];
@@ -75,7 +75,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         this.parent = parent;
 
         initKeysShortcuts();
-        fetchListaBeni();
+        fetchArticlesList();
         buildContentsList();
         buildVisualList();
 
@@ -99,18 +99,18 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
 
-    jPanelListaBeni = new javax.swing.JPanel();
+    jPanelArticlesList = new javax.swing.JPanel();
 
     setMinimumSize(new java.awt.Dimension(150, 150));
 
-    javax.swing.GroupLayout jPanelListaBeniLayout = new javax.swing.GroupLayout(jPanelListaBeni);
-    jPanelListaBeni.setLayout(jPanelListaBeniLayout);
-    jPanelListaBeniLayout.setHorizontalGroup(
-      jPanelListaBeniLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+    javax.swing.GroupLayout jPanelArticlesListLayout = new javax.swing.GroupLayout(jPanelArticlesList);
+    jPanelArticlesList.setLayout(jPanelArticlesListLayout);
+    jPanelArticlesListLayout.setHorizontalGroup(
+      jPanelArticlesListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGap(0, 559, Short.MAX_VALUE)
     );
-    jPanelListaBeniLayout.setVerticalGroup(
-      jPanelListaBeniLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+    jPanelArticlesListLayout.setVerticalGroup(
+      jPanelArticlesListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGap(0, 443, Short.MAX_VALUE)
     );
 
@@ -118,17 +118,17 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
     this.setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(jPanelListaBeni, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+      .addComponent(jPanelArticlesList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(jPanelListaBeni, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+      .addComponent(jPanelArticlesList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
     );
   }// </editor-fold>//GEN-END:initComponents
 
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JPanel jPanelListaBeni;
+  private javax.swing.JPanel jPanelArticlesList;
   // End of variables declaration//GEN-END:variables
 
     /**
@@ -165,9 +165,9 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
      * Popolates the list of the panels related to each article sold.
      */
     private void buildContentsList() {
-        tabellaBeni = new ArrayList<RecordPanelsOfArticles>();
+        articlesTable = new ArrayList<RecordPanelsOfArticles>();
         int i = 0;
-        for (Article bene : listaBeni.getList()) {
+        for (Article bene : articlesList.getList()) {
             GuiAbstrSingleArticlePanel tempPanel;
             if (bene instanceof ArticleWithOptions) {
                 tempPanel = 
@@ -176,7 +176,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
             } else {
                 tempPanel = new GuiOrderSingleArticlePanel(this,bene,i);
             }
-            tabellaBeni.add(new RecordPanelsOfArticles(bene, tempPanel));
+            articlesTable.add(new RecordPanelsOfArticles(bene, tempPanel));
             i++;
         }
     }
@@ -190,13 +190,13 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         /* Prima di tutto rimuoviamo i pannelli di prima che se no incasinano
          * tutto
          */
-        jPanelListaBeni.removeAll();
+        jPanelArticlesList.removeAll();
 
         /* Creo il nuovo layout in cui organizzerò i nuovi pannelli
          */
         javax.swing.GroupLayout layout =
-                new javax.swing.GroupLayout(jPanelListaBeni);
-        jPanelListaBeni.setLayout(layout);
+                new javax.swing.GroupLayout(jPanelArticlesList);
+        jPanelArticlesList.setLayout(layout);
 
         /* Creo i due gruppi con cui organizzare i pannelli
          */
@@ -207,7 +207,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
 
         /* Ciclo in cui aggiungo i pannelli ai gruppi con le impostazioni giuste
          */
-        for (RecordPanelsOfArticles singoloRecord : tabellaBeni) {
+        for (RecordPanelsOfArticles singoloRecord : articlesTable) {
 
             tempHorizGroup.addComponent(singoloRecord.panel,
                     javax.swing.GroupLayout.DEFAULT_SIZE,
@@ -246,15 +246,15 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
     /**
      * Gets the ArticleList and stores it locally.
      */
-    private void fetchListaBeni() {
-        listaBeni = owner.getArticlesList();
+    private void fetchArticlesList() {
+        articlesList = owner.getArticlesList();
     }
 
     /**
      * it fetches the ArticleList from the server (through the CassaAPI)
      * and makes the client store it locally
      */
-    void requestListaBeni() {
+    void forceRMIRequestArticlesList() {
         try {
             owner.getRMIArticlesList();
         } catch (RemoteException ex) {
@@ -295,15 +295,15 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
      * Cleans the gui.
      */
     void cleanDataFields() {
-        for (RecordPanelsOfArticles singoloRecord : tabellaBeni) {
+        for (RecordPanelsOfArticles singoloRecord : articlesTable) {
             singoloRecord.panel.clean();
         }
         parent.updateCurrentOrder(0);
     }
 
     void updateList() {
-        requestListaBeni();
-        fetchListaBeni();
+        forceRMIRequestArticlesList();
+        fetchArticlesList();
         buildContentsList();
         buildVisualList();
     }
@@ -349,7 +349,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         int tempNumTot = 0;
         Order tempOrd = new Order(owner.getUsername(), owner.getHostname());
 
-        for (RecordPanelsOfArticles singoloRecord : tabellaBeni) {
+        for (RecordPanelsOfArticles singoloRecord : articlesTable) {
 
             tempNumTot = singoloRecord.panel.getNumTot();
 
@@ -380,7 +380,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
      */
     private double computeCurrentOrder() {
         double output = 0;
-        for (RecordPanelsOfArticles singoloRecord : tabellaBeni) {
+        for (RecordPanelsOfArticles singoloRecord : articlesTable) {
             if (singoloRecord.panel.getNumTot() != 0) {
                 output += singoloRecord.panel.getNumTot() *
                         singoloRecord.article.getPrice();

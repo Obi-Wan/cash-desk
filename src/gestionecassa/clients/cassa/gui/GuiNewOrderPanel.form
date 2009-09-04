@@ -21,17 +21,17 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jPanelListaBeni" alignment="0" max="32767" attributes="0"/>
+          <Component id="jPanelArticlesList" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jPanelListaBeni" alignment="0" max="32767" attributes="0"/>
+          <Component id="jPanelArticlesList" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JPanel" name="jPanelListaBeni">
+    <Container class="javax.swing.JPanel" name="jPanelArticlesList">
 
       <Layout>
         <DimensionLayout dim="0">

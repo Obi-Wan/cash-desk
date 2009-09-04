@@ -147,7 +147,7 @@ public class GuiAppFrameCassa extends GuiAppFrame {
      * @param price
      */
     void updateCurrentOrder(double price) {
-        statusPanel.setCurrentOrder(price);
+        statusPanel.setPartialOrder(price);
     }
 
     /**
@@ -155,7 +155,7 @@ public class GuiAppFrameCassa extends GuiAppFrame {
      * @param price
      */
     void updateNewOrder(double price) {
-        statusPanel.setLastOrder(price);
+        statusPanel.setEmittedOrder(price);
     }
 
     /**
