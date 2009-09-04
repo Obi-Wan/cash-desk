@@ -166,7 +166,7 @@ public class GuiOrderSingleOptionPanel extends javax.swing.JPanel {
      * @param evt
      */
     private void jButtonRimuoviActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRimuoviActionPerformed
-        parent.removeOpzionePanel(this);
+        parent.removeOptionPanel(this);
     }//GEN-LAST:event_jButtonRimuoviActionPerformed
 
 

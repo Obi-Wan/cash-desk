@@ -35,40 +35,47 @@ import javax.swing.GroupLayout.SequentialGroup;
  */
 public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePanel {
 
-    ArticleWithOptions bene;
+    ArticleWithOptions article;
 
-    List<GuiOrderSingleOptionPanel> pannelliopzioni;
+    List<GuiOrderSingleOptionPanel> optionsPanels;
 
     GuiNewOrderPanel parent;
 
-    /** Creates new form GuiOrderSingleArticleWOptionsPanel */
+    /**
+     * Creates new form GuiOrderSingleArticleWOptionsPanel
+     *
+     * @param parent
+     * @param bene
+     * @param i
+     */
     public GuiOrderSingleArticleWOptionsPanel(GuiNewOrderPanel parent, 
-            ArticleWithOptions bene, int i) {
+            ArticleWithOptions art, int index) {
         initComponents();
 
         this.parent = parent;
-        this.bene = bene;
-        this.jLabelNome.setText(bene.getName());
-        this.jLabelPrezzo.setText("€ " + bene.getPrice());
+        this.article = art;
+        this.jLabelName.setText(art.getName());
+        this.jLabelPrice.setText("€ " + art.getPrice());
 
-        pannelliopzioni = new ArrayList<GuiOrderSingleOptionPanel>();
+        optionsPanels = new ArrayList<GuiOrderSingleOptionPanel>();
 
-        if (i < 10) {
-            jButtonNuovo.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(parent.moreKeys[i], "MORE"+i);
-            jButtonNuovo.getActionMap().put("MORE"+i, new AbstractAction() {
+        if (index < 10) {
+            jButtonNuovo.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
+                    parent.moreKeys[index], "MORE"+index);
+            jButtonNuovo.getActionMap().put("MORE"+index, new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     addNewOpzionePanel();
                 }
             });
-            this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(parent.lessKeys[i], "LESS"+i);
-            this.getActionMap().put("LESS"+i, new AbstractAction() {
+            this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(parent.lessKeys[index], "LESS"+index);
+            this.getActionMap().put("LESS"+index, new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     removeLastOpzionePanel();
                 }
             });
         }
 
-        jLabelNum.setText((i + 1) + ".");
+        jLabelNum.setText((index + 1) + ".");
     }
 
     /** This method is called from within the constructor to
@@ -80,20 +87,20 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
 
-    jLabelNome = new javax.swing.JLabel();
-    jLabelPrezzo = new javax.swing.JLabel();
+    jLabelName = new javax.swing.JLabel();
+    jLabelPrice = new javax.swing.JLabel();
     jButtonNuovo = new javax.swing.JButton();
     jPanelOpzioni = new javax.swing.JPanel();
     jLabelNum = new javax.swing.JLabel();
 
     setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-    jLabelNome.setText("Nome");
+    jLabelName.setText("Nome");
 
-    jLabelPrezzo.setText("Prezzo");
+    jLabelPrice.setText("Prezzo");
 
     jButtonNuovo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestionecassa/resources/dialog-yes.png"))); // NOI18N
-    jButtonNuovo.setText("Nuovo");
+    jButtonNuovo.setText("Modifica");
     jButtonNuovo.setPreferredSize(new java.awt.Dimension(102, 25));
     jButtonNuovo.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -121,7 +128,7 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(layout.createSequentialGroup()
             .addGap(12, 12, 12)
-            .addComponent(jButtonNuovo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jButtonNuovo, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
           .addGroup(layout.createSequentialGroup()
             .addComponent(jLabelNum)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -130,9 +137,9 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
                 .addGap(24, 24, 24)
                 .addComponent(jPanelOpzioni, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
               .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabelNome)
+                .addComponent(jLabelName)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 289, Short.MAX_VALUE)
-                .addComponent(jLabelPrezzo)))))
+                .addComponent(jLabelPrice)))))
         .addContainerGap())
     );
     layout.setVerticalGroup(
@@ -140,9 +147,9 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabelPrezzo)
+          .addComponent(jLabelPrice)
           .addComponent(jLabelNum)
-          .addComponent(jLabelNome))
+          .addComponent(jLabelName))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jPanelOpzioni, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -158,9 +165,9 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton jButtonNuovo;
-  private javax.swing.JLabel jLabelNome;
+  private javax.swing.JLabel jLabelName;
   private javax.swing.JLabel jLabelNum;
-  private javax.swing.JLabel jLabelPrezzo;
+  private javax.swing.JLabel jLabelPrice;
   private javax.swing.JPanel jPanelOpzioni;
   // End of variables declaration//GEN-END:variables
 
@@ -169,7 +176,7 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
      *
      */
     public void clean() {
-        pannelliopzioni.removeAll(pannelliopzioni);
+        optionsPanels.removeAll(optionsPanels);
         rebuildListaOpzioni();
     }
 
@@ -178,8 +185,8 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
      */
     private void addNewOpzionePanel() {
         GuiOrderSingleOptionPanel tempPanel =
-                new GuiOrderSingleOptionPanel(this,bene.getOptions());
-        pannelliopzioni.add(tempPanel);
+                new GuiOrderSingleOptionPanel(this,article.getOptions());
+        optionsPanels.add(tempPanel);
         tempPanel.more();
         rebuildListaOpzioni();
     }
@@ -188,8 +195,8 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
      *
      * @param panel
      */
-    void removeOpzionePanel(GuiOrderSingleOptionPanel panel) {
-        pannelliopzioni.remove(panel);
+    void removeOptionPanel(GuiOrderSingleOptionPanel panel) {
+        optionsPanels.remove(panel);
         rebuildListaOpzioni();
         triggerUpdateCurrentOrder();
     }
@@ -198,8 +205,8 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
      * 
      */
     void removeLastOpzionePanel() {
-        if (pannelliopzioni.size() > 0) {
-            removeOpzionePanel(pannelliopzioni.get(pannelliopzioni.size()-1));
+        if (optionsPanels.size() > 0) {
+            removeOptionPanel(optionsPanels.get(optionsPanels.size()-1));
         }
     }
 
@@ -216,7 +223,7 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
         SequentialGroup tempSequGroup = layout.createSequentialGroup()
             .addContainerGap();
 
-        for (GuiOrderSingleOptionPanel singolaOpzionePanel : pannelliopzioni) {
+        for (GuiOrderSingleOptionPanel singolaOpzionePanel : optionsPanels) {
 
             tempHorizGroup.addComponent(singolaOpzionePanel,
                     javax.swing.GroupLayout.DEFAULT_SIZE,
@@ -251,10 +258,10 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
      * 
      * @return
      */
-    public List<EntrySingleOption> getListaParziali() {
+    public List<EntrySingleOption> getPatialsList() {
         List<EntrySingleOption> tempLista
                 = new ArrayList<EntrySingleOption>();
-        for (GuiOrderSingleOptionPanel singolaOpzionePanel : pannelliopzioni) {
+        for (GuiOrderSingleOptionPanel singolaOpzionePanel : optionsPanels) {
             if (singolaOpzionePanel.getNumParziale() != 0) {
                 EntrySingleOption tempArray =
                     new EntrySingleOption(
@@ -273,7 +280,7 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
     @Override
     public int getNumTot() {
         int tot = 0;
-        for (GuiOrderSingleOptionPanel singolaOpzionePanel : pannelliopzioni) {
+        for (GuiOrderSingleOptionPanel singolaOpzionePanel : optionsPanels) {
             tot += singolaOpzionePanel.getNumParziale();
         }
         return tot;
