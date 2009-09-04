@@ -192,18 +192,6 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
     /**
      *
      */
-    @Deprecated
-    private void addNewOptionPanel() {
-        GuiOrderSingleOptionPanel tempPanel =
-                new GuiOrderSingleOptionPanel(this,article.getOptions());
-        optionsPanels.add(tempPanel);
-        tempPanel.more();
-        rebuildListaOpzioni();
-    }
-
-    /**
-     *
-     */
     void addNewOptionPanel(String choice, int num) {
         GuiOrderSingleOptionPanel tempPanel =
                 new GuiOrderSingleOptionPanel(this,article.getOptions());
@@ -222,16 +210,6 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
         optionsPanels.remove(panel);
         rebuildListaOpzioni();
         triggerUpdateCurrentOrder();
-    }
-
-    /**
-     * 
-     */
-    @Deprecated
-    private void removeLastOptionPanel() {
-        if (optionsPanels.size() > 0) {
-            removeOptionPanel(optionsPanels.get(optionsPanels.size()-1));
-        }
     }
 
     /**
