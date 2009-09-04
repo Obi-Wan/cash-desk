@@ -373,7 +373,7 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
      * @param price
      */
     void setEmittedOrder(double price) {
-        jTextFieldPrice.setText(new Double(price).toString());
+        jTextFieldPrice.setText(String.format(Locale.ITALIAN,"%3.2f", price));
         final String timestamp = new SimpleDateFormat(
                 "HH:mm:ss", Locale.ITALIAN).format(new Date());
         jTextFieldTime.setText(timestamp);
