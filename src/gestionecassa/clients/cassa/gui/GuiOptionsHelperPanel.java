@@ -140,5 +140,6 @@ public class GuiOptionsHelperPanel extends GuiVariableListPanel {
                 }
             }
         }
+        targetPanel.updateAfterModify();
     }
 }

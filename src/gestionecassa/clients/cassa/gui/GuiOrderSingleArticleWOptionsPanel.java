@@ -64,14 +64,12 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
                     parent.moreKeys[index], "MORE"+index);
             jButtonNuovo.getActionMap().put("MORE"+index, new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-//                    addNewOptionPanel();
                     modifyOptions();
                 }
             });
             this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(parent.lessKeys[index], "LESS"+index);
             this.getActionMap().put("LESS"+index, new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
-//                    removeLastOptionPanel();
                     modifyOptions();
                 }
             });
@@ -183,6 +181,10 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
         rebuildListaOpzioni();
     }
 
+    /**
+     * Opens a dialog that makes it possible to add/delete/modify options for
+     * the selected <code>ArticleWithOptions</code>
+     */
     private void modifyOptions() {
         GuiOptionsHelperDialog dialog =
                 new GuiOptionsHelperDialog(parent.parent, this);
@@ -190,7 +192,12 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
     }
 
     /**
+     * Adds a new panel with the selected choice and the partial number specified
+     * It doesnt update the visual list. The method <code>updateAfterModify()</code>
+     * will do it.
      *
+     * @param choice
+     * @param num
      */
     void addNewOptionPanel(String choice, int num) {
         GuiOrderSingleOptionPanel tempPanel =
@@ -199,21 +206,30 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
         tempPanel.comboModel.setSelectedItem(choice);
         
         optionsPanels.add(tempPanel);
-        rebuildListaOpzioni();
     }
 
     /**
+     * Removes the panel from the list of panels to show.
+     * It doesnt update the visual list. The method <code>updateAfterModify()</code>
+     * will do it.
      *
      * @param panel
      */
     void removeOptionPanel(GuiOrderSingleOptionPanel panel) {
         optionsPanels.remove(panel);
+    }
+
+    /**
+     * Updates the visual list after a modification of the options of an
+     * <code>ArticleWithOptions</code>
+     */
+    void updateAfterModify() {
         rebuildListaOpzioni();
         triggerUpdateCurrentOrder();
     }
 
     /**
-     *
+     * 
      */
     private void rebuildListaOpzioni() {
         jPanelOpzioni.removeAll();
