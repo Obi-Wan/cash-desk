@@ -20,40 +20,24 @@
 
 package gestionecassa.clients;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import javax.swing.JDialog;
+import javax.swing.JPanel;
 
 /**
  *
  * @author ben
  */
-public class GuiOptionsPanel extends javax.swing.JPanel {
-
-    JDialog parent;
+public class GuiOptionsPanel extends JPanel implements OkCancelPanelAPI {
 
     ClientAPI owner;
 
     /** Creates new form GuiOptionsPanel */
-    public GuiOptionsPanel(JDialog parent, ClientAPI owner) {
+    public GuiOptionsPanel(ClientAPI owner) {
         initComponents();
 
         this.owner = owner;
-        this.parent = parent;
 
-        this.jTextFieldServer.setText(owner.getOptions().defaultServer);
-        this.jTextFieldUser.setText(owner.getOptions().defaultUsername);
-
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension frameSize = this.getSize();
-        if (frameSize.height > screenSize.height) {
-            frameSize.height = screenSize.height;
-        }
-        if (frameSize.width > screenSize.width) {
-            frameSize.width = screenSize.width;
-        }
-        this.setLocation((screenSize.width - frameSize.width) / 2,
-                (screenSize.height - frameSize.height) / 2);
+        init();
     }
 
     /** This method is called from within the constructor to
@@ -68,12 +52,9 @@ public class GuiOptionsPanel extends javax.swing.JPanel {
     jPanelUser = new javax.swing.JPanel();
     jLabelUser = new javax.swing.JLabel();
     jTextFieldUser = new javax.swing.JTextField();
-    jPanel1 = new javax.swing.JPanel();
+    jPanelServer = new javax.swing.JPanel();
     jLabelServer = new javax.swing.JLabel();
     jTextFieldServer = new javax.swing.JTextField();
-    jPanel2 = new javax.swing.JPanel();
-    jButtonOk = new javax.swing.JButton();
-    jButtonAnnulla = new javax.swing.JButton();
 
     jLabelUser.setText("Default Username");
 
@@ -100,63 +81,25 @@ public class GuiOptionsPanel extends javax.swing.JPanel {
 
     jLabelServer.setText("Default Server");
 
-    javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-    jPanel1.setLayout(jPanel1Layout);
-    jPanel1Layout.setHorizontalGroup(
-      jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel1Layout.createSequentialGroup()
+    javax.swing.GroupLayout jPanelServerLayout = new javax.swing.GroupLayout(jPanelServer);
+    jPanelServer.setLayout(jPanelServerLayout);
+    jPanelServerLayout.setHorizontalGroup(
+      jPanelServerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanelServerLayout.createSequentialGroup()
         .addContainerGap()
         .addComponent(jLabelServer)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jTextFieldServer, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
         .addContainerGap())
     );
-    jPanel1Layout.setVerticalGroup(
-      jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel1Layout.createSequentialGroup()
+    jPanelServerLayout.setVerticalGroup(
+      jPanelServerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addGroup(jPanelServerLayout.createSequentialGroup()
         .addContainerGap()
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        .addGroup(jPanelServerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabelServer)
           .addComponent(jTextFieldServer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-    );
-
-    jButtonOk.setText("Ok");
-    jButtonOk.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButtonOkActionPerformed(evt);
-      }
-    });
-
-    jButtonAnnulla.setText("Annulla");
-    jButtonAnnulla.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButtonAnnullaActionPerformed(evt);
-      }
-    });
-
-    javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-    jPanel2.setLayout(jPanel2Layout);
-    jPanel2Layout.setHorizontalGroup(
-      jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-        .addContainerGap(194, Short.MAX_VALUE)
-        .addComponent(jButtonAnnulla)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jButtonOk)
-        .addContainerGap())
-    );
-
-    jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jButtonAnnulla, jButtonOk});
-
-    jPanel2Layout.setVerticalGroup(
-      jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jButtonOk)
-          .addComponent(jButtonAnnulla))
-        .addContainerGap())
     );
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -166,8 +109,7 @@ public class GuiOptionsPanel extends javax.swing.JPanel {
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-          .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+          .addComponent(jPanelServer, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
           .addComponent(jPanelUser, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         .addContainerGap())
     );
@@ -177,36 +119,30 @@ public class GuiOptionsPanel extends javax.swing.JPanel {
         .addContainerGap()
         .addComponent(jPanelUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap())
+        .addComponent(jPanelServer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
   }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonAnnullaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAnnullaActionPerformed
-        parent.dispose();
-    }//GEN-LAST:event_jButtonAnnullaActionPerformed
-
-    private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
-        LuogoOptions options = new LuogoOptions();
-        options.defaultServer = jTextFieldServer.getText();
-        options.defaultUsername = jTextFieldUser.getText();
-        owner.setOptions(options);
-        parent.dispose();
-    }//GEN-LAST:event_jButtonOkActionPerformed
-
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JButton jButtonAnnulla;
-  private javax.swing.JButton jButtonOk;
   private javax.swing.JLabel jLabelServer;
   private javax.swing.JLabel jLabelUser;
-  private javax.swing.JPanel jPanel1;
-  private javax.swing.JPanel jPanel2;
+  private javax.swing.JPanel jPanelServer;
   private javax.swing.JPanel jPanelUser;
   private javax.swing.JTextField jTextFieldServer;
   private javax.swing.JTextField jTextFieldUser;
   // End of variables declaration//GEN-END:variables
 
+    public void apply() {
+        LuogoOptions options = new LuogoOptions();
+        options.defaultServer = jTextFieldServer.getText();
+        options.defaultUsername = jTextFieldUser.getText();
+        owner.setOptions(options);
+    }
+
+    public void init() {
+        this.jTextFieldServer.setText(owner.getOptions().defaultServer);
+        this.jTextFieldUser.setText(owner.getOptions().defaultUsername);
+    }
 }

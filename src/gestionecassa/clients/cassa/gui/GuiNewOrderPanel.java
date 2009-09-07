@@ -67,7 +67,7 @@ public class GuiNewOrderPanel extends GuiVariableListPanel {
         initKeysShortcuts();
         fetchArticlesList();
         buildContentsList();
-        buildVisualList(this);
+        buildVisualList();
 
         this.setPreferredSize(new Dimension(800, 450));
 
@@ -186,7 +186,7 @@ public class GuiNewOrderPanel extends GuiVariableListPanel {
         forceRMIRequestArticlesList();
         fetchArticlesList();
         buildContentsList();
-        buildVisualList(this);
+        buildVisualList();
     }
 
     /**

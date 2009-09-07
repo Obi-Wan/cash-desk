@@ -20,13 +20,14 @@
 
 package gestionecassa.clients.cassa.gui;
 
+import gestionecassa.clients.OkCancelPanelAPI;
 import java.util.Vector;
 
 /**
  *
  * @author ben
  */
-public class GuiOptionsHelperPanel extends GuiVariableListPanel {
+public class GuiOptionsHelperPanel extends GuiVariableListPanel implements OkCancelPanelAPI {
 
     GuiOrderSingleArticleWOptionsPanel targetPanel;
 
@@ -58,9 +59,6 @@ public class GuiOptionsHelperPanel extends GuiVariableListPanel {
       .addGap(0, 300, Short.MAX_VALUE)
     );
   }// </editor-fold>//GEN-END:initComponents
-
-  // Variables declaration - do not modify//GEN-BEGIN:variables
-  // End of variables declaration//GEN-END:variables
 
     /**
      * Inner class that defines a record of the table of options.
@@ -94,6 +92,10 @@ public class GuiOptionsHelperPanel extends GuiVariableListPanel {
         }
     }
 
+  // Variables declaration - do not modify//GEN-BEGIN:variables
+  // End of variables declaration//GEN-END:variables
+
+
     /**
      * Popolates the list of the panels related to each article sold.
      */
@@ -117,7 +119,7 @@ public class GuiOptionsHelperPanel extends GuiVariableListPanel {
     /**
      * 
      */
-    void apply() {
+    public void apply() {
         for (RecordPanels tempRecord : panelsTable) {
             RecordPanelsOfOptions record =
                     (RecordPanelsOfOptions) tempRecord;
@@ -141,5 +143,11 @@ public class GuiOptionsHelperPanel extends GuiVariableListPanel {
             }
         }
         targetPanel.updateAfterModify();
+    }
+
+    public void init() {
+        initKeysShortcuts();
+        buildContentsList();
+        buildVisualList();
     }
 }

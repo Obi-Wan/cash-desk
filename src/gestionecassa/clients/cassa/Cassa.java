@@ -6,7 +6,6 @@
 package gestionecassa.clients.cassa;
 
 import gestionecassa.clients.cassa.gui.GuiAppFrameCassa;
-import gestionecassa.clients.cassa.gui.GuiNewOrderPanel;
 import gestionecassa.Log;
 import gestionecassa.order.Order;
 import gestionecassa.clients.GuiLoginPanel;

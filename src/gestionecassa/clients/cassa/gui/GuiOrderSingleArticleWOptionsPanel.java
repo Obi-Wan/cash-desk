@@ -20,6 +20,7 @@
 
 package gestionecassa.clients.cassa.gui;
 
+import gestionecassa.clients.GuiOkCancelHelperDialog;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.order.EntrySingleOption;
 import java.awt.event.ActionEvent;
@@ -159,7 +160,6 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
   }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonNuovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNuovoActionPerformed
-//        addNewOptionPanel();
         modifyOptions();
     }//GEN-LAST:event_jButtonNuovoActionPerformed
 
@@ -178,7 +178,7 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
      */
     public void clean() {
         optionsPanels.removeAll(optionsPanels);
-        rebuildListaOpzioni();
+        rebuildVisualOptionsList();
     }
 
     /**
@@ -186,8 +186,9 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
      * the selected <code>ArticleWithOptions</code>
      */
     private void modifyOptions() {
-        GuiOptionsHelperDialog dialog =
-                new GuiOptionsHelperDialog(parent.parent, this);
+        GuiOptionsHelperPanel panel = new GuiOptionsHelperPanel(this);
+        GuiOkCancelHelperDialog dialog =
+                new GuiOkCancelHelperDialog(parent.parent, article.getName(), panel);
         dialog.setVisible(true);
     }
 
@@ -224,14 +225,14 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
      * <code>ArticleWithOptions</code>
      */
     void updateAfterModify() {
-        rebuildListaOpzioni();
+        rebuildVisualOptionsList();
         triggerUpdateCurrentOrder();
     }
 
     /**
      * 
      */
-    private void rebuildListaOpzioni() {
+    private void rebuildVisualOptionsList() {
         jPanelOpzioni.removeAll();
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(jPanelOpzioni);
         jPanelOpzioni.setLayout(layout);
@@ -311,6 +312,11 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
         parent.updateCurrentOrder();
     }
 
+    /**
+     * 
+     * @param option
+     * @return
+     */
     public GuiOrderSingleOptionPanel getSingleOptionPanel( String option ) {
         for (GuiOrderSingleOptionPanel panel : optionsPanels) {
             if (panel.hasSelected(option)) {

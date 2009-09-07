@@ -112,18 +112,18 @@ abstract public class GuiVariableListPanel extends javax.swing.JPanel {
      * It actually displays what the method <code>buildContentsList()</code>
      * stored in the table of SoldArticle-"Panel showing it".
      */
-    protected void buildVisualList(JPanel panel) {
+    protected void buildVisualList() {
 
         /* Prima di tutto rimuoviamo i pannelli di prima che se no incasinano
          * tutto
          */
-        panel.removeAll();
+        this.removeAll();
 
         /* Creo il nuovo layout in cui organizzerò i nuovi pannelli
          */
         javax.swing.GroupLayout layout =
-                new javax.swing.GroupLayout(panel);
-        panel.setLayout(layout);
+                new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
 
         /* Creo i due gruppi con cui organizzare i pannelli
          */

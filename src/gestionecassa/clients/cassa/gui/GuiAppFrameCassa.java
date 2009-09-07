@@ -22,7 +22,8 @@ package gestionecassa.clients.cassa.gui;
 
 import gestionecassa.clients.GUIClientAPI;
 import gestionecassa.clients.GuiAppFrame;
-import gestionecassa.clients.GuiOptionsDialog;
+import gestionecassa.clients.GuiOkCancelHelperDialog;
+import gestionecassa.clients.GuiOptionsPanel;
 import gestionecassa.clients.cassa.CassaAPI;
 import java.awt.BorderLayout;
 
@@ -139,7 +140,8 @@ public class GuiAppFrameCassa extends GuiAppFrame {
      * 
      */
     void selectedDialogOptions() {
-        new GuiOptionsDialog(this, true, owner).setVisible(true);
+        new GuiOkCancelHelperDialog(this, "Client Options", 
+                                    new GuiOptionsPanel(owner)).setVisible(true);
     }
 
     /**
@@ -176,7 +178,6 @@ public class GuiAppFrameCassa extends GuiAppFrame {
         GuiNewOrderPanel orderPanel = new GuiNewOrderPanel(cassaAPI,this);
         this.setContentPanel(orderPanel);
         statusPanel.setOrderPanel(orderPanel);
-        statusPanel.enableButtons(true);
         statusPanel.setLogin(username);
     }
 
@@ -185,7 +186,6 @@ public class GuiAppFrameCassa extends GuiAppFrame {
      */
     public void setdownAfterLogout() {
         statusPanel.setOrderPanel(null);
-        statusPanel.enableButtons(false);
         this.enableLogout(false);
         this.enableListaBeni(false);
         statusPanel.reset();

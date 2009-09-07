@@ -1,5 +1,5 @@
 /*
- * GuiOptionsHelperDialog.java
+ * GuiOkCancelHelperDialog.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,43 +13,38 @@
  */
 
 /*
- * GuiOptionsHelperDialog.java
+ * GuiOkCancelHelperDialog.java
  *
  * Created on 4-set-2009, 15.08.03
  */
 
-package gestionecassa.clients.cassa.gui;
+package gestionecassa.clients;
 
-import gestionecassa.clients.GuiCentredDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
 /**
  *
  * @author ben
  */
-public class GuiOptionsHelperDialog extends GuiCentredDialog {
+public class GuiOkCancelHelperDialog extends GuiCentredDialog {
 
-    /** Creates new form GuiOptionsHelperDialog */
-    public GuiOptionsHelperDialog(java.awt.Frame parent,
-            GuiOrderSingleArticleWOptionsPanel targetPanel) {
+    /** Creates new form GuiOkCancelHelperDialog */
+    public GuiOkCancelHelperDialog(java.awt.Frame parent, String title,
+            OkCancelPanelAPI panel) {
         super(parent, true);
         initComponents();
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         jScrollPaneMain.setBorder(
-                javax.swing.BorderFactory.createTitledBorder(
-                                                targetPanel.article.getName()));
+                javax.swing.BorderFactory.createTitledBorder(title));
         
-        GuiOptionsHelperPanel panel = new GuiOptionsHelperPanel(targetPanel);
-        jScrollPaneMain.setViewportView(panel);
-
-        panel.initKeysShortcuts();
-        panel.buildContentsList();
-        panel.buildVisualList(panel);
+        panel.init();
+        jScrollPaneMain.setViewportView((JPanel)panel);
 
         jScrollPaneMain.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "ENTER");
@@ -159,7 +154,7 @@ public class GuiOptionsHelperDialog extends GuiCentredDialog {
 
     
     private void pressedOk() {
-        ((GuiOptionsHelperPanel)
+        ((OkCancelPanelAPI)
                 jScrollPaneMain.getViewport().getView()).apply();
         this.dispose();
     }
