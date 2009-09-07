@@ -357,6 +357,7 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
 
     void cleanLastOrder() {
         jTextFieldStatus.setText("Annullato");
+        jButtonAnnulla.setEnabled(false);
     }
 
     /**
@@ -378,16 +379,32 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
                 "HH:mm:ss", Locale.ITALIAN).format(new Date());
         jTextFieldTime.setText(timestamp);
         jTextFieldStatus.setText("Emesso");
+        jButtonAnnulla.setEnabled(true);
     }
 
-    public void enableButtons(boolean b) {
+    /**
+     * Enables/Disables all the buttons related to order committing at once
+     *
+     * @param b true is enalbe, false disable
+     */
+    private void enableButtons(boolean b) {
         jButtonAggiorna.setEnabled(b);
         jButtonAnnulla.setEnabled(b);
         jButtonConferma.setEnabled(b);
         jButtonPulisci.setEnabled(b);
     }
 
+    /**
+     * Sets the panel that manages the orders.
+     * @param orderPanel
+     */
     public void setOrderPanel(GuiNewOrderPanel orderPanel) {
         this.orderPanel = orderPanel;
+        if (orderPanel == null) {
+            enableButtons(false);
+        } else {
+            enableButtons(true);
+        }
+        jButtonAnnulla.setEnabled(false);
     }
 }
