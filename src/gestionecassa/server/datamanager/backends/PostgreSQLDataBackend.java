@@ -119,11 +119,11 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                 "name text ");
         tables.put("09_articles_in_order",
                 "id_art_in_ord serial PRIMARY KEY, " +
-                "id_order integer REFERENCES orders ON DELETE CASCADE, " +
+                "id_order integer REFERENCES orders ON DELETE CASCADE ON UPDATE CASCADE, " +
                 "id_article integer REFERENCES articles ON DELETE RESTRICT, " +
                 "num_tot integer ");
         tables.put("10_opts_of_article_in_order",
-                "id_art_in_ord integer REFERENCES articles_in_order ON DELETE CASCADE, " +
+                "id_art_in_ord integer REFERENCES articles_in_order ON DELETE CASCADE ON UPDATE CASCADE, " +
                 "id_option integer REFERENCES options ON DELETE RESTRICT, " +
                 "num_parz integer ");
     }
