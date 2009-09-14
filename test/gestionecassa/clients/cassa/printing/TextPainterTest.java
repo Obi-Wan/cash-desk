@@ -62,18 +62,19 @@ public class TextPainterTest {
     }
 
     /**
-     * Test of doPrint method, of class TextPainter.
+     * Test of addArticle method, of class TextPainter.
      */
     @Test
     public void testDoPrint() throws Exception {
         System.out.println("doPrint");
-        TextPainter instance = new TextPainter(articles.get(0));
+        TextPainter instance = new TextPainter("test");
+        instance.addArticle(articles.get(0), 1);
         instance.doPrint();
 
 
-        TextPainter instance2 = new TextPainter((ArticleWithOptions)articles.get(2), 12,
+        TextPainter instance2 = new TextPainter("test2");
+        instance2.addArticleWOptions((ArticleWithOptions)articles.get(2), 12,
                 ((ArticleWithOptions)articles.get(2)).getOptions().get(0));
-//        instance2.setCopies(2);
         instance2.doPrint();
     }
 

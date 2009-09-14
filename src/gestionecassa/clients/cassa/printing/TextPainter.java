@@ -26,68 +26,84 @@ import java.io.IOException;
  */
 public class TextPainter {
 
-    Article article;
-
-    final int progressive;
-
-    final String option;
-
-    int copies = 1;
+    /**
+     * The output file
+     */
+    BufferedWriter outputStream;
 
     /**
-     * Constructor for <code>ArticleWithOption</code>
+     * Constructor tat initializes the file descriptor and the name of who
+     * emitted the order
      *
-     * @param entry
+     * @param username
      */
-    public TextPainter(ArticleWithOptions article, int prog, String option) {
-        this.article = article;
-        this.progressive = prog;
-        this.option = option;
+    public TextPainter(String username) throws IOException {
+        outputStream = new BufferedWriter(new FileWriter("output.txt"));
+        outputStream.write("  " + "Emesso da:\n  -> " + username.toUpperCase() +
+                " <-\n\n\n");
     }
 
     /**
-     * Constructor for <code>Article</code>
+     * Adds the given <code>Article</code> to the file to print
      *
      * @param article
+     * @param copies
+     * 
+     * @throws IOException
      */
-    public TextPainter(Article article) {
-        this.article = article;
-        this.progressive = 0;
-        this.option = "";
+    public void addArticle(Article article, int copies) throws IOException {
+
+        for (int i = 0; i < copies; i++) {
+            outputStream.write(
+                    "  " + article.getName().toUpperCase() + "\n\n\n");
+        }
+        outputStream.flush();
+
     }
 
-    public void doPrint() throws IOException, InterruptedException {
+    /**
+     * Adds the given <code>ArticleWithOptions</code> to the file to print
+     * 
+     * @param article the article to print
+     * @param copies number of times to print the text
+     * @param prog
+     * @param option
+     *
+     * @throws IOException
+     */
+    public void addArticleWOptions(ArticleWithOptions article, int prog,
+            String option) throws IOException {
 
-        BufferedWriter outputStream =
-            new BufferedWriter(new FileWriter("output.txt"));
+        if (!article.hasOptions())
+            throw new IOException("wrong article type: this should be with" +
+                    " options");
+        
+        for (int i = 0; i < 2; i++) {
 
-        String centralString = article.getName();
+            outputStream.write("  " + String.format("N. %03d", prog) + "\n");
 
-        if (article.hasOptions()) {
+            String centralString =
+                    "  " + article.getName() + ":\n" + "  " + option;
+            centralString = centralString.toUpperCase();
 
-            centralString += ":\n  " + option;
-
-            String progStr = String.format("  N. %03d", progressive);
-
-            outputStream.write(progStr);
-            outputStream.newLine();
+            outputStream.write(centralString + "\n\n\n");
         }
-        centralString = centralString.toUpperCase();
+        outputStream.flush();
+    }
 
-        outputStream.write("  " + centralString);
+    /**
+     * It actualy prints and closes the file descriptor.
+     *
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public void doPrint() throws IOException, InterruptedException {
+        outputStream.write("  " + "-----------------\n\n\n");
         outputStream.flush();
         outputStream.close();
 
         String cmd[] = {"lpr", "-o", "PrintQuality=Text", "output.txt"};
         Runtime run = Runtime.getRuntime();
-        for (int i = 0; i < copies; i++) {
-            run.exec(cmd).waitFor();
-        }
-    }
-
-    void setCopies(int nm) {
-        if (nm > 1) {
-            copies = nm;
-        }
+        run.exec(cmd).waitFor();
     }
 }
