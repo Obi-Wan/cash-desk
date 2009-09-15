@@ -108,7 +108,7 @@ public class AdministrationCLI extends Administration {
             switch (choice) {
                 case 'a': {
                     CLIAdminArtices temp = new CLIAdminArtices(this, con);
-                    temp.printMenuArticles();
+                    temp.printMenuGroups();
                     break;
                 }
                 case 'l': {

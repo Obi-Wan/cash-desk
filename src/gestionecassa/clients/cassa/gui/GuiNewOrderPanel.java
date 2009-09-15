@@ -112,9 +112,9 @@ public class GuiNewOrderPanel extends GuiVariableListPanel {
      * Popolates the list of the panels related to each article sold.
      */
     protected void buildContentsList() {
-        panelsTable = new Vector<RecordPanels>();//<RecordPanelsOfArticles>();
+        panelsTable = new Vector<RecordPanels>();
         int i = 0;
-        for (Article bene : articlesList.getList()) {
+        for (Article bene : articlesList.getArticlesList()) {
             GuiAbstrSingleArticlePanel tempPanel;
             if (bene instanceof ArticleWithOptions) {
                 tempPanel = 
@@ -223,7 +223,8 @@ public class GuiNewOrderPanel extends GuiVariableListPanel {
      */
     private Order createNewOrder() throws RemoteException {
         int tempNumTot = 0;
-        Order tempOrd = new Order(owner.getUsername(), owner.getHostname());
+        // TODO One day will be needed here to handle the table properly
+        Order tempOrd = new Order(owner.getUsername(), owner.getHostname(), 0);
 
         for (RecordPanels tempRecord : panelsTable) {
             RecordPanelsOfArticles singleRecord =

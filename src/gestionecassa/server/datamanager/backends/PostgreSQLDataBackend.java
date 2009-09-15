@@ -16,6 +16,7 @@ package gestionecassa.server.datamanager.backends;
 
 import gestionecassa.Admin;
 import gestionecassa.Article;
+import gestionecassa.ArticleGroup;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.Cassiere;
 import gestionecassa.EventDate;
@@ -105,24 +106,31 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                 "id_date_event integer DEFAULT '1' REFERENCES dates_event ON DELETE SET DEFAULT, " +
                 "hostname text, " +
                 "id_cassiere integer REFERENCES cassieres ON DELETE RESTRICT, " +
+                "table_num integer, " +
                 "price_tot numeric ");
-        tables.put("07_articles",
+        tables.put("07_groups",
+                "id_group serial PRIMARY KEY, " +
+                "name text UNIQUE, " +
+                "enabled boolean, " +
+                "num_pos integer NOT NULL");
+        tables.put("08_articles",
                 "id_article serial PRIMARY KEY, " +
+                "id_group integer REFERENCES groups ON DELETE CASCADE, " +
                 "name text UNIQUE, " +
                 "enabled boolean, " +
                 "has_options boolean, " +
                 "price numeric, " +
                 "num_pos integer NOT NULL ");
-        tables.put("08_options",
+        tables.put("09_options",
                 "id_option serial PRIMARY KEY, " +
                 "id_article integer REFERENCES articles ON DELETE CASCADE, " +
                 "name text ");
-        tables.put("09_articles_in_order",
+        tables.put("10_articles_in_order",
                 "id_art_in_ord serial PRIMARY KEY, " +
                 "id_order integer REFERENCES orders ON DELETE CASCADE ON UPDATE CASCADE, " +
                 "id_article integer REFERENCES articles ON DELETE RESTRICT, " +
                 "num_tot integer ");
-        tables.put("10_opts_of_article_in_order",
+        tables.put("11_opts_of_article_in_order",
                 "id_art_in_ord integer REFERENCES articles_in_order ON DELETE CASCADE ON UPDATE CASCADE, " +
                 "id_option integer REFERENCES options ON DELETE RESTRICT, " +
                 "num_parz integer ");
@@ -205,14 +213,36 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
     //-----------------//
 
     /**
+     * Adds the given <code>ArticleGroup</code> (and its <code>Article</code>s
+     * to the ArticleList)
+     *
+     * @param group
+     *
+     * @throws IOException
+     */
+    public void addGroupToList(ArticleGroup group) throws IOException {
+        int idGroup = getNextId("groups_id_group_seq");
+        String insQuery =
+                "INSERT INTO groups ( id_group, name, enabled, num_pos)" +
+                "VALUES ('" + idGroup + "', '" + group.getGroupName() + "', '" +
+                    group.isEnabled() + "', '" + (idGroup-1) + "' )";
+        genericCommit(insQuery);
+
+        for (Article article : group.getList()) {
+            addArticleToList(idGroup, article);
+        }
+    }
+
+    /**
      *
      * @param article
      * @param position
      * @throws IOException
      */
-    public void addArticleToListAt(Article article, int position) throws IOException {
+    public void addArticleToListAt(int idGroup, Article article, int position)
+            throws IOException {
         
-        addArticleToList(article);
+        addArticleToList(idGroup, article);
 
         moveArticleAt(article, position);
     }
@@ -225,8 +255,10 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      */
     public void moveArticleAt(Article article, int position) throws IOException {
         
-        String orderQuery = "SELECT id_article, name, num_pos" +
-                            "   FROM articles;";
+        String orderQuery = "SELECT a1.id_article, a1.name AS name, a1.num_pos AS num_pos" +
+                            "   FROM articles AS a1, articles AS a2" +
+                            "   WHERE a1.id_group = a2.id_group" +
+                            "       AND a2.name = '" + article.getName() + "';";
         try {
             Statement stIns = db.createStatement(ResultSet.TYPE_FORWARD_ONLY,
                                                  ResultSet.CONCUR_UPDATABLE);
@@ -261,15 +293,16 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @param article
      * @throws IOException
      */
-    public void addArticleToList(Article article) throws IOException {
+    public void addArticleToList(int idGroup, Article article) throws IOException {
         // Start by inserting the article in the proper table.
         int idArticle = getNextId("articles_id_article_seq");
         String insQuery =
-                "INSERT INTO articles (id_article, name, price, enabled, " +
+                "INSERT INTO articles (id_article, id_group, name, price, enabled, " +
                     "has_options, num_pos)" +
-                "VALUES ('" + idArticle + "', '" + article.getName() + "', '" +
-                    article.getPrice() + "', " + article.isEnabled() + ", '" +
-                    article.hasOptions() + "', (" + (idArticle -1) + ") );";
+                "VALUES ('" + idArticle + "', '" + idGroup + "', '" +
+                    article.getName() + "', '" + article.getPrice() + "', " +
+                    article.isEnabled() + ", '" + article.hasOptions() + "', (" +
+                    getCountGroup(idGroup) + ") );";
         genericCommit(insQuery);
 
         //then just if it has options
@@ -305,10 +338,47 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @return
      * @throws IOException
      */
-    public List<Article> loadArticlesList() throws IOException {
+    public List<ArticleGroup> loadArticlesList() throws IOException {
+
+        String query =  "SELECT *" +
+                        "   FROM groups" +
+                        "   ORDER BY num_pos;";
+        try {
+            Statement st = db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+
+                List<ArticleGroup> outout = new Vector<ArticleGroup>();
+                while (rs.next()) {
+                    int idGroup = rs.getInt("id_group");
+                    
+                    outout.add(new ArticleGroup( idGroup, rs.getString("name"),
+                            rs.getBoolean("enabled"), loadArticlesOfGroup(idGroup)));
+                }
+                return outout;
+            } catch (SQLException ex) {
+                logger.error("Errore con la query: " + query, ex);
+                throw new IOException(ex);
+            } finally {
+                st.close();
+            }
+
+        } catch (SQLException ex) {
+            logger.error("Errore nella counicazione col DB", ex);
+            throw new IOException(ex);
+        }
+    }
+
+    /**
+     *
+     * @return
+     * @throws IOException
+     */
+    public List<Article> loadArticlesOfGroup(int idGroup) throws IOException {
 
         String query =  "SELECT *" +
                         "   FROM articles" +
+                        "   WHERE id_group = '" + idGroup + "'" +
                         "   ORDER BY num_pos;";
         try {
             Statement st = db.createStatement();
@@ -318,12 +388,12 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                 List<Article> outout = new Vector<Article>();
                 while (rs.next()) {
                     int idArticle = rs.getInt("id_article");
-                    
+
                     outout.add(rs.getBoolean("has_options")
                                     ? new ArticleWithOptions(idArticle,
                                             rs.getString("name"),
                                             rs.getDouble("price"),
-                                            getOptionsByArticleID(idArticle),
+                                            loadOptionsOfArticle(idArticle),
                                             rs.getBoolean("enabled"))
                                     : new Article(idArticle,
                                             rs.getString("name"),
@@ -662,7 +732,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @throws IOException
      */
     public void delLastOrder(Order order) throws IOException {
-        final String timestamp = new Timestamp(order.getData().getTime()).toString();
+        final String timestamp = new Timestamp(order.getDate().getTime()).toString();
 
         String cassiereOrderQuery =
                 "SELECT t2.id_order" +
@@ -740,6 +810,38 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
     }
 
     /**
+     * Returns the number of Articles in that group
+     * 
+     * @param idGroup Id of the group to count
+     *
+     * @return number of Articles in that group
+     *
+     * @throws IOException
+     */
+    private int getCountGroup(int idGroup) throws IOException {
+        String query =
+                "SELECT count(id_article)" +
+                "   FROM articles" +
+                "   WHERE id_group = '" + idGroup + "';";
+        try {
+            Statement st = db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+                rs.next();
+                return rs.getInt("count");
+            } catch (SQLException ex) {
+                logger.error("Errore con la query: " + query, ex);
+                throw new IOException(ex);
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            logger.error("Errore nella comunicazione col DB", ex);
+            throw new IOException(ex);
+        }
+    }
+
+    /**
      * This method safely extracts the Options for a precise Article identified
      * by the id. If it fails, it does it gracefully.
      *
@@ -749,7 +851,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      *
      * @throws IOException
      */
-    private List<String> getOptionsByArticleID(int art_id) throws IOException {
+    private List<String> loadOptionsOfArticle(int art_id) throws IOException {
         String queryOpts =  "SELECT name" +
                             "   FROM options" +
                             "   WHERE id_article = '" + art_id + "';";
@@ -857,17 +959,18 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      */
     private int addOrderToOrdersTable(Order order, int idCassiere) throws IOException {
         
-        final String timestamp = new Timestamp(order.getData().getTime()).toString();
+        final String timestamp = new Timestamp(order.getDate().getTime()).toString();
         int idDateEvent = getIdDateEvent(timestamp);
         
         int idOrder = getNextId("orders_id_order_seq");
 
         // and the order to the table of orders
         String query = "INSERT INTO orders (id_order, time_order, id_cassiere, " +
-                    "price_tot, hostname, id_date_event)" +
+                    "price_tot, hostname, id_date_event, table_num )" +
                 "VALUES ('" + idOrder + "', '" + timestamp + "', '" +
                     idCassiere + "', '" + order.getTotalPrice() + "', '" +
-                    order.getHostname() + "', '" + idDateEvent + "' )";
+                    order.getHostname() + "', '" + idDateEvent + "', '" +
+                    order.getTable() + "' )";
         genericCommit(query);
         
         return idOrder;

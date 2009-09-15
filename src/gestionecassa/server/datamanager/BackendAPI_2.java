@@ -16,6 +16,7 @@ package gestionecassa.server.datamanager;
 
 import gestionecassa.Admin;
 import gestionecassa.Article;
+import gestionecassa.ArticleGroup;
 import gestionecassa.Cassiere;
 import gestionecassa.EventDate;
 import gestionecassa.OrganizedEvent;
@@ -33,9 +34,9 @@ public interface BackendAPI_2 {
 
     //--------------------//
 
-    void addArticleToListAt(Article article, int position) throws IOException;
+    void addArticleToListAt(int group, Article article, int position) throws IOException;
 
-    void addArticleToList(Article article) throws IOException;
+    void addArticleToList(int group, Article article) throws IOException;
 
     void enableArticleFromList(Article article, boolean enable) throws IOException;
 
@@ -82,7 +83,7 @@ public interface BackendAPI_2 {
      *
      * @throws IOException
      */
-    List<Article> loadArticlesList() throws IOException;
+    List<ArticleGroup> loadArticlesList() throws IOException;
 
     /**
      * Loads the list of admins and returns it.

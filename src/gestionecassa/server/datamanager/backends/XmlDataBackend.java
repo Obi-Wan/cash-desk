@@ -17,6 +17,7 @@ package gestionecassa.server.datamanager.backends;
 import gestionecassa.Admin;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.Article;
+import gestionecassa.ArticleGroup;
 import gestionecassa.Cassiere;
 import gestionecassa.ArticlesList;
 import gestionecassa.Log;
@@ -29,6 +30,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import org.apache.log4j.Logger;
@@ -51,11 +53,11 @@ public class XmlDataBackend implements BackendAPI_1 {
 
     final String xmlDataPath = "XMLDB" + java.io.File.separator;
 
-    final String listaBeniFile = xmlDataPath + "listaBeni.xml";
+    final String ArtListFile = xmlDataPath + "listaBeni.xml";
 
-    final String listaAdminFile = xmlDataPath + "listaAdmin.xml";
+    final String AdminListFile = xmlDataPath + "listaAdmin.xml";
 
-    final String listaCassiereFile = xmlDataPath + "listaCassa.xml";
+    final String CassiereListFile = xmlDataPath + "listaCassa.xml";
 
     /**
      * Default constructor
@@ -71,24 +73,32 @@ public class XmlDataBackend implements BackendAPI_1 {
     public void saveArticlesList(ArticlesList lista) throws IOException {
 
         Document document = DocumentHelper.createDocument();
-        Element root = document.addElement( "beni" );
-        List<Article> listaVera = lista.getList();
-        for (Article beneVenduto : listaVera) {
-            Element tempBene = root.addElement("bene");
-            tempBene.addElement("nome").addText(beneVenduto.getName());
-            tempBene.addElement("prezzo").addText(beneVenduto.getPrice()+"");
-            tempBene.addElement("id").addText(beneVenduto.getId()+"");
-            
-            if (beneVenduto.hasOptions()) {
-                tempBene.addAttribute("opzioni", "true");
-                Element tempOpzioni = tempBene.addElement("opzioni");
+        Element root = document.addElement( "article_groups" );
+        List<ArticleGroup> groups = lista.getGroupsList();
+        for (ArticleGroup group : groups) {
+            Element tempGroup = root.addElement("group");
 
-                List<String> listOpzioni = ((ArticleWithOptions)beneVenduto).getOptions();
-                for (String nomeOpzione : listOpzioni) {
-                    tempOpzioni.addElement("opzione").addText(nomeOpzione);
+            tempGroup.addElement("name").addText(group.getGroupName());
+            tempGroup.addElement("id").addText(group.getIdGroup()+"");
+
+            for (Article art : group.getList()) {
+                Element tempArt = tempGroup.addElement("article");
+
+                tempArt.addElement("name").addText(art.getName());
+                tempArt.addElement("price").addText(art.getPrice()+"");
+                tempArt.addElement("id").addText(art.getId()+"");
+
+                if (art.hasOptions()) {
+                    tempArt.addAttribute("options", "true");
+                    Element tempOpzioni = tempArt.addElement("options");
+
+                    List<String> options = ((ArticleWithOptions)art).getOptions();
+                    for (String option : options) {
+                        tempOpzioni.addElement("option").addText(option);
+                    }
+                } else {
+                    tempArt.addAttribute("options", "false");
                 }
-            } else {
-                tempBene.addAttribute("opzioni", "false");
             }
         }
 
@@ -96,46 +106,55 @@ public class XmlDataBackend implements BackendAPI_1 {
         OutputFormat format = OutputFormat.createPrettyPrint();
 
         // lets write to a file
-        XMLWriter writer = new XMLWriter(new FileWriter(listaBeniFile),format);
+        XMLWriter writer = new XMLWriter(new FileWriter(ArtListFile),format);
         //XMLWriter writer = new XMLWriter(new FileWriter(fileName));
         writer.write( document );
         writer.close();
     }
 
-    public List<Article> loadArticlesList() throws IOException {
-        List<Article> output = new ArrayList<Article>();
+    public List<ArticleGroup> loadArticlesList() throws IOException {
+        List<ArticleGroup> output = new LinkedList<ArticleGroup>();
 
         SAXReader reader = new SAXReader();
         Document document;
         try {
-            document = reader.read(listaBeniFile);
+            document = reader.read(ArtListFile);
         } catch (DocumentException ex) {
             logger.warn("Error while reading/parsing the file", ex);
             throw new IOException("I was not able to read/parse the file", ex);
         }
 
-        Element nodoRoot = document.getRootElement();
-        
-        for (Object bene : nodoRoot.elements("bene")) {
-            Element tempRefBene = (Element)bene;
-            Article tempBene;
+        Element root = document.getRootElement();
 
-            String nome = tempRefBene.element("nome").getText();
-            double prezzo = new Double(tempRefBene.element("prezzo").getText()).doubleValue();
-            int id = new Integer(tempRefBene.element("id").getText()).intValue();
+        for (Object gr : root.elements("group")) {
+            Element tempRefGroup = (Element)gr;
 
-            if (tempRefBene.attribute("opzioni").getValue().equals("true")) {
+            String g_name = tempRefGroup.element("name").getText();
+            int g_id = new Integer(tempRefGroup.element("id").getText()).intValue();
 
-                List<String> opzioni = new ArrayList<String>();
-                for (Object opzione : tempRefBene.element("opzioni").elements("opzione")) {
-                    opzioni.add(((Element)opzione).getText());
+            List<Article> tempList = new LinkedList<Article>();
+            for (Object art : tempRefGroup.elements("article")) {
+                Element tempRefArt = (Element)art;
+
+                String name = tempRefArt.element("name").getText();
+                double price = new Double(tempRefArt.element("price").getText()).doubleValue();
+                int id = new Integer(tempRefArt.element("id").getText()).intValue();
+
+                Article article;
+                if (tempRefArt.attribute("options").getValue().equals("true")) {
+
+                    List<String> opts = new ArrayList<String>();
+                    for (Object opt : tempRefArt.element("options").elements("option")) {
+                        opts.add(((Element)opt).getText());
+                    }
+
+                    article = new ArticleWithOptions(id, name, price, opts);
+                } else {
+                    article = new Article(id, name, price);
                 }
-
-                tempBene = new ArticleWithOptions(id,nome, prezzo, opzioni);
-            } else {
-                tempBene = new Article(id,nome, prezzo);
+                tempList.add(article);
             }
-            output.add(tempBene);
+            output.add(new ArticleGroup(g_id, g_name, true, tempList));
         }
         
         return output;
@@ -161,7 +180,7 @@ public class XmlDataBackend implements BackendAPI_1 {
         OutputFormat format = OutputFormat.createPrettyPrint();
 
         // lets write to a file
-        XMLWriter writer = new XMLWriter(new FileWriter(listaAdminFile),format);
+        XMLWriter writer = new XMLWriter(new FileWriter(AdminListFile),format);
         //XMLWriter writer = new XMLWriter(new FileWriter(fileName));
         writer.write( document );
         writer.close();
@@ -173,7 +192,7 @@ public class XmlDataBackend implements BackendAPI_1 {
         SAXReader reader = new SAXReader();
         Document document;
         try {
-            document = reader.read(listaAdminFile);
+            document = reader.read(AdminListFile);
         } catch (DocumentException ex) {
             logger.warn("Error while reading/parsing the Admin file", ex);
             throw new IOException("I was not able to read/parse the Admin file", ex);
@@ -209,7 +228,7 @@ public class XmlDataBackend implements BackendAPI_1 {
         OutputFormat format = OutputFormat.createPrettyPrint();
 
         // lets write to a file
-        XMLWriter writer = new XMLWriter(new FileWriter(listaCassiereFile),format);
+        XMLWriter writer = new XMLWriter(new FileWriter(CassiereListFile),format);
         //XMLWriter writer = new XMLWriter(new FileWriter(fileName));
         writer.write( document );
         writer.close();
@@ -221,7 +240,7 @@ public class XmlDataBackend implements BackendAPI_1 {
         SAXReader reader = new SAXReader();
         Document document;
         try {
-            document = reader.read(listaCassiereFile);
+            document = reader.read(CassiereListFile);
         } catch (DocumentException ex) {
             logger.warn("Error while reading/parsing the Cassieri file", ex);
             throw new IOException("I was not able to read/parse the Cassieri file", ex);
@@ -245,7 +264,8 @@ public class XmlDataBackend implements BackendAPI_1 {
     // Orders handle functions.
     //--------------------------//
 
-    public void saveListOfOrders(String id, ConcurrentLinkedQueue<Order> list) throws IOException {
+    public void saveListOfOrders(String id, ConcurrentLinkedQueue<Order> list)
+            throws IOException {
 
         String fileName = xmlDataPath + id + ".xml";
 
@@ -268,7 +288,7 @@ public class XmlDataBackend implements BackendAPI_1 {
 
     private void addOrderToElement(Element root, Order order) {
         Element xmlOrder = root.addElement("ordine");
-        xmlOrder.addElement("data").addText(order.getData().toString());
+        xmlOrder.addElement("data").addText(order.getDate().toString());
         xmlOrder.addElement("prezzo_totale").addText(order.getTotalPrice()+"");
         List<EntrySingleArticle> listaBeni = order.getArticlesSold();
 

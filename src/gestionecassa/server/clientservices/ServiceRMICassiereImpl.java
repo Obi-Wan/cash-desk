@@ -91,13 +91,7 @@ public class ServiceRMICassiereImpl extends SharedServerService
      * @throws RemoteException
      */
     public ArticlesList requestArticlesList() throws RemoteException {
-        List<Article> lista = new LinkedList<Article>();
-        for (Article article : dataManager.getCurrentArticlesList().getList()) {
-            if (article.isEnabled()) {
-                lista.add(article);
-            }
-        }
-        return new ArticlesList(lista);
+        return dataManager.getCurrentArticlesList().getEnabledList();
     }
 
     /**

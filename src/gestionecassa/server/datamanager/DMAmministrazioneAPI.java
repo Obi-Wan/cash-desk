@@ -17,6 +17,8 @@ package gestionecassa.server.datamanager;
 import gestionecassa.Article;
 import gestionecassa.ArticlesList;
 import gestionecassa.Person;
+import gestionecassa.exceptions.DuplicateArticleException;
+import gestionecassa.exceptions.NotExistingGroupException;
 
 /**
  *
@@ -38,15 +40,25 @@ public interface DMAmministrazioneAPI extends DMCommonAPI, DMServerAPI {
      *
      * @param article
      */
-    void addArticle(Article article);
+    void addArticle(int group, Article article)
+            throws DuplicateArticleException, NotExistingGroupException;
+
+    /**
+     * Adds an article to the common list.
+     *
+     * @param article
+     */
+    void addArticle(String group, Article article)
+            throws DuplicateArticleException, NotExistingGroupException;
 
     /**
      * Enables/disables an article at the index specified by position.
      *
      * @param position
      * @param enable
+     * @param group 
      */
-    void enableArticle(int position, boolean enable);
+    void enableArticle(int group, int position, boolean enable);
 
     /**
      * Enables/disables the article.
@@ -56,21 +68,21 @@ public interface DMAmministrazioneAPI extends DMCommonAPI, DMServerAPI {
      */
     void enableArticle(Article article, boolean enable);
 
-    /**
-     * Moves an article
-     *
-     * @param oldPos Old position
-     * @param newPos New position
-     */
-    void moveArticle(int oldPos, int newPos);
-
-    /**
-     * Moves the specified article
-     *
-     * @param article Article to move
-     * @param newPos New position
-     */
-    void moveArticle(Article article, int newPos);
+//    /**
+//     * Moves an article
+//     *
+//     * @param oldPos Old position
+//     * @param newPos New position
+//     */
+//    void moveArticle(int oldPos, int newPos);
+//
+//    /**
+//     * Moves the specified article
+//     *
+//     * @param article Article to move
+//     * @param newPos New position
+//     */
+//    void moveArticle(Article article, int newPos);
 
     //--------- Users ---------------//
     

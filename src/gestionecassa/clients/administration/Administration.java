@@ -10,6 +10,8 @@ import gestionecassa.Log;
 import gestionecassa.Person;
 import gestionecassa.clients.Luogo;
 import gestionecassa.exceptions.ActorAlreadyExistingException;
+import gestionecassa.exceptions.DuplicateArticleException;
+import gestionecassa.exceptions.NotExistingGroupException;
 import gestionecassa.exceptions.WrongLoginException;
 import gestionecassa.server.clientservices.ServiceRMIAdminAPI;
 import gestionecassa.server.ServerRMIAdmin;
@@ -129,11 +131,14 @@ public class Administration extends Luogo implements AdministrationAPI {
      * Adds an article to the common list.
      *
      * @param article
+     * @param group 
      *
      * @throws RemoteException
      */
-    public void addRMIArticle(Article article) throws RemoteException {
-        server.addRMIArticle(article);
+    public void addRMIArticle(int group, Article article)
+            throws RemoteException, DuplicateArticleException,
+                NotExistingGroupException {
+        server.addRMIArticle(group, article);
     }
 
     /**
@@ -141,11 +146,12 @@ public class Administration extends Luogo implements AdministrationAPI {
      *
      * @param position
      * @param enable
+     * @param group 
      *
      * @throws RemoteException
      */
-    public void enableRMIArticle(int position, boolean enable) throws RemoteException {
-        server.enableRMIArticle(position, enable);
+    public void enableRMIArticle(int group, int position, boolean enable) throws RemoteException {
+        server.enableRMIArticle(group, position, enable);
     }
 
     /**
@@ -160,27 +166,27 @@ public class Administration extends Luogo implements AdministrationAPI {
         server.enableRMIArticle(article, enable);
     }
 
-    /**
-     * Moves an article
-     *
-     * @param oldPos Old position
-     * @param newPos New position
-     *
-     * @throws RemoteException
-     */
-    public void moveRMIArticle(int oldPos, int newPos) throws RemoteException {
-        server.moveRMIArticle(oldPos, newPos);
-    }
-
-    /**
-     * Moves the specified article
-     *
-     * @param article Article to move
-     * @param newPos New position
-     *
-     * @throws RemoteException
-     */
-    public void moveRMIArticle(Article article, int newPos) throws RemoteException {
-        server.moveRMIArticle(article, newPos);
-    }
+//    /**
+//     * Moves an article
+//     *
+//     * @param oldPos Old position
+//     * @param newPos New position
+//     *
+//     * @throws RemoteException
+//     */
+//    public void moveRMIArticle(int oldPos, int newPos) throws RemoteException {
+//        server.moveRMIArticle(oldPos, newPos);
+//    }
+//
+//    /**
+//     * Moves the specified article
+//     *
+//     * @param article Article to move
+//     * @param newPos New position
+//     *
+//     * @throws RemoteException
+//     */
+//    public void moveRMIArticle(Article article, int newPos) throws RemoteException {
+//        server.moveRMIArticle(article, newPos);
+//    }
 }

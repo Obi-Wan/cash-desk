@@ -15,8 +15,11 @@
 package gestionecassa.clients.administration.cli;
 
 import gestionecassa.Article;
+import gestionecassa.ArticleGroup;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.clients.administration.AdministrationAPI;
+import gestionecassa.exceptions.DuplicateArticleException;
+import gestionecassa.exceptions.NotExistingGroupException;
 import java.io.Console;
 import java.rmi.RemoteException;
 import java.util.List;
@@ -42,16 +45,13 @@ public class CLIAdminArtices {
         this.con = con;
     }
 
-    /**
-     * 
-     * @throws RemoteException
-     */
-    void printMenuArticles() throws RemoteException {
+    void printMenuGroups() throws RemoteException {
         String menu = "You can now choose between these alternatives:\n" +
                 " - s - Show\n" +
-                " - a - Add" +
-                " - e - Disable/Enable" +
-                " - d - Move" +
+                " - c - Chose a group\n" +
+                " - a - Add\n" +
+                " - e - Disable/Enable\n" +
+                " - d - Move\n" +
                 " - m - Modify\n" +
                 " - q - Quit\n" +
                 "Choice: ";
@@ -68,19 +68,20 @@ public class CLIAdminArtices {
                     break;
                 }
                 case 'a': {
-                    addArticle();
+                    break;
+                }
+                case 'c': {
+                    int groupPos = Integer.parseInt(con.readLine("Group number: "));
+                    printMenuArticles(owner.getArticlesList().getGroup(groupPos));
                     break;
                 }
                 case 'e': {
-                    enableDisableArticle();
                     break;
                 }
                 case 'd': {
-                    moveArticle();
                     break;
                 }
                 case 'm': {
-                    modifyArticle();
                     break;
                 }
                 default: {
@@ -94,7 +95,55 @@ public class CLIAdminArtices {
      * 
      * @throws RemoteException
      */
-    private void addArticle() throws RemoteException {
+    void printMenuArticles(ArticleGroup group) throws RemoteException {
+        String menu = "You can now choose between these alternatives:\n" +
+                " - s - Show\n" +
+                " - a - Add\n" +
+                " - e - Disable/Enable\n" +
+                " - d - Move\n" +
+                " - m - Modify\n" +
+                " - q - Quit\n" +
+                "Choice: ";
+        char choice;
+        con.writer().println("\n"+group.getPrintableFormat());
+        do {
+            choice = con.readLine(menu).charAt(0);
+            switch (choice) {
+                case 's': {
+                    con.writer().println("\n" +
+                            owner.getArticlesList().getPrintableFormat() +
+                            "\nPress Enter to continue..");
+                    con.readLine();
+                    break;
+                }
+                case 'a': {
+                    addArticle(group);
+                    break;
+                }
+                case 'e': {
+                    enableDisableArticle(group);
+                    break;
+                }
+//                case 'd': {
+//                    moveArticle();
+//                    break;
+//                }
+                case 'm': {
+                    modifyArticle(group);
+                    break;
+                }
+                default: {
+
+                }
+            }
+        } while(choice != 'q');
+    }
+
+    /**
+     * 
+     * @throws RemoteException
+     */
+    private void addArticle(ArticleGroup group) throws RemoteException {
         String name = con.readLine("Name: ");
         double price = Double.parseDouble(con.readLine("Price: "));
         boolean hasOptions = Boolean.parseBoolean(con.readLine("Has options (true to say yes): "));
@@ -107,10 +156,16 @@ public class CLIAdminArtices {
         }
         
         if (Boolean.parseBoolean(con.readLine("Do you want to proceed? (true to say yes): "))) {
-            owner.addRMIArticle(
-                    (hasOptions ?
-                        new ArticleWithOptions(0, name, price, options) :
-                        new Article(0, name, price)));
+            try {
+                owner.addRMIArticle(group.getIdGroup(),
+                        hasOptions ?
+                            new ArticleWithOptions(0, name, price, options) :
+                            new Article(0, name, price));
+            } catch (DuplicateArticleException ex) {
+
+            } catch (NotExistingGroupException ex) {
+                
+            }
         }
     }
 
@@ -118,10 +173,11 @@ public class CLIAdminArtices {
      *
      * @throws RemoteException
      */
-    private void enableDisableArticle() throws RemoteException {
+    private void enableDisableArticle(ArticleGroup group) throws RemoteException {
         int num = Integer.parseInt(
                 con.readLine("Position of the article to enable/disable: "));
-        Article art = owner.getArticlesList().getList().get(num);
+        Article art = owner.getArticlesList().getGroupsList()
+                .get(group.getIdGroup()).getList().get(num);
         boolean disen = Boolean.parseBoolean(
                 con.readLine(art.isEnabled() ?
                     "Do you want to disable it? (true to say yes)" :
@@ -134,10 +190,11 @@ public class CLIAdminArtices {
     /**
      *
      */
-    private void modifyArticle() {
+    private void modifyArticle(ArticleGroup group) {
         int num = Integer.parseInt(
                 con.readLine("Position of the article to modify: "));
-        Article art = owner.getArticlesList().getList().get(num);
+        Article art = owner.getArticlesList().getGroupsList()
+                .get(group.getIdGroup()).getList().get(num);
         char choice = con.readLine(
                 "Press:\n" +
                 " - n - To modify the name\n" +
@@ -171,20 +228,21 @@ public class CLIAdminArtices {
         }
     }
 
-    /**
-     * 
-     * @throws RemoteException
-     */
-    private void moveArticle() throws RemoteException {
-        int num = Integer.parseInt(
-                con.readLine("Position of the article to move: "));
-        Article art = owner.getArticlesList().getList().get(num);
-        int n_num = Integer.parseInt(
-                con.readLine("New position of the article " + art.getName() + ": "));
-
-        if (Boolean.parseBoolean(
-                con.readLine("Do you want to proceed? (true to say yes): "))) {
-            owner.moveRMIArticle(art, n_num);
-        }
-    }
+//    /**
+//     *
+//     * @throws RemoteException
+//     */
+//    private void moveArticle(ArticleGroup group) throws RemoteException {
+//        int num = Integer.parseInt(
+//                con.readLine("Position of the article to move: "));
+//        Article art = owner.getArticlesList().getGroupsList()
+//                .get(group.getIdGroup()).getList().get(num);
+//        int n_num = Integer.parseInt(
+//                con.readLine("New position of the article " + art.getName() + ": "));
+//
+//        if (Boolean.parseBoolean(
+//                con.readLine("Do you want to proceed? (true to say yes): "))) {
+//            owner.moveRMIArticle(art, n_num);
+//        }
+//    }
 }

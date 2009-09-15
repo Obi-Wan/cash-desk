@@ -23,17 +23,17 @@ public class Order implements Serializable, Comparable<Order> {
     Date date;
 
     /**
-     * 
+     * Username of the Cassiere that committed the order
      */
     String username;
 
     /**
-     *
+     * Place where the order was committed
      */
     String hostname;
 
     /**
-     * Lista dei beni per il singolo ordine.
+     * List of articles for this order
      */
     List<EntrySingleArticle> articlesList;
 
@@ -43,13 +43,18 @@ public class Order implements Serializable, Comparable<Order> {
     double totalPrice;
 
     /**
+     * Table at which the order has been committed
+     */
+    int table;
+
+    /**
      * Default constructor (well, at most :) )
      *
      * @param username
      * @param hostname
      */
-    public Order(String username, String hostname) {
-        this( new Date(), new String(username), new String(hostname),
+    public Order(String username, String hostname, int table) {
+        this( new Date(), new String(username), new String(hostname), table,
                 new ArrayList<EntrySingleArticle>());
         totalPrice = 0;
     }
@@ -61,9 +66,10 @@ public class Order implements Serializable, Comparable<Order> {
      * @param username
      * @param hostname
      */
-    public Order(Date data, String username, String hostname) {
-        this( new Date(data.getTime()), new String(username), 
-                new String(hostname), new ArrayList<EntrySingleArticle>());
+    public Order(Date data, String username, String hostname, int table) {
+        this( new Date(data.getTime()), new String(username),
+                new String(hostname), table,
+                new ArrayList<EntrySingleArticle>());
         totalPrice = 0;
     }
 
@@ -76,12 +82,13 @@ public class Order implements Serializable, Comparable<Order> {
      * @param hostname
      * @param articlesList
      */
-    private Order( Date date, String username, String hostname,
-            List<EntrySingleArticle> listaBeni) {
+    private Order( Date date, String username, String hostname, int table,
+            List<EntrySingleArticle> articles) {
         this.date = date;
-        this.articlesList = listaBeni;
+        this.articlesList = articles;
         this.username = username;
         this.hostname = hostname;
+        this.table = table;
     }
 
     /**
@@ -101,7 +108,7 @@ public class Order implements Serializable, Comparable<Order> {
      *
      * @return
      */
-    public Date getData() {
+    public Date getDate() {
         return date;
     }
 
@@ -135,6 +142,14 @@ public class Order implements Serializable, Comparable<Order> {
      */
     public String getUsername() {
         return username;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public int getTable() {
+        return table;
     }
 
     /**

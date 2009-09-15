@@ -16,6 +16,7 @@ package gestionecassa.server.datamanager.backends;
 
 import gestionecassa.Admin;
 import gestionecassa.Article;
+import gestionecassa.ArticleGroup;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.Cassiere;
 import gestionecassa.EventDate;
@@ -60,6 +61,7 @@ public class PostgreSQLDataBackendTest {
     Cassiere testCassiere;
 
     List<Article> articles;
+    List<ArticleGroup> groups;
 
     OrganizedEvent event;
 
@@ -70,16 +72,39 @@ public class PostgreSQLDataBackendTest {
         testAdmin = new Admin(1, "admin", "password");
         testCassiere = new Cassiere(1, "bene", "male");
 
+        groups = new Vector<ArticleGroup>();
+
+        int idArticle = 0;
+
+        /* First group with id 0 */
         articles = new Vector<Article>();
         List<String> options = new Vector<String>();
         options.add("corta");
         options.add("media");
         options.add("lunga");
-        articles.add(new Article(articles.size()+1, "gatto", 5.5));
-        articles.add(new Article(articles.size()+1, "cane", 10));
-        articles.add(new ArticleWithOptions(articles.size()+1, "falce", 4.25, options));
-        articles.add(new Article(articles.size()+1, "vanga", 0.2));
+        articles.add(new Article(++idArticle, "gatto", 5.5));
+        articles.add(new Article(++idArticle, "cane", 10));
+        articles.add(new ArticleWithOptions(++idArticle, "falce", 4.25, options));
+        articles.add(new Article(++idArticle, "vanga", 0.2));
 
+        groups.add(new ArticleGroup(1, "Group1", articles));
+
+        /* Second group, empty, with id 1 */
+        articles = new Vector<Article>();
+        groups.add(new ArticleGroup(2, "Group2", articles));
+
+        /* Articles not in group 1 to add later */
+        articles = new Vector<Article>();
+        options = new Vector<String>();
+        options.add("corta1");
+        options.add("media1");
+        options.add("lunga1");
+        articles.add(new Article(++idArticle, "gatto1", 5.5));
+        articles.add(new Article(++idArticle, "cane1", 10));
+        articles.add(new ArticleWithOptions(++idArticle, "falce1", 4.25, options));
+        articles.add(new Article(++idArticle, "vanga1", 0.2));
+
+        /*  */
         dates = new LinkedList<EventDate>();
         DateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         Date startDate, endDate;
@@ -205,6 +230,30 @@ public class PostgreSQLDataBackendTest {
     }
 
     /**
+     * Test of addGroupToList method, of class PostgreSQLDataBackend.
+     */
+    @Test
+    public void testAddGroupToList() throws Exception {
+        System.out.println("addGroupToList");
+
+        backend.addGroupToList(groups.get(0));
+
+        backend.addGroupToList(groups.get(1));
+    }
+
+    /**
+     * Test of loadArticlesList method, of class PostgreSQLDataBackend.
+     */
+    @Test
+    public void testLoadArticlesOfGroup() throws Exception {
+        System.out.println("loadArticlesOfGroup");
+
+        List<Article> artsInGroup = backend.loadArticlesOfGroup(1);
+
+        assertEquals(artsInGroup, groups.get(0).getList());
+    }
+
+    /**
      * Test of addArticleToList method, of class PostgreSQLDataBackend.
      */
     @Test
@@ -213,25 +262,42 @@ public class PostgreSQLDataBackendTest {
         
         Article temp = articles.get(0);
 
-        backend.addArticleToList(temp);
+        backend.addArticleToList(2, temp);
 
         String query = "SELECT * FROM articles WHERE name = '"+
                 temp.getName() + "'";
-        testArticlePresence(query,temp);
+        testArticlePresence(query, temp);
+
+        query = "SELECT * FROM articles WHERE id_article = '"+
+                temp.getId() + "'";
+        testArticlePresence(query, temp);
 
         temp = articles.get(2);
 
-        backend.addArticleToList(temp);
+        backend.addArticleToList(2, temp);
 
         query = "SELECT * FROM articles WHERE name = '" + temp.getName() + "'";
         testArticlePresence(query,temp);
 
         temp = articles.get(1);
 
-        backend.addArticleToList(temp);
+        backend.addArticleToList(2, temp);
 
         query = "SELECT * FROM articles WHERE name = '" + temp.getName() + "'";
         testArticlePresence(query,temp);
+    }
+
+    /**
+     * Test of moveArticleAt method, of class PostgreSQLDataBackend.
+     */
+    @Test
+    public void testMoveArticleAt() throws Exception {
+        System.out.println("moveArticleAt");
+
+        backend.moveArticleAt(articles.get(2), 0);
+
+        String query = "SELECT * FROM articles WHERE num_pos = '0' AND id_group = '2'";
+        testArticlePresence(query, articles.get(2));
     }
 
     /**
@@ -243,7 +309,7 @@ public class PostgreSQLDataBackendTest {
 
         Article temp = articles.get(3);
 
-        backend.addArticleToListAt(temp,2);
+        backend.addArticleToListAt(2, temp, 2);
 
         String query = "SELECT * FROM articles WHERE name = '"+
                 temp.getName() + "'";
@@ -251,35 +317,34 @@ public class PostgreSQLDataBackendTest {
     }
 
     /**
-     * Test of moveArticleAt method, of class PostgreSQLDataBackend.
-     */
-    @Test
-    public void testMoveArticleAt() throws Exception {
-        System.out.println("moveArticleAt");
-    }
-
-    /**
-     * Test of loadArticlesList method, of class PostgreSQLDataBackend.
+     * Test of loadArticlesOfGroup method, of class PostgreSQLDataBackend.
      */
     @Test
     public void testLoadArticlesList() throws Exception {
         System.out.println("loadArticlesList");
 
-        List<Article> articleList = backend.loadArticlesList();
+        List<ArticleGroup> grs = backend.loadArticlesList();
+        assertEquals(grs.get(0).getGroupName(), groups.get(0).getGroupName());
+        assertEquals(grs.get(0).getIdGroup(), groups.get(0).getIdGroup());
+        assertEquals(grs.get(0).getList(), groups.get(0).getList());
 
-        assertNotNull(articleList);
-        assertEquals(articleList.size(), 4);
+        assertEquals(grs.get(1).getGroupName(), groups.get(1).getGroupName());
+        assertEquals(grs.get(1).getIdGroup(), groups.get(1).getIdGroup());
+
+        List<Article> artsInGroup = grs.get(1).getList();
+        assertEquals(artsInGroup.size(), 4);
         // gatto
-        assertEquals(articleList.get(0), articles.get(0));
+        assertEquals(artsInGroup.get(0), articles.get(2));
+        assertEquals(artsInGroup.get(0).getId(), 6);
         // falce
-        assertEquals(articleList.get(1), articles.get(2));
-        assertEquals(articleList.get(1).getId(), 2);
+        assertEquals(artsInGroup.get(1), articles.get(0));
+        assertEquals(artsInGroup.get(1).getId(), 5);
         // vanga
-        assertEquals(articleList.get(2), articles.get(3));
-        assertEquals(articleList.get(2).getId(), 4);
+        assertEquals(artsInGroup.get(2), articles.get(3));
+        assertEquals(artsInGroup.get(2).getId(), 8);
         // cane
-        assertEquals(articleList.get(3), articles.get(1));
-        assertEquals(articleList.get(3).getId(), 3);
+        assertEquals(artsInGroup.get(3), articles.get(1));
+        assertEquals(artsInGroup.get(3).getId(), 7);
     }
 
     /**
@@ -289,17 +354,17 @@ public class PostgreSQLDataBackendTest {
     public void testEnableArticleFromList() throws Exception {
         System.out.println("enableArticleFromList");
         
-        Article temp = articles.get(0);
+        Article temp = groups.get(0).getList().get(0);
 
         backend.enableArticleFromList(temp, false);
 
-        List<Article> articleList = backend.loadArticlesList();
+        List<Article> articleList = backend.loadArticlesOfGroup(1);
 
         assertTrue(!articleList.get(0).isEnabled());
 
         backend.enableArticleFromList(temp, true);
 
-        articleList = backend.loadArticlesList();
+        articleList = backend.loadArticlesOfGroup(1);
 
         assertTrue(articleList.get(0).isEnabled());
     }
@@ -460,9 +525,9 @@ public class PostgreSQLDataBackendTest {
     public void testAddNewOrder() throws Exception {
         System.out.println("addNewOrder");
 
-        articles = backend.loadArticlesList();
+        articles = backend.loadArticlesOfGroup(1);
 
-        Order tempOrder = new Order(testCassiere.getUsername(), "hell");
+        Order tempOrder = new Order(testCassiere.getUsername(), "hell", 0);
         tempOrder.addArticle(articles.get(0), 3);
         tempOrder.addArticle(articles.get(3), 2);
         
@@ -470,7 +535,7 @@ public class PostgreSQLDataBackendTest {
 
         // verify presence
         String query =  "SELECT c.username AS username, o.time_order AS time, " +
-                            "o.price_tot AS price" +
+                            "o.price_tot AS price, o.table_num AS table" +
                         "   FROM orders AS o, cassieres AS c" +
                         "   WHERE o.id_cassiere = c.id_cassiere;";
         try {
@@ -483,8 +548,9 @@ public class PostgreSQLDataBackendTest {
 
                 assertEquals(tempOrder.getUsername(), rs.getString("username"));
                 assertEquals(tempOrder.getTotalPrice(), rs.getDouble("price"),0);
-                assertEquals(new Timestamp(tempOrder.getData().getTime()),
+                assertEquals(new Timestamp(tempOrder.getDate().getTime()),
                         rs.getTimestamp("time"));
+                assertEquals(tempOrder.getTable(), rs.getInt("table"));
                 
             } catch (SQLException ex) {
                 fail("Failed in interrogating the DB");
@@ -544,7 +610,7 @@ public class PostgreSQLDataBackendTest {
         }
 
         SimpleDateFormat date = new SimpleDateFormat("yyyyMMddhhmmss");
-        tempOrder = new Order(date.parse("20090904213000"),testCassiere.getUsername(), "hell");
+        tempOrder = new Order(date.parse("20090904213000"),testCassiere.getUsername(), "hell", 0);
         tempOrder.addArticle(articles.get(0), 3);
         tempOrder.addArticle(articles.get(3), 2);
 
@@ -593,17 +659,17 @@ public class PostgreSQLDataBackendTest {
     public void testAddNewOrderWithOptions() throws Exception {
         System.out.println("delLastOrder");
 
-        articles = backend.loadArticlesList();
+        articles = backend.loadArticlesOfGroup(1);
 
         List<EntrySingleOption> optionsList = new Vector<EntrySingleOption>();
         optionsList.add(new EntrySingleOption(
-                ((ArticleWithOptions)articles.get(1)).getOptions().get(0), 2));
+                ((ArticleWithOptions)articles.get(2)).getOptions().get(0), 2));
         optionsList.add(new EntrySingleOption(
-                ((ArticleWithOptions)articles.get(1)).getOptions().get(1), 3));
+                ((ArticleWithOptions)articles.get(2)).getOptions().get(1), 3));
 
-        Order tempOrder = new Order(testCassiere.getUsername(), "hell");
+        Order tempOrder = new Order(testCassiere.getUsername(), "hell", 0);
         tempOrder.addArticleWithOptions(
-                (ArticleWithOptions)articles.get(1), 5, 0, optionsList);
+                (ArticleWithOptions)articles.get(2), 5, 0, optionsList);
 
         backend.addNewOrder(tempOrder);
 
@@ -624,7 +690,7 @@ public class PostgreSQLDataBackendTest {
 
                 assertEquals(tempOrder.getUsername(), rs.getString("username"));
                 assertEquals(tempOrder.getTotalPrice(), rs.getDouble("price"),0);
-                assertEquals(new Timestamp(tempOrder.getData().getTime()),
+                assertEquals(new Timestamp(tempOrder.getDate().getTime()),
                         rs.getTimestamp("time"));
 
             } catch (SQLException ex) {
@@ -695,7 +761,7 @@ public class PostgreSQLDataBackendTest {
                 assertTrue(rs.next());
                 assertTrue(!rs.isLast());
 
-                assertEquals(tempOrder.getData().getTime(),
+                assertEquals(tempOrder.getDate().getTime(),
                                 rs.getTimestamp("time").getTime());
                 assertEquals(tempOrder.getArticlesSold().get(0).article.getName(),
                                 rs.getString("a_name"));
@@ -709,7 +775,7 @@ public class PostgreSQLDataBackendTest {
                 assertTrue(rs.next());
                 assertTrue(rs.isLast());
 
-                assertEquals(tempOrder.getData().getTime(),
+                assertEquals(tempOrder.getDate().getTime(),
                                 rs.getTimestamp("time").getTime());
                 assertEquals(tempOrder.getArticlesSold().get(0).article.getName(),
                                 rs.getString("a_name"));
@@ -741,9 +807,9 @@ public class PostgreSQLDataBackendTest {
     public void testDelLastOrder() throws Exception {
         System.out.println("delLastOrder");
 
-        articles = backend.loadArticlesList();
+        articles = backend.loadArticlesOfGroup(1);
 
-        Order tempOrder = new Order(testCassiere.getUsername(), "hell");
+        Order tempOrder = new Order(testCassiere.getUsername(), "hell", 0);
         tempOrder.addArticle(articles.get(0), 3);
         tempOrder.addArticle(articles.get(3), 2);
 
@@ -944,6 +1010,33 @@ public class PostgreSQLDataBackendTest {
     }
 
     /**
+     *
+     * @param query
+     * @param testArticle
+     */
+    private void testGroupPresence(String query, ArticleGroup testGroup) {
+        try {
+            Statement st = backend.db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+                assertTrue("Non c'è un risultato!",rs.next());
+                assertTrue("Non è l'ultimo!",rs.isLast());
+
+                assertTrue("Non è enabled", rs.getBoolean("enabled"));
+                assertEquals("Non ha lo stesso id", testGroup.getIdGroup(),
+                        rs.getInt("id_group"));
+            } catch (SQLException ex) {
+                fail("Failed in executing the query: " + query + "\n" + ex.getMessage());
+                ex.printStackTrace();
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            fail("Failed in connecting to the DB");
+        }
+    }
+
+    /**
      * 
      * @param option
      */
@@ -955,9 +1048,6 @@ public class PostgreSQLDataBackendTest {
                 ResultSet rs = st.executeQuery(query);
                 assertTrue("Non c'è un risultato!",rs.next());
                 assertTrue("Non è l'ultimo!",rs.isLast());
-
-                assertEquals("l'opzione non corrisponde!",
-                             option,rs.getString("name"));
             } catch (SQLException ex) {
                 fail("Failed in executing the query: " + query + "\n" + ex.getMessage());
                 ex.printStackTrace();

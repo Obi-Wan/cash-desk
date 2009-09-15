@@ -8,11 +8,14 @@ package gestionecassa.server.datamanager;
 import gestionecassa.Admin;
 import gestionecassa.ArticleWithPreparation;
 import gestionecassa.Article;
+import gestionecassa.ArticleGroup;
 import gestionecassa.Cassiere;
 import gestionecassa.ArticlesList;
 import gestionecassa.Log;
+import gestionecassa.exceptions.DuplicateArticleException;
 import gestionecassa.order.Order;
 import gestionecassa.Person;
+import gestionecassa.exceptions.NotExistingGroupException;
 import java.io.IOException;
 import java.util.List;
 import java.util.TreeMap;
@@ -202,7 +205,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      * 
      */
     private void loadArticlesList() {
-        List<Article> lista;
+        List<ArticleGroup> lista;
         synchronized (listArticlesSemaphore) {
             try {
                 if (useFallback) {
@@ -220,7 +223,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
                 synchronized (listProgressiviSemaphore) {
                     progressivesList = new TreeMap<String, Integer>();
                 
-                    for (Article article : articlesList.getList()) {
+                    for (Article article : articlesList.getArticlesList()) {
                         if (article instanceof ArticleWithPreparation) {
                             progressivesList.put(article.getName(), 0);
                         }
@@ -364,14 +367,15 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     // Administration Client handle.
     //----------------------------//
 
+    // FIXME potrebbe non esser corretto
     public void saveNewArticlesList(ArticlesList list) { // RIVEDI
         synchronized (listArticlesSemaphore) {
-            articlesList = new ArticlesList(list.getList());
+            articlesList = new ArticlesList(list.getGroupsList());
             
             synchronized (listProgressiviSemaphore) {
                 progressivesList = new TreeMap<String, Integer>();
 
-                for (Article article : list.getList()) {
+                for (Article article : list.getArticlesList()) {
                     if (article instanceof ArticleWithPreparation) {
                         progressivesList.put(article.getName(), 0);
                     }
@@ -390,13 +394,14 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      *
      * @param article
      */
-    public void addArticle(Article article) {
+    public void addArticle(int group, Article article)
+            throws DuplicateArticleException, NotExistingGroupException {
         synchronized (listArticlesSemaphore) {
-            articlesList.addArticle(article);
+            articlesList.addArticleToGroup(group, article);
 
             if (!useFallback) {
                 try {
-                    dataBackendDB.addArticleToList(article);
+                    dataBackendDB.addArticleToList(group, article);
                 } catch (IOException ex) {
                     logger.error("could not save new article to DB", ex);
                 }
@@ -416,14 +421,26 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     }
 
     /**
+     * Adds an article to the common list.
+     *
+     * @param article
+     */
+    public void addArticle(String group, Article article)
+            throws DuplicateArticleException, NotExistingGroupException {
+        synchronized (listArticlesSemaphore) {
+            addArticle(articlesList.getGroupPos(group), article);
+        }
+    }
+
+    /**
      * Enables/disables an article at the index specified by position.
      *
      * @param position
      * @param enable
      */
-    public void enableArticle(int position, boolean enable) {
+    public void enableArticle(int group, int position, boolean enable) {
         synchronized (listArticlesSemaphore) {
-            Article temp = articlesList.enableArticle(position, enable);
+            Article temp = articlesList.enableArticle(group, position, enable);
 
             if (!useFallback) {
                 try {
@@ -467,57 +484,57 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
         }
     }
 
-    /**
-     * Moves an article
-     *
-     * @param oldPos Old position
-     * @param newPos New position
-     */
-    public void moveArticle(int oldPos, int newPos) {
-        synchronized (listArticlesSemaphore) {
-            Article temp = articlesList.moveArticleAt(oldPos, newPos);
-
-            if (!useFallback) {
-                try {
-                    dataBackendDB.moveArticleAt(temp, newPos);
-                } catch (IOException ex) {
-                    logger.error("could not save new article to DB", ex);
-                }
-            }
-
-            try {
-                fallbackXML.saveArticlesList(articlesList);
-            } catch (IOException ex) {
-                logger.error("could not save articles list to XML", ex);
-            }
-        }
-    }
-
-    /**
-     * Moves the specified article
-     *
-     * @param article Article to move
-     * @param newPos New position
-     */
-    public void moveArticle(Article article, int newPos) {
-        synchronized (listArticlesSemaphore) {
-            Article temp = articlesList.moveArticleAt(article, newPos);
-
-            if (!useFallback) {
-                try {
-                    dataBackendDB.moveArticleAt(temp, newPos);
-                } catch (IOException ex) {
-                    logger.error("could not save new article to DB", ex);
-                }
-            }
-
-            try {
-                fallbackXML.saveArticlesList(articlesList);
-            } catch (IOException ex) {
-                logger.error("could not save articles list to XML", ex);
-            }
-        }
-    }
+//    /**
+//     * Moves an article
+//     *
+//     * @param oldPos Old position
+//     * @param newPos New position
+//     */
+//    public void moveArticle(int oldPos, int newPos) {
+//        synchronized (listArticlesSemaphore) {
+//            Article temp = articlesList.moveArticleAt(oldPos, newPos);
+//
+//            if (!useFallback) {
+//                try {
+//                    dataBackendDB.moveArticleAt(temp, newPos);
+//                } catch (IOException ex) {
+//                    logger.error("could not save new article to DB", ex);
+//                }
+//            }
+//
+//            try {
+//                fallbackXML.saveArticlesList(articlesList);
+//            } catch (IOException ex) {
+//                logger.error("could not save articles list to XML", ex);
+//            }
+//        }
+//    }
+//
+//    /**
+//     * Moves the specified article
+//     *
+//     * @param article Article to move
+//     * @param newPos New position
+//     */
+//    public void moveArticle(Article article, int newPos) {
+//        synchronized (listArticlesSemaphore) {
+//            Article temp = articlesList.moveArticleAt(article, newPos);
+//
+//            if (!useFallback) {
+//                try {
+//                    dataBackendDB.moveArticleAt(temp, newPos);
+//                } catch (IOException ex) {
+//                    logger.error("could not save new article to DB", ex);
+//                }
+//            }
+//
+//            try {
+//                fallbackXML.saveArticlesList(articlesList);
+//            } catch (IOException ex) {
+//                logger.error("could not save articles list to XML", ex);
+//            }
+//        }
+//    }
 
     public void terminate() {
     }

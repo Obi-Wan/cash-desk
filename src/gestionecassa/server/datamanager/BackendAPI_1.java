@@ -16,6 +16,7 @@ package gestionecassa.server.datamanager;
 
 import gestionecassa.Admin;
 import gestionecassa.Article;
+import gestionecassa.ArticleGroup;
 import gestionecassa.Cassiere;
 import gestionecassa.ArticlesList;
 import gestionecassa.order.Order;
@@ -58,7 +59,7 @@ public interface BackendAPI_1 {
      *
      * @throws IOException
      */
-    List<Article> loadArticlesList() throws IOException;
+    List<ArticleGroup> loadArticlesList() throws IOException;
 
     /**
      * Saves the list of all the Admins

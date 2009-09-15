@@ -9,6 +9,8 @@ import gestionecassa.Article;
 import gestionecassa.ArticlesList;
 import gestionecassa.Person;
 import gestionecassa.exceptions.ActorAlreadyExistingException;
+import gestionecassa.exceptions.DuplicateArticleException;
+import gestionecassa.exceptions.NotExistingGroupException;
 import java.rmi.RemoteException;
 import gestionecassa.server.SessionRecord;
 import gestionecassa.server.datamanager.DMAmministrazioneAPI;
@@ -86,8 +88,23 @@ public class ServiceRMIAdminImpl extends SharedServerService
      *
      * @throws RemoteException
      */
-    public void addRMIArticle(Article article) throws RemoteException {
-        dataManager.addArticle(article);
+    public void addRMIArticle(int group, Article article)
+            throws RemoteException, DuplicateArticleException,
+                NotExistingGroupException {
+        dataManager.addArticle(group, article);
+    }
+
+    /**
+     * Adds an article to the common list.
+     *
+     * @param article
+     *
+     * @throws RemoteException
+     */
+    public void addRMIArticle(String group, Article article)
+            throws RemoteException, DuplicateArticleException,
+                NotExistingGroupException {
+        dataManager.addArticle(group, article);
     }
 
     /**
@@ -98,9 +115,9 @@ public class ServiceRMIAdminImpl extends SharedServerService
      *
      * @throws RemoteException
      */
-    public void enableRMIArticle(int position, boolean enable)
+    public void enableRMIArticle(int group, int position, boolean enable)
             throws RemoteException {
-        dataManager.enableArticle(position, enable);
+        dataManager.enableArticle(group, position, enable);
     }
 
     /**
@@ -116,28 +133,28 @@ public class ServiceRMIAdminImpl extends SharedServerService
         dataManager.enableArticle(article, enable);
     }
 
-    /**
-     * Moves an article
-     *
-     * @param oldPos Old position
-     * @param newPos New position
-     *
-     * @throws RemoteException
-     */
-    public void moveRMIArticle(int oldPos, int newPos) throws RemoteException {
-        dataManager.moveArticle(oldPos, newPos);
-    }
-
-    /**
-     * Moves the specified article
-     * 
-     * @param article Article to move
-     * @param newPos New position
-     *
-     * @throws RemoteException
-     */
-    public void moveRMIArticle(Article article, int newPos)
-            throws RemoteException {
-        dataManager.moveArticle(article, newPos);
-    }
+//    /**
+//     * Moves an article
+//     *
+//     * @param oldPos Old position
+//     * @param newPos New position
+//     *
+//     * @throws RemoteException
+//     */
+//    public void moveRMIArticle(int oldPos, int newPos) throws RemoteException {
+//        dataManager.moveArticle(oldPos, newPos);
+//    }
+//
+//    /**
+//     * Moves the specified article
+//     *
+//     * @param article Article to move
+//     * @param newPos New position
+//     *
+//     * @throws RemoteException
+//     */
+//    public void moveRMIArticle(Article article, int newPos)
+//            throws RemoteException {
+//        dataManager.moveArticle(article, newPos);
+//    }
 }
