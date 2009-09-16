@@ -17,11 +17,10 @@ import gestionecassa.order.Order;
 import gestionecassa.Person;
 import gestionecassa.exceptions.NotExistingGroupException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import org.apache.log4j.Logger;
 
 /**
@@ -64,7 +63,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     /**
      *
      */
-    ConcurrentHashMap<String, ConcurrentLinkedQueue<Order> > ordersTable;
+    TreeMap<String, List<Order> > ordersTable;
 
     /**
      * list of handled good
@@ -98,22 +97,31 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
             new String("CassieriSemaphore" + System.currentTimeMillis());
 
     /**
-     * Semaphore for the list of goods
+     * Semaphore for the list of Articles
      *
      * NOTE: it's randozed to avoid the JVM to make optimizations, which could
      * lead the threads to share the same semaphore.
      */
     static final String listArticlesSemaphore =
-            new String("BeniSemaphore" + System.currentTimeMillis());
+            new String("ArticlesSemaphore" + System.currentTimeMillis());
 
     /**
-     * Semaphore for the list of goods
+     * Semaphore for the list of progressive numbers
      *
      * NOTE: it's randozed to avoid the JVM to make optimizations, which could
      * lead the threads to share the same semaphore.
      */
     static final String listProgressiviSemaphore =
             new String("ProgressiviSemaphore" + System.currentTimeMillis());
+
+    /**
+     * Semaphore for the list of orders
+     *
+     * NOTE: it's randozed to avoid the JVM to make optimizations, which could
+     * lead the threads to share the same semaphore.
+     */
+    static final String listOrdersSemaphore =
+            new String("OrdersSemaphore" + System.currentTimeMillis());
 
     /**
      * Default constructor
@@ -125,7 +133,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
         this.dataBackendDB = fallback;
         this.logger = Log.GESTIONECASSA_SERVER_DATAMANAGER;
 
-        ordersTable = new ConcurrentHashMap<String, ConcurrentLinkedQueue<Order>>();
+        ordersTable = new TreeMap<String, List<Order>>();
 
         try {
             dataBackendDB.init("jdbc:postgresql://localhost:5432/GCDB");
@@ -147,10 +155,10 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      * 
      */
     private void loadAdminsList() {
+        Collection<Admin> listaAdmin;
         synchronized (listAdminsSemaphore) {
             adminsList = new TreeMap<String, Admin>();
             try {
-                List<Admin> listaAdmin;
                 if (useFallback) {
                     listaAdmin = fallbackXML.loadAdminsList();
                 } else {
@@ -180,10 +188,10 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      * 
      */
     private void loadCassieresList() {
+        Collection<Cassiere> listaCassiere;
         synchronized (listCassieriSemaphore) {
             cassieresList = new TreeMap<String, Cassiere>();
             try {
-                List<Cassiere> listaCassiere;
                 if (useFallback) {
                     listaCassiere = fallbackXML.loadCassiereList();
                 } else {
@@ -206,7 +214,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      * 
      */
     private void loadArticlesList() {
-        List<ArticleGroup> lista;
+        Collection<ArticleGroup> lista;
         synchronized (listArticlesSemaphore) {
             try {
                 if (useFallback) {
@@ -308,38 +316,46 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     //----------------------------//
 
     public void createNewCassaSession(String identifier) {
-        ordersTable.put(identifier, new ConcurrentLinkedQueue<Order>());
+        synchronized (listOrdersSemaphore) {
+            ordersTable.put(identifier, new ArrayList<Order>());
+        }
     }
 
     public void closeCassaSession(String identifier) {
         // flush to disk
-        ConcurrentLinkedQueue<Order> tempOrderList = ordersTable.get(identifier);
-        try {
-            // usefull to save even if we're using a DB
-            fallbackXML.saveListOfOrders(identifier, tempOrderList);
+        synchronized (listOrdersSemaphore) {
+            List<Order> tempOrderList = ordersTable.get(identifier);
+            try {
+                // usefull to save even if we're using a DB
+                fallbackXML.saveListOfOrders(identifier, tempOrderList);
 
-            // once saved, delete it.
-            ordersTable.remove(identifier);
-        } catch (IOException ex) {
-            logger.error("Order list could not be saved", ex);
+                // once saved, delete it.
+                ordersTable.remove(identifier);
+            } catch (IOException ex) {
+                logger.error("Order list could not be saved", ex);
+            }
         }
     }
 
     public void addNewOrder(String id, Order order) throws IOException {
-        ordersTable.get(id).add(order);
-        if (!useFallback) {
-            dataBackendDB.addNewOrder(order);
+        synchronized (listOrdersSemaphore) {
+            ordersTable.get(id).add(order);
+            if (!useFallback) {
+                dataBackendDB.addNewOrder(order);
+            }
         }
     }
 
     public void delLastOrder(String id) throws IOException {
-        ConcurrentLinkedQueue<Order> tempOrderList = ordersTable.get(id);
-        if (tempOrderList.size() >= 0) {
-            Order tempOrder = (Order)tempOrderList.toArray()[tempOrderList.size() -1];
-            if (!useFallback) {
-                dataBackendDB.delLastOrder( tempOrder );
+        synchronized (listOrdersSemaphore) {
+            List<Order> tempOrderList = ordersTable.get(id);
+            if (tempOrderList.size() >= 0) {
+                Order tempOrder = tempOrderList.get( tempOrderList.size()-1 );
+                if (!useFallback) {
+                    dataBackendDB.delLastOrder( tempOrder );
+                }
+                tempOrderList.remove( tempOrder );
             }
-            tempOrderList.remove( tempOrder );
         }
     }
 
@@ -369,9 +385,10 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     //----------------------------//
 
     // FIXME potrebbe non esser corretto
+    @Deprecated
     public void saveNewArticlesList(ArticlesList list) { // RIVEDI
         synchronized (listArticlesSemaphore) {
-            articlesList = new ArticlesList(list.getGroupsList());
+            articlesList = new ArticlesList(list);
             
             synchronized (listProgressiviSemaphore) {
                 progressivesList = new TreeMap<String, Integer>();
