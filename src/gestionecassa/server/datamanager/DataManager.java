@@ -5,6 +5,8 @@
 
 package gestionecassa.server.datamanager;
 
+import gestionecassa.backends.BackendAPI_2;
+import gestionecassa.backends.BackendAPI_1;
 import gestionecassa.Admin;
 import gestionecassa.ArticleWithPreparation;
 import gestionecassa.Article;
@@ -302,10 +304,11 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     }
 
     /**
+     * Getter for the Articles List hold by the server
      *
      * @return
      */
-    public ArticlesList getCurrentArticlesList() {
+    public ArticlesList getArticlesList() {
         synchronized (listArticlesSemaphore) {
             return articlesList;
         }

@@ -26,6 +26,6 @@ public interface DMCommonAPI {
      *
      * @return
      */
-    ArticlesList getCurrentArticlesList();
+    ArticlesList getArticlesList();
 
 }

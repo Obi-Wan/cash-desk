@@ -19,7 +19,7 @@ import gestionecassa.ArticleGroup;
 import gestionecassa.ArticlesList;
 import gestionecassa.Cassiere;
 import gestionecassa.order.Order;
-import gestionecassa.server.datamanager.BackendAPI_1;
+import gestionecassa.backends.BackendAPI_1;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;

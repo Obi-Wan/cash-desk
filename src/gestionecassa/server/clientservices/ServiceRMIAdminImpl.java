@@ -50,7 +50,7 @@ public class ServiceRMIAdminImpl extends SharedServerService
      * @throws RemoteException
      */
     public ArticlesList requestArticlesList() throws RemoteException {
-        return dataManager.getCurrentArticlesList();
+        return dataManager.getArticlesList();
     }
 
 

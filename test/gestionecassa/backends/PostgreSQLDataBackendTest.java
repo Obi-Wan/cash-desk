@@ -12,8 +12,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package gestionecassa.server.datamanager.backends;
+package gestionecassa.backends;
 
+import gestionecassa.backends.PostgreSQLDataBackend;
 import gestionecassa.Admin;
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;

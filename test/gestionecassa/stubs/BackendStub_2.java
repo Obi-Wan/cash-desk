@@ -21,7 +21,7 @@ import gestionecassa.Cassiere;
 import gestionecassa.EventDate;
 import gestionecassa.OrganizedEvent;
 import gestionecassa.order.Order;
-import gestionecassa.server.datamanager.BackendAPI_2;
+import gestionecassa.backends.BackendAPI_2;
 import java.io.IOException;
 import java.util.List;
 

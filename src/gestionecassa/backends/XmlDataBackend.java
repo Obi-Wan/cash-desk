@@ -12,7 +12,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package gestionecassa.server.datamanager.backends;
+package gestionecassa.backends;
 
 import gestionecassa.Admin;
 import gestionecassa.ArticleWithOptions;
@@ -25,7 +25,6 @@ import gestionecassa.order.Order;
 import gestionecassa.order.EntrySingleOption;
 import gestionecassa.order.EntrySingleArticle;
 import gestionecassa.order.EntrySingleArticleWithOption;
-import gestionecassa.server.datamanager.BackendAPI_1;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;

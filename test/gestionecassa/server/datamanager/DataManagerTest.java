@@ -14,6 +14,8 @@
 
 package gestionecassa.server.datamanager;
 
+import gestionecassa.backends.BackendAPI_2;
+import gestionecassa.backends.BackendAPI_1;
 import gestionecassa.Admin;
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
@@ -109,12 +111,12 @@ public class DataManagerTest {
     }
 
     /**
-     * Test of getCurrentArticlesList method, of class DataManager.
+     * Test of getArticlesList method, of class DataManager.
      */
     @Test
     public void testGetCurrentArticlesList() throws IOException {
         System.out.println("getCurrentArticlesList");
-        assertEquals(dataManager.getCurrentArticlesList().getGroupsList(),
+        assertEquals(dataManager.getArticlesList().getGroupsList(),
                 backend_1.loadArticlesList());
     }
 
@@ -184,8 +186,16 @@ public class DataManagerTest {
 
         // FIXME non preservato l'ordine!
         assertEquals(dataManager.articlesList.getGroup(0).getList(), articles);
-        assertEquals(backend_1.loadArticlesList().get(0).getList(), articles);
-        assertNotSame(backend_1.loadArticlesList().get(0).getList(), oldArticles);
+
+        assertEquals(
+                ((List<ArticleGroup>)
+                    backend_1.loadArticlesList()).get(0).getList(),
+                articles);
+
+        assertNotSame(
+                ((List<ArticleGroup>)
+                    backend_1.loadArticlesList()).get(0).getList(),
+                oldArticles);
     }
 
 }

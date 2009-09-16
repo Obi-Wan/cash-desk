@@ -23,10 +23,10 @@ import java.util.List;
 import gestionecassa.Log;
 import gestionecassa.exceptions.WrongLoginException;
 import gestionecassa.server.clientservices.*;
-import gestionecassa.server.datamanager.BackendAPI_1;
-import gestionecassa.server.datamanager.BackendAPI_2;
-import gestionecassa.server.datamanager.backends.PostgreSQLDataBackend;
-import gestionecassa.server.datamanager.backends.XmlDataBackend;
+import gestionecassa.backends.BackendAPI_1;
+import gestionecassa.backends.BackendAPI_2;
+import gestionecassa.backends.PostgreSQLDataBackend;
+import gestionecassa.backends.XmlDataBackend;
 import org.apache.log4j.Logger;
 
 /** This is the main class of the server side application.

@@ -12,7 +12,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package gestionecassa.server.datamanager;
+package gestionecassa.backends;
 
 import gestionecassa.Admin;
 import gestionecassa.Article;
