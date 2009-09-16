@@ -15,15 +15,12 @@
 package gestionecassa.server.datamanager;
 
 import gestionecassa.Admin;
-import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
 import gestionecassa.Cassiere;
 import gestionecassa.ArticlesList;
 import gestionecassa.order.Order;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * This interface defines the basc functionalities a databackend should provide
@@ -41,7 +38,7 @@ public interface BackendAPI_1 {
      *
      * @throws IOException
      */
-    void saveListOfOrders(String id, ConcurrentLinkedQueue<Order> list) throws IOException;
+    void saveListOfOrders(String id, Collection<Order> list) throws IOException;
 
     /**
      * Saves the list of old articles
@@ -59,7 +56,7 @@ public interface BackendAPI_1 {
      *
      * @throws IOException
      */
-    List<ArticleGroup> loadArticlesList() throws IOException;
+    Collection<ArticleGroup> loadArticlesList() throws IOException;
 
     /**
      * Saves the list of all the Admins
@@ -77,7 +74,7 @@ public interface BackendAPI_1 {
      *
      * @throws IOException
      */
-    List<Admin> loadAdminsList() throws IOException;
+    Collection<Admin> loadAdminsList() throws IOException;
 
     /**
      * Saves the cassieres list
@@ -95,5 +92,5 @@ public interface BackendAPI_1 {
      *
      * @throws IOException
      */
-    List<Cassiere> loadCassiereList() throws IOException;
+    Collection<Cassiere> loadCassiereList() throws IOException;
 }

@@ -28,11 +28,8 @@ import gestionecassa.order.EntrySingleArticleWithOption;
 import gestionecassa.server.datamanager.BackendAPI_1;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -74,7 +71,7 @@ public class XmlDataBackend implements BackendAPI_1 {
 
         Document document = DocumentHelper.createDocument();
         Element root = document.addElement( "article_groups" );
-        List<ArticleGroup> groups = lista.getGroupsList();
+        Collection<ArticleGroup> groups = lista.getGroupsList();
         for (ArticleGroup group : groups) {
             Element tempGroup = root.addElement("group");
 
@@ -92,7 +89,7 @@ public class XmlDataBackend implements BackendAPI_1 {
                     tempArt.addAttribute("options", "true");
                     Element tempOpzioni = tempArt.addElement("options");
 
-                    List<String> options = ((ArticleWithOptions)art).getOptions();
+                    Collection<String> options = ((ArticleWithOptions)art).getOptions();
                     for (String option : options) {
                         tempOpzioni.addElement("option").addText(option);
                     }
@@ -112,8 +109,8 @@ public class XmlDataBackend implements BackendAPI_1 {
         writer.close();
     }
 
-    public List<ArticleGroup> loadArticlesList() throws IOException {
-        List<ArticleGroup> output = new LinkedList<ArticleGroup>();
+    public Collection<ArticleGroup> loadArticlesList() throws IOException {
+        Collection<ArticleGroup> output = new LinkedList<ArticleGroup>();
 
         SAXReader reader = new SAXReader();
         Document document;
@@ -132,7 +129,7 @@ public class XmlDataBackend implements BackendAPI_1 {
             String g_name = tempRefGroup.element("name").getText();
             int g_id = new Integer(tempRefGroup.element("id").getText()).intValue();
 
-            List<Article> tempList = new LinkedList<Article>();
+            Collection<Article> tempList = new LinkedList<Article>();
             for (Object art : tempRefGroup.elements("article")) {
                 Element tempRefArt = (Element)art;
 
@@ -143,7 +140,7 @@ public class XmlDataBackend implements BackendAPI_1 {
                 Article article;
                 if (tempRefArt.attribute("options").getValue().equals("true")) {
 
-                    List<String> opts = new ArrayList<String>();
+                    Collection<String> opts = new LinkedList<String>();
                     for (Object opt : tempRefArt.element("options").elements("option")) {
                         opts.add(((Element)opt).getText());
                     }
@@ -186,8 +183,8 @@ public class XmlDataBackend implements BackendAPI_1 {
         writer.close();
     }
 
-    public List<Admin> loadAdminsList() throws IOException {
-        List<Admin> output = new ArrayList<Admin>();
+    public Collection<Admin> loadAdminsList() throws IOException {
+        Collection<Admin> output = new LinkedList<Admin>();
 
         SAXReader reader = new SAXReader();
         Document document;
@@ -234,8 +231,8 @@ public class XmlDataBackend implements BackendAPI_1 {
         writer.close();
     }
 
-    public List<Cassiere> loadCassiereList() throws IOException {
-        List<Cassiere> output = new ArrayList<Cassiere>();
+    public Collection<Cassiere> loadCassiereList() throws IOException {
+        Collection<Cassiere> output = new LinkedList<Cassiere>();
 
         SAXReader reader = new SAXReader();
         Document document;
@@ -264,7 +261,7 @@ public class XmlDataBackend implements BackendAPI_1 {
     // Orders handle functions.
     //--------------------------//
 
-    public void saveListOfOrders(String id, ConcurrentLinkedQueue<Order> list)
+    public void saveListOfOrders(String id, Collection<Order> list)
             throws IOException {
 
         String fileName = xmlDataPath + id + ".xml";
@@ -290,7 +287,7 @@ public class XmlDataBackend implements BackendAPI_1 {
         Element xmlOrder = root.addElement("ordine");
         xmlOrder.addElement("data").addText(order.getDate().toString());
         xmlOrder.addElement("prezzo_totale").addText(order.getTotalPrice()+"");
-        List<EntrySingleArticle> listaBeni = order.getArticlesSold();
+        Collection<EntrySingleArticle> listaBeni = order.getArticlesSold();
 
         for (EntrySingleArticle singleArticle : listaBeni) {
             Element xmlArticle = xmlOrder.addElement("singolo_bene");
@@ -304,7 +301,7 @@ public class XmlDataBackend implements BackendAPI_1 {
                 Element xmlOptions = xmlArticle.addElement("opzioni");
                 int progressivo =
                         ((EntrySingleArticleWithOption)singleArticle).startProgressive;
-                List<EntrySingleOption> options =
+                Collection<EntrySingleOption> options =
                         ((EntrySingleArticleWithOption)singleArticle).numPartial;
 
                 for (EntrySingleOption option : options) {

@@ -15,6 +15,7 @@
 package gestionecassa;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
@@ -60,7 +61,7 @@ public class ArticleGroup implements Serializable {
      * @param grn Name of this group
      * @param list List of articles of this group
      */
-    public ArticleGroup(int id, String grn, List<Article> list) {
+    public ArticleGroup(int id, String grn, Collection<Article> list) {
         this(id, grn, true, list);
     }
 
@@ -71,7 +72,7 @@ public class ArticleGroup implements Serializable {
      * @param en If group is enabled/disabled
      * @param list List of articles of this group
      */
-    public ArticleGroup(int id, String grn, boolean en, List<Article> list) {
+    public ArticleGroup(int id, String grn, boolean en, Collection<Article> list) {
         this.groupName = new String(grn);
         this.list = new Vector<Article>(list);
         this.enabled = en;

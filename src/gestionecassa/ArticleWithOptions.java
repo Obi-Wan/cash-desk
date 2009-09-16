@@ -2,6 +2,7 @@
 package gestionecassa;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public class ArticleWithOptions extends Article implements ArticleWithPreparatio
      * @param price
      * @param options
      */
-    public ArticleWithOptions(int id, String name, double price, List<String> options) {
+    public ArticleWithOptions(int id, String name, double price, Collection<String> options) {
         super(id,name, price);
         this.options = new ArrayList<String>(options);
     }
@@ -34,7 +35,7 @@ public class ArticleWithOptions extends Article implements ArticleWithPreparatio
      * @param price
      * @param options
      */
-    public ArticleWithOptions(int id, String name, double price, List<String> options, boolean b) {
+    public ArticleWithOptions(int id, String name, double price, Collection<String> options, boolean b) {
         super(id, name, price, b);
         this.options = new ArrayList<String>(options);
     }

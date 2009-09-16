@@ -42,10 +42,21 @@ public class ArticlesList implements Serializable {
      *
      * @param list
      */
-    public ArticlesList(List<ArticleGroup> list) {
+    public ArticlesList(Collection<ArticleGroup> list) {
         this.groups = new Vector<ArticleGroup>(list);
-        generateArtSet();
+        generateArtMap();
         generateNumMap();
+    }
+
+    /**
+     * Copy constructor
+     * 
+     * @param list
+     */
+    public ArticlesList(ArticlesList list) {
+        this.groups = new Vector<ArticleGroup>(list.groups);
+        this.grNum = new TreeMap<String, Integer>(list.grNum);
+        this.articles = new TreeMap<String, Article>(list.articles);
     }
 
     private void generateNumMap() {
@@ -55,7 +66,7 @@ public class ArticlesList implements Serializable {
         }
     }
 
-    private void generateArtSet() {
+    private void generateArtMap() {
         articles = new TreeMap<String, Article>();
         for (ArticleGroup artGroup : groups) {
             for (Article article : artGroup.getList()) {
@@ -90,7 +101,7 @@ public class ArticlesList implements Serializable {
             }
             groups.add(group);
             grNum.put(group.groupName, groups.size()-1);
-            generateArtSet();
+            generateArtMap();
         } else {
             throw new DuplicateGroupException("Already existing group: "
                     + group.groupName);

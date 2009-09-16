@@ -17,6 +17,7 @@ import gestionecassa.order.Order;
 import gestionecassa.Person;
 import gestionecassa.exceptions.NotExistingGroupException;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
