@@ -16,6 +16,7 @@ package gestionecassa.server.datamanager;
 
 import gestionecassa.Admin;
 import gestionecassa.Article;
+import gestionecassa.ArticleGroup;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.ArticlesList;
 import gestionecassa.Cassiere;
@@ -23,6 +24,7 @@ import gestionecassa.Person;
 import gestionecassa.stubs.BackendStub_1;
 import gestionecassa.stubs.BackendStub_2;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 import org.junit.After;
@@ -112,8 +114,8 @@ public class DataManagerTest {
     @Test
     public void testGetCurrentArticlesList() throws IOException {
         System.out.println("getCurrentArticlesList");
-        assertTrue(dataManager.getCurrentArticlesList().list.equals(
-                backend_1.loadArticlesList()));
+        assertEquals(dataManager.getCurrentArticlesList().getGroupsList(),
+                backend_1.loadArticlesList());
     }
 
     /**
@@ -144,6 +146,7 @@ public class DataManagerTest {
      * Test of delLastOrder method, of class DataManager.
      */
     @Test
+
     public void testDelLastOrder() {
         System.out.println("delLastOrder");
     }
@@ -163,22 +166,26 @@ public class DataManagerTest {
     public void testSaveNewArticlesList() throws IOException {
         System.out.println("saveNewArticlesList");
 
-        List<Article> oldArticles = dataManager.articlesList.list;
+        Collection<Article> oldArticles = dataManager.articlesList.getArticlesList();
         
         List<Article> articles = new Vector<Article>();
-        List<String> listaOpzioni = new Vector<String>();
+        Collection<String> listaOpzioni = new Vector<String>();
         listaOpzioni.add("cacca secca");
         listaOpzioni.add("cacca liquida");
         articles.add(new Article(1,"fagiolo", 25));
         articles.add(new Article(2,"blabla", 35));
         articles.add(new Article(3,"merda dello stige", 5.5));
         articles.add(new ArticleWithOptions(4,"yeah", 10.25, listaOpzioni));
+        
+        List<ArticleGroup> groups = new Vector<ArticleGroup>();
+        groups.add(new ArticleGroup(1, "group", articles));
 
-        dataManager.saveNewArticlesList(new ArticlesList(articles));
+        dataManager.saveNewArticlesList(new ArticlesList(groups));
 
-        assertTrue(dataManager.articlesList.list.equals(articles));
-        assertTrue(backend_1.loadArticlesList().equals(articles));
-        assertTrue(!backend_1.loadArticlesList().equals(oldArticles));
+        // FIXME non preservato l'ordine!
+        assertEquals(dataManager.articlesList.getGroup(0).getList(), articles);
+        assertEquals(backend_1.loadArticlesList().get(0).getList(), articles);
+        assertNotSame(backend_1.loadArticlesList().get(0).getList(), oldArticles);
     }
 
 }

@@ -16,9 +16,11 @@ package gestionecassa.stubs;
 
 import gestionecassa.Admin;
 import gestionecassa.Article;
+import gestionecassa.ArticleGroup;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.Cassiere;
 import gestionecassa.order.Order;
+import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
@@ -30,7 +32,7 @@ public class BackendStub {
 
     public List<Order> ordersList;
 
-    public List<Article> articles;
+    public List<ArticleGroup> groups;
 
     public List<Admin> admins;
 
@@ -42,14 +44,17 @@ public class BackendStub {
         cassieres = new Vector<Cassiere>();
         cassieres.add(new Cassiere(cassieres.size(), "bene", "male"));
 
-        articles = new Vector<Article>();
-        List<String> listaOpzioni = new Vector<String>();
+        List<Article> articles = new Vector<Article>();
+        Collection<String> listaOpzioni = new Vector<String>();
         listaOpzioni.add("cacca secca");
         listaOpzioni.add("cacca liquida");
         articles.add(new Article(1,"fagiolo", 25));
         articles.add(new Article(2,"ameba", 35));
         articles.add(new Article(3,"merda dello stige", 5.5));
         articles.add(new ArticleWithOptions(4,"panino alla", 10.25, listaOpzioni));
+
+        groups = new Vector<ArticleGroup>();
+        groups.add(new ArticleGroup(1, "group", articles));
     }
 
 }

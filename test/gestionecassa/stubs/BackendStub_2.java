@@ -16,7 +16,10 @@ package gestionecassa.stubs;
 
 import gestionecassa.Admin;
 import gestionecassa.Article;
+import gestionecassa.ArticleGroup;
 import gestionecassa.Cassiere;
+import gestionecassa.EventDate;
+import gestionecassa.OrganizedEvent;
 import gestionecassa.order.Order;
 import gestionecassa.server.datamanager.BackendAPI_2;
 import java.io.IOException;
@@ -32,19 +35,19 @@ public class BackendStub_2 extends BackendStub implements BackendAPI_2 {
         throw new IOException("use BackendStub_1 for now");
     }
 
-    public void addArticleToListAt(Article article, int position) throws IOException {
+    public void addArticleToListAt(int group, Article article, int position) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public void addArticleToList(Article article) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void moveArticleAt(Article article, int position) throws IOException {
+    public void addArticleToList(int group, Article article) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void enableArticleFromList(Article article, boolean enable) throws IOException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void moveArticleAt(Article article, int position) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -72,7 +75,7 @@ public class BackendStub_2 extends BackendStub implements BackendAPI_2 {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public List<Article> loadArticlesList() throws IOException {
+    public List<ArticleGroup> loadArticlesList() throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -81,6 +84,22 @@ public class BackendStub_2 extends BackendStub implements BackendAPI_2 {
     }
 
     public List<Cassiere> loadCassiereList() throws IOException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public List<EventDate> getDatesOfOrgEvent(String name) throws IOException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public List<OrganizedEvent> getOrganizedEvents() throws IOException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void addOrganizedEvent(OrganizedEvent ev) throws IOException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void addDateToOrgEvent(EventDate evd, String title) throws IOException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

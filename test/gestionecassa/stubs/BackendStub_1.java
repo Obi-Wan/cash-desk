@@ -15,7 +15,7 @@
 package gestionecassa.stubs;
 
 import gestionecassa.Admin;
-import gestionecassa.Article;
+import gestionecassa.ArticleGroup;
 import gestionecassa.ArticlesList;
 import gestionecassa.Cassiere;
 import gestionecassa.order.Order;
@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  *
@@ -32,16 +31,16 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class BackendStub_1 extends BackendStub implements BackendAPI_1 {
 
-    public void saveListOfOrders(String id, ConcurrentLinkedQueue<Order> list) throws IOException {
+    public void saveListOfOrders(String id, Collection<Order> list) throws IOException {
         ordersList = new Vector<Order>(list);
     }
 
     public void saveArticlesList(ArticlesList list) throws IOException {
-        articles = new Vector<Article>(list.list);
+        groups = new Vector<ArticleGroup>(list.getGroupsList());
     }
 
-    public List<Article> loadArticlesList() throws IOException {
-        return articles;
+    public List<ArticleGroup> loadArticlesList() throws IOException {
+        return groups;
     }
 
     public void saveAdminsList(Collection<Admin> list) throws IOException {
