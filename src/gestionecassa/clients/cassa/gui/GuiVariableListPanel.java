@@ -40,9 +40,6 @@ abstract public class GuiVariableListPanel extends javax.swing.JPanel {
     /**
      * Default constructor
      */
-    protected KeyStroke moreKeys[];
-    protected KeyStroke lessKeys[];
-
     public GuiVariableListPanel() {
         panelsTable = new Vector<RecordPanels>();
     }
@@ -95,21 +92,19 @@ abstract public class GuiVariableListPanel extends javax.swing.JPanel {
          * tutto */
         this.removeAll();
 
-        /* Creo il nuovo layout in cui organizzerò i nuovi pannelli
-         */
+        /* Creo il nuovo layout in cui organizzerò i nuovi pannelli */
         javax.swing.GroupLayout layout =
                 new javax.swing.GroupLayout(this);
         this.setLayout(layout);
 
-        /* Creo i due gruppi con cui organizzare i pannelli
-         */
+        /* Creo i due gruppi con cui organizzare i pannelli */
         ParallelGroup tempHorizGroup = layout.createParallelGroup(
                 javax.swing.GroupLayout.Alignment.LEADING);
         SequentialGroup tempSequGroup = layout.createSequentialGroup()
             .addContainerGap();
 
-        /* Ciclo in cui aggiungo i pannelli ai gruppi con le impostazioni giuste
-         */
+        /* Ciclo in cui aggiungo i pannelli ai gruppi con le impostazioni
+         * giuste */
         for (RecordPanels singleRecord : panelsTable) {
 
             tempHorizGroup.addComponent(singleRecord.displayedPanel,
@@ -125,14 +120,12 @@ abstract public class GuiVariableListPanel extends javax.swing.JPanel {
                     javax.swing.LayoutStyle.ComponentPlacement.RELATED);
         }
 
-        /* Ultimo spazio del gruppo verticale
-         */
+        /* Ultimo spazio del gruppo verticale */
         tempSequGroup.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE,
                                       Short.MAX_VALUE);
 
         /* infine aggiungiamo il gruppo di elementi al layout della pagina
-         * principale.
-         */
+         * principale. */
         layout.setHorizontalGroup(
           layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
