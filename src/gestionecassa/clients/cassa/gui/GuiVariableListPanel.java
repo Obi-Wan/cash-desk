@@ -20,12 +20,11 @@
 
 package gestionecassa.clients.cassa.gui;
 
-import java.awt.event.KeyEvent;
 import java.util.List;
+import java.util.Vector;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
 import javax.swing.JPanel;
-import javax.swing.KeyStroke;
 
 /**
  *
@@ -38,14 +37,14 @@ abstract public class GuiVariableListPanel extends javax.swing.JPanel {
      */
     protected List<RecordPanels> panelsTable;
 
+    /**
+     * Default constructor
+     */
     protected KeyStroke moreKeys[];
     protected KeyStroke lessKeys[];
 
-    /** Creates new form GuiVariableListPanel */
     public GuiVariableListPanel() {
-        initComponents();
-        
-        initKeysShortcuts();
+        panelsTable = new Vector<RecordPanels>();
     }
 
     /** This method is called from within the constructor to
@@ -74,49 +73,26 @@ abstract public class GuiVariableListPanel extends javax.swing.JPanel {
   // End of variables declaration//GEN-END:variables
 
     /**
-     * It assigns the keys for fast selection of chosen articles in this displayedPanel
+     * Explicit constructor
+     *
+     * @param panelses
      */
-    protected void initKeysShortcuts() {
-        moreKeys = new KeyStroke[10];
-        lessKeys = new KeyStroke[10];
-
-        moreKeys[0] = KeyStroke.getKeyStroke(KeyEvent.VK_1,0);
-        moreKeys[1] = KeyStroke.getKeyStroke(KeyEvent.VK_2,0);
-        moreKeys[2] = KeyStroke.getKeyStroke(KeyEvent.VK_3,0);
-        moreKeys[3] = KeyStroke.getKeyStroke(KeyEvent.VK_4,0);
-        moreKeys[4] = KeyStroke.getKeyStroke(KeyEvent.VK_5,0);
-        moreKeys[5] = KeyStroke.getKeyStroke(KeyEvent.VK_6,0);
-        moreKeys[6] = KeyStroke.getKeyStroke(KeyEvent.VK_7,0);
-        moreKeys[7] = KeyStroke.getKeyStroke(KeyEvent.VK_8,0);
-        moreKeys[8] = KeyStroke.getKeyStroke(KeyEvent.VK_9,0);
-        moreKeys[9] = KeyStroke.getKeyStroke(KeyEvent.VK_0,0);
-
-        lessKeys[0] = KeyStroke.getKeyStroke(KeyEvent.VK_Q,0);
-        lessKeys[1] = KeyStroke.getKeyStroke(KeyEvent.VK_W,0);
-        lessKeys[2] = KeyStroke.getKeyStroke(KeyEvent.VK_E,0);
-        lessKeys[3] = KeyStroke.getKeyStroke(KeyEvent.VK_R,0);
-        lessKeys[4] = KeyStroke.getKeyStroke(KeyEvent.VK_T,0);
-        lessKeys[5] = KeyStroke.getKeyStroke(KeyEvent.VK_Y,0);
-        lessKeys[6] = KeyStroke.getKeyStroke(KeyEvent.VK_U,0);
-        lessKeys[7] = KeyStroke.getKeyStroke(KeyEvent.VK_I,0);
-        lessKeys[8] = KeyStroke.getKeyStroke(KeyEvent.VK_O,0);
-        lessKeys[9] = KeyStroke.getKeyStroke(KeyEvent.VK_P,0);
+    public GuiVariableListPanel(List<RecordPanels> panelses) {
+        this.panelsTable = panelses;
     }
 
     /**
      * Popolates the list of the panels related to each article sold.
      */
-    abstract protected void buildContentsList();
+    abstract void buildContentsList();
 
     /**
      * It actually displays what the method <code>buildContentsList()</code>
      * stored in the table of SoldArticle-"Panel showing it".
      */
-    protected void buildVisualList() {
-
+    void buildVisualList() {
         /* Prima di tutto rimuoviamo i pannelli di prima che se no incasinano
-         * tutto
-         */
+         * tutto */
         this.removeAll();
 
         /* Creo il nuovo layout in cui organizzerò i nuovi pannelli

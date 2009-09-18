@@ -46,14 +46,14 @@ public class GuiHelperSingleOptionPanel extends GuiAbstrSingleArticlePanel {
 
         if (countPanel < 10) {
             jButtonMore.getInputMap(WHEN_IN_FOCUSED_WINDOW)
-                    .put(parent.moreKeys[countPanel], "MORE"+countPanel);
+                    .put(Shortcuts.moreKeys[countPanel], "MORE"+countPanel);
             jButtonMore.getActionMap().put("MORE"+countPanel, new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     more();
                 }
             });
             jButtonLess.getInputMap(WHEN_IN_FOCUSED_WINDOW)
-                    .put(parent.lessKeys[countPanel], "LESS"+countPanel);
+                    .put(Shortcuts.lessKeys[countPanel], "LESS"+countPanel);
             jButtonLess.getActionMap().put("LESS"+countPanel, new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     less();
@@ -181,10 +181,5 @@ public class GuiHelperSingleOptionPanel extends GuiAbstrSingleArticlePanel {
             jSpinnerNum.setValue(spinnerModel.getValue());
         }
         return spinnerModel.getNumber().intValue();
-    }
-
-    @Override
-    public void clean() {
-        // useless, just to preserve ompatibility with GuiAbstrSingleArticlePanel
     }
 }

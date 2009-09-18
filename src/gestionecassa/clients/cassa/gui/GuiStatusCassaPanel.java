@@ -99,15 +99,15 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
           .addGroup(jPanelMachineStatusLayout.createSequentialGroup()
             .addComponent(jLabelHostname)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jTextFieldHostname, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE))
+            .addComponent(jTextFieldHostname, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE))
           .addGroup(jPanelMachineStatusLayout.createSequentialGroup()
             .addComponent(jLabelUser)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jTextFieldUser, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE))
+            .addComponent(jTextFieldUser, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE))
           .addGroup(jPanelMachineStatusLayout.createSequentialGroup()
             .addComponent(jLabelLogged)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jTextFieldLogged, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)))
+            .addComponent(jTextFieldLogged, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)))
         .addContainerGap())
     );
     jPanelMachineStatusLayout.setVerticalGroup(
@@ -125,7 +125,7 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
         .addGroup(jPanelMachineStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabelLogged)
           .addComponent(jTextFieldLogged, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addContainerGap(14, Short.MAX_VALUE))
     );
 
     jPanelLastOrder.setBorder(javax.swing.BorderFactory.createTitledBorder("Last Order"));
@@ -137,7 +137,7 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
     jLabelPrize.setText("Price");
 
     jTextFieldPrice.setEditable(false);
-    jTextFieldPrice.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
+    jTextFieldPrice.setFont(new java.awt.Font("Dialog", 1, 36));
 
     jLabelStatus.setText("Status");
 
@@ -155,9 +155,9 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
           .addComponent(jLabelStatus))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(jPanelLastOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jTextFieldPrice, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
-          .addComponent(jTextFieldTime, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
-          .addComponent(jTextFieldStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE))
+          .addComponent(jTextFieldPrice, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+          .addComponent(jTextFieldTime, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+          .addComponent(jTextFieldStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
         .addContainerGap())
     );
     jPanelLastOrderLayout.setVerticalGroup(
@@ -175,7 +175,7 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
         .addGroup(jPanelLastOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabelStatus)
           .addComponent(jTextFieldStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addContainerGap(13, Short.MAX_VALUE))
     );
 
     jPanelCurrentOrder.setBorder(javax.swing.BorderFactory.createTitledBorder("Partial Order"));
@@ -192,7 +192,7 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
         .addContainerGap()
         .addComponent(jLabelPrizeCurrent)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jTextFieldPriceCurrent, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+        .addComponent(jTextFieldPriceCurrent, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
         .addContainerGap())
     );
     jPanelCurrentOrderLayout.setVerticalGroup(

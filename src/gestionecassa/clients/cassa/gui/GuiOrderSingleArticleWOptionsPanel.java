@@ -59,20 +59,17 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
         this.jLabelPrice.setText("€ " + art.getPrice());
 
         optionsPanels = new ArrayList<GuiOrderSingleOptionPanel>();
-
+        
         if (index < 10) {
-            jButtonNuovo.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
-                    parent.moreKeys[index], "MORE"+index);
-            jButtonNuovo.getActionMap().put("MORE"+index, new AbstractAction() {
-                public void actionPerformed(ActionEvent e) {
-                    modifyOptions();
-                }
+            this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
+                    Shortcuts.moreKeys[index], "MORE"+index);
+            this.getActionMap().put("MORE"+index, new AbstractAction() {
+                public void actionPerformed(ActionEvent e) { modifyOptions(); }
             });
-            this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(parent.lessKeys[index], "LESS"+index);
+            this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
+                    Shortcuts.lessKeys[index], "LESS"+index);
             this.getActionMap().put("LESS"+index, new AbstractAction() {
-                public void actionPerformed(ActionEvent e) {
-                    modifyOptions();
-                }
+                public void actionPerformed(ActionEvent e) { modifyOptions(); }
             });
         }
 
@@ -176,6 +173,7 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
     /**
      *
      */
+    @Override
     public void clean() {
         optionsPanels.removeAll(optionsPanels);
         rebuildVisualOptionsList();

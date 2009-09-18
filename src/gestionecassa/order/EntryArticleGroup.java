@@ -32,15 +32,13 @@ public class EntryArticleGroup implements Serializable {
 
     List<EntrySingleArticle> articles;
 
-    int table;
-
     String username;
 
     /**
      * Default constructor
      */
     public EntryArticleGroup(String name, int id) {
-        this(new String(name), id, "", 0, new Vector<EntrySingleArticle>());
+        this(new String(name), id, "", new Vector<EntrySingleArticle>());
     }
 
     /**
@@ -48,10 +46,9 @@ public class EntryArticleGroup implements Serializable {
      *
      * @param articles
      */
-    private EntryArticleGroup(String gname, int gid, String uname, int table,
+    EntryArticleGroup(String gname, int gid, String uname,
             List<EntrySingleArticle> articles) {
         this.articles = articles;
-        this.table = table;
         this.username = uname;
         this.groupId = gid;
         this.groupName = gname;

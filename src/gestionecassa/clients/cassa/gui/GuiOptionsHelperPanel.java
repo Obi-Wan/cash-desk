@@ -146,7 +146,6 @@ public class GuiOptionsHelperPanel extends GuiVariableListPanel implements OkCan
     }
 
     public void init() {
-        initKeysShortcuts();
         buildContentsList();
         buildVisualList();
     }

@@ -63,8 +63,7 @@ public class GuiNewOrderPanel extends GuiVariableListPanel {
         initComponents();
         this.owner = owner;
         this.parent = parent;
-
-        initKeysShortcuts();
+        
         fetchArticlesList();
         buildContentsList();
         buildVisualList();
@@ -109,21 +108,21 @@ public class GuiNewOrderPanel extends GuiVariableListPanel {
 
 
     /**
-     * Popolates the list of the panels related to each article sold.
+     * Populates the list of the panels related to each article sold.
      */
-    protected void buildContentsList() {
+    void buildContentsList() {
         panelsTable = new Vector<RecordPanels>();
         int i = 0;
-        for (Article bene : articlesList.getArticlesList()) {
+        for (Article art : articlesList.getArticlesList()) {
             GuiAbstrSingleArticlePanel tempPanel;
-            if (bene instanceof ArticleWithOptions) {
+            if (art instanceof ArticleWithOptions) {
                 tempPanel = 
                         new GuiOrderSingleArticleWOptionsPanel(this,
-                                                    (ArticleWithOptions)bene,i);
+                                                    (ArticleWithOptions)art,i);
             } else {
-                tempPanel = new GuiOrderSingleArticlePanel(this,bene,i);
+                tempPanel = new GuiOrderSingleArticlePanel(this, art, i);
             }
-            panelsTable.add(new RecordPanelsOfArticles(bene, tempPanel));
+            panelsTable.add(new RecordPanelsOfArticles(art, tempPanel));
             i++;
         }
     }

@@ -56,11 +56,11 @@ abstract public class GuiAbstrSingleArticlePanel extends javax.swing.JPanel {
   // Variables declaration - do not modify//GEN-BEGIN:variables
   // End of variables declaration//GEN-END:variables
 
-    abstract public void clean();
+    public void clean() { }
 
     /**
      *
      * @return
      */
-    public abstract int getNumTot();
+    abstract public int getNumTot();
 }

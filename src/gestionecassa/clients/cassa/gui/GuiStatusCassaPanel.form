@@ -47,8 +47,10 @@
   <SubComponents>
     <Container class="javax.swing.JPanel" name="jPanelMachineStatus">
       <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="javax.swing.BorderFactory.createTitledBorder(&quot;Client Status&quot;)" type="code"/>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Client Status"/>
+          </Border>
         </Property>
       </Properties>
 
@@ -61,17 +63,17 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabelHostname" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jTextFieldHostname" pref="107" max="32767" attributes="0"/>
+                          <Component id="jTextFieldHostname" pref="97" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabelUser" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jTextFieldUser" pref="108" max="32767" attributes="0"/>
+                          <Component id="jTextFieldUser" pref="98" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jLabelLogged" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jTextFieldLogged" pref="124" max="32767" attributes="0"/>
+                          <Component id="jTextFieldLogged" pref="114" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -96,7 +98,7 @@
                       <Component id="jLabelLogged" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jTextFieldLogged" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="14" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -139,8 +141,10 @@
     </Container>
     <Container class="javax.swing.JPanel" name="jPanelLastOrder">
       <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="javax.swing.BorderFactory.createTitledBorder(&quot;Last Order&quot;)" type="code"/>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Last Order"/>
+          </Border>
         </Property>
       </Properties>
 
@@ -156,9 +160,9 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jTextFieldPrice" alignment="1" pref="131" max="32767" attributes="0"/>
-                      <Component id="jTextFieldTime" alignment="0" pref="131" max="32767" attributes="0"/>
-                      <Component id="jTextFieldStatus" alignment="0" pref="131" max="32767" attributes="0"/>
+                      <Component id="jTextFieldPrice" alignment="1" pref="121" max="32767" attributes="0"/>
+                      <Component id="jTextFieldTime" alignment="0" pref="121" max="32767" attributes="0"/>
+                      <Component id="jTextFieldStatus" alignment="0" pref="121" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -182,7 +186,7 @@
                       <Component id="jLabelStatus" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jTextFieldStatus" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="13" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -225,8 +229,10 @@
     </Container>
     <Container class="javax.swing.JPanel" name="jPanelCurrentOrder">
       <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="javax.swing.BorderFactory.createTitledBorder(&quot;Partial Order&quot;)" type="code"/>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Partial Order"/>
+          </Border>
         </Property>
       </Properties>
 
@@ -237,7 +243,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLabelPrizeCurrent" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jTextFieldPriceCurrent" pref="141" max="32767" attributes="0"/>
+                  <Component id="jTextFieldPriceCurrent" pref="131" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
