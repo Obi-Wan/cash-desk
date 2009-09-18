@@ -20,8 +20,10 @@
 
 package gestionecassa.clients.cassa.gui;
 
+import gestionecassa.clients.GuiToolbarPanel;
 import gestionecassa.clients.GUIClientAPI;
 import gestionecassa.clients.GuiAppFrame;
+import gestionecassa.clients.GuiHelper;
 import gestionecassa.clients.GuiOkCancelHelperDialog;
 import gestionecassa.clients.GuiOptionsPanel;
 import gestionecassa.clients.cassa.CassaAPI;
@@ -36,12 +38,7 @@ public class GuiAppFrameCassa extends GuiAppFrame {
     /**
      *
      */
-    GuiArticlesListDialog dialogListaBeni;
-
-    /**
-     *
-     */
-    GuiToolbarCassaPanel toolbar;
+    GuiToolbarPanel toolbar;
 
     /**
      * 
@@ -57,7 +54,7 @@ public class GuiAppFrameCassa extends GuiAppFrame {
         super(owner);
         initComponents();
 
-        toolbar = new GuiToolbarCassaPanel(this);
+        toolbar = new GuiToolbarPanel(this);
 
         jScrollPanelMain = new javax.swing.JScrollPane();
 
@@ -72,9 +69,8 @@ public class GuiAppFrameCassa extends GuiAppFrame {
         getContentPane().add(statusPanel, java.awt.BorderLayout.LINE_END);
 
         enableLogout(false);
-        enableListaBeni(false);
 
-        packAndCenter();
+        GuiHelper.packAndCenter(this);
     }
 
     /** This method is called from within the constructor to
@@ -105,41 +101,10 @@ public class GuiAppFrameCassa extends GuiAppFrame {
     }
 
     /**
-     *
-     */
-    public void cleanDialogListaBeni() {
-        dialogListaBeni = null;
-    }
-
-    /**
-     *
-     * @param value
-     */
-    private void enableListaBeni(boolean value) {
-        toolbar.enableListaBeni(value);
-        if (!value) {
-            this.dialogListaBeni = null;
-        }
-    }
-
-    /**
-     *
-     */
-    void selectedDialogListaBeni() {
-        if (dialogListaBeni == null) {
-            dialogListaBeni = new GuiArticlesListDialog(this, false);
-            dialogListaBeni.setListaBeni(owner.getArticlesList());
-            dialogListaBeni.setVisible(true);
-        } else {
-            dialogListaBeni.setVisible(true);
-            dialogListaBeni.requestFocus();
-        }
-    }
-
-    /**
      * 
      */
-    void selectedDialogOptions() {
+    @Override
+    public void selectedDialogOptions() {
         new GuiOkCancelHelperDialog(this, "Client Options", 
                                     new GuiOptionsPanel(owner)).setVisible(true);
     }
@@ -174,7 +139,6 @@ public class GuiAppFrameCassa extends GuiAppFrame {
      */
     public void setupAfterLogin(CassaAPI cassaAPI, String username) {
         this.enableLogout(true);
-        this.enableListaBeni(true);
         GuiNewOrderPanel orderPanel = new GuiNewOrderPanel(cassaAPI,this);
         this.setContentPanel(orderPanel);
         statusPanel.setOrderPanel(orderPanel);
@@ -187,7 +151,6 @@ public class GuiAppFrameCassa extends GuiAppFrame {
     public void setdownAfterLogout() {
         statusPanel.setOrderPanel(null);
         this.enableLogout(false);
-        this.enableListaBeni(false);
         statusPanel.reset();
     }
 }

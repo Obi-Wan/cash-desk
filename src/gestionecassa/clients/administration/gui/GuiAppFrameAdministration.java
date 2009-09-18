@@ -22,6 +22,10 @@ package gestionecassa.clients.administration.gui;
 
 import gestionecassa.clients.GUIClientAPI;
 import gestionecassa.clients.GuiAppFrame;
+import gestionecassa.clients.GuiHelper;
+import gestionecassa.clients.GuiOkCancelHelperDialog;
+import gestionecassa.clients.GuiOptionsPanel;
+import gestionecassa.clients.GuiToolbarPanel;
 import java.awt.BorderLayout;
 
 /**
@@ -33,7 +37,7 @@ public class GuiAppFrameAdministration extends GuiAppFrame {
     /**
      * 
      */
-    GuiToolbarAdministrationPanel toolbar;
+    GuiToolbarPanel toolbar;
 
     /**
      * 
@@ -49,7 +53,7 @@ public class GuiAppFrameAdministration extends GuiAppFrame {
         super(owner);
         initComponents();
 
-        toolbar = new GuiToolbarAdministrationPanel(this);
+        toolbar = new GuiToolbarPanel(this);
 
         jScrollPanelMain = new javax.swing.JScrollPane();
 
@@ -65,7 +69,7 @@ public class GuiAppFrameAdministration extends GuiAppFrame {
 
         enableLogout(false);
 
-        packAndCenter();
+        GuiHelper.packAndCenter(this);
     }
 
     /** This method is called from within the constructor to
@@ -92,5 +96,11 @@ public class GuiAppFrameAdministration extends GuiAppFrame {
      */
     public void enableLogout(boolean value) {
         toolbar.enableLogout(value);
+    }
+
+    @Override
+    public void selectedDialogOptions() {
+        new GuiOkCancelHelperDialog(this, "Client Options",
+                                    new GuiOptionsPanel(owner)).setVisible(true);
     }
 }

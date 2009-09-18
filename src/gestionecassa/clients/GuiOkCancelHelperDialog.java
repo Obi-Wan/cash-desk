@@ -31,7 +31,7 @@ import javax.swing.KeyStroke;
  *
  * @author ben
  */
-public class GuiOkCancelHelperDialog extends GuiCentredDialog {
+public class GuiOkCancelHelperDialog extends javax.swing.JDialog {
 
     /** Creates new form GuiOkCancelHelperDialog */
     public GuiOkCancelHelperDialog(java.awt.Frame parent, String title,
@@ -61,7 +61,7 @@ public class GuiOkCancelHelperDialog extends GuiCentredDialog {
             }
         });
 
-        packAndCenter();
+        GuiHelper.packAndCenter(this);
     }
 
     /** This method is called from within the constructor to

@@ -21,7 +21,6 @@
 package gestionecassa.clients;
 
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.rmi.RemoteException;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -95,33 +94,12 @@ abstract public class GuiAppFrame extends javax.swing.JFrame {
     }
 
     /**
-     * 
-     */
-    protected void packAndCenter() {
-        this.pack();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension frameSize = this.getSize();
-        if (frameSize.height > screenSize.height) {
-            frameSize.height = screenSize.height;
-        }
-        if (frameSize.width > screenSize.width) {
-            frameSize.width = screenSize.width;
-        }
-        this.setSize(frameSize);
-        this.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
-    }
-
-    /**
      * Sets the new panel into the work area
      *
      * @param content
      */
     public void setContentPanel(JPanel content) {
         jScrollPanelMain.setViewportView(content);
-        jScrollPanelMain.setVerticalScrollBarPolicy(
-                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        jScrollPanelMain.setHorizontalScrollBarPolicy(
-                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         Dimension tempDim = content.getPreferredSize();
         tempDim.height = tempDim.height + 10;
@@ -129,14 +107,15 @@ abstract public class GuiAppFrame extends javax.swing.JFrame {
 
         jScrollPanelMain.setPreferredSize(tempDim);
 
-        packAndCenter();
+        GuiHelper.packAndCenter(this);
     }
 
     /**
-     * cleans the work area.
+     * re applies the panel to the ScrollPane to make it react on changes
      */
-    public void cleanContentPanel() {
-        jScrollPanelMain.setViewportView(new JPanel());
+    public void refreshContentPanel() {
+        jScrollPanelMain.setViewportView(
+                jScrollPanelMain.getViewport().getView());
     }
 
     /**
@@ -145,6 +124,11 @@ abstract public class GuiAppFrame extends javax.swing.JFrame {
      * @param value
      */
     abstract public void enableLogout(boolean value);
+
+    /**
+     *
+     */
+    abstract public void selectedDialogOptions();
 
     /**
      *

@@ -6,9 +6,6 @@
 
 package gestionecassa.clients;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-
 /**
  *
  * @author  ben
@@ -23,18 +20,7 @@ public class WaitingDialog extends javax.swing.JDialog {
         jLabelMessage.setText(message);
         jProgressBarWorking.setIndeterminate(true);
         
-        boolean noPack = false;
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension frameSize = this.getSize();
-        if (frameSize.height > screenSize.height) {
-            frameSize.height = screenSize.height;
-            noPack = true;
-        }
-        if (frameSize.width > screenSize.width) {
-            frameSize.width = screenSize.width;
-            noPack = true;
-        }
-        this.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
+        GuiHelper.packAndCenter(this);
     }
     
     /** This method is called from within the constructor to
@@ -73,23 +59,10 @@ public class WaitingDialog extends javax.swing.JDialog {
 
     pack();
   }// </editor-fold>//GEN-END:initComponents
-    
-    /**
-     * @param args the command line arguments
-     */
-   /*
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new WaitingDialog(new javax.swing.JFrame(), true, 
-                        "This is a Test").setVisible(true);
-            }
-        });
-    }
-    */
+
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JLabel jLabelMessage;
   private javax.swing.JProgressBar jProgressBarWorking;
   // End of variables declaration//GEN-END:variables
-    private boolean alive;
+
 }

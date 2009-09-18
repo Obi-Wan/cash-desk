@@ -1,5 +1,5 @@
 /*
- * GuiOptionsHelperPanel.java
+ * GuiAccelOptionsPanel.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,7 +13,7 @@
  */
 
 /*
- * GuiOptionsHelperPanel.java
+ * GuiAccelOptionsPanel.java
  *
  * Created on 4-set-2009, 18.46.14
  */
@@ -27,12 +27,12 @@ import java.util.Vector;
  *
  * @author ben
  */
-public class GuiOptionsHelperPanel extends GuiVariableListPanel implements OkCancelPanelAPI {
+public class GuiAccelOptionsPanel extends GuiVariableListPanel implements OkCancelPanelAPI {
 
     GuiOrderSingleArticleWOptionsPanel targetPanel;
 
-    /** Creates new form GuiOptionsHelperPanel */
-    public GuiOptionsHelperPanel(
+    /** Creates new form GuiAccelOptionsPanel */
+    public GuiAccelOptionsPanel(
             GuiOrderSingleArticleWOptionsPanel targetPanel) {
         initComponents();
 
@@ -86,7 +86,7 @@ public class GuiOptionsHelperPanel extends GuiVariableListPanel implements OkCan
          */
         public RecordPanelsOfOptions(String option,
                 GuiOrderSingleOptionPanel origPanel,
-                GuiHelperSingleOptionPanel diagPanel) {
+                GuiAccelSingleOptionPanel diagPanel) {
             super(diagPanel);
             this.option = option;
             this.originalPanel = origPanel;
@@ -112,10 +112,10 @@ public class GuiOptionsHelperPanel extends GuiVariableListPanel implements OkCan
         panelsTable = new Vector<RecordPanels>();
         int i = 0;
         for (String option : targetPanel.article.getOptions()) {
-            GuiHelperSingleOptionPanel tempDiagPanel;
+            GuiAccelSingleOptionPanel tempDiagPanel;
             GuiOrderSingleOptionPanel tempOrigPanel = targetPanel.getSingleOptionPanel(option);
 
-            tempDiagPanel = new GuiHelperSingleOptionPanel(this, option,
+            tempDiagPanel = new GuiAccelSingleOptionPanel(this, option,
                     (tempOrigPanel == null) ? 0 : tempOrigPanel.getNumParziale(),
                     i
                         );
@@ -133,8 +133,8 @@ public class GuiOptionsHelperPanel extends GuiVariableListPanel implements OkCan
             RecordPanelsOfOptions record =
                     (RecordPanelsOfOptions) tempRecord;
 
-            GuiHelperSingleOptionPanel dispPanel =
-                    (GuiHelperSingleOptionPanel) tempRecord.displayedPanel;
+            GuiAccelSingleOptionPanel dispPanel =
+                    (GuiAccelSingleOptionPanel) tempRecord.displayedPanel;
 
             if (dispPanel.spinnerModel.getValue().equals(
                     dispPanel.spinnerModel.getMinimum())) {

@@ -1,5 +1,5 @@
 /*
- * GuiToolbarCassaPanel.java
+ * GuiToolbarPanel.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,12 +13,12 @@
  */
 
 /*
- * GuiToolbarCassaPanel.java
+ * GuiToolbarPanel.java
  *
  * Created on 6-lug-2009, 15.46.33
  */
 
-package gestionecassa.clients.cassa.gui;
+package gestionecassa.clients;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -29,12 +29,12 @@ import javax.swing.KeyStroke;
  *
  * @author ben
  */
-public class GuiToolbarCassaPanel extends javax.swing.JPanel {
+public class GuiToolbarPanel extends javax.swing.JPanel {
 
-    GuiAppFrameCassa owner;
+    GuiAppFrame owner;
 
-    /** Creates new form GuiToolbarCassaPanel */
-    public GuiToolbarCassaPanel(GuiAppFrameCassa owner) {
+    /** Creates new form GuiToolbarPanel */
+    public GuiToolbarPanel(GuiAppFrame owner) {
         initComponents();
         this.owner = owner;
 
@@ -59,7 +59,6 @@ public class GuiToolbarCassaPanel extends javax.swing.JPanel {
     jToolBarMain = new javax.swing.JToolBar();
     jButtonLogout = new javax.swing.JButton();
     jSeparator1 = new javax.swing.JToolBar.Separator();
-    jButtonList = new javax.swing.JButton();
     jSeparator2 = new javax.swing.JToolBar.Separator();
     jButtonOptions = new javax.swing.JButton();
 
@@ -77,17 +76,6 @@ public class GuiToolbarCassaPanel extends javax.swing.JPanel {
     });
     jToolBarMain.add(jButtonLogout);
     jToolBarMain.add(jSeparator1);
-
-    jButtonList.setText("Lista beni venduti");
-    jButtonList.setFocusable(false);
-    jButtonList.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-    jButtonList.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-    jButtonList.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButtonListActionPerformed(evt);
-      }
-    });
-    jToolBarMain.add(jButtonList);
     jToolBarMain.add(jSeparator2);
 
     jButtonOptions.setText("Opzioni");
@@ -117,17 +105,12 @@ public class GuiToolbarCassaPanel extends javax.swing.JPanel {
         owner.logout();
 }//GEN-LAST:event_jButtonLogoutActionPerformed
 
-    private void jButtonListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonListActionPerformed
-        owner.selectedDialogListaBeni();
-}//GEN-LAST:event_jButtonListActionPerformed
-
     private void jButtonOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionsActionPerformed
         owner.selectedDialogOptions();
 }//GEN-LAST:event_jButtonOptionsActionPerformed
 
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
-  protected javax.swing.JButton jButtonList;
   protected javax.swing.JButton jButtonLogout;
   protected javax.swing.JButton jButtonOptions;
   protected javax.swing.JToolBar.Separator jSeparator1;
@@ -135,10 +118,6 @@ public class GuiToolbarCassaPanel extends javax.swing.JPanel {
   protected javax.swing.JToolBar jToolBarMain;
   // End of variables declaration//GEN-END:variables
 
-
-    public void enableListaBeni(boolean value) {
-        jButtonList.setEnabled(value);
-    }
     
     /**
      * Enables or disables logout button.

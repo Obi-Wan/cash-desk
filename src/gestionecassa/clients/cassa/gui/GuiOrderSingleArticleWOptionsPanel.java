@@ -184,7 +184,7 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
      * the selected <code>ArticleWithOptions</code>
      */
     private void modifyOptions() {
-        GuiOptionsHelperPanel panel = new GuiOptionsHelperPanel(this);
+        GuiAccelOptionsPanel panel = new GuiAccelOptionsPanel(this);
         GuiOkCancelHelperDialog dialog =
                 new GuiOkCancelHelperDialog(parent.parent, article.getName(), panel);
         dialog.setVisible(true);

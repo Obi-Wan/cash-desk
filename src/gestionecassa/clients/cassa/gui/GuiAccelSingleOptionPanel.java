@@ -1,5 +1,5 @@
 /*
- * GuiHelperSingleOptionPanel.java
+ * GuiAccelSingleOptionPanel.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,7 +13,7 @@
  */
 
 /*
- * GuiHelperSingleOptionPanel.java
+ * GuiAccelSingleOptionPanel.java
  *
  * Created on 4-set-2009, 15.42.54
  */
@@ -29,12 +29,22 @@ import javax.swing.SpinnerNumberModel;
  *
  * @author ben
  */
-public class GuiHelperSingleOptionPanel extends GuiAbstrSingleArticlePanel {
+public class GuiAccelSingleOptionPanel extends GuiAbstrSingleArticlePanel {
 
+    /**
+     * 
+     */
     SpinnerNumberModel spinnerModel;
 
-    /** Creates new form GuiHelperSingleOptionPanel */
-    public GuiHelperSingleOptionPanel(GuiOptionsHelperPanel parent,
+    /**
+     * Creates new form GuiAccelSingleOptionPanel
+     *
+     * @param parent
+     * @param option
+     * @param countOption
+     * @param countPanel
+     */
+    public GuiAccelSingleOptionPanel(GuiAccelOptionsPanel parent,
             String option, int countOption, int countPanel) {
         initComponents();
 
@@ -48,16 +58,12 @@ public class GuiHelperSingleOptionPanel extends GuiAbstrSingleArticlePanel {
             jButtonMore.getInputMap(WHEN_IN_FOCUSED_WINDOW)
                     .put(Shortcuts.moreKeys[countPanel], "MORE"+countPanel);
             jButtonMore.getActionMap().put("MORE"+countPanel, new AbstractAction() {
-                public void actionPerformed(ActionEvent e) {
-                    more();
-                }
+                public void actionPerformed(ActionEvent e) { more(); }
             });
             jButtonLess.getInputMap(WHEN_IN_FOCUSED_WINDOW)
                     .put(Shortcuts.lessKeys[countPanel], "LESS"+countPanel);
             jButtonLess.getActionMap().put("LESS"+countPanel, new AbstractAction() {
-                public void actionPerformed(ActionEvent e) {
-                    less();
-                }
+                public void actionPerformed(ActionEvent e) { less(); }
             });
         }
     }
@@ -110,7 +116,6 @@ public class GuiHelperSingleOptionPanel extends GuiAbstrSingleArticlePanel {
     this.setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 396, Short.MAX_VALUE)
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
         .addComponent(jLabelNum)
@@ -126,7 +131,6 @@ public class GuiHelperSingleOptionPanel extends GuiAbstrSingleArticlePanel {
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 45, Short.MAX_VALUE)
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -156,7 +160,9 @@ public class GuiHelperSingleOptionPanel extends GuiAbstrSingleArticlePanel {
   private javax.swing.JSpinner jSpinnerNum;
   // End of variables declaration//GEN-END:variables
 
-
+    /**
+     * 
+     */
     public void more() {
         Object next = spinnerModel.getNextValue();
         if (next != null) {

@@ -47,6 +47,9 @@ public class GuiNewOrderPanel extends GuiVariableListPanel {
      */
     CassaAPI owner;
 
+    /**
+     * 
+     */
     GuiAppFrameCassa parent;
 
     /**
