@@ -68,12 +68,13 @@ public class GuiOptionsHelperPanel extends GuiVariableListPanel implements OkCan
     protected class RecordPanelsOfOptions extends RecordPanels {
 
         /**
-         *
+         * Reference to the option that this Record rapresents
          */
         final String option;
 
         /**
-         *
+         * Reference to the original panel showing up in the gui,
+         * rapresenting this option; if any.
          */
         final GuiOrderSingleOptionPanel originalPanel;
 
@@ -97,6 +98,14 @@ public class GuiOptionsHelperPanel extends GuiVariableListPanel implements OkCan
 
 
     /**
+     * Initializes the panel
+     */
+    public void init() {
+        buildContentsList();
+        buildVisualList();
+    }
+
+    /**
      * Popolates the list of the panels related to each article sold.
      */
     protected void buildContentsList() {
@@ -117,7 +126,7 @@ public class GuiOptionsHelperPanel extends GuiVariableListPanel implements OkCan
     }
 
     /**
-     * 
+     * Applies modifications to the original panel.
      */
     public void apply() {
         for (RecordPanels tempRecord : panelsTable) {
@@ -143,10 +152,5 @@ public class GuiOptionsHelperPanel extends GuiVariableListPanel implements OkCan
             }
         }
         targetPanel.updateAfterModify();
-    }
-
-    public void init() {
-        buildContentsList();
-        buildVisualList();
     }
 }
