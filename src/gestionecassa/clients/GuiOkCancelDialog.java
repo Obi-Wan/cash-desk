@@ -32,18 +32,21 @@ import javax.swing.KeyStroke;
  */
 public class GuiOkCancelDialog extends javax.swing.JDialog {
 
+    OkCancelPanel content;
+
     /** Creates new form GuiOkCancelDialog */
     public GuiOkCancelDialog(java.awt.Frame parent, String title,
-            OkCancelPanelAPI panel) {
+            OkCancelPanel panel) {
         super(parent, true);
         initComponents();
+        this.content = panel;
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         jScrollPaneMain.setBorder(
                 javax.swing.BorderFactory.createTitledBorder(title));
         
-        panel.init();
-        jScrollPaneMain.setViewportView((javax.swing.JPanel)panel);
+        content.init();
+        jScrollPaneMain.setViewportView(content);
 
         jScrollPaneMain.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "ENTER");
@@ -149,8 +152,7 @@ public class GuiOkCancelDialog extends javax.swing.JDialog {
 
     
     private void pressOk() {
-        ((OkCancelPanelAPI)
-                jScrollPaneMain.getViewport().getView()).apply();
+        content.apply();
         this.dispose();
     }
 

@@ -1,5 +1,5 @@
 /*
- * OkCancelPanelAPI.java
+ * OkCancelPanel.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -18,9 +18,9 @@ package gestionecassa.clients;
  *
  * @author ben
  */
-public interface OkCancelPanelAPI {
+abstract public class OkCancelPanel extends javax.swing.JPanel {
     
-    public void apply();
-    public void init();
+    abstract public void apply();
+    abstract public void init();
 
 }

@@ -20,17 +20,14 @@
 
 package gestionecassa.clients.cassa.gui;
 
-import java.util.List;
-
 /**
  *
  * @author ben
  */
-public class GuiGroupPanel extends GuiVariableListPanel {
+public class GuiGroupPanel extends javax.swing.JPanel {
 
     /** Creates new form GuiGroupPanel */
-    public GuiGroupPanel(List<RecordPanels> panels) {
-        super(panels);
+    public GuiGroupPanel() {
         initComponents();
     }
 
@@ -57,9 +54,6 @@ public class GuiGroupPanel extends GuiVariableListPanel {
     );
   }// </editor-fold>//GEN-END:initComponents
 
-    @Override
-    void buildContentsList() {
-    }
 
 
   // Variables declaration - do not modify//GEN-BEGIN:variables

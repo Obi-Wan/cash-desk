@@ -24,7 +24,7 @@ package gestionecassa.clients;
  *
  * @author ben
  */
-public class GuiOptionsPanel extends javax.swing.JPanel implements OkCancelPanelAPI {
+public class GuiOptionsPanel extends OkCancelPanel {
 
     GUIClientAPI owner;
 

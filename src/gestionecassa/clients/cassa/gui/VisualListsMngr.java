@@ -1,5 +1,5 @@
 /*
- * GuiVariableListPanel.java
+ * VisualListsMngr.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,7 +13,7 @@
  */
 
 /*
- * GuiVariableListPanel.java
+ * VisualListsMngr.java
  *
  * Created on 4-set-2009, 18.18.59
  */
@@ -24,12 +24,15 @@ import java.util.List;
 import java.util.Vector;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
+import javax.swing.JPanel;
 
 /**
  *
  * @author ben
  */
-abstract public class GuiVariableListPanel<Data> extends javax.swing.JPanel {
+public class VisualListsMngr<Data> {
+
+    protected JPanel managedPanel;
 
     /**
      * List that associates a panel to each article
@@ -39,7 +42,8 @@ abstract public class GuiVariableListPanel<Data> extends javax.swing.JPanel {
     /**
      * Default constructor
      */
-    public GuiVariableListPanel() {
+    public VisualListsMngr(JPanel managed) {
+        this.managedPanel = managed;
         panelsTable = new Vector<RecordPanels>();
     }
 
@@ -48,14 +52,10 @@ abstract public class GuiVariableListPanel<Data> extends javax.swing.JPanel {
      *
      * @param panelses
      */
-    public GuiVariableListPanel(List<RecordPanels> panelses) {
+    public VisualListsMngr(JPanel managed, List<RecordPanels> panelses) {
         this.panelsTable = panelses;
+        this.managedPanel = managed;
     }
-
-    /**
-     * Popolates the list of the panels related to each article sold.
-     */
-    abstract void buildContentsList();
 
     /**
      * It actually displays what the method <code>buildContentsList()</code>
@@ -64,12 +64,12 @@ abstract public class GuiVariableListPanel<Data> extends javax.swing.JPanel {
     void buildVisualList() {
         /* Prima di tutto rimuoviamo i pannelli di prima che se no incasinano
          * tutto */
-        this.removeAll();
+        managedPanel.removeAll();
 
         /* Creo il nuovo layout in cui organizzerò i nuovi pannelli */
         javax.swing.GroupLayout layout =
-                new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
+                new javax.swing.GroupLayout(managedPanel);
+        managedPanel.setLayout(layout);
 
         /* Creo i due gruppi con cui organizzare i pannelli */
         ParallelGroup tempHorizGroup = layout.createParallelGroup(
@@ -127,7 +127,7 @@ abstract public class GuiVariableListPanel<Data> extends javax.swing.JPanel {
      *
      * @author ben
      */
-    protected class RecordPanels {
+    public class RecordPanels {
 
         /**
          * 
@@ -149,5 +149,14 @@ abstract public class GuiVariableListPanel<Data> extends javax.swing.JPanel {
             this.displayedPanel = pan;
             this.data = data;
         }
+    }
+
+    /**
+     * 
+     * @param pan
+     * @param data
+     */
+    void addRecord(GuiAbstrSingleArticlePanel pan, Data data) {
+        panelsTable.add(new RecordPanels(pan, data));
     }
 }

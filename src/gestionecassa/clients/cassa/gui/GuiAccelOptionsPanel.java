@@ -20,17 +20,23 @@
 
 package gestionecassa.clients.cassa.gui;
 
-import gestionecassa.clients.OkCancelPanelAPI;
-import java.util.Vector;
+import gestionecassa.clients.OkCancelPanel;
 
 /**
  *
  * @author ben
  */
-public class GuiAccelOptionsPanel extends GuiVariableListPanel<String>
-        implements OkCancelPanelAPI {
+public class GuiAccelOptionsPanel extends OkCancelPanel {
 
+    /**
+     *
+     */
     GuiOrderSingleArticleWOptionsPanel targetPanel;
+
+    /**
+     * 
+     */
+    VisualListsMngr<OptionPanelRelation> varListMng;
 
     /**
      * Creates new form GuiAccelOptionsPanel
@@ -70,25 +76,25 @@ public class GuiAccelOptionsPanel extends GuiVariableListPanel<String>
      *
      * @author ben
      */
-    protected class RecordPanelsOfOptions extends RecordPanels {
+    public class OptionPanelRelation {
+
+        public String option;
 
         /**
          * Reference to the original panel showing up in the gui,
          * rapresenting this option; if any.
          */
-        final GuiOrderSingleOptionPanel originalPanel;
+        public GuiOrderSingleOptionPanel origPanel;
 
         /**
          * Explicit constructor
          *
-         * @param article
-         * @param panel
+         * @param origPanel
+         * @param opt
          */
-        public RecordPanelsOfOptions(String option,
-                GuiOrderSingleOptionPanel origPanel,
-                GuiAccelSingleOptionPanel diagPanel) {
-            super(diagPanel, option);
-            this.originalPanel = origPanel;
+        private OptionPanelRelation(GuiOrderSingleOptionPanel origPanel, String opt) {
+            this.origPanel = origPanel;
+            this.option = opt;
         }
     }
 
@@ -100,52 +106,43 @@ public class GuiAccelOptionsPanel extends GuiVariableListPanel<String>
      * Initializes the panel
      */
     public void init() {
-        buildContentsList();
-        buildVisualList();
-    }
-
-    /**
-     * Popolates the list of the panels related to each article sold.
-     */
-    protected void buildContentsList() {
-        panelsTable = new Vector<RecordPanels>();
         int i = 0;
         for (String option : targetPanel.article.getOptions()) {
             GuiAccelSingleOptionPanel tempDiagPanel;
-            GuiOrderSingleOptionPanel tempOrigPanel = targetPanel.getSingleOptionPanel(option);
+            GuiOrderSingleOptionPanel tempOrigPanel =
+                    targetPanel.getSingleOptionPanel(option);
 
             tempDiagPanel = new GuiAccelSingleOptionPanel(this, option,
                     (tempOrigPanel == null) ? 0 : tempOrigPanel.getNumParziale(),
-                    i
-                        );
+                    i++);
 
-            panelsTable.add(new RecordPanelsOfOptions(option, tempOrigPanel, tempDiagPanel));
-            i++;
+            varListMng.addRecord(tempDiagPanel,
+                                new OptionPanelRelation(tempOrigPanel, option));
         }
+
+        varListMng.buildVisualList();
     }
 
     /**
      * Applies modifications to the original panel.
      */
     public void apply() {
-        for (RecordPanels tempRecord : panelsTable) {
-            RecordPanelsOfOptions record =
-                    (RecordPanelsOfOptions) tempRecord;
+        for (VisualListsMngr<OptionPanelRelation>.RecordPanels record : varListMng.panelsTable) {
 
             GuiAccelSingleOptionPanel dispPanel =
-                    (GuiAccelSingleOptionPanel) tempRecord.displayedPanel;
+                    (GuiAccelSingleOptionPanel) record.displayedPanel;
 
             if (dispPanel.spinnerModel.getValue().equals(
                     dispPanel.spinnerModel.getMinimum())) {
-                if (record.originalPanel != null) {
-                    targetPanel.removeOptionPanel(record.originalPanel);
+                if (record.data.origPanel != null) {
+                    targetPanel.removeOptionPanel(record.data.origPanel);
                 }
             } else {
-                if (record.originalPanel == null) {
-                    targetPanel.addNewOptionPanel(record.data,
+                if (record.data.origPanel == null) {
+                    targetPanel.addNewOptionPanel(record.data.option,
                             dispPanel.getNumTot());
                 } else {
-                    record.originalPanel.spinnerModel.setValue(
+                    record.data.origPanel.spinnerModel.setValue(
                             dispPanel.spinnerModel.getValue());
                 }
             }

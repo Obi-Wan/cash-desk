@@ -32,7 +32,6 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.List;
-import java.util.Vector;
 import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
 
@@ -40,7 +39,7 @@ import javax.swing.KeyStroke;
  *
  * @author ben
  */
-public class GuiNewOrderPanel extends GuiVariableListPanel<Article> {
+public class GuiNewOrderPanel extends javax.swing.JPanel {
 
     /**
      * Reference alla classe della business logic
@@ -57,6 +56,8 @@ public class GuiNewOrderPanel extends GuiVariableListPanel<Article> {
      */
     ArticlesList articlesList;
 
+    VisualListsMngr<Article> varListMng;
+
     /** 
      * Creates new form GuiNewOrderPanel
      *
@@ -68,8 +69,10 @@ public class GuiNewOrderPanel extends GuiVariableListPanel<Article> {
         this.parent = parent;
         
         fetchArticlesList();
+
+        varListMng = new VisualListsMngr<Article>(this);
         buildContentsList();
-        buildVisualList();
+        varListMng.buildVisualList();
 
         this.setPreferredSize(new Dimension(800, 450));
 
@@ -114,7 +117,6 @@ public class GuiNewOrderPanel extends GuiVariableListPanel<Article> {
      * Populates the list of the panels related to each article sold.
      */
     void buildContentsList() {
-        panelsTable = new Vector<RecordPanels>();
         int i = 0;
         for (Article art : articlesList.getArticlesList()) {
             GuiAbstrSingleArticlePanel tempPanel;
@@ -125,14 +127,13 @@ public class GuiNewOrderPanel extends GuiVariableListPanel<Article> {
             } else {
                 tempPanel = new GuiOrderSingleArticlePanel(this, art, i);
             }
-            panelsTable.add(new RecordPanels(tempPanel, art));
+            varListMng.addRecord(tempPanel, art);
             i++;
         }
     }
 
-    @Override
     void cleanDataFields() {
-        super.cleanDataFields();
+        varListMng.cleanDataFields();
         parent.updateCurrentOrder(0);
     }
 
@@ -188,7 +189,7 @@ public class GuiNewOrderPanel extends GuiVariableListPanel<Article> {
         forceRMIRequestArticlesList();
         fetchArticlesList();
         buildContentsList();
-        buildVisualList();
+        varListMng.buildVisualList();
     }
 
     /**
@@ -203,7 +204,7 @@ public class GuiNewOrderPanel extends GuiVariableListPanel<Article> {
         // TODO One day will be needed here to handle the table properly
         Order tempOrd = new Order(owner.getUsername(), owner.getHostname(), 0);
 
-        for (RecordPanels tempRecord : panelsTable) {
+        for (VisualListsMngr<Article>.RecordPanels tempRecord : varListMng.panelsTable) {
 
             tempNumTot = tempRecord.displayedPanel.getNumTot();
 
@@ -234,7 +235,7 @@ public class GuiNewOrderPanel extends GuiVariableListPanel<Article> {
      */
     private double computeCurrentOrder() {
         double output = 0;
-        for (RecordPanels tempRecord : panelsTable) {
+        for (VisualListsMngr<Article>.RecordPanels tempRecord : varListMng.panelsTable) {
             
             if (tempRecord.displayedPanel.getNumTot() != 0) {
                 output += tempRecord.displayedPanel.getNumTot() *
