@@ -29,12 +29,13 @@ import javax.swing.JScrollPane;
  *
  * @author ben
  */
-abstract public class GuiAppFrame extends javax.swing.JFrame {
+abstract public class GuiAppFrame<Owner extends GUIClientAPI>
+        extends javax.swing.JFrame {
 
     /**
      * The owner of this frame.
      */
-    protected GUIClientAPI owner;
+    protected Owner owner;
 
     /**
      * 
@@ -46,9 +47,11 @@ abstract public class GuiAppFrame extends javax.swing.JFrame {
      * 
      * @param owner
      */
-    public GuiAppFrame(GUIClientAPI owner) {
+    public GuiAppFrame(Owner owner) {
         initComponents();
         this.owner = owner;
+
+        jScrollPanelMain = new javax.swing.JScrollPane();
         
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
@@ -143,7 +146,7 @@ abstract public class GuiAppFrame extends javax.swing.JFrame {
                 javax.swing.JOptionPane.ERROR_MESSAGE);
         } finally {
             this.enableLogout(false);
-            this.setContentPanel(new GuiLoginPanel(this, owner, owner.getHostname()));
+            this.setContentPanel(new GuiLoginPanel(this, owner));
         }
     }
 }

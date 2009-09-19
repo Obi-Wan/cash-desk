@@ -20,19 +20,19 @@
 
 package gestionecassa.clients.administration.gui;
 
-import gestionecassa.clients.GUIClientAPI;
 import gestionecassa.clients.GuiAppFrame;
 import gestionecassa.clients.GuiHelper;
-import gestionecassa.clients.GuiOkCancelHelperDialog;
+import gestionecassa.clients.GuiOkCancelDialog;
 import gestionecassa.clients.GuiOptionsPanel;
 import gestionecassa.clients.GuiToolbarPanel;
+import gestionecassa.clients.administration.AdministrationAPI;
 import java.awt.BorderLayout;
 
 /**
  *
  * @author ben
  */
-public class GuiAppFrameAdministration extends GuiAppFrame {
+public class GuiAppFrameAdministration extends GuiAppFrame<AdministrationAPI> {
 
     /**
      * 
@@ -49,13 +49,11 @@ public class GuiAppFrameAdministration extends GuiAppFrame {
      * 
      * @param owner 
      */
-    public GuiAppFrameAdministration(GUIClientAPI owner) {
+    public GuiAppFrameAdministration(AdministrationAPI owner) {
         super(owner);
         initComponents();
 
         toolbar = new GuiToolbarPanel(this);
-
-        jScrollPanelMain = new javax.swing.JScrollPane();
 
         statusPanel = new GuiStatusAdministrationPanel();
 
@@ -100,7 +98,7 @@ public class GuiAppFrameAdministration extends GuiAppFrame {
 
     @Override
     public void selectedDialogOptions() {
-        new GuiOkCancelHelperDialog(this, "Client Options",
+        new GuiOkCancelDialog(this, "Client Options",
                                     new GuiOptionsPanel(owner)).setVisible(true);
     }
 }

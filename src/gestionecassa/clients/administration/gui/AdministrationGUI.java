@@ -19,6 +19,7 @@ import gestionecassa.clients.GUIClientAPI;
 import gestionecassa.clients.GuiLoginPanel;
 import gestionecassa.clients.administration.Administration;
 import gestionecassa.clients.administration.AdministrationAPI;
+import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import org.apache.log4j.Logger;
 
@@ -49,7 +50,14 @@ public class AdministrationGUI extends Administration implements GUIClientAPI {
      * @return reference to the main class
      */
     public static AdministrationAPI crea() {
-        return new AdministrationGUI(System.getenv("HOSTNAME"));
+        String hostname = new String();
+        try {
+            hostname = java.net.InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException ex) {
+            hostname = System.getProperty("user.name") + "@" +
+                    System.getProperty("os.name");
+        }
+        return new AdministrationGUI(hostname);
     }
 
     /**
@@ -73,7 +81,7 @@ public class AdministrationGUI extends Administration implements GUIClientAPI {
         appFrame = new GuiAppFrameAdministration(this);
 
         // concludi fase preparatoria al login
-        appFrame.setContentPanel(new GuiLoginPanel(appFrame, this, hostname));
+        appFrame.setContentPanel(new GuiLoginPanel(appFrame, this));
         appFrame.setVisible(true);
 
         super.run();

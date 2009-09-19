@@ -20,7 +20,7 @@
 
 package gestionecassa.clients.cassa.gui;
 
-import gestionecassa.clients.GuiOkCancelHelperDialog;
+import gestionecassa.clients.GuiOkCancelDialog;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.order.EntrySingleOption;
 import java.awt.event.ActionEvent;
@@ -185,8 +185,8 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
      */
     private void modifyOptions() {
         GuiAccelOptionsPanel panel = new GuiAccelOptionsPanel(this);
-        GuiOkCancelHelperDialog dialog =
-                new GuiOkCancelHelperDialog(parent.parent, article.getName(), panel);
+        GuiOkCancelDialog dialog =
+                new GuiOkCancelDialog(parent.parent, article.getName(), panel);
         dialog.setVisible(true);
     }
 

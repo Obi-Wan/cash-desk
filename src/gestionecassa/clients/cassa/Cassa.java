@@ -107,7 +107,7 @@ public class Cassa extends Luogo implements CassaAPI {
         // avvia la fase di login
         appFrame = new GuiAppFrameCassa(this);
         // concludi fase preparatoria al login
-        appFrame.setContentPanel(new GuiLoginPanel(appFrame, this, hostname));
+        appFrame.setContentPanel(new GuiLoginPanel(appFrame, this));
         appFrame.setVisible(true);
 
         // esecuzione principale
@@ -158,7 +158,7 @@ public class Cassa extends Luogo implements CassaAPI {
      */
     public void getRMIArticlesList() throws RemoteException {
         try {
-            listaBeni = server.requestArticlesList();
+            articles = server.requestArticlesList();
         } catch (RemoteException ex) {
             logger.warn("Il server non ha risposto alla richiesta della lista",
                     ex);
@@ -175,10 +175,6 @@ public class Cassa extends Luogo implements CassaAPI {
     public void sendRMINewOrder(Order newOrder) throws RemoteException, IOException {
         try {
             server.sendOrdine(newOrder);
-            // This should print the order.
-            //PrinterHelper.startPrintingOrder(nuovoOrdine);
-
-//             This should print the order.
             PrinterHelper.startPrintingOrder(newOrder);
         } catch (RemoteException ex) {
             logger.warn("Errore nella comunicazione col server",ex);

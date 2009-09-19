@@ -1,5 +1,5 @@
 /*
- * GuiOkCancelHelperDialog.java
+ * GuiOkCancelDialog.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,7 +13,7 @@
  */
 
 /*
- * GuiOkCancelHelperDialog.java
+ * GuiOkCancelDialog.java
  *
  * Created on 4-set-2009, 15.08.03
  */
@@ -24,17 +24,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
 /**
  *
  * @author ben
  */
-public class GuiOkCancelHelperDialog extends javax.swing.JDialog {
+public class GuiOkCancelDialog extends javax.swing.JDialog {
 
-    /** Creates new form GuiOkCancelHelperDialog */
-    public GuiOkCancelHelperDialog(java.awt.Frame parent, String title,
+    /** Creates new form GuiOkCancelDialog */
+    public GuiOkCancelDialog(java.awt.Frame parent, String title,
             OkCancelPanelAPI panel) {
         super(parent, true);
         initComponents();
@@ -44,21 +43,17 @@ public class GuiOkCancelHelperDialog extends javax.swing.JDialog {
                 javax.swing.BorderFactory.createTitledBorder(title));
         
         panel.init();
-        jScrollPaneMain.setViewportView((JPanel)panel);
+        jScrollPaneMain.setViewportView((javax.swing.JPanel)panel);
 
         jScrollPaneMain.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "ENTER");
         jScrollPaneMain.getActionMap().put("ENTER", new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
-                pressedOk();
-            }
+            public void actionPerformed(ActionEvent e) { pressOk(); }
         });
         jScrollPaneMain.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESC");
         jScrollPaneMain.getActionMap().put("ESC", new AbstractAction() {
-            public void actionPerformed(ActionEvent e) {
-                pressedCancel();
-            }
+            public void actionPerformed(ActionEvent e) { pressCancel(); }
         });
 
         GuiHelper.packAndCenter(this);
@@ -137,11 +132,11 @@ public class GuiOkCancelHelperDialog extends javax.swing.JDialog {
   }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
-        pressedCancel();
+        pressCancel();
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
-        pressedOk();
+        pressOk();
     }//GEN-LAST:event_jButtonOkActionPerformed
 
 
@@ -153,13 +148,13 @@ public class GuiOkCancelHelperDialog extends javax.swing.JDialog {
   // End of variables declaration//GEN-END:variables
 
     
-    private void pressedOk() {
+    private void pressOk() {
         ((OkCancelPanelAPI)
                 jScrollPaneMain.getViewport().getView()).apply();
         this.dispose();
     }
 
-    private void pressedCancel() {
+    private void pressCancel() {
         this.dispose();
     }
 }

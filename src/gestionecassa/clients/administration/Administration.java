@@ -18,6 +18,7 @@ import gestionecassa.server.ServerRMIAdmin;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -31,10 +32,16 @@ public class Administration extends Luogo implements AdministrationAPI {
     ServiceRMIAdminAPI server;
 
     /**
+     *
+     */
+    protected final Logger loggerGUI;
+
+    /**
      * Creates a new instance of Administration.
      */
     protected Administration(String nomeLuogo) {
         super(nomeLuogo, Log.GESTIONECASSA_AMMINISTRAZIONE);
+        loggerGUI = Log.GESTIONECASSA_AMMINISTRAZIONE_GUI;
     }
 
     /**
@@ -117,7 +124,7 @@ public class Administration extends Luogo implements AdministrationAPI {
      */
     public void getRMIArticlesList() throws RemoteException {
         try {
-            listaBeni = server.requestArticlesList();
+            articles = server.requestArticlesList();
         } catch (RemoteException ex) {
             logger.warn("Il server non ha risposto alla richiesta della lista",
                     ex);
@@ -164,6 +171,14 @@ public class Administration extends Luogo implements AdministrationAPI {
      */
     public void enableRMIArticle(Article article, boolean enable) throws RemoteException {
         server.enableRMIArticle(article, enable);
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public Logger getLoggerGUI() {
+        return loggerGUI;
     }
 
 //    /**

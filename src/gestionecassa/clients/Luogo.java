@@ -60,7 +60,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
     /**
      *
      */
-    protected ArticlesList listaBeni;
+    protected ArticlesList articles;
 
     /**
      *
@@ -78,7 +78,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
         this.stopApp = false;
         this.sessionID = -1;
         this.serverCentrale = null;
-        this.listaBeni = null;
+        this.articles = null;
         this.username = "";
         options = new LuogoOptions();
     }
@@ -257,7 +257,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
             stopDemoneConnessione();
             sessionID = -1;
             serverCentrale = null;
-            listaBeni = null;
+            articles = null;
             username = "";
         }
     }
@@ -268,7 +268,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
      * @return List of goods
      */
     public ArticlesList getArticlesList() {
-        return listaBeni;
+        return articles;
     }
 
     /**

@@ -29,7 +29,7 @@ import javax.swing.GroupLayout.SequentialGroup;
  *
  * @author ben
  */
-abstract public class GuiVariableListPanel extends javax.swing.JPanel {
+abstract public class GuiVariableListPanel<Data> extends javax.swing.JPanel {
 
     /**
      * List that associates a panel to each article
@@ -130,6 +130,11 @@ abstract public class GuiVariableListPanel extends javax.swing.JPanel {
     protected class RecordPanels {
 
         /**
+         * 
+         */
+        final Data data;
+
+        /**
          * Reference to the panel that will show up in the gui
          */
         final GuiAbstrSingleArticlePanel displayedPanel;
@@ -137,11 +142,12 @@ abstract public class GuiVariableListPanel extends javax.swing.JPanel {
         /**
          * Explicit constructor
          *
-         * @param article
+         * @param data 
          * @param displayedPanel
          */
-        public RecordPanels(GuiAbstrSingleArticlePanel pan) {
+        public RecordPanels(GuiAbstrSingleArticlePanel pan, Data data) {
             this.displayedPanel = pan;
+            this.data = data;
         }
     }
 }

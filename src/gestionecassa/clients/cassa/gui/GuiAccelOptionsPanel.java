@@ -27,11 +27,16 @@ import java.util.Vector;
  *
  * @author ben
  */
-public class GuiAccelOptionsPanel extends GuiVariableListPanel implements OkCancelPanelAPI {
+public class GuiAccelOptionsPanel extends GuiVariableListPanel<String>
+        implements OkCancelPanelAPI {
 
     GuiOrderSingleArticleWOptionsPanel targetPanel;
 
-    /** Creates new form GuiAccelOptionsPanel */
+    /**
+     * Creates new form GuiAccelOptionsPanel
+     *
+     * @param targetPanel
+     */
     public GuiAccelOptionsPanel(
             GuiOrderSingleArticleWOptionsPanel targetPanel) {
         initComponents();
@@ -68,11 +73,6 @@ public class GuiAccelOptionsPanel extends GuiVariableListPanel implements OkCanc
     protected class RecordPanelsOfOptions extends RecordPanels {
 
         /**
-         * Reference to the option that this Record rapresents
-         */
-        final String option;
-
-        /**
          * Reference to the original panel showing up in the gui,
          * rapresenting this option; if any.
          */
@@ -87,8 +87,7 @@ public class GuiAccelOptionsPanel extends GuiVariableListPanel implements OkCanc
         public RecordPanelsOfOptions(String option,
                 GuiOrderSingleOptionPanel origPanel,
                 GuiAccelSingleOptionPanel diagPanel) {
-            super(diagPanel);
-            this.option = option;
+            super(diagPanel, option);
             this.originalPanel = origPanel;
         }
     }
@@ -143,7 +142,7 @@ public class GuiAccelOptionsPanel extends GuiVariableListPanel implements OkCanc
                 }
             } else {
                 if (record.originalPanel == null) {
-                    targetPanel.addNewOptionPanel(record.option,
+                    targetPanel.addNewOptionPanel(record.data,
                             dispPanel.getNumTot());
                 } else {
                     record.originalPanel.spinnerModel.setValue(

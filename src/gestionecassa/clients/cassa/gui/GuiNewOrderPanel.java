@@ -40,7 +40,7 @@ import javax.swing.KeyStroke;
  *
  * @author ben
  */
-public class GuiNewOrderPanel extends GuiVariableListPanel {
+public class GuiNewOrderPanel extends GuiVariableListPanel<Article> {
 
     /**
      * Reference alla classe della business logic
@@ -125,7 +125,7 @@ public class GuiNewOrderPanel extends GuiVariableListPanel {
             } else {
                 tempPanel = new GuiOrderSingleArticlePanel(this, art, i);
             }
-            panelsTable.add(new RecordPanelsOfArticles(art, tempPanel));
+            panelsTable.add(new RecordPanels(tempPanel, art));
             i++;
         }
     }
@@ -192,31 +192,6 @@ public class GuiNewOrderPanel extends GuiVariableListPanel {
     }
 
     /**
-     * Inner class that defines a record of the table of goods.
-     *
-     * @author ben
-     */
-    protected class RecordPanelsOfArticles extends RecordPanels {
-
-        /**
-         *
-         */
-        final Article article;
-
-        /**
-         * Explicit constructor
-         *
-         * @param article
-         * @param panel
-         */
-        public RecordPanelsOfArticles(Article art,
-                                      GuiAbstrSingleArticlePanel pan) {
-            super(pan);
-            this.article = art;
-        }
-    }
-
-    /**
      * Creates a new order from the chosen Articles
      *
      * @return the created order
@@ -229,24 +204,22 @@ public class GuiNewOrderPanel extends GuiVariableListPanel {
         Order tempOrd = new Order(owner.getUsername(), owner.getHostname(), 0);
 
         for (RecordPanels tempRecord : panelsTable) {
-            RecordPanelsOfArticles singleRecord =
-                    (RecordPanelsOfArticles) tempRecord;
 
-            tempNumTot = singleRecord.displayedPanel.getNumTot();
+            tempNumTot = tempRecord.displayedPanel.getNumTot();
 
-            if (singleRecord.displayedPanel.getNumTot() != 0) {
+            if (tempRecord.displayedPanel.getNumTot() != 0) {
 
-                if (singleRecord.article.hasOptions()) {
+                if (tempRecord.data.hasOptions()) {
 
                     int progressive = owner.getNProgressivo(
-                            singleRecord.article.getName(), tempNumTot);
+                            tempRecord.data.getName(), tempNumTot);
                     tempOrd.addArticleWithOptions(
-                            (ArticleWithOptions)singleRecord.article,
+                            (ArticleWithOptions)tempRecord.data,
                             tempNumTot, progressive,
                             ((GuiOrderSingleArticleWOptionsPanel)
-                                (singleRecord.displayedPanel)).getPatialsList());
+                                (tempRecord.displayedPanel)).getPatialsList());
                 } else {
-                    tempOrd.addArticle(singleRecord.article,tempNumTot);
+                    tempOrd.addArticle(tempRecord.data,tempNumTot);
                 }
             }
         }
@@ -262,12 +235,10 @@ public class GuiNewOrderPanel extends GuiVariableListPanel {
     private double computeCurrentOrder() {
         double output = 0;
         for (RecordPanels tempRecord : panelsTable) {
-            RecordPanelsOfArticles singleRecord =
-                    (RecordPanelsOfArticles) tempRecord;
             
-            if (singleRecord.displayedPanel.getNumTot() != 0) {
-                output += singleRecord.displayedPanel.getNumTot() *
-                        singleRecord.article.getPrice();
+            if (tempRecord.displayedPanel.getNumTot() != 0) {
+                output += tempRecord.displayedPanel.getNumTot() *
+                        tempRecord.data.getPrice();
             }
         }
         return output;

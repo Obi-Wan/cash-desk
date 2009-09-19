@@ -20,19 +20,16 @@
 
 package gestionecassa.clients;
 
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-
 /**
  *
  * @author ben
  */
-public class GuiOptionsPanel extends JPanel implements OkCancelPanelAPI {
+public class GuiOptionsPanel extends javax.swing.JPanel implements OkCancelPanelAPI {
 
-    ClientAPI owner;
+    GUIClientAPI owner;
 
     /** Creates new form GuiOptionsPanel */
-    public GuiOptionsPanel(ClientAPI owner) {
+    public GuiOptionsPanel(GUIClientAPI owner) {
         initComponents();
 
         this.owner = owner;

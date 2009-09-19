@@ -7,7 +7,7 @@ package gestionecassa.clients.administration;
 
 import gestionecassa.Article;
 import gestionecassa.Person;
-import gestionecassa.clients.ClientAPI;
+import gestionecassa.clients.GUIClientAPI;
 import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.DuplicateArticleException;
 import gestionecassa.exceptions.NotExistingGroupException;
@@ -18,7 +18,7 @@ import java.rmi.RemoteException;
  *
  * @author ben
  */
-public interface AdministrationAPI extends ClientAPI {
+public interface AdministrationAPI extends GUIClientAPI {
 
     /**
      * Closes the remote server to which we are connected to
