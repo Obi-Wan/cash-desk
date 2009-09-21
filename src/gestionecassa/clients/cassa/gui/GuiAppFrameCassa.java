@@ -20,7 +20,6 @@
 
 package gestionecassa.clients.cassa.gui;
 
-import gestionecassa.clients.gui.GuiToolbarPanel;
 import gestionecassa.clients.gui.GuiAppFrame;
 import gestionecassa.clients.gui.GuiHelper;
 import gestionecassa.clients.gui.GuiOkCancelDialog;
@@ -33,11 +32,6 @@ import java.awt.BorderLayout;
  * @author ben
  */
 public class GuiAppFrameCassa extends GuiAppFrame<CassaAPI> {
-
-    /**
-     *
-     */
-    GuiToolbarPanel toolbar;
 
     /**
      * 
@@ -53,8 +47,6 @@ public class GuiAppFrameCassa extends GuiAppFrame<CassaAPI> {
         super(owner);
         initComponents();
 
-        toolbar = new GuiToolbarPanel(this);
-
         statusPanel = new GuiStatusCassaPanel(owner.getHostname());
 
         if (!(getContentPane().getLayout() instanceof BorderLayout)) {
@@ -64,8 +56,6 @@ public class GuiAppFrameCassa extends GuiAppFrame<CassaAPI> {
         getContentPane().add(toolbar, java.awt.BorderLayout.PAGE_START);
         getContentPane().add(jScrollPanelMain, java.awt.BorderLayout.CENTER);
         getContentPane().add(statusPanel, java.awt.BorderLayout.LINE_END);
-
-        enableLogout(false);
 
         GuiHelper.packAndCenter(this);
     }
@@ -86,16 +76,6 @@ public class GuiAppFrameCassa extends GuiAppFrame<CassaAPI> {
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   // End of variables declaration//GEN-END:variables
-
-
-    /**
-     * Enables or disables logout button.
-     *
-     * @param value
-     */
-    public void enableLogout(boolean value) {
-        toolbar.enableLogout(value);
-    }
 
     /**
      * 
@@ -145,9 +125,10 @@ public class GuiAppFrameCassa extends GuiAppFrame<CassaAPI> {
     /**
      *
      */
+    @Override
     public void setdownAfterLogout() {
+        super.setdownAfterLogout();
         statusPanel.setOrderPanel(null);
-        this.enableLogout(false);
         statusPanel.reset();
     }
 }

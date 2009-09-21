@@ -14,14 +14,12 @@
 
 package gestionecassa.clients.administration.gui;
 
-import gestionecassa.Log;
 import gestionecassa.clients.gui.GUIClientAPI;
 import gestionecassa.clients.gui.GuiLoginPanel;
 import gestionecassa.clients.administration.Administration;
 import gestionecassa.clients.administration.AdministrationAPI;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
-import org.apache.log4j.Logger;
 
 /**
  *
@@ -34,14 +32,8 @@ public class AdministrationGUI extends Administration implements GUIClientAPI {
      */
     protected GuiAppFrameAdministration appFrame;
 
-    /**
-     *
-     */
-    protected final Logger loggerGUI;
-
     protected AdministrationGUI(String nomeLuogo) {
         super(nomeLuogo);
-        loggerGUI = Log.GESTIONECASSA_AMMINISTRAZIONE_GUI;
     }
 
     /**
@@ -96,16 +88,8 @@ public class AdministrationGUI extends Administration implements GUIClientAPI {
 
     @Override
     public void logout() throws RemoteException {
-        appFrame.enableLogout(false);
-        
         super.logout();
-    }
-
-    /**
-     *
-     * @return
-     */
-    public Logger getLoggerGUI() {
-        return loggerGUI;
+        
+        appFrame.setdownAfterLogout();
     }
 }

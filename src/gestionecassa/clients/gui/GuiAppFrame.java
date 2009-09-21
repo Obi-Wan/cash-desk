@@ -40,6 +40,10 @@ abstract public class GuiAppFrame<Owner extends GUIClientAPI>
      * 
      */
     protected JScrollPane jScrollPanelMain;
+    /**
+     *
+     */
+    protected GuiToolbarPanel toolbar;
     
     /**
      * Creates new form GuiAppFrame
@@ -51,6 +55,10 @@ abstract public class GuiAppFrame<Owner extends GUIClientAPI>
         this.owner = owner;
 
         jScrollPanelMain = new javax.swing.JScrollPane();
+
+        toolbar = new GuiToolbarPanel(this);
+
+        enableLogout(false);
         
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
@@ -114,13 +122,15 @@ abstract public class GuiAppFrame<Owner extends GUIClientAPI>
         jScrollPanelMain.setViewportView(
                 jScrollPanelMain.getViewport().getView());
     }
-
+    
     /**
      * Enables or disables logout button.
      *
      * @param value
      */
-    abstract public void enableLogout(boolean value);
+    public void enableLogout(boolean value) {
+        toolbar.enableLogout(value);
+    }
 
     /**
      *
@@ -138,9 +148,14 @@ abstract public class GuiAppFrame<Owner extends GUIClientAPI>
                 "Il server non ha risposto nel tentativo di chiuder la connessione",
                 "Errore di comunicazione",
                 javax.swing.JOptionPane.ERROR_MESSAGE);
-        } finally {
-            this.enableLogout(false);
-            this.setContentPanel(new GuiLoginPanel(this, owner));
         }
+    }
+
+    /**
+     *
+     */
+    public void setdownAfterLogout() {
+        this.enableLogout(false);
+        this.setContentPanel(new GuiLoginPanel(this, owner));
     }
 }

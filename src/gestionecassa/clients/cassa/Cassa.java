@@ -222,9 +222,9 @@ public class Cassa extends Luogo implements CassaAPI {
      */
     @Override
     public void logout() throws RemoteException {
-        appFrame.setdownAfterLogout();
-        
         super.logout();
+
+        appFrame.setdownAfterLogout();
     }
 
     /**
