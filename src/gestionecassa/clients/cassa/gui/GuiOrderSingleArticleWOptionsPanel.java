@@ -29,8 +29,6 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
-import javax.swing.GroupLayout.ParallelGroup;
-import javax.swing.GroupLayout.SequentialGroup;
 
 /**
  *
@@ -39,8 +37,6 @@ import javax.swing.GroupLayout.SequentialGroup;
 public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel {
 
     ArticleWithOptions article;
-
-//    List<GuiOrderSingleOptionPanel> optionsPanels;
 
     VisualListsMngr<GuiOrderSingleOptionPanel, String> listMngr;
 
@@ -63,8 +59,6 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
         this.jLabelPrice.setText("€ " + art.getPrice());
 
         listMngr = new VisualListsMngr<GuiOrderSingleOptionPanel, String>(jPanelOpzioni);
-
-//        optionsPanels = new ArrayList<GuiOrderSingleOptionPanel>();
         
         if (index < 10) {
             this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
@@ -182,8 +176,6 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
     @Override
     public void clean() {
         listMngr.resetList();
-//        optionsPanels.removeAll(optionsPanels);
-//        rebuildVisualOptionsList();
     }
 
     /**
@@ -208,7 +200,6 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
     void addNewOptionPanel(String choice, int num) {
         GuiOrderSingleOptionPanel tempPanel =
                 new GuiOrderSingleOptionPanel(this, choice, num);
-//        optionsPanels.add(tempPanel);
         listMngr.addRecord(tempPanel, choice);
     }
 
@@ -220,7 +211,6 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
      * @param panel
      */
     void removeOptionPanel(GuiOrderSingleOptionPanel panel) {
-//        optionsPanels.remove(panel);
         listMngr.remove(panel);
     }
 
@@ -229,54 +219,9 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
      * <code>ArticleWithOptions</code>
      */
     void updateAfterModify() {
-//        rebuildVisualOptionsList();
         listMngr.buildVisualList();
         triggerUpdateCurrentOrder();
     }
-
-//    /**
-//     *
-//     */
-//    private void rebuildVisualOptionsList() {
-//        jPanelOpzioni.removeAll();
-//        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(jPanelOpzioni);
-//        jPanelOpzioni.setLayout(layout);
-//
-//        ParallelGroup tempHorizGroup = layout.createParallelGroup(
-//                javax.swing.GroupLayout.Alignment.LEADING);
-//        SequentialGroup tempSequGroup = layout.createSequentialGroup()
-//            .addContainerGap();
-//
-//        for (GuiOrderSingleOptionPanel singolaOpzionePanel : optionsPanels) {
-//
-//            tempHorizGroup.addComponent(singolaOpzionePanel,
-//                    javax.swing.GroupLayout.DEFAULT_SIZE,
-//                    javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
-//
-//            tempSequGroup
-//                .addComponent(singolaOpzionePanel,
-//                    javax.swing.GroupLayout.PREFERRED_SIZE,
-//                    javax.swing.GroupLayout.DEFAULT_SIZE,
-//                    javax.swing.GroupLayout.PREFERRED_SIZE)
-//                .addPreferredGap(
-//                    javax.swing.LayoutStyle.ComponentPlacement.RELATED);
-//        }
-//        tempSequGroup.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
-//
-//        // infine aggiungiamo il gruppo di elementi alla pagina principale.
-//        layout.setHorizontalGroup(
-//          layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//            .addGroup(layout.createSequentialGroup()
-//                .addContainerGap()
-//                .addGroup(tempHorizGroup)
-//                .addContainerGap() )
-//        );
-//
-//        layout.setVerticalGroup(
-//          layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//            .addGroup(tempSequGroup)
-//        );
-//    }
 
     /**
      * 
@@ -285,7 +230,6 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
     public List<EntrySingleOption> getPatialsList() {
         List<EntrySingleOption> tempLista
                 = new ArrayList<EntrySingleOption>();
-//        for (GuiOrderSingleOptionPanel singolaOpzionePanel : optionsPanels) {
         for (RecordPanels<GuiOrderSingleOptionPanel, String> recordPanels
                 : listMngr.getRecords()) {
             if (recordPanels.displayedPanel.getNumTot() != 0) {
@@ -295,13 +239,6 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
                         recordPanels.displayedPanel.getNumTot());
                 tempLista.add(tempArray);
             }
-//            if (singolaOpzionePanel.getNumTot() != 0) {
-//                EntrySingleOption tempArray =
-//                    new EntrySingleOption(
-//                        singolaOpzionePanel.getComboChoice(),
-//                        singolaOpzionePanel.getNumTot());
-//                tempLista.add(tempArray);
-//            }
         }
         return tempLista;
     }
@@ -313,9 +250,6 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
     @Override
     public int getNumTot() {
         int tot = 0;
-//        for (GuiOrderSingleOptionPanel singolaOpzionePanel : optionsPanels) {
-//            tot += singolaOpzionePanel.getNumTot();
-//        }
         for (GuiOrderSingleOptionPanel panel : listMngr.getPanels()) {
             tot += panel.getNumTot();
         }
@@ -335,11 +269,6 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
      * @return
      */
     public GuiOrderSingleOptionPanel getSingleOptionPanel( String option ) {
-//        for (GuiOrderSingleOptionPanel panel : optionsPanels) {
-//            if (panel.hasSelected(option)) {
-//                return panel;
-//            }
-//        }
         for (GuiOrderSingleOptionPanel panel : listMngr.getPanels()) {
             if (panel.hasSelected(option)) {
                 return panel;
