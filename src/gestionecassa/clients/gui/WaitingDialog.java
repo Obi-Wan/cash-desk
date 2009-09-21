@@ -4,7 +4,7 @@
  * Created on 15 gennaio 2007, 11.07
  */
 
-package gestionecassa.clients;
+package gestionecassa.clients.gui;
 
 /**
  *

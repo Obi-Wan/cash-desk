@@ -18,7 +18,7 @@
  * Created on 4-set-2009, 15.08.03
  */
 
-package gestionecassa.clients;
+package gestionecassa.clients.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;

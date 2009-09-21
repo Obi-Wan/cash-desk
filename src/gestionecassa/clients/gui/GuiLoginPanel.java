@@ -18,8 +18,9 @@
  * Created on 12-mag-2009, 22.20.16
  */
 
-package gestionecassa.clients;
+package gestionecassa.clients.gui;
 
+import gestionecassa.clients.*;
 import gestionecassa.exceptions.WrongLoginException;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;

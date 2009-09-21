@@ -7,7 +7,7 @@ package gestionecassa.clients.administration;
 
 import gestionecassa.Article;
 import gestionecassa.Person;
-import gestionecassa.clients.GUIClientAPI;
+import gestionecassa.clients.gui.GUIClientAPI;
 import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.DuplicateArticleException;
 import gestionecassa.exceptions.NotExistingGroupException;

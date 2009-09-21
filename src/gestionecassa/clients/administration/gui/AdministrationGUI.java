@@ -15,8 +15,8 @@
 package gestionecassa.clients.administration.gui;
 
 import gestionecassa.Log;
-import gestionecassa.clients.GUIClientAPI;
-import gestionecassa.clients.GuiLoginPanel;
+import gestionecassa.clients.gui.GUIClientAPI;
+import gestionecassa.clients.gui.GuiLoginPanel;
 import gestionecassa.clients.administration.Administration;
 import gestionecassa.clients.administration.AdministrationAPI;
 import java.net.UnknownHostException;

@@ -20,11 +20,11 @@
 
 package gestionecassa.clients.cassa.gui;
 
-import gestionecassa.clients.GuiToolbarPanel;
-import gestionecassa.clients.GuiAppFrame;
-import gestionecassa.clients.GuiHelper;
-import gestionecassa.clients.GuiOkCancelDialog;
-import gestionecassa.clients.GuiOptionsPanel;
+import gestionecassa.clients.gui.GuiToolbarPanel;
+import gestionecassa.clients.gui.GuiAppFrame;
+import gestionecassa.clients.gui.GuiHelper;
+import gestionecassa.clients.gui.GuiOkCancelDialog;
+import gestionecassa.clients.gui.GuiOptionsPanel;
 import gestionecassa.clients.cassa.CassaAPI;
 import java.awt.BorderLayout;
 

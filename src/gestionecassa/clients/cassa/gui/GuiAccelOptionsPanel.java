@@ -20,7 +20,7 @@
 
 package gestionecassa.clients.cassa.gui;
 
-import gestionecassa.clients.OkCancelPanel;
+import gestionecassa.clients.gui.OkCancelPanel;
 
 /**
  *

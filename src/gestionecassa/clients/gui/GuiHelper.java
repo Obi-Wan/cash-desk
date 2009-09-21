@@ -12,11 +12,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package gestionecassa.clients;
+package gestionecassa.clients.gui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.Window;
+import javax.swing.JComponent;
 
 /**
  *
@@ -25,6 +26,7 @@ import java.awt.Window;
 public class GuiHelper {
 
     /**
+     * Packs and centers the windows
      * 
      * @param wind
      */
@@ -41,5 +43,20 @@ public class GuiHelper {
         wind.setSize(frameSize);
         wind.setLocation((screenSize.width - frameSize.width) / 2,
                 (screenSize.height - frameSize.height) / 2);
+    }
+
+    /**
+     * Adapts the preferred size of the container to the one of the content
+     * 
+     * @param container
+     * @param content
+     */
+    static public void adaptContainerSize(JComponent container, JComponent content) {
+
+        Dimension tempDim = content.getPreferredSize();
+        tempDim.height = tempDim.height + 10;
+        tempDim.width = tempDim.width + 10;
+
+        container.setPreferredSize(tempDim);
     }
 }

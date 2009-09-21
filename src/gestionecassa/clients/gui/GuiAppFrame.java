@@ -18,9 +18,8 @@
  * Created on 14-mag-2009, 21.18.51
  */
 
-package gestionecassa.clients;
+package gestionecassa.clients.gui;
 
-import java.awt.Dimension;
 import java.rmi.RemoteException;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -102,14 +101,9 @@ abstract public class GuiAppFrame<Owner extends GUIClientAPI>
      * @param content
      */
     public void setContentPanel(JPanel content) {
+        
         jScrollPanelMain.setViewportView(content);
-
-        Dimension tempDim = content.getPreferredSize();
-        tempDim.height = tempDim.height + 10;
-        tempDim.width = tempDim.width + 10;
-
-        jScrollPanelMain.setPreferredSize(tempDim);
-
+        GuiHelper.adaptContainerSize(jScrollPanelMain, content);
         GuiHelper.packAndCenter(this);
     }
 

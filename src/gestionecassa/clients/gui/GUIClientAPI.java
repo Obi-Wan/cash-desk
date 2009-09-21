@@ -1,5 +1,5 @@
 /*
- * OkCancelPanel.java
+ * GUIClientAPI.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -12,15 +12,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package gestionecassa.clients;
+package gestionecassa.clients.gui;
+
+import gestionecassa.clients.*;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author ben
  */
-abstract public class OkCancelPanel extends javax.swing.JPanel {
-    
-    abstract public void apply();
-    abstract public void init();
+public interface GUIClientAPI extends ClientAPI {
 
+
+    /**
+     * Returns the chosen logger for the GUI objects
+     *
+     * @return
+     */
+    Logger getLoggerGUI();
 }

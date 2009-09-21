@@ -18,7 +18,9 @@
  * Created on 3-lug-2009, 21.31.33
  */
 
-package gestionecassa.clients;
+package gestionecassa.clients.gui;
+
+import gestionecassa.clients.LuogoOptions;
 
 /**
  *

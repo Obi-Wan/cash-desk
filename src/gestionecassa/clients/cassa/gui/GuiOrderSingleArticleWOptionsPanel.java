@@ -20,7 +20,7 @@
 
 package gestionecassa.clients.cassa.gui;
 
-import gestionecassa.clients.GuiOkCancelDialog;
+import gestionecassa.clients.gui.GuiOkCancelDialog;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.order.EntrySingleOption;
 import java.awt.event.ActionEvent;
