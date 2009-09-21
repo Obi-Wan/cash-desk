@@ -183,7 +183,7 @@ public class GuiOrderSingleOptionPanel extends javax.swing.JPanel {
      *
      * @return
      */
-    public int getNumParziale() {
+    public int getNumPartial() {
         try {
             jSpinnerNum.commitEdit();
         } catch (ParseException ex) {

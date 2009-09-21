@@ -34,7 +34,7 @@ import javax.swing.GroupLayout.SequentialGroup;
  *
  * @author ben
  */
-public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePanel {
+public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel {
 
     ArticleWithOptions article;
 
@@ -279,11 +279,11 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
         List<EntrySingleOption> tempLista
                 = new ArrayList<EntrySingleOption>();
         for (GuiOrderSingleOptionPanel singolaOpzionePanel : optionsPanels) {
-            if (singolaOpzionePanel.getNumParziale() != 0) {
+            if (singolaOpzionePanel.getNumPartial() != 0) {
                 EntrySingleOption tempArray =
                     new EntrySingleOption(
                         singolaOpzionePanel.getComboChoice(),
-                        singolaOpzionePanel.getNumParziale());
+                        singolaOpzionePanel.getNumPartial());
                 tempLista.add(tempArray);
             }
         }
@@ -298,7 +298,7 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleArticlePan
     public int getNumTot() {
         int tot = 0;
         for (GuiOrderSingleOptionPanel singolaOpzionePanel : optionsPanels) {
-            tot += singolaOpzionePanel.getNumParziale();
+            tot += singolaOpzionePanel.getNumPartial();
         }
         return tot;
     }

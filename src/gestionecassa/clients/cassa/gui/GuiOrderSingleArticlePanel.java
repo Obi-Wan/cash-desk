@@ -21,53 +21,50 @@
 package gestionecassa.clients.cassa.gui;
 
 import gestionecassa.Article;
-import java.awt.event.ActionEvent;
-import java.text.ParseException;
-import javax.swing.AbstractAction;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
  * @author ben
  */
-public class GuiOrderSingleArticlePanel extends GuiAbstrSingleArticlePanel {
+public class GuiOrderSingleArticlePanel extends GuiAbstrMoreLessPanel
+        implements ChangeListener {
 
+    /**
+     *
+     */
     Article article;
 
-    SpinnerNumberModel spinnerModel;
-
+    /**
+     * 
+     */
     GuiNewOrderPanel parent;
 
     /**
      * Creates new form GuiOrderSingleArticlePanel
      *
-     * @param nome
+     * @param parent
+     * @param art
+     * @param index
      */
-    public GuiOrderSingleArticlePanel(GuiNewOrderPanel parent, Article bene, int i) {
+    public GuiOrderSingleArticlePanel(GuiNewOrderPanel parent, Article art,
+            int index) {
+        super(index, 0);
+
         initComponents();
-        this.article = bene;
+
+        this.article = art;
         this.parent = parent;
 
-        spinnerModel = new SpinnerNumberModel(0, 0, 255, 1);
         jSpinnerNum.setModel(spinnerModel);
 
-        jLabelNameArticle.setText(bene.getName());
-        jLabelPrice.setText("€ " + bene.getPrice());
+        jLabelNameArticle.setText(art.getName());
+        jLabelPrice.setText("€ " + art.getPrice());
 
-        if (i < 10) {
-            jButtonMore.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
-                    Shortcuts.moreKeys[i], "MORE"+i);
-            jButtonMore.getActionMap().put("MORE"+i, new AbstractAction() {
-                public void actionPerformed(ActionEvent e) { more(); }
-            });
-            jButtonLess.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
-                    Shortcuts.lessKeys[i], "LESS"+i);
-            jButtonLess.getActionMap().put("LESS"+i, new AbstractAction() {
-                public void actionPerformed(ActionEvent e) { less(); }
-            });
-        }
+        jLabelNum.setText((index + 1) + ".");
 
-        jLabelNum.setText((i + 1) + ".");
+        jSpinnerNum.addChangeListener(this);
     }
 
     /** This method is called from within the constructor to
@@ -176,41 +173,8 @@ public class GuiOrderSingleArticlePanel extends GuiAbstrSingleArticlePanel {
   private javax.swing.JLabel jLabelPrice;
   private javax.swing.JSpinner jSpinnerNum;
   // End of variables declaration//GEN-END:variables
-
-    /**
-     * 
-     * @return
-     */
-    public int getNumTot() {
-        try {
-            jSpinnerNum.commitEdit();
-        } catch (ParseException ex) {
-            jSpinnerNum.setValue(spinnerModel.getValue());
-        }
-        return spinnerModel.getNumber().intValue();
-    }
-
-    /**
-     * 
-     */
-    @Override
-    public void clean() {
-        jSpinnerNum.setValue(spinnerModel.getMinimum());
-    }
-
-    public void more() {
-        Object next = spinnerModel.getNextValue();
-        if (next != null) {
-            jSpinnerNum.setValue(next);
-        }
-        parent.updateCurrentOrder();
-    }
-
-    public void less() {
-        Object previous = spinnerModel.getPreviousValue();
-        if (previous != null) {
-            jSpinnerNum.setValue(previous);
-        }
+    
+    public void stateChanged(ChangeEvent e) {
         parent.updateCurrentOrder();
     }
 }

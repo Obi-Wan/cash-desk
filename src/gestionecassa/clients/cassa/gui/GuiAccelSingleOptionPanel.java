@@ -20,52 +20,30 @@
 
 package gestionecassa.clients.cassa.gui;
 
-import java.awt.event.ActionEvent;
-import java.text.ParseException;
-import javax.swing.AbstractAction;
-import javax.swing.SpinnerNumberModel;
-
 /**
  *
  * @author ben
  */
-public class GuiAccelSingleOptionPanel extends GuiAbstrSingleArticlePanel {
-
-    /**
-     * 
-     */
-    SpinnerNumberModel spinnerModel;
+public class GuiAccelSingleOptionPanel extends GuiAbstrMoreLessPanel {
 
     /**
      * Creates new form GuiAccelSingleOptionPanel
      *
      * @param parent
      * @param option
-     * @param countOption
-     * @param countPanel
+     * @param startOptionQuantity
+     * @param indexPanel
      */
-    public GuiAccelSingleOptionPanel(GuiAccelOptionsPanel parent,
-            String option, int countOption, int countPanel) {
+    public GuiAccelSingleOptionPanel(String option, int startOptionQuantity,
+            int indexPanel) {
+        super(indexPanel, startOptionQuantity);
+
         initComponents();
 
-        spinnerModel = new SpinnerNumberModel(countOption, 0, 255, 1);
         jSpinnerNum.setModel(spinnerModel);
 
         jLabelOptionName.setText(option);
-        jLabelNum.setText((countPanel + 1) + ".");
-
-        if (countPanel < 10) {
-            jButtonMore.getInputMap(WHEN_IN_FOCUSED_WINDOW)
-                    .put(Shortcuts.moreKeys[countPanel], "MORE"+countPanel);
-            jButtonMore.getActionMap().put("MORE"+countPanel, new AbstractAction() {
-                public void actionPerformed(ActionEvent e) { more(); }
-            });
-            jButtonLess.getInputMap(WHEN_IN_FOCUSED_WINDOW)
-                    .put(Shortcuts.lessKeys[countPanel], "LESS"+countPanel);
-            jButtonLess.getActionMap().put("LESS"+countPanel, new AbstractAction() {
-                public void actionPerformed(ActionEvent e) { less(); }
-            });
-        }
+        jLabelNum.setText((indexPanel + 1) + ".");
     }
 
     /** This method is called from within the constructor to
@@ -160,32 +138,4 @@ public class GuiAccelSingleOptionPanel extends GuiAbstrSingleArticlePanel {
   private javax.swing.JSpinner jSpinnerNum;
   // End of variables declaration//GEN-END:variables
 
-    /**
-     * 
-     */
-    public void more() {
-        Object next = spinnerModel.getNextValue();
-        if (next != null) {
-            jSpinnerNum.setValue(next);
-        }
-    }
-
-    public void less() {
-        Object previous = spinnerModel.getPreviousValue();
-        if (previous != null) {
-            jSpinnerNum.setValue(previous);
-        }
-    }
-    /**
-     *
-     * @return
-     */
-    public int getNumTot() {
-        try {
-            jSpinnerNum.commitEdit();
-        } catch (ParseException ex) {
-            jSpinnerNum.setValue(spinnerModel.getValue());
-        }
-        return spinnerModel.getNumber().intValue();
-    }
 }

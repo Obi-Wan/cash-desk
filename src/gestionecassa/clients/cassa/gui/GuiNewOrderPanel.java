@@ -119,7 +119,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
     void buildContentsList() {
         int i = 0;
         for (Article art : articlesList.getArticlesList()) {
-            GuiAbstrSingleArticlePanel tempPanel;
+            GuiAbstrSingleEntryPanel tempPanel;
             if (art instanceof ArticleWithOptions) {
                 tempPanel = 
                         new GuiOrderSingleArticleWOptionsPanel(this,

@@ -114,8 +114,8 @@ public class GuiAccelOptionsPanel extends OkCancelPanel {
             GuiOrderSingleOptionPanel tempOrigPanel =
                     targetPanel.getSingleOptionPanel(option);
 
-            tempDiagPanel = new GuiAccelSingleOptionPanel(this, option,
-                    (tempOrigPanel == null) ? 0 : tempOrigPanel.getNumParziale(),
+            tempDiagPanel = new GuiAccelSingleOptionPanel(option,
+                    (tempOrigPanel == null) ? 0 : tempOrigPanel.getNumPartial(),
                     i++);
 
             varListMng.addRecord(tempDiagPanel,

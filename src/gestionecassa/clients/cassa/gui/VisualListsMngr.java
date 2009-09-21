@@ -137,7 +137,7 @@ public class VisualListsMngr<Data> {
         /**
          * Reference to the panel that will show up in the gui
          */
-        final GuiAbstrSingleArticlePanel displayedPanel;
+        final GuiAbstrSingleEntryPanel displayedPanel;
 
         /**
          * Explicit constructor
@@ -145,7 +145,7 @@ public class VisualListsMngr<Data> {
          * @param data 
          * @param displayedPanel
          */
-        public RecordPanels(GuiAbstrSingleArticlePanel pan, Data data) {
+        public RecordPanels(GuiAbstrSingleEntryPanel pan, Data data) {
             this.displayedPanel = pan;
             this.data = data;
         }
@@ -156,7 +156,7 @@ public class VisualListsMngr<Data> {
      * @param pan
      * @param data
      */
-    void addRecord(GuiAbstrSingleArticlePanel pan, Data data) {
+    void addRecord(GuiAbstrSingleEntryPanel pan, Data data) {
         panelsTable.add(new RecordPanels(pan, data));
     }
 }
