@@ -48,6 +48,8 @@ public class GuiAccelOptionsPanel extends OkCancelPanel {
         initComponents();
 
         this.targetPanel = targetPanel;
+
+        varListMng = new VisualListsMngr<OptionPanelRelation>(this);
     }
 
     /** This method is called from within the constructor to
