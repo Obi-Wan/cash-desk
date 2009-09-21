@@ -25,7 +25,6 @@ import gestionecassa.clients.gui.GuiHelper;
 import gestionecassa.clients.gui.GuiOkCancelDialog;
 import gestionecassa.clients.gui.GuiOptionsPanel;
 import gestionecassa.clients.cassa.CassaAPI;
-import java.awt.BorderLayout;
 
 /**
  *
@@ -49,13 +48,10 @@ public class GuiAppFrameCassa extends GuiAppFrame<CassaAPI> {
 
         statusPanel = new GuiStatusCassaPanel(owner.getHostname());
 
-        if (!(getContentPane().getLayout() instanceof BorderLayout)) {
-            getContentPane().setLayout(new BorderLayout());
-        }
-        
-        getContentPane().add(toolbar, java.awt.BorderLayout.PAGE_START);
-        getContentPane().add(jScrollPanelMain, java.awt.BorderLayout.CENTER);
-        getContentPane().add(statusPanel, java.awt.BorderLayout.LINE_END);
+        GuiHelper.MngBorderLayout.init(getContentPane());
+        GuiHelper.MngBorderLayout.putTop(getContentPane(), toolbar);
+        GuiHelper.MngBorderLayout.putCenter(getContentPane(), jScrollPanelMain);
+        GuiHelper.MngBorderLayout.putRight(getContentPane(), statusPanel);
 
         GuiHelper.packAndCenter(this);
     }

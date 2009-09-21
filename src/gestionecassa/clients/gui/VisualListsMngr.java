@@ -47,7 +47,7 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
     protected List<RecordPanels<PanelType, DataType>> panelsList;
 
     /**
-     * 
+     * Alternative way of reaching records.
      */
     protected SortedMap<PanelType, RecordPanels<PanelType, DataType>> panelsMap;
 

@@ -14,10 +14,12 @@
 
 package gestionecassa.clients.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.Window;
-import javax.swing.JComponent;
 
 /**
  *
@@ -51,7 +53,7 @@ public class GuiHelper {
      * @param container
      * @param content
      */
-    static public void adaptContainerSize(JComponent container, JComponent content) {
+    static public void adaptContainerSize(Container container, Component content) {
 
         Dimension tempDim = content.getPreferredSize();
         tempDim.height = tempDim.height + 10;
@@ -59,4 +61,34 @@ public class GuiHelper {
 
         container.setPreferredSize(tempDim);
     }
+    
+    static public class MngBorderLayout {
+
+        static public void init(Container container) {
+            if (!(container.getLayout() instanceof BorderLayout)) {
+                container.setLayout(new BorderLayout());
+            }
+        }
+
+        static public void putTop(Container cont, Component comp) {
+            cont.add(comp, java.awt.BorderLayout.PAGE_START);
+        }
+
+        static public void putBottom(Container cont, Component comp) {
+            cont.add(comp, java.awt.BorderLayout.PAGE_END);
+        }
+
+        static public void putCenter(Container cont, Component comp) {
+            cont.add(comp, java.awt.BorderLayout.CENTER);
+        }
+
+        static public void putLeft(Container cont, Component comp) {
+            cont.add(comp, java.awt.BorderLayout.LINE_START);
+        }
+
+        static public void putRight(Container cont, Component comp) {
+            cont.add(comp, java.awt.BorderLayout.LINE_END);
+        }
+    }
+
 }
