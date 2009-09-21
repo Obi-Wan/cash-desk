@@ -88,29 +88,6 @@ public class GuiAppFrameCassa extends GuiAppFrame<CassaAPI> {
 
     /**
      *
-     * @param price
-     */
-    void updateCurrentOrder(double price) {
-        statusPanel.setPartialOrder(price);
-    }
-
-    /**
-     *
-     * @param price
-     */
-    void updateNewOrder(double price) {
-        statusPanel.setEmittedOrder(price);
-    }
-
-    /**
-     * 
-     */
-    void cleanLastOrder() {
-        statusPanel.cleanLastOrder();
-    }
-
-    /**
-     *
      * @param cassaAPI
      * @param username
      */
@@ -130,5 +107,13 @@ public class GuiAppFrameCassa extends GuiAppFrame<CassaAPI> {
         super.setdownAfterLogout();
         statusPanel.setOrderPanel(null);
         statusPanel.reset();
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public GuiStatusCassaPanel getStatusPanel() {
+        return statusPanel;
     }
 }

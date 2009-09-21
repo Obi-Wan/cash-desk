@@ -139,7 +139,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
 
     void cleanDataFields() {
         varListMng.cleanDataFields();
-        frame.updateCurrentOrder(0);
+        frame.getStatusPanel().setPartialOrder(0);
     }
 
     /**
@@ -173,7 +173,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
             Order nuovoOrdine = createNewOrder();
             if (nuovoOrdine.getTotalPrice() != 0) {
                 owner.sendRMINewOrder(nuovoOrdine);
-                frame.updateNewOrder(computeOrderPrice(nuovoOrdine));
+                frame.getStatusPanel().setEmittedOrder(computeOrderPrice(nuovoOrdine));
                 this.cleanDataFields();
             }
         } catch (RemoteException ex) {
@@ -256,7 +256,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
      * Committs the calculated price of the current partial order to the gui.
      */
     void updateCurrentOrder() {
-        frame.updateCurrentOrder(computeCurrentOrder());
+        frame.getStatusPanel().setPartialOrder(computeCurrentOrder());
     }
 
     /**
@@ -286,7 +286,8 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         if (result == javax.swing.JOptionPane.YES_OPTION) {
             try {
                 owner.delRMILastOrder();
-                frame.cleanLastOrder();
+                frame.getStatusPanel().cleanLastOrder();
+                
                 javax.swing.JOptionPane.showMessageDialog(this,
                     "L'ultimo Ordine emesso è stato annullato",
                     "Operazione terminata",
