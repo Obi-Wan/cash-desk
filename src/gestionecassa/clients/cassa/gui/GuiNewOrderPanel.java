@@ -20,10 +20,12 @@
 
 package gestionecassa.clients.cassa.gui;
 
+import gestionecassa.clients.gui.VisualListsMngr;
 import gestionecassa.clients.cassa.*;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.Article;
 import gestionecassa.ArticlesList;
+import gestionecassa.clients.gui.RecordPanels;
 import gestionecassa.order.Order;
 import gestionecassa.order.EntrySingleArticle;
 import java.awt.Dimension;
@@ -49,28 +51,31 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
     /**
      * 
      */
-    GuiAppFrameCassa parent;
+    GuiAppFrameCassa frame;
 
     /**
      * Local Reference to the articles list.
      */
     ArticlesList articlesList;
 
-    VisualListsMngr<Article> varListMng;
+    /**
+     * 
+     */
+    VisualListsMngr<GuiAbstrSingleEntryPanel, Article> varListMng;
 
     /** 
      * Creates new form GuiNewOrderPanel
      *
      * @param owner
      */
-    public GuiNewOrderPanel(CassaAPI owner, GuiAppFrameCassa parent) {
+    public GuiNewOrderPanel(CassaAPI owner, GuiAppFrameCassa frame) {
         initComponents();
         this.owner = owner;
-        this.parent = parent;
+        this.frame = frame;
         
         fetchArticlesList();
 
-        varListMng = new VisualListsMngr<Article>(this);
+        varListMng = new VisualListsMngr<GuiAbstrSingleEntryPanel, Article>(this);
         buildContentsList();
         varListMng.buildVisualList();
 
@@ -134,7 +139,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
 
     void cleanDataFields() {
         varListMng.cleanDataFields();
-        parent.updateCurrentOrder(0);
+        frame.updateCurrentOrder(0);
     }
 
     /**
@@ -168,7 +173,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
             Order nuovoOrdine = createNewOrder();
             if (nuovoOrdine.getTotalPrice() != 0) {
                 owner.sendRMINewOrder(nuovoOrdine);
-                parent.updateNewOrder(computeOrderPrice(nuovoOrdine));
+                frame.updateNewOrder(computeOrderPrice(nuovoOrdine));
                 this.cleanDataFields();
             }
         } catch (RemoteException ex) {
@@ -204,7 +209,8 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         // TODO One day will be needed here to handle the table properly
         Order tempOrd = new Order(owner.getUsername(), owner.getHostname(), 0);
 
-        for (VisualListsMngr<Article>.RecordPanels tempRecord : varListMng.panelsTable) {
+        for (RecordPanels<GuiAbstrSingleEntryPanel, Article>
+                tempRecord : varListMng.getRecords()) {
 
             tempNumTot = tempRecord.displayedPanel.getNumTot();
 
@@ -235,7 +241,8 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
      */
     private double computeCurrentOrder() {
         double output = 0;
-        for (VisualListsMngr<Article>.RecordPanels tempRecord : varListMng.panelsTable) {
+        for (RecordPanels<GuiAbstrSingleEntryPanel, Article>
+                tempRecord : varListMng.getRecords()) {
             
             if (tempRecord.displayedPanel.getNumTot() != 0) {
                 output += tempRecord.displayedPanel.getNumTot() *
@@ -249,7 +256,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
      * Committs the calculated price of the current partial order to the gui.
      */
     void updateCurrentOrder() {
-        parent.updateCurrentOrder(computeCurrentOrder());
+        frame.updateCurrentOrder(computeCurrentOrder());
     }
 
     /**
@@ -260,10 +267,10 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
      * @return Price calculated.
      */
     private double computeOrderPrice(Order ordine) {
-        List<EntrySingleArticle> lista = ordine.getArticlesSold();
+        List<EntrySingleArticle> list = ordine.getArticlesSold();
         double output = 0;
-        for (EntrySingleArticle singoloBene : lista) {
-            output += singoloBene.numTot * singoloBene.article.getPrice();
+        for (EntrySingleArticle artEntry : list) {
+            output += artEntry.numTot * artEntry.article.getPrice();
         }
         return output;
     }
@@ -279,7 +286,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         if (result == javax.swing.JOptionPane.YES_OPTION) {
             try {
                 owner.delRMILastOrder();
-                parent.cleanLastOrder();
+                frame.cleanLastOrder();
                 javax.swing.JOptionPane.showMessageDialog(this,
                     "L'ultimo Ordine emesso è stato annullato",
                     "Operazione terminata",

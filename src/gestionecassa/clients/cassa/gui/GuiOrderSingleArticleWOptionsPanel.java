@@ -20,8 +20,10 @@
 
 package gestionecassa.clients.cassa.gui;
 
+import gestionecassa.clients.gui.VisualListsMngr;
 import gestionecassa.clients.gui.GuiOkCancelDialog;
 import gestionecassa.ArticleWithOptions;
+import gestionecassa.clients.gui.RecordPanels;
 import gestionecassa.order.EntrySingleOption;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -38,27 +40,31 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
 
     ArticleWithOptions article;
 
-    List<GuiOrderSingleOptionPanel> optionsPanels;
+//    List<GuiOrderSingleOptionPanel> optionsPanels;
 
-    GuiNewOrderPanel parent;
+    VisualListsMngr<GuiOrderSingleOptionPanel, String> listMngr;
+
+    GuiNewOrderPanel orderPanel;
 
     /**
      * Creates new form GuiOrderSingleArticleWOptionsPanel
      *
-     * @param parent
-     * @param bene
-     * @param i
+     * @param orderPanel
+     * @param art 
+     * @param index 
      */
-    public GuiOrderSingleArticleWOptionsPanel(GuiNewOrderPanel parent, 
+    public GuiOrderSingleArticleWOptionsPanel(GuiNewOrderPanel orderPanel,
             ArticleWithOptions art, int index) {
         initComponents();
 
-        this.parent = parent;
+        this.orderPanel = orderPanel;
         this.article = art;
         this.jLabelName.setText(art.getName());
         this.jLabelPrice.setText("€ " + art.getPrice());
 
-        optionsPanels = new ArrayList<GuiOrderSingleOptionPanel>();
+        listMngr = new VisualListsMngr<GuiOrderSingleOptionPanel, String>(jPanelOpzioni);
+
+//        optionsPanels = new ArrayList<GuiOrderSingleOptionPanel>();
         
         if (index < 10) {
             this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
@@ -175,8 +181,9 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
      */
     @Override
     public void clean() {
-        optionsPanels.removeAll(optionsPanels);
-        rebuildVisualOptionsList();
+        listMngr.resetList();
+//        optionsPanels.removeAll(optionsPanels);
+//        rebuildVisualOptionsList();
     }
 
     /**
@@ -186,7 +193,7 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
     private void modifyOptions() {
         GuiAccelOptionsPanel panel = new GuiAccelOptionsPanel(this);
         GuiOkCancelDialog dialog =
-                new GuiOkCancelDialog(parent.parent, article.getName(), panel);
+                new GuiOkCancelDialog(orderPanel.frame, article.getName(), panel);
         dialog.setVisible(true);
     }
 
@@ -200,11 +207,9 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
      */
     void addNewOptionPanel(String choice, int num) {
         GuiOrderSingleOptionPanel tempPanel =
-                new GuiOrderSingleOptionPanel(this,article.getOptions());
-        tempPanel.spinnerModel.setValue(num);
-        tempPanel.comboModel.setSelectedItem(choice);
-        
-        optionsPanels.add(tempPanel);
+                new GuiOrderSingleOptionPanel(this, choice, num);
+//        optionsPanels.add(tempPanel);
+        listMngr.addRecord(tempPanel, choice);
     }
 
     /**
@@ -215,7 +220,8 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
      * @param panel
      */
     void removeOptionPanel(GuiOrderSingleOptionPanel panel) {
-        optionsPanels.remove(panel);
+//        optionsPanels.remove(panel);
+        listMngr.remove(panel);
     }
 
     /**
@@ -223,53 +229,54 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
      * <code>ArticleWithOptions</code>
      */
     void updateAfterModify() {
-        rebuildVisualOptionsList();
+//        rebuildVisualOptionsList();
+        listMngr.buildVisualList();
         triggerUpdateCurrentOrder();
     }
 
-    /**
-     * 
-     */
-    private void rebuildVisualOptionsList() {
-        jPanelOpzioni.removeAll();
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(jPanelOpzioni);
-        jPanelOpzioni.setLayout(layout);
-
-        ParallelGroup tempHorizGroup = layout.createParallelGroup(
-                javax.swing.GroupLayout.Alignment.LEADING);
-        SequentialGroup tempSequGroup = layout.createSequentialGroup()
-            .addContainerGap();
-
-        for (GuiOrderSingleOptionPanel singolaOpzionePanel : optionsPanels) {
-
-            tempHorizGroup.addComponent(singolaOpzionePanel,
-                    javax.swing.GroupLayout.DEFAULT_SIZE,
-                    javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
-
-            tempSequGroup
-                .addComponent(singolaOpzionePanel,
-                    javax.swing.GroupLayout.PREFERRED_SIZE,
-                    javax.swing.GroupLayout.DEFAULT_SIZE,
-                    javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(
-                    javax.swing.LayoutStyle.ComponentPlacement.RELATED);
-        }
-        tempSequGroup.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
-
-        // infine aggiungiamo il gruppo di elementi alla pagina principale.
-        layout.setHorizontalGroup(
-          layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(tempHorizGroup)
-                .addContainerGap() )
-        );
-
-        layout.setVerticalGroup(
-          layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(tempSequGroup)
-        );
-    }
+//    /**
+//     *
+//     */
+//    private void rebuildVisualOptionsList() {
+//        jPanelOpzioni.removeAll();
+//        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(jPanelOpzioni);
+//        jPanelOpzioni.setLayout(layout);
+//
+//        ParallelGroup tempHorizGroup = layout.createParallelGroup(
+//                javax.swing.GroupLayout.Alignment.LEADING);
+//        SequentialGroup tempSequGroup = layout.createSequentialGroup()
+//            .addContainerGap();
+//
+//        for (GuiOrderSingleOptionPanel singolaOpzionePanel : optionsPanels) {
+//
+//            tempHorizGroup.addComponent(singolaOpzionePanel,
+//                    javax.swing.GroupLayout.DEFAULT_SIZE,
+//                    javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
+//
+//            tempSequGroup
+//                .addComponent(singolaOpzionePanel,
+//                    javax.swing.GroupLayout.PREFERRED_SIZE,
+//                    javax.swing.GroupLayout.DEFAULT_SIZE,
+//                    javax.swing.GroupLayout.PREFERRED_SIZE)
+//                .addPreferredGap(
+//                    javax.swing.LayoutStyle.ComponentPlacement.RELATED);
+//        }
+//        tempSequGroup.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
+//
+//        // infine aggiungiamo il gruppo di elementi alla pagina principale.
+//        layout.setHorizontalGroup(
+//          layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//            .addGroup(layout.createSequentialGroup()
+//                .addContainerGap()
+//                .addGroup(tempHorizGroup)
+//                .addContainerGap() )
+//        );
+//
+//        layout.setVerticalGroup(
+//          layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//            .addGroup(tempSequGroup)
+//        );
+//    }
 
     /**
      * 
@@ -278,14 +285,23 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
     public List<EntrySingleOption> getPatialsList() {
         List<EntrySingleOption> tempLista
                 = new ArrayList<EntrySingleOption>();
-        for (GuiOrderSingleOptionPanel singolaOpzionePanel : optionsPanels) {
-            if (singolaOpzionePanel.getNumPartial() != 0) {
+//        for (GuiOrderSingleOptionPanel singolaOpzionePanel : optionsPanels) {
+        for (RecordPanels<GuiOrderSingleOptionPanel, String> recordPanels
+                : listMngr.getRecords()) {
+            if (recordPanels.displayedPanel.getNumTot() != 0) {
                 EntrySingleOption tempArray =
                     new EntrySingleOption(
-                        singolaOpzionePanel.getComboChoice(),
-                        singolaOpzionePanel.getNumPartial());
+                        recordPanels.data,
+                        recordPanels.displayedPanel.getNumTot());
                 tempLista.add(tempArray);
             }
+//            if (singolaOpzionePanel.getNumTot() != 0) {
+//                EntrySingleOption tempArray =
+//                    new EntrySingleOption(
+//                        singolaOpzionePanel.getComboChoice(),
+//                        singolaOpzionePanel.getNumTot());
+//                tempLista.add(tempArray);
+//            }
         }
         return tempLista;
     }
@@ -297,8 +313,11 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
     @Override
     public int getNumTot() {
         int tot = 0;
-        for (GuiOrderSingleOptionPanel singolaOpzionePanel : optionsPanels) {
-            tot += singolaOpzionePanel.getNumPartial();
+//        for (GuiOrderSingleOptionPanel singolaOpzionePanel : optionsPanels) {
+//            tot += singolaOpzionePanel.getNumTot();
+//        }
+        for (GuiOrderSingleOptionPanel panel : listMngr.getPanels()) {
+            tot += panel.getNumTot();
         }
         return tot;
     }
@@ -307,7 +326,7 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
      * 
      */
     void triggerUpdateCurrentOrder() {
-        parent.updateCurrentOrder();
+        orderPanel.updateCurrentOrder();
     }
 
     /**
@@ -316,7 +335,12 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
      * @return
      */
     public GuiOrderSingleOptionPanel getSingleOptionPanel( String option ) {
-        for (GuiOrderSingleOptionPanel panel : optionsPanels) {
+//        for (GuiOrderSingleOptionPanel panel : optionsPanels) {
+//            if (panel.hasSelected(option)) {
+//                return panel;
+//            }
+//        }
+        for (GuiOrderSingleOptionPanel panel : listMngr.getPanels()) {
             if (panel.hasSelected(option)) {
                 return panel;
             }

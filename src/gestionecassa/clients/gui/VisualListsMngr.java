@@ -18,8 +18,10 @@
  * Created on 4-set-2009, 18.18.59
  */
 
-package gestionecassa.clients.cassa.gui;
+package gestionecassa.clients.gui;
 
+import gestionecassa.clients.cassa.gui.*;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.GroupLayout.ParallelGroup;
@@ -30,21 +32,24 @@ import javax.swing.JPanel;
  *
  * @author ben
  */
-public class VisualListsMngr<Data> {
+public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataType> {
 
+    /**
+     * The managed panel
+     */
     protected JPanel managedPanel;
 
     /**
      * List that associates a panel to each article
      */
-    protected List<RecordPanels> panelsTable;
+    protected List<RecordPanels<PanelType, DataType>> panelsTable;
 
     /**
      * Default constructor
      */
     public VisualListsMngr(JPanel managed) {
         this.managedPanel = managed;
-        panelsTable = new Vector<RecordPanels>();
+        panelsTable = new Vector<RecordPanels<PanelType, DataType>>();
     }
 
     /**
@@ -52,7 +57,8 @@ public class VisualListsMngr<Data> {
      *
      * @param panelses
      */
-    public VisualListsMngr(JPanel managed, List<RecordPanels> panelses) {
+    public VisualListsMngr(JPanel managed,
+            List<RecordPanels<PanelType, DataType>> panelses) {
         this.panelsTable = panelses;
         this.managedPanel = managed;
     }
@@ -61,7 +67,7 @@ public class VisualListsMngr<Data> {
      * It actually displays what the method <code>buildContentsList()</code>
      * stored in the table of SoldArticle-"Panel showing it".
      */
-    void buildVisualList() {
+    public void buildVisualList() {
         /* Prima di tutto rimuoviamo i pannelli di prima che se no incasinano
          * tutto */
         managedPanel.removeAll();
@@ -116,38 +122,23 @@ public class VisualListsMngr<Data> {
     /**
      * Cleans the gui.
      */
-    void cleanDataFields() {
+    public void cleanDataFields() {
         for (RecordPanels singoloRecord : panelsTable) {
             singoloRecord.displayedPanel.clean();
         }
     }
 
-    /**
-     * Inner class that defines a record of panels and other useful info.
-     *
-     * @author ben
-     */
-    public class RecordPanels {
+    public void resetList() {
+        panelsTable.clear();
+        managedPanel.removeAll();
+    }
 
-        /**
-         * 
-         */
-        final Data data;
-
-        /**
-         * Reference to the panel that will show up in the gui
-         */
-        final GuiAbstrSingleEntryPanel displayedPanel;
-
-        /**
-         * Explicit constructor
-         *
-         * @param data 
-         * @param displayedPanel
-         */
-        public RecordPanels(GuiAbstrSingleEntryPanel pan, Data data) {
-            this.displayedPanel = pan;
-            this.data = data;
+    public void remove(GuiOrderSingleOptionPanel panel) {
+        for (RecordPanels recordPanels : panelsTable) {
+            if (recordPanels.displayedPanel.equals(panel)) {
+                panelsTable.remove(recordPanels);
+                return;
+            }
         }
     }
 
@@ -156,7 +147,27 @@ public class VisualListsMngr<Data> {
      * @param pan
      * @param data
      */
-    void addRecord(GuiAbstrSingleEntryPanel pan, Data data) {
+    public void addRecord(PanelType pan, DataType data) {
         panelsTable.add(new RecordPanels(pan, data));
+    }
+
+    /**
+     *
+     * @return
+     */
+    public List<RecordPanels<PanelType, DataType>> getRecords() {
+        return panelsTable;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public List<PanelType> getPanels() {
+        List<PanelType> panels = new LinkedList<PanelType>();
+        for (RecordPanels<PanelType, DataType> recordPanels : panelsTable) {
+            panels.add(recordPanels.displayedPanel);
+        }
+        return panels;
     }
 }

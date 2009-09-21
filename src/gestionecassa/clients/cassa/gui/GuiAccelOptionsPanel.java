@@ -20,7 +20,9 @@
 
 package gestionecassa.clients.cassa.gui;
 
+import gestionecassa.clients.gui.VisualListsMngr;
 import gestionecassa.clients.gui.OkCancelPanel;
+import gestionecassa.clients.gui.RecordPanels;
 
 /**
  *
@@ -36,7 +38,7 @@ public class GuiAccelOptionsPanel extends OkCancelPanel {
     /**
      * 
      */
-    VisualListsMngr<OptionPanelRelation> varListMng;
+    VisualListsMngr<GuiAccelSingleOptionPanel, OptionPanelRelation> varListMng;
 
     /**
      * Creates new form GuiAccelOptionsPanel
@@ -49,7 +51,8 @@ public class GuiAccelOptionsPanel extends OkCancelPanel {
 
         this.targetPanel = targetPanel;
 
-        varListMng = new VisualListsMngr<OptionPanelRelation>(this);
+        varListMng = new VisualListsMngr<GuiAccelSingleOptionPanel,
+                OptionPanelRelation>(this);
     }
 
     /** This method is called from within the constructor to
@@ -115,7 +118,7 @@ public class GuiAccelOptionsPanel extends OkCancelPanel {
                     targetPanel.getSingleOptionPanel(option);
 
             tempDiagPanel = new GuiAccelSingleOptionPanel(option,
-                    (tempOrigPanel == null) ? 0 : tempOrigPanel.getNumPartial(),
+                    (tempOrigPanel == null) ? 0 : tempOrigPanel.getNumTot(),
                     i++);
 
             varListMng.addRecord(tempDiagPanel,
@@ -129,23 +132,21 @@ public class GuiAccelOptionsPanel extends OkCancelPanel {
      * Applies modifications to the original panel.
      */
     public void apply() {
-        for (VisualListsMngr<OptionPanelRelation>.RecordPanels record : varListMng.panelsTable) {
+        for (RecordPanels<GuiAccelSingleOptionPanel, OptionPanelRelation>
+                record : varListMng.getRecords()) {
 
-            GuiAccelSingleOptionPanel dispPanel =
-                    (GuiAccelSingleOptionPanel) record.displayedPanel;
-
-            if (dispPanel.spinnerModel.getValue().equals(
-                    dispPanel.spinnerModel.getMinimum())) {
+            if (record.displayedPanel.spinnerModel.getValue().equals(
+                    record.displayedPanel.spinnerModel.getMinimum())) {
                 if (record.data.origPanel != null) {
                     targetPanel.removeOptionPanel(record.data.origPanel);
                 }
             } else {
                 if (record.data.origPanel == null) {
                     targetPanel.addNewOptionPanel(record.data.option,
-                            dispPanel.getNumTot());
+                            record.displayedPanel.getNumTot());
                 } else {
-                    record.data.origPanel.spinnerModel.setValue(
-                            dispPanel.spinnerModel.getValue());
+                    record.data.origPanel.setNumTot(
+                            record.displayedPanel.spinnerModel.getNumber().intValue());
                 }
             }
         }
