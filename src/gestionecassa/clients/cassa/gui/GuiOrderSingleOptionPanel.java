@@ -20,31 +20,21 @@
 
 package gestionecassa.clients.cassa.gui;
 
-import java.text.ParseException;
-import java.util.List;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.SpinnerNumberModel;
-
 /**
  *
  * @author ben
  */
-public class GuiOrderSingleOptionPanel extends javax.swing.JPanel {
+public class GuiOrderSingleOptionPanel extends GuiAbstrSingleEntryPanel {
+
+    /**
+     * 
+     */
+    int quantity;
 
     /**
      *
      */
     GuiOrderSingleArticleWOptionsPanel parent;
-
-    /**
-     *
-     */
-    DefaultComboBoxModel comboModel;
-
-    /**
-     *
-     */
-    SpinnerNumberModel spinnerModel;
 
     /**
      * Creates new form GuiOrderSingleOptionPanel
@@ -53,15 +43,13 @@ public class GuiOrderSingleOptionPanel extends javax.swing.JPanel {
      * @param opzioni
      */
     public GuiOrderSingleOptionPanel(GuiOrderSingleArticleWOptionsPanel parent,
-            List<String> opzioni) {
+            String option, int quantity) {
         initComponents();
         this.parent = parent;
+        this.quantity = quantity;
 
-        spinnerModel = new SpinnerNumberModel(0, 0, 255, 1);
-        jSpinnerNum.setModel(spinnerModel);
-
-        comboModel = new DefaultComboBoxModel(opzioni.toArray());
-        jComboBoxOpzione.setModel(comboModel);
+        this.setNumTot(quantity);
+        jTextFieldOptionName.setText(option);
     }
 
     /** This method is called from within the constructor to
@@ -73,48 +61,30 @@ public class GuiOrderSingleOptionPanel extends javax.swing.JPanel {
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
 
-    jButtonRimuovi = new javax.swing.JButton();
-    jButtonLess = new javax.swing.JButton();
-    jSpinnerNum = new javax.swing.JSpinner();
-    jButtonMore = new javax.swing.JButton();
-    jComboBoxOpzione = new javax.swing.JComboBox();
+    jButtonRemove = new javax.swing.JButton();
+    jLabelDots = new javax.swing.JLabel();
+    jTextFieldQuantity = new javax.swing.JTextField();
+    jTextFieldOptionName = new javax.swing.JTextField();
 
-    jButtonRimuovi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestionecassa/resources/dialog-no.png"))); // NOI18N
-    jButtonRimuovi.setText("Rimuovi");
-    jButtonRimuovi.setPreferredSize(new java.awt.Dimension(113, 25));
-    jButtonRimuovi.addActionListener(new java.awt.event.ActionListener() {
+    jButtonRemove.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestionecassa/resources/dialog-no.png"))); // NOI18N
+    jButtonRemove.setText("Rimuovi");
+    jButtonRemove.setPreferredSize(new java.awt.Dimension(113, 25));
+    jButtonRemove.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButtonRimuoviActionPerformed(evt);
+        jButtonRemoveActionPerformed(evt);
       }
     });
 
-    jButtonLess.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestionecassa/resources/list-remove.png"))); // NOI18N
-    jButtonLess.setMaximumSize(new java.awt.Dimension(28, 25));
-    jButtonLess.setMinimumSize(new java.awt.Dimension(24, 25));
-    jButtonLess.setPreferredSize(new java.awt.Dimension(26, 25));
-    jButtonLess.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButtonLessActionPerformed(evt);
-      }
-    });
+    jLabelDots.setText(":");
 
-    jSpinnerNum.setMaximumSize(new java.awt.Dimension(48, 32767));
-    jSpinnerNum.setPreferredSize(new java.awt.Dimension(28, 25));
+    jTextFieldQuantity.setEditable(false);
+    jTextFieldQuantity.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+    jTextFieldQuantity.setPreferredSize(new java.awt.Dimension(30, 21));
 
-    jButtonMore.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestionecassa/resources/list-add.png"))); // NOI18N
-    jButtonMore.setFocusable(false);
-    jButtonMore.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-    jButtonMore.setMaximumSize(new java.awt.Dimension(28, 25));
-    jButtonMore.setMinimumSize(new java.awt.Dimension(24, 25));
-    jButtonMore.setPreferredSize(new java.awt.Dimension(26, 25));
-    jButtonMore.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-    jButtonMore.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        jButtonMoreActionPerformed(evt);
-      }
-    });
-
-    jComboBoxOpzione.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+    jTextFieldOptionName.setEditable(false);
+    jTextFieldOptionName.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+    jTextFieldOptionName.setText("Nome");
+    jTextFieldOptionName.setPreferredSize(new java.awt.Dimension(200, 21));
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
     this.setLayout(layout);
@@ -122,74 +92,50 @@ public class GuiOrderSingleOptionPanel extends javax.swing.JPanel {
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(jButtonRimuovi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 135, Short.MAX_VALUE)
-        .addComponent(jComboBoxOpzione, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addGap(12, 12, 12)
-        .addComponent(jButtonLess, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(jButtonRemove, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
+        .addComponent(jTextFieldOptionName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jSpinnerNum, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(jLabelDots)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jButtonMore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(jTextFieldQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap())
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+      .addComponent(jButtonRemove, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
       .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-        .addComponent(jButtonRimuovi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addComponent(jComboBoxOpzione, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-      .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-        .addComponent(jButtonMore, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addComponent(jSpinnerNum, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
-      .addComponent(jButtonLess, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(jTextFieldQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(jLabelDots)
+        .addComponent(jTextFieldOptionName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
   }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * 
-     * @param evt
-     */
-    private void jButtonLessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLessActionPerformed
-        less();
-}//GEN-LAST:event_jButtonLessActionPerformed
-
-    /**
-     *
-     * @param evt
-     */
-    private void jButtonMoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMoreActionPerformed
-        more();
-}//GEN-LAST:event_jButtonMoreActionPerformed
-
-    /**
-     *
-     * @param evt
-     */
-    private void jButtonRimuoviActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRimuoviActionPerformed
+    private void jButtonRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoveActionPerformed
         parent.removeOptionPanel(this);
-    }//GEN-LAST:event_jButtonRimuoviActionPerformed
+        parent.updateAfterModify();
+    }//GEN-LAST:event_jButtonRemoveActionPerformed
 
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JButton jButtonLess;
-  private javax.swing.JButton jButtonMore;
-  private javax.swing.JButton jButtonRimuovi;
-  private javax.swing.JComboBox jComboBoxOpzione;
-  private javax.swing.JSpinner jSpinnerNum;
+  private javax.swing.JButton jButtonRemove;
+  private javax.swing.JLabel jLabelDots;
+  private javax.swing.JTextField jTextFieldOptionName;
+  private javax.swing.JTextField jTextFieldQuantity;
   // End of variables declaration//GEN-END:variables
 
     /**
-     * Gets the partial count of items for the selected option
+     * Gets the count of items for the selected option
      *
      * @return
      */
-    public int getNumPartial() {
-        try {
-            jSpinnerNum.commitEdit();
-        } catch (ParseException ex) {
-            jSpinnerNum.setValue(spinnerModel.getValue());
-        }
-        return spinnerModel.getNumber().intValue();
+    public int getNumTot() {
+        return quantity;
+    }
+
+    public void setNumTot(int quantity) {
+        this.quantity = quantity;
+        jTextFieldQuantity.setText(String.format("%02d", quantity));
     }
 
     /**
@@ -198,38 +144,7 @@ public class GuiOrderSingleOptionPanel extends javax.swing.JPanel {
      * @return The selected Option
      */
     public String getComboChoice() {
-        return (String)comboModel.getSelectedItem();
-    }
-
-    /**
-     * Gets the index of the selected item in the combobox
-     *
-     * @return the index
-     */
-    public int getComboNum() {
-        return comboModel.getIndexOf(comboModel.getSelectedItem());
-    }
-
-    /**
-     * 
-     */
-    void more() {
-        Object next = spinnerModel.getNextValue();
-        if (next != null) {
-            jSpinnerNum.setValue(next);
-        }
-        parent.triggerUpdateCurrentOrder();
-    }
-
-    /**
-     * 
-     */
-    void less() {
-        Object previous = spinnerModel.getPreviousValue();
-        if (previous != null) {
-            jSpinnerNum.setValue(previous);
-        }
-        parent.triggerUpdateCurrentOrder();
+        return jTextFieldOptionName.getText();
     }
 
     /**
@@ -238,7 +153,6 @@ public class GuiOrderSingleOptionPanel extends javax.swing.JPanel {
      * @return
      */
     public boolean hasSelected(String option) {
-        return (((String)jComboBoxOpzione.getSelectedItem()).equals(option)) ?
-            true : false;
+        return jTextFieldOptionName.getText().equals(option);
     }
 }
