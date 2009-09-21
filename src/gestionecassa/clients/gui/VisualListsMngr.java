@@ -21,8 +21,10 @@
 package gestionecassa.clients.gui;
 
 import gestionecassa.clients.cassa.gui.*;
-import java.util.LinkedList;
+import java.util.Collection;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.Vector;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
@@ -42,14 +44,20 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
     /**
      * List that associates a panel to each article
      */
-    protected List<RecordPanels<PanelType, DataType>> panelsTable;
+    protected List<RecordPanels<PanelType, DataType>> panelsList;
+
+    /**
+     * 
+     */
+    protected SortedMap<PanelType, RecordPanels<PanelType, DataType>> panelsMap;
 
     /**
      * Default constructor
      */
     public VisualListsMngr(JPanel managed) {
         this.managedPanel = managed;
-        panelsTable = new Vector<RecordPanels<PanelType, DataType>>();
+        panelsList = new Vector<RecordPanels<PanelType, DataType>>();
+        panelsMap = new TreeMap<PanelType, RecordPanels<PanelType, DataType>>();
     }
 
     /**
@@ -59,8 +67,12 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
      */
     public VisualListsMngr(JPanel managed,
             List<RecordPanels<PanelType, DataType>> panelses) {
-        this.panelsTable = panelses;
+        this.panelsList = panelses;
         this.managedPanel = managed;
+        panelsMap = new TreeMap<PanelType, RecordPanels<PanelType, DataType>>();
+        for (RecordPanels<PanelType, DataType> recordPanels : panelses) {
+            panelsMap.put(recordPanels.displayedPanel, recordPanels);
+        }
     }
 
     /**
@@ -85,7 +97,7 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
 
         /* Ciclo in cui aggiungo i pannelli ai gruppi con le impostazioni
          * giuste */
-        for (RecordPanels singleRecord : panelsTable) {
+        for (RecordPanels singleRecord : panelsList) {
 
             tempHorizGroup.addComponent(singleRecord.displayedPanel,
                     javax.swing.GroupLayout.DEFAULT_SIZE,
@@ -123,23 +135,32 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
      * Cleans the gui.
      */
     public void cleanDataFields() {
-        for (RecordPanels singoloRecord : panelsTable) {
+        for (RecordPanels singoloRecord : panelsList) {
             singoloRecord.displayedPanel.clean();
         }
+        buildVisualList();
     }
 
+    /**
+     *
+     */
     public void resetList() {
-        panelsTable.clear();
+        panelsList.clear();
+        panelsMap.clear();
         managedPanel.removeAll();
     }
 
-    public void remove(GuiOrderSingleOptionPanel panel) {
-        for (RecordPanels recordPanels : panelsTable) {
-            if (recordPanels.displayedPanel.equals(panel)) {
-                panelsTable.remove(recordPanels);
-                return;
-            }
+    /**
+     * 
+     * @param panel
+     */
+    public void remove(PanelType panel) {
+        RecordPanels<PanelType, DataType> record = panelsMap.get(panel);
+        if (record != null) {
+            panelsList.remove(record);
+            panelsMap.remove(panel);
         }
+        // FIXME i should throw an exception
     }
 
     /**
@@ -148,7 +169,10 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
      * @param data
      */
     public void addRecord(PanelType pan, DataType data) {
-        panelsTable.add(new RecordPanels(pan, data));
+        RecordPanels<PanelType, DataType> record =
+                new RecordPanels<PanelType, DataType>(pan, data);
+        panelsList.add(record);
+        panelsMap.put(pan, record);
     }
 
     /**
@@ -156,18 +180,14 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
      * @return
      */
     public List<RecordPanels<PanelType, DataType>> getRecords() {
-        return panelsTable;
+        return panelsList;
     }
 
     /**
      * 
      * @return
      */
-    public List<PanelType> getPanels() {
-        List<PanelType> panels = new LinkedList<PanelType>();
-        for (RecordPanels<PanelType, DataType> recordPanels : panelsTable) {
-            panels.add(recordPanels.displayedPanel);
-        }
-        return panels;
+    public Collection<PanelType> getPanels() {
+        return panelsMap.keySet();
     }
 }

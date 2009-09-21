@@ -24,7 +24,8 @@ package gestionecassa.clients.cassa.gui;
  *
  * @author ben
  */
-abstract public class GuiAbstrSingleEntryPanel extends javax.swing.JPanel {
+abstract public class GuiAbstrSingleEntryPanel extends javax.swing.JPanel
+        implements Comparable<GuiAbstrSingleEntryPanel> {
 
     /**
      * 
@@ -36,4 +37,8 @@ abstract public class GuiAbstrSingleEntryPanel extends javax.swing.JPanel {
      * @return
      */
     abstract public int getNumTot();
+
+    public int compareTo(GuiAbstrSingleEntryPanel o) {
+        return (this.hashCode() - o.hashCode());
+    }
 }
