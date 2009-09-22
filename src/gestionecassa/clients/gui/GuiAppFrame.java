@@ -99,8 +99,8 @@ abstract public class GuiAppFrame<Owner extends GUIClientAPI>
     public void dispose() {
         owner.getLoggerGUI().info("sto chiudendo l'interfaccia.");
 
-        super.dispose();
         owner.stopClient();
+        super.dispose();
     }
 
     /**
