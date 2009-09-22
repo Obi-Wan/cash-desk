@@ -61,7 +61,11 @@ public class GuiHelper {
 
         container.setPreferredSize(tempDim);
     }
-    
+
+    /**
+     * 
+     * @author ben
+     */
     static public class MngBorderLayout {
 
         static public void init(Container container) {

@@ -133,6 +133,10 @@ public class GuiOrderSingleOptionPanel extends GuiAbstrSingleEntryPanel {
         return quantity;
     }
 
+    /**
+     *
+     * @param quantity
+     */
     public void setNumTot(int quantity) {
         this.quantity = quantity;
         jTextFieldQuantity.setText(String.format("%02d", quantity));
