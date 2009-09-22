@@ -29,7 +29,6 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import javax.swing.AbstractAction;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 
 /**
@@ -46,10 +45,10 @@ public class GuiLoginPanel extends javax.swing.JPanel {
     /**
      * 
      */
-    JFrame parent;
+    GuiAppFrame parent;
 
     /** Creates new form GuiLoginPanel */
-    public GuiLoginPanel(JFrame parent, GUIClientAPI owner) {
+    public GuiLoginPanel(GuiAppFrame parent, GUIClientAPI owner) {
         initComponents();
         jTextFieldLuogo.setText(owner.getHostname());
         this.owner = owner;
@@ -60,6 +59,7 @@ public class GuiLoginPanel extends javax.swing.JPanel {
         jButtonLogin.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "ENTER");
         jButtonLogin.getActionMap().put("ENTER", new AbstractAction() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 login();
             }
