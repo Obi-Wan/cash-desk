@@ -20,15 +20,33 @@
 
 package gestionecassa.clients.cassa.gui;
 
+import gestionecassa.Article;
+import gestionecassa.ArticleGroup;
+import gestionecassa.ArticleWithOptions;
+import gestionecassa.clients.gui.RecordPanels;
+import gestionecassa.clients.gui.VisualListsMngr;
+import gestionecassa.order.EntryArticleGroup;
+import java.rmi.RemoteException;
+
 /**
  *
  * @author ben
  */
-public class GuiGroupPanel extends javax.swing.JPanel {
+public class GuiGroupPanel extends GuiAbstrSingleEntryPanel {
+
+    ArticleGroup group;
+
+    GuiNewOrderPanel orderPanel;
+
+    VisualListsMngr<GuiAbstrSingleEntryPanel, Article> varListMngr;
 
     /** Creates new form GuiGroupPanel */
-    public GuiGroupPanel() {
+    public GuiGroupPanel(GuiNewOrderPanel orderPanel, ArticleGroup group) {
         initComponents();
+        this.orderPanel = orderPanel;
+        this.group = group;
+
+        varListMngr = new VisualListsMngr<GuiAbstrSingleEntryPanel, Article>(this);
     }
 
     /** This method is called from within the constructor to
@@ -54,9 +72,75 @@ public class GuiGroupPanel extends javax.swing.JPanel {
     );
   }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * In this implementation it just tells how many things will ahve to prepare
+     * the manager of this group
+     * 
+     * @return
+     */
+    @Override
+    public int getNumTot() {
+        int num = 0;
+        for (GuiAbstrSingleEntryPanel panel : varListMngr.getPanels()) {
+            num += panel.getNumTot();
+        }
+        return num;
+    }
+
+    @Override
+    public void clean() {
+        varListMngr.cleanDataFields();
+    }
 
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   // End of variables declaration//GEN-END:variables
 
+    /**
+     * Creates a new order from the chosen Articles
+     *
+     * @return the created order
+     *
+     * @throws RemoteException
+     */
+    public EntryArticleGroup collectOrderEntries() throws RemoteException {
+        EntryArticleGroup entry = new EntryArticleGroup(group);
+        for (RecordPanels<GuiAbstrSingleEntryPanel, Article>
+                recordPanels : varListMngr.getRecords()) {
+            int tempNumTot = recordPanels.displayedPanel.getNumTot();
+
+            if (recordPanels.data.hasOptions()) {
+
+                int progressive = orderPanel.owner.getNProgressivo(
+                        recordPanels.data.getName(), tempNumTot);
+                entry.addArticleWithOptions(
+                        (ArticleWithOptions)recordPanels.data,
+                        tempNumTot, progressive,
+                        ((GuiOrderSingleArticleWOptionsPanel)
+                            (recordPanels.displayedPanel)).getPatialsList());
+            } else {
+                
+                entry.addArticle(recordPanels.data, tempNumTot);
+            }
+        }
+        return entry;
+    }
+
+    /**
+     * It calculates the amount the "still to be committed" order will cost
+     *
+     * @return
+     */
+    double getPartialOrderPrice() {
+        double output = 0;
+        for (RecordPanels<GuiAbstrSingleEntryPanel, Article>
+                tempRecord : varListMngr.getRecords()) {
+
+            if (tempRecord.displayedPanel.getNumTot() != 0) {
+                output += tempRecord.displayedPanel.getNumTot() *
+                        tempRecord.data.getPrice();
+            }
+        }
+        return output;
+    }
 }
