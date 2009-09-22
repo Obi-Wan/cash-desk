@@ -21,9 +21,8 @@ import gestionecassa.ArticleGroup;
 import gestionecassa.Cassiere;
 import gestionecassa.ArticlesList;
 import gestionecassa.Log;
+import gestionecassa.order.BaseEntry;
 import gestionecassa.order.Order;
-import gestionecassa.order.EntrySingleOption;
-import gestionecassa.order.EntrySingleArticle;
 import gestionecassa.order.EntrySingleArticleWithOption;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -66,6 +65,7 @@ public class XmlDataBackend implements BackendAPI_1 {
     // Lista beni functions
     //------------------------//
 
+    @Override
     public void saveArticlesList(ArticlesList lista) throws IOException {
 
         Document document = DocumentHelper.createDocument();
@@ -108,6 +108,7 @@ public class XmlDataBackend implements BackendAPI_1 {
         writer.close();
     }
 
+    @Override
     public Collection<ArticleGroup> loadArticlesList() throws IOException {
         Collection<ArticleGroup> output = new LinkedList<ArticleGroup>();
 
@@ -160,6 +161,7 @@ public class XmlDataBackend implements BackendAPI_1 {
     // Lista Utenti functions
     //------------------------//
 
+    @Override
     public void saveAdminsList(Collection<Admin> lista) throws IOException {
 
         Document document = DocumentHelper.createDocument();
@@ -182,6 +184,7 @@ public class XmlDataBackend implements BackendAPI_1 {
         writer.close();
     }
 
+    @Override
     public Collection<Admin> loadAdminsList() throws IOException {
         Collection<Admin> output = new LinkedList<Admin>();
 
@@ -208,6 +211,7 @@ public class XmlDataBackend implements BackendAPI_1 {
         return output;
     }
 
+    @Override
     public void saveCassiereList(Collection<Cassiere> lista) throws IOException {
 
         Document document = DocumentHelper.createDocument();
@@ -230,6 +234,7 @@ public class XmlDataBackend implements BackendAPI_1 {
         writer.close();
     }
 
+    @Override
     public Collection<Cassiere> loadCassiereList() throws IOException {
         Collection<Cassiere> output = new LinkedList<Cassiere>();
 
@@ -260,6 +265,7 @@ public class XmlDataBackend implements BackendAPI_1 {
     // Orders handle functions.
     //--------------------------//
 
+    @Override
     public void saveListOfOrders(String id, Collection<Order> list)
             throws IOException {
 
@@ -286,33 +292,33 @@ public class XmlDataBackend implements BackendAPI_1 {
         Element xmlOrder = root.addElement("ordine");
         xmlOrder.addElement("data").addText(order.getDate().toString());
         xmlOrder.addElement("prezzo_totale").addText(order.getTotalPrice()+"");
-        Collection<EntrySingleArticle> listaBeni = order.getArticlesSold();
+        Collection<BaseEntry<Article>> listaBeni = order.getArticlesSold();
 
-        for (EntrySingleArticle singleArticle : listaBeni) {
+        for (BaseEntry<Article> singleArticle : listaBeni) {
             Element xmlArticle = xmlOrder.addElement("singolo_bene");
 
-            xmlArticle.addElement("nome").addText(singleArticle.article.getName());
-            xmlArticle.addElement("prezzo").addText(singleArticle.article.getPrice()+"");
+            xmlArticle.addElement("nome").addText(singleArticle.data.getName());
+            xmlArticle.addElement("prezzo").addText(singleArticle.data.getPrice()+"");
             xmlArticle.addElement("numero").addText(singleArticle.numTot+"");
 
-            if (singleArticle.article.hasOptions()) {
+            if (singleArticle.data.hasOptions()) {
                 xmlArticle.addAttribute("opzioni", "true");
                 Element xmlOptions = xmlArticle.addElement("opzioni");
                 int progressivo =
                         ((EntrySingleArticleWithOption)singleArticle).startProgressive;
-                Collection<EntrySingleOption> options =
+                Collection<BaseEntry<String>> options =
                         ((EntrySingleArticleWithOption)singleArticle).numPartial;
 
-                for (EntrySingleOption option : options) {
+                for (BaseEntry<String> option : options) {
 
                     String stringaProgressivi = new String((progressivo++) + "");
-                    for (int i = 1; i < option.numPartial; i++) {
+                    for (int i = 1; i < option.numTot; i++) {
                         stringaProgressivi += ", " + progressivo++;
                     }
                     Element xmlOption = xmlOptions.addElement("opzione");
-                    xmlOption.addElement("nome").addText(option.optionName);
+                    xmlOption.addElement("nome").addText(option.data);
                     xmlOption.addElement("numero").addText(
-                            ""+option.numPartial);
+                            ""+option.numTot);
                     xmlOption.addElement("n_progressivi").addText(stringaProgressivi);
                 }
             } else {

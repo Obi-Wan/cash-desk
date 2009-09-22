@@ -1,6 +1,15 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Order.java
+ *
+ * Copyright (C) 2009 Nicola Roberto Viganò
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package gestionecassa.order;
@@ -35,7 +44,7 @@ public class Order implements Serializable, Comparable<Order> {
     /**
      * List of articles for this order
      */
-    List<EntrySingleArticle> articlesList;
+    List<BaseEntry<Article> > articlesList;
 
     /**
      *
@@ -55,7 +64,7 @@ public class Order implements Serializable, Comparable<Order> {
      */
     public Order(String username, String hostname, int table) {
         this( new Date(), new String(username), new String(hostname), table,
-                new ArrayList<EntrySingleArticle>());
+                new ArrayList<BaseEntry<Article>>());
         totalPrice = 0;
     }
 
@@ -69,7 +78,7 @@ public class Order implements Serializable, Comparable<Order> {
     public Order(Date data, String username, String hostname, int table) {
         this( new Date(data.getTime()), new String(username),
                 new String(hostname), table,
-                new ArrayList<EntrySingleArticle>());
+                new ArrayList<BaseEntry<Article>>());
         totalPrice = 0;
     }
 
@@ -83,7 +92,7 @@ public class Order implements Serializable, Comparable<Order> {
      * @param articlesList
      */
     private Order( Date date, String username, String hostname, int table,
-            List<EntrySingleArticle> articles) {
+            List<BaseEntry<Article>> articles) {
         this.date = date;
         this.articlesList = articles;
         this.username = username;
@@ -101,7 +110,7 @@ public class Order implements Serializable, Comparable<Order> {
         this.hostname = new String(order.hostname);
         this.username = new String(order.username);
         this.totalPrice = order.totalPrice;
-        this.articlesList = new ArrayList<EntrySingleArticle>(order.articlesList);
+        this.articlesList = new ArrayList<BaseEntry<Article>>(order.articlesList);
     }
 
     /**
@@ -116,7 +125,7 @@ public class Order implements Serializable, Comparable<Order> {
      * 
      * @return
      */
-    public List<EntrySingleArticle> getArticlesSold() {
+    public List<BaseEntry<Article>> getArticlesSold() {
         return articlesList;
     }
 
@@ -159,7 +168,7 @@ public class Order implements Serializable, Comparable<Order> {
      * @param numTot
      */
     public void addArticle(Article article, int numTot) {
-        articlesList.add(new EntrySingleArticle(article, numTot));
+        articlesList.add(new BaseEntry<Article>(article, numTot));
     }
 
     /**
@@ -170,7 +179,7 @@ public class Order implements Serializable, Comparable<Order> {
      * @param partialsList 
      */
     public void addArticleWithOptions(ArticleWithOptions article, int numTot,
-            int progressive, List<EntrySingleOption> partialsList) {
+            int progressive, List<BaseEntry<String>> partialsList) {
         articlesList.add(new EntrySingleArticleWithOption(article, numTot, progressive,
                 partialsList));
     }
@@ -183,6 +192,7 @@ public class Order implements Serializable, Comparable<Order> {
         this.totalPrice = totalPrice;
     }
 
+    @Override
     public int compareTo(Order o) {
         return this.date.compareTo(o.date);
     }

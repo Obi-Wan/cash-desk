@@ -26,8 +26,8 @@ import gestionecassa.ArticleWithOptions;
 import gestionecassa.Article;
 import gestionecassa.ArticlesList;
 import gestionecassa.clients.gui.RecordPanels;
+import gestionecassa.order.BaseEntry;
 import gestionecassa.order.Order;
-import gestionecassa.order.EntrySingleArticle;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -84,6 +84,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "ENTER");
         this.getActionMap().put("ENTER", new AbstractAction() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 confirmAndSendNewOrder();
             }
@@ -122,6 +123,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
      * Populates the list of the panels related to each article sold.
      */
     void buildContentsList() {
+        varListMng.resetList();
         int i = 0;
         for (Article art : articlesList.getArticlesList()) {
             GuiAbstrSingleEntryPanel tempPanel;
@@ -205,14 +207,13 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
      * @throws RemoteException
      */
     private Order createNewOrder() throws RemoteException {
-        int tempNumTot = 0;
         // TODO One day will be needed here to handle the table properly
         Order tempOrd = new Order(owner.getUsername(), owner.getHostname(), 0);
 
         for (RecordPanels<GuiAbstrSingleEntryPanel, Article>
                 tempRecord : varListMng.getRecords()) {
 
-            tempNumTot = tempRecord.displayedPanel.getNumTot();
+            int tempNumTot = tempRecord.displayedPanel.getNumTot();
 
             if (tempRecord.displayedPanel.getNumTot() != 0) {
 
@@ -267,10 +268,10 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
      * @return Price calculated.
      */
     private double computeOrderPrice(Order ordine) {
-        List<EntrySingleArticle> list = ordine.getArticlesSold();
+        List<BaseEntry<Article>> list = ordine.getArticlesSold();
         double output = 0;
-        for (EntrySingleArticle artEntry : list) {
-            output += artEntry.numTot * artEntry.article.getPrice();
+        for (BaseEntry<Article> artEntry : list) {
+            output += artEntry.numTot * artEntry.data.getPrice();
         }
         return output;
     }

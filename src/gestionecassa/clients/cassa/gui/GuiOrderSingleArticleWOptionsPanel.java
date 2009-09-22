@@ -24,7 +24,7 @@ import gestionecassa.clients.gui.VisualListsMngr;
 import gestionecassa.clients.gui.GuiOkCancelDialog;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.clients.gui.RecordPanels;
-import gestionecassa.order.EntrySingleOption;
+import gestionecassa.order.BaseEntry;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +36,19 @@ import javax.swing.AbstractAction;
  */
 public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel {
 
+    /**
+     * 
+     */
     ArticleWithOptions article;
 
+    /**
+     *
+     */
     VisualListsMngr<GuiOrderSingleOptionPanel, String> listMngr;
 
+    /**
+     *
+     */
     GuiNewOrderPanel orderPanel;
 
     /**
@@ -64,11 +73,13 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
             this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
                     Shortcuts.moreKeys[index], "MORE"+index);
             this.getActionMap().put("MORE"+index, new AbstractAction() {
+                @Override
                 public void actionPerformed(ActionEvent e) { modifyOptions(); }
             });
             this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
                     Shortcuts.lessKeys[index], "LESS"+index);
             this.getActionMap().put("LESS"+index, new AbstractAction() {
+                @Override
                 public void actionPerformed(ActionEvent e) { modifyOptions(); }
             });
         }
@@ -227,14 +238,14 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
      * 
      * @return
      */
-    public List<EntrySingleOption> getPatialsList() {
-        List<EntrySingleOption> tempLista
-                = new ArrayList<EntrySingleOption>();
+    public List<BaseEntry<String>> getPatialsList() {
+        List<BaseEntry<String>> tempLista
+                = new ArrayList<BaseEntry<String>>();
         for (RecordPanels<GuiOrderSingleOptionPanel, String> recordPanels
                 : listMngr.getRecords()) {
             if (recordPanels.displayedPanel.getNumTot() != 0) {
-                EntrySingleOption tempArray =
-                    new EntrySingleOption(
+                BaseEntry<String> tempArray =
+                    new BaseEntry<String>(
                         recordPanels.data,
                         recordPanels.displayedPanel.getNumTot());
                 tempLista.add(tempArray);

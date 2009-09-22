@@ -22,9 +22,8 @@ import gestionecassa.Cassiere;
 import gestionecassa.EventDate;
 import gestionecassa.Log;
 import gestionecassa.OrganizedEvent;
-import gestionecassa.order.EntrySingleArticle;
+import gestionecassa.order.BaseEntry;
 import gestionecassa.order.EntrySingleArticleWithOption;
-import gestionecassa.order.EntrySingleOption;
 import gestionecassa.order.Order;
 import java.io.IOException;
 import java.sql.Connection;
@@ -142,6 +141,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * 
      * @throws IOException
      */
+    @Override
     public void init(String url) throws IOException {
         try {
             Class.forName("org.postgresql.Driver");
@@ -238,6 +238,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @param position
      * @throws IOException
      */
+    @Override
     public void addArticleToListAt(int idGroup, Article article, int position)
             throws IOException {
         
@@ -252,6 +253,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @param position
      * @throws IOException
      */
+    @Override
     public void moveArticleAt(Article article, int position) throws IOException {
         
         String orderQuery = "SELECT a1.id_article, a1.name AS name, a1.num_pos AS num_pos" +
@@ -292,6 +294,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @param article
      * @throws IOException
      */
+    @Override
     public void addArticleToList(int idGroup, Article article) throws IOException {
         // Start by inserting the article in the proper table.
         int idArticle = getNextId("articles_id_article_seq");
@@ -325,6 +328,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * 
      * @throws IOException
      */
+    @Override
     public void enableArticleFromList(Article article, boolean enable) throws IOException {
         String query =  "SELECT id_article, enabled" +
                         "   FROM articles" +
@@ -337,6 +341,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @return
      * @throws IOException
      */
+    @Override
     public List<ArticleGroup> loadArticlesList() throws IOException {
 
         String query =  "SELECT *" +
@@ -421,6 +426,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @param admin
      * @throws IOException
      */
+    @Override
     public void addAdmin(Admin admin) throws IOException {
         String insQuery = "INSERT INTO admins (username, password, enabled)" +
                           "VALUES ('" + admin.getUsername() + "', '" +
@@ -434,6 +440,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @return
      * @throws IOException
      */
+    @Override
     public List<Admin> loadAdminsList() throws IOException {
 
         String query =  "SELECT *" +
@@ -469,6 +476,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @param enable
      * @throws IOException
      */
+    @Override
     public void enableAdmin(Admin admin, boolean enable) throws IOException {
         String query =  "SELECT id_admin, enabled" +
                         "   FROM admins" +
@@ -481,6 +489,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @param cassiere
      * @throws IOException
      */
+    @Override
     public void addCassiere(Cassiere cassiere) throws IOException {
         String insQuery = "INSERT INTO cassieres (username, password, enabled)"+
                           "VALUES ('" + cassiere.getUsername() + "', '" +
@@ -494,6 +503,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @return
      * @throws IOException
      */
+    @Override
     public List<Cassiere> loadCassiereList() throws IOException {
 
         String query =  "SELECT *" +
@@ -529,6 +539,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @param enable
      * @throws IOException
      */
+    @Override
     public void enableCassiere(Cassiere cassiere, boolean enable) throws IOException {
         String query =  "SELECT id_cassiere, enabled" +
                         "   FROM cassieres" +
@@ -543,6 +554,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @param ev
      * @throws IOException
      */
+    @Override
     public void addOrganizedEvent(OrganizedEvent ev) throws IOException {
         String query = "INSERT INTO events (name) VALUES ('" + ev.name + "');";
         genericCommit(query);
@@ -571,6 +583,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @param title
      * @throws IOException
      */
+    @Override
     public void addDateToOrgEvent(EventDate evd, String title) throws IOException {
 
         String idEventQuery = "(SELECT id_event FROM events WHERE name = '" +
@@ -591,6 +604,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @return
      * @throws IOException
      */
+    @Override
     public List<EventDate> getDatesOfOrgEvent(String name) throws IOException {
         List<EventDate> output = new LinkedList<EventDate>();
 
@@ -626,6 +640,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @return
      * @throws IOException
      */
+    @Override
     public List<OrganizedEvent> getOrganizedEvents() throws IOException {
         List<OrganizedEvent> output = new LinkedList<OrganizedEvent>();
 
@@ -678,16 +693,17 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @param order
      * @throws IOException
      */
+    @Override
     public void addNewOrder( Order order) throws IOException {
 
         int idCassiere = getIdCassiereByUsername(order.getUsername());
         int idOrder = addOrderToOrdersTable(order, idCassiere);
 
-        for (EntrySingleArticle entry : order.getArticlesSold()) {
+        for (BaseEntry<Article> entry : order.getArticlesSold()) {
 
             int idArticle; // if trusted is > 0, otherwise < 0
 //            if (idCassiere > 0) {
-                idArticle = entry.article.getId();
+                idArticle = entry.data.getId();
 //            } else {
 //                idArticle = getIdArticleByName(entry.article.getName());
 //                idCassiere = - idCassiere;
@@ -701,7 +717,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                     + "', '" + entry.numTot + "' )";
             genericCommit(addEntry);
 
-            if (entry.article.hasOptions()) {
+            if (entry.data.hasOptions()) {
 
                 EntrySingleArticleWithOption entryOpts =
                         (EntrySingleArticleWithOption)entry;
@@ -710,13 +726,13 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 
                 String addOpt = "INSERT INTO opts_of_article_in_order " +
                                 "(id_art_in_ord, id_option, num_parz ) VALUES ";
-                for (Iterator<EntrySingleOption> iter =
+                for (Iterator<BaseEntry<String>> iter =
                         entryOpts.numPartial.iterator(); iter.hasNext(); )
                 {
-                    EntrySingleOption option = iter.next();
+                    BaseEntry<String> option = iter.next();
                     addOpt += "('" + idArtInOrd + "', '" +
-                            neededOpts.get(option.optionName) + "', '" +
-                            option.numPartial + "')" +
+                            neededOpts.get(option.data) + "', '" +
+                            option.numTot + "')" +
                             (iter.hasNext() ? "," : ";");
                 }
                 genericCommit(addOpt);
@@ -730,6 +746,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      *
      * @throws IOException
      */
+    @Override
     public void delLastOrder(Order order) throws IOException {
         final String timestamp = new Timestamp(order.getDate().getTime()).toString();
 
@@ -1044,14 +1061,14 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
     private Map<String,Integer> getNeededOpts(int idArticle,
             EntrySingleArticleWithOption entry) throws IOException {
         
-        List<EntrySingleOption> opts = entry.numPartial;
+        List<BaseEntry<String>> opts = entry.numPartial;
         String optionsQuery = "SELECT name, id_option" +
                             "   FROM options" +
                             "   WHERE id_article = '" + idArticle + "'"+
                             "       AND name IN (";
-        for (Iterator<EntrySingleOption> it = opts.iterator(); it.hasNext();) {
-            EntrySingleOption opt = it.next();
-            optionsQuery += " '"+opt.optionName+"'" + (it.hasNext() ? "," : "");
+        for (Iterator<BaseEntry<String>> it = opts.iterator(); it.hasNext();) {
+            BaseEntry<String> opt = it.next();
+            optionsQuery += " '"+opt.data+"'" + (it.hasNext() ? "," : "");
         }
         optionsQuery += " );";
         Map<String,Integer> neededOpts = new HashMap<String,Integer>();

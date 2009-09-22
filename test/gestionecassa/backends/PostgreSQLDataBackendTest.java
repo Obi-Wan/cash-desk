@@ -23,8 +23,8 @@ import gestionecassa.Cassiere;
 import gestionecassa.EventDate;
 import gestionecassa.OrganizedEvent;
 import gestionecassa.Person;
+import gestionecassa.order.BaseEntry;
 import gestionecassa.order.EntrySingleArticleWithOption;
-import gestionecassa.order.EntrySingleOption;
 import gestionecassa.order.Order;
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -581,9 +581,9 @@ public class PostgreSQLDataBackendTest {
                 assertTrue(!rs.isLast());
 
                 assertEquals(tempOrder.getUsername(), rs.getString("u_name"));
-                assertEquals(tempOrder.getArticlesSold().get(0).article.getPrice(),
+                assertEquals(tempOrder.getArticlesSold().get(0).data.getPrice(),
                                 rs.getDouble("price"),0);
-                assertEquals(tempOrder.getArticlesSold().get(0).article.getName(),
+                assertEquals(tempOrder.getArticlesSold().get(0).data.getName(),
                                 rs.getString("a_name"));
                 assertEquals(tempOrder.getArticlesSold().get(0).numTot,
                                 rs.getInt("num_tot"));
@@ -592,9 +592,9 @@ public class PostgreSQLDataBackendTest {
                 assertTrue(rs.isLast());
 
                 assertEquals(tempOrder.getUsername(), rs.getString("u_name"));
-                assertEquals(tempOrder.getArticlesSold().get(1).article.getPrice(),
+                assertEquals(tempOrder.getArticlesSold().get(1).data.getPrice(),
                                 rs.getDouble("price"),0);
-                assertEquals(tempOrder.getArticlesSold().get(1).article.getName(),
+                assertEquals(tempOrder.getArticlesSold().get(1).data.getName(),
                                 rs.getString("a_name"));
                 assertEquals(tempOrder.getArticlesSold().get(1).numTot,
                                 rs.getInt("num_tot"));
@@ -662,10 +662,10 @@ public class PostgreSQLDataBackendTest {
 
         articles = backend.loadArticlesOfGroup(1);
 
-        List<EntrySingleOption> optionsList = new Vector<EntrySingleOption>();
-        optionsList.add(new EntrySingleOption(
+        List<BaseEntry<String>> optionsList = new Vector<BaseEntry<String>>();
+        optionsList.add(new BaseEntry<String>(
                 ((ArticleWithOptions)articles.get(2)).getOptions().get(0), 2));
-        optionsList.add(new EntrySingleOption(
+        optionsList.add(new BaseEntry<String>(
                 ((ArticleWithOptions)articles.get(2)).getOptions().get(1), 3));
 
         Order tempOrder = new Order(testCassiere.getUsername(), "hell", 0);
@@ -726,9 +726,9 @@ public class PostgreSQLDataBackendTest {
                 assertTrue(rs.isLast());
 
                 assertEquals(tempOrder.getUsername(), rs.getString("u_name"));
-                assertEquals(tempOrder.getArticlesSold().get(0).article.getPrice(),
+                assertEquals(tempOrder.getArticlesSold().get(0).data.getPrice(),
                                 rs.getDouble("price"),0);
-                assertEquals(tempOrder.getArticlesSold().get(0).article.getName(),
+                assertEquals(tempOrder.getArticlesSold().get(0).data.getName(),
                                 rs.getString("a_name"));
                 assertEquals(tempOrder.getArticlesSold().get(0).numTot,
                                 rs.getInt("num_tot"));
@@ -764,13 +764,13 @@ public class PostgreSQLDataBackendTest {
 
                 assertEquals(tempOrder.getDate().getTime(),
                                 rs.getTimestamp("time").getTime());
-                assertEquals(tempOrder.getArticlesSold().get(0).article.getName(),
+                assertEquals(tempOrder.getArticlesSold().get(0).data.getName(),
                                 rs.getString("a_name"));
                 assertEquals(
-                        ((EntrySingleArticleWithOption)tempOrder.getArticlesSold().get(0)).numPartial.get(0).numPartial,
+                        ((EntrySingleArticleWithOption)tempOrder.getArticlesSold().get(0)).numPartial.get(0).numTot,
                                 rs.getInt("num_parz"));
                 assertEquals(
-                        ((EntrySingleArticleWithOption)tempOrder.getArticlesSold().get(0)).numPartial.get(0).optionName,
+                        ((EntrySingleArticleWithOption)tempOrder.getArticlesSold().get(0)).numPartial.get(0).data,
                                 rs.getString("op_name"));
 
                 assertTrue(rs.next());
@@ -778,13 +778,13 @@ public class PostgreSQLDataBackendTest {
 
                 assertEquals(tempOrder.getDate().getTime(),
                                 rs.getTimestamp("time").getTime());
-                assertEquals(tempOrder.getArticlesSold().get(0).article.getName(),
+                assertEquals(tempOrder.getArticlesSold().get(0).data.getName(),
                                 rs.getString("a_name"));
                 assertEquals(
-                        ((EntrySingleArticleWithOption)tempOrder.getArticlesSold().get(0)).numPartial.get(1).numPartial,
+                        ((EntrySingleArticleWithOption)tempOrder.getArticlesSold().get(0)).numPartial.get(1).numTot,
                                 rs.getInt("num_parz"));
                 assertEquals(
-                        ((EntrySingleArticleWithOption)tempOrder.getArticlesSold().get(0)).numPartial.get(1).optionName,
+                        ((EntrySingleArticleWithOption)tempOrder.getArticlesSold().get(0)).numPartial.get(1).data,
                                 rs.getString("op_name"));
 
             } catch (SQLException ex) {

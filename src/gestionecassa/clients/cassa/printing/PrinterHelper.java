@@ -14,21 +14,13 @@
 
 package gestionecassa.clients.cassa.printing;
 
+import gestionecassa.Article;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.Log;
-import gestionecassa.order.EntrySingleArticle;
+import gestionecassa.order.BaseEntry;
 import gestionecassa.order.EntrySingleArticleWithOption;
-import gestionecassa.order.EntrySingleOption;
 import gestionecassa.order.Order;
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
 import java.io.IOException;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
-import javax.print.attribute.standard.Destination;
-import javax.print.attribute.standard.Media;
-import javax.print.attribute.standard.MediaSizeName;
-import javax.print.attribute.standard.OrientationRequested;
 import org.apache.log4j.Logger;
 
 /**
@@ -55,73 +47,25 @@ public class PrinterHelper extends Thread {
         this.order = order;
     }
 
-    /**
-     * 
-     */
-//    @Override
-//    public void run() {
-//        super.run();
-//        PrinterJob job = PrinterJob.getPrinterJob();
-//
-//        PrintRequestAttributeSet attribs = new HashPrintRequestAttributeSet();
-//
-//        // Debug output (during develop phase)
-//        Destination dest = new Destination(new File("out.ps").toURI());
-//        attribs.add(dest);
-//        // end debug output
-//
-//        Media media = MediaSizeName.ISO_A7;
-//        attribs.add(media);
-//
-//        OrientationRequested orient = OrientationRequested.LANDSCAPE;
-//        attribs.add(orient);
-//
-//        for (EntrySingleArticle entrySingleArticle : order.getArticlesSold()) {
-//            if (entrySingleArticle.article.hasOptions()) {
-//                EntrySingleArticleWithOption entry =
-//                        (EntrySingleArticleWithOption)entrySingleArticle;
-//                int prog = entry.startProgressive;
-//                for (EntrySingleOption entrySingleOption : entry.numPartial) {
-//                    for (int i = 0; i < entrySingleOption.numPartial; i++) {
-//                        job.setPrintable(new Painter(
-//                                (ArticleWithOptions)entrySingleArticle.article,
-//                                prog++, entrySingleOption.optionName));
-//                        job.setCopies(2);
-//                    }
-//                }
-//            } else {
-//                job.setPrintable(new Painter(entrySingleArticle.article));
-//                job.setCopies(entrySingleArticle.numTot);
-//            }
-//
-//            try {
-//                job.print(attribs);
-//            } catch (PrinterException ex) {
-//                logger.error("Errore nel tentativo di stampa", ex);
-//            }
-//        }
-//
-//    }
-
     @Override
     public void run() {
         try {
             TextPainter painter = new TextPainter(order.getUsername());
             
-            for (EntrySingleArticle entrySingleArticle : order.getArticlesSold()) {
-                if (entrySingleArticle.article.hasOptions()) {
+            for (BaseEntry<Article> entrySingleArticle : order.getArticlesSold()) {
+                if (entrySingleArticle.data.hasOptions()) {
                     EntrySingleArticleWithOption entry =
                             (EntrySingleArticleWithOption)entrySingleArticle;
                     int prog = entry.startProgressive;
-                    for (EntrySingleOption entrySingleOption : entry.numPartial) {
-                        for (int i = 0; i < entrySingleOption.numPartial; i++) {
+                    for (BaseEntry<String> entrySingleOption : entry.numPartial) {
+                        for (int i = 0; i < entrySingleOption.numTot; i++) {
                             painter.addArticleWOptions(
-                                    (ArticleWithOptions)entrySingleArticle.article,
-                                    prog++, entrySingleOption.optionName);
+                                    (ArticleWithOptions)entrySingleArticle.data,
+                                    prog++, entrySingleOption.data);
                         }
                     }
                 } else {
-                    painter.addArticle(entrySingleArticle.article,
+                    painter.addArticle(entrySingleArticle.data,
                             entrySingleArticle.numTot);
                 }
             }
