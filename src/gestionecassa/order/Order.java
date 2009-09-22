@@ -175,37 +175,6 @@ public class Order implements Serializable, Comparable<Order> {
         return table;
     }
 
-//    /**
-//     * Adder helper
-//     *
-//     * @param article
-//     * @param numTot
-//     */
-//    public void addArticle(Article article, int numTot) {
-//        groupsList.add(new BaseEntry<Article>(article, numTot));
-//    }
-
-//    /**
-//     * Adder helper
-//     *
-//     * @param article
-//     * @param numTot
-//     * @param partialsList
-//     */
-//    public void addArticleWithOptions(ArticleWithOptions article, int numTot,
-//            int progressive, List<BaseEntry<String>> partialsList) {
-//        groupsList.add(new EntrySingleArticleWithOption(article, numTot, progressive,
-//                partialsList));
-//    }
-
-//    /**
-//     *
-//     * @param totalPrice
-//     */
-//    public void setTotalPrice(double totalPrice) {
-//        this.totalPrice = totalPrice;
-//    }
-
     /**
      *
      * @param group

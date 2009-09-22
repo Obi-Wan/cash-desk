@@ -145,23 +145,24 @@ public class GuiNewOrderPanel extends javax.swing.JPanel implements VariableVisu
 
             grPanel.varListMngr.buildVisualList();
         }
-//        for (Article art : articlesList.getArticlesList()) {
-//            GuiAbstrSingleEntryPanel tempPanel;
-//            if (art instanceof ArticleWithOptions) {
-//                tempPanel =
-//                        new GuiOrderSingleArticleWOptionsPanel(this,
-//                                                    (ArticleWithOptions)art,i);
-//            } else {
-//                tempPanel = new GuiOrderSingleArticlePanel(this, art, i);
-//            }
-//            varListMng.addRecord(tempPanel, art);
-//            i++;
-//        }
     }
 
     void cleanDataFields() {
         varListMng.cleanDataFields();
         frame.getStatusPanel().setPartialOrder(0);
+    }
+
+    @Override
+    public void rebuildVisualList() {
+        varListMng.buildVisualList();
+        frame.refreshContentPanel();
+    }
+
+    void updateList() {
+        forceRMIRequestArticlesList();
+        fetchArticlesList();
+        buildContentsList();
+        rebuildVisualList();
     }
 
     /**
@@ -187,41 +188,6 @@ public class GuiNewOrderPanel extends javax.swing.JPanel implements VariableVisu
     }
 
     /**
-     * If the new order is not empty, it sends it to the server and cleans the
-     * gui, ready for compiling a new order.
-     */
-    void confirmAndSendNewOrder() {
-        try {
-            Order nuovoOrdine = createNewOrder();
-            
-            if (nuovoOrdine.getTotalPrice() != 0) {
-                owner.sendRMINewOrder(nuovoOrdine);
-                frame.getStatusPanel().setEmittedOrder(nuovoOrdine.getTotalPrice());
-//                frame.getStatusPanel().setEmittedOrder(computeOrderPrice(nuovoOrdine));
-                this.cleanDataFields();
-            }
-        } catch (RemoteException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                "Il server non ha risposto alla richiesta dell'invio del " +
-                "nuovo ordine",
-                "Errore di comunicazione",
-                javax.swing.JOptionPane.ERROR_MESSAGE);
-        } catch (IOException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                "Il server ha avuto problemi col DB",
-                "Errore del Backend sul server",
-                javax.swing.JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    void updateList() {
-        forceRMIRequestArticlesList();
-        fetchArticlesList();
-        buildContentsList();
-        rebuildVisualList();
-    }
-
-    /**
      * Creates a new order from the chosen Articles
      *
      * @return the created order
@@ -238,29 +204,6 @@ public class GuiNewOrderPanel extends javax.swing.JPanel implements VariableVisu
                 tempOrd.addGroup(tempEntry);
             }
         }
-
-//        for (RecordPanels<GuiAbstrSingleEntryPanel, Article>
-//                tempRecord : varListMng.getRecords()) {
-//
-//            int tempNumTot = tempRecord.displayedPanel.getNumTot();
-//
-//            if (tempRecord.displayedPanel.getNumTot() != 0) {
-//
-//                if (tempRecord.data.hasOptions()) {
-//
-//                    int progressive = owner.getNProgressivo(
-//                            tempRecord.data.getName(), tempNumTot);
-//                    tempOrd.addArticleWithOptions(
-//                            (ArticleWithOptions)tempRecord.data,
-//                            tempNumTot, progressive,
-//                            ((GuiOrderSingleArticleWOptionsPanel)
-//                                (tempRecord.displayedPanel)).getPatialsList());
-//                } else {
-//                    tempOrd.addArticle(tempRecord.data,tempNumTot);
-//                }
-//            }
-//        }
-//        tempOrd.setTotalPrice(computeOrderPrice(tempOrd));
         return tempOrd;
     }
 
@@ -274,14 +217,6 @@ public class GuiNewOrderPanel extends javax.swing.JPanel implements VariableVisu
         for (GuiGroupPanel group : varListMng.getPanels()) {
             output += group.getPartialOrderPrice();
         }
-//        for (RecordPanels<GuiAbstrSingleEntryPanel, Article>
-//                tempRecord : varListMng.getRecords()) {
-//
-//            if (tempRecord.displayedPanel.getNumTot() != 0) {
-//                output += tempRecord.displayedPanel.getNumTot() *
-//                        tempRecord.data.getPrice();
-//            }
-//        }
         return output;
     }
 
@@ -292,21 +227,32 @@ public class GuiNewOrderPanel extends javax.swing.JPanel implements VariableVisu
         frame.getStatusPanel().setPartialOrder(computeCurrentOrder());
     }
 
-//    /**
-//     * Calculate price o the given Order
-//     *
-//     * @param ordine the order to calculate
-//     *
-//     * @return Price calculated.
-//     */
-//    private double computeOrderPrice(Order ordine) {
-//        List<BaseEntry<Article>> list = ordine.getArticlesSold();
-//        double output = 0;
-//        for (BaseEntry<Article> artEntry : list) {
-//            output += artEntry.numTot * artEntry.data.getPrice();
-//        }
-//        return output;
-//    }
+    /**
+     * If the new order is not empty, it sends it to the server and cleans the
+     * gui, ready for compiling a new order.
+     */
+    void confirmAndSendNewOrder() {
+        try {
+            Order nuovoOrdine = createNewOrder();
+
+            if (nuovoOrdine.getTotalPrice() != 0) {
+                owner.sendRMINewOrder(nuovoOrdine);
+                frame.getStatusPanel().setEmittedOrder(nuovoOrdine.getTotalPrice());
+                this.cleanDataFields();
+            }
+        } catch (RemoteException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Il server non ha risposto alla richiesta dell'invio del " +
+                "nuovo ordine",
+                "Errore di comunicazione",
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+        } catch (IOException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Il server ha avuto problemi col DB",
+                "Errore del Backend sul server",
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     /**
      * This cancells the last commited order. It's a function to treat carefully
@@ -337,10 +283,5 @@ public class GuiNewOrderPanel extends javax.swing.JPanel implements VariableVisu
                     javax.swing.JOptionPane.ERROR_MESSAGE);
             }
         }
-    }
-
-    @Override
-    public void rebuildVisualList() {
-        varListMng.buildVisualList();
     }
 }

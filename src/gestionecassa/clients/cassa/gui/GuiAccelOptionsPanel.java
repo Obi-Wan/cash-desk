@@ -110,6 +110,7 @@ public class GuiAccelOptionsPanel extends OkCancelPanel {
     /**
      * Initializes the panel
      */
+    @Override
     public void init() {
         int i = 0;
         for (String option : targetPanel.article.getOptions()) {
@@ -131,6 +132,7 @@ public class GuiAccelOptionsPanel extends OkCancelPanel {
     /**
      * Applies modifications to the original panel.
      */
+    @Override
     public void apply() {
         for (RecordPanels<GuiAccelSingleOptionPanel, OptionPanelRelation>
                 record : varListMng.getRecords()) {
