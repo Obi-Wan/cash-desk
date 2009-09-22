@@ -1081,7 +1081,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                                    rs.getInt("id_option"));
                 }
             } catch (SQLException ex) {
-                logger.error("Errore con le commit", ex);
+                logger.error("Errore con la query: " + optionsQuery, ex);
                 throw new IOException(ex);
             } finally {
                 optionSt.close();

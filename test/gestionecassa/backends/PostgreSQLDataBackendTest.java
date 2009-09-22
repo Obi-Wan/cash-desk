@@ -24,6 +24,7 @@ import gestionecassa.EventDate;
 import gestionecassa.OrganizedEvent;
 import gestionecassa.Person;
 import gestionecassa.order.BaseEntry;
+import gestionecassa.order.EntryArticleGroup;
 import gestionecassa.order.EntrySingleArticleWithOption;
 import gestionecassa.order.Order;
 import java.io.IOException;
@@ -529,8 +530,10 @@ public class PostgreSQLDataBackendTest {
         articles = backend.loadArticlesOfGroup(1);
 
         Order tempOrder = new Order(testCassiere.getUsername(), "hell", 0);
-        tempOrder.addArticle(articles.get(0), 3);
-        tempOrder.addArticle(articles.get(3), 2);
+        EntryArticleGroup entry = new EntryArticleGroup(groups.get(0));
+        entry.addArticle(groups.get(0).getList().get(0), 3);
+        entry.addArticle(groups.get(0).getList().get(3), 2);
+        tempOrder.addGroup(entry);
         
         backend.addNewOrder(tempOrder);
 
@@ -581,22 +584,22 @@ public class PostgreSQLDataBackendTest {
                 assertTrue(!rs.isLast());
 
                 assertEquals(tempOrder.getUsername(), rs.getString("u_name"));
-                assertEquals(tempOrder.getArticlesSold().get(0).data.getPrice(),
+                assertEquals(tempOrder.getGroups().get(0).articles.get(0).data.getPrice(),
                                 rs.getDouble("price"),0);
-                assertEquals(tempOrder.getArticlesSold().get(0).data.getName(),
+                assertEquals(tempOrder.getGroups().get(0).articles.get(0).data.getName(),
                                 rs.getString("a_name"));
-                assertEquals(tempOrder.getArticlesSold().get(0).numTot,
+                assertEquals(tempOrder.getGroups().get(0).articles.get(0).numTot,
                                 rs.getInt("num_tot"));
 
                 assertTrue(rs.next());
                 assertTrue(rs.isLast());
 
                 assertEquals(tempOrder.getUsername(), rs.getString("u_name"));
-                assertEquals(tempOrder.getArticlesSold().get(1).data.getPrice(),
+                assertEquals(tempOrder.getGroups().get(0).articles.get(1).data.getPrice(),
                                 rs.getDouble("price"),0);
-                assertEquals(tempOrder.getArticlesSold().get(1).data.getName(),
+                assertEquals(tempOrder.getGroups().get(0).articles.get(1).data.getName(),
                                 rs.getString("a_name"));
-                assertEquals(tempOrder.getArticlesSold().get(1).numTot,
+                assertEquals(tempOrder.getGroups().get(0).articles.get(1).numTot,
                                 rs.getInt("num_tot"));
 
             } catch (SQLException ex) {
@@ -612,8 +615,10 @@ public class PostgreSQLDataBackendTest {
 
         SimpleDateFormat date = new SimpleDateFormat("yyyyMMddhhmmss");
         tempOrder = new Order(date.parse("20090904213000"),testCassiere.getUsername(), "hell", 0);
-        tempOrder.addArticle(articles.get(0), 3);
-        tempOrder.addArticle(articles.get(3), 2);
+        entry = new EntryArticleGroup(groups.get(0));
+        entry.addArticle(groups.get(0).getList().get(0), 3);
+        entry.addArticle(groups.get(0).getList().get(3), 2);
+        tempOrder.addGroup(entry);
 
         backend.addNewOrder(tempOrder);
 
@@ -669,8 +674,10 @@ public class PostgreSQLDataBackendTest {
                 ((ArticleWithOptions)articles.get(2)).getOptions().get(1), 3));
 
         Order tempOrder = new Order(testCassiere.getUsername(), "hell", 0);
-        tempOrder.addArticleWithOptions(
+        EntryArticleGroup entry = new EntryArticleGroup(groups.get(0));
+        entry.addArticleWithOptions(
                 (ArticleWithOptions)articles.get(2), 5, 0, optionsList);
+        tempOrder.addGroup(entry);
 
         backend.addNewOrder(tempOrder);
 
@@ -811,8 +818,10 @@ public class PostgreSQLDataBackendTest {
         articles = backend.loadArticlesOfGroup(1);
 
         Order tempOrder = new Order(testCassiere.getUsername(), "hell", 0);
-        tempOrder.addArticle(articles.get(0), 3);
-        tempOrder.addArticle(articles.get(3), 2);
+        EntryArticleGroup entry = new EntryArticleGroup(groups.get(0));
+        entry.addArticle(groups.get(0).getList().get(0), 3);
+        entry.addArticle(groups.get(0).getList().get(3), 2);
+        tempOrder.addGroup(entry);
 
         backend.addNewOrder(tempOrder);
 
