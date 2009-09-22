@@ -76,6 +76,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel implements VariableVisu
         fetchArticlesList();
 
         varListMng = new VisualListsMngr<GuiGroupPanel, ArticleGroup>(this);
+        varListMng.setInitialGap(true);
         buildContentsList();
         rebuildVisualList();
 

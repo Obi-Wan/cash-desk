@@ -52,12 +52,15 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
     protected SortedMap<PanelType, RecordPanels<PanelType, DataType>> panelsMap;
 
     /**
+     * Visual effect of an initial blanck space in the list.
+     */
+    protected boolean initialGap;
+
+    /**
      * Default constructor
      */
     public VisualListsMngr(JPanel managed) {
-        this.managedPanel = managed;
-        panelsList = new Vector<RecordPanels<PanelType, DataType>>();
-        panelsMap = new TreeMap<PanelType, RecordPanels<PanelType, DataType>>();
+        this(managed, new Vector<RecordPanels<PanelType, DataType>>() );
     }
 
     /**
@@ -67,12 +70,33 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
      */
     public VisualListsMngr(JPanel managed,
             List<RecordPanels<PanelType, DataType>> panelses) {
+        this(managed, panelses, false);
+    }
+
+    /**
+     * Completely explicit constructor
+     * 
+     * @param managed
+     * @param panelses
+     * @param initGap
+     */
+    private VisualListsMngr(JPanel managed,
+            List<RecordPanels<PanelType, DataType>> panelses, boolean initGap) {
         this.panelsList = panelses;
         this.managedPanel = managed;
         panelsMap = new TreeMap<PanelType, RecordPanels<PanelType, DataType>>();
         for (RecordPanels<PanelType, DataType> recordPanels : panelses) {
             panelsMap.put(recordPanels.displayedPanel, recordPanels);
         }
+        this.initialGap = initGap;
+    }
+
+    public void setInitialGap(boolean initialGap) {
+        this.initialGap = initialGap;
+    }
+
+    public boolean getInitialGap() {
+        return this.initialGap;
     }
 
     /**
@@ -92,8 +116,12 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
         /* Creo i due gruppi con cui organizzare i pannelli */
         ParallelGroup tempHorizGroup = layout.createParallelGroup(
                 javax.swing.GroupLayout.Alignment.LEADING);
-        SequentialGroup tempSequGroup = layout.createSequentialGroup()
-            .addContainerGap();
+        SequentialGroup tempSequGroup = layout.createSequentialGroup();
+
+        /* If requested leave a gap before the first item */
+        if (initialGap) {
+            tempSequGroup.addContainerGap();
+        }
 
         /* Ciclo in cui aggiungo i pannelli ai gruppi con le impostazioni
          * giuste */
