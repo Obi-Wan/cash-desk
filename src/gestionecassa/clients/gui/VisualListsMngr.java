@@ -99,6 +99,11 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
          * giuste */
         for (RecordPanels singleRecord : panelsList) {
 
+            if(singleRecord.displayedPanel instanceof VariableVisualList) {
+                ((VariableVisualList)singleRecord.displayedPanel)
+                        .rebuildVisualList();
+            }
+
             tempHorizGroup.addComponent(singleRecord.displayedPanel,
                     javax.swing.GroupLayout.DEFAULT_SIZE,
                     javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);

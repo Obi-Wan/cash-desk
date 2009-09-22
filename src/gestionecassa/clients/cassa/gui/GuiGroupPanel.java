@@ -24,6 +24,7 @@ import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.clients.gui.RecordPanels;
+import gestionecassa.clients.gui.VariableVisualList;
 import gestionecassa.clients.gui.VisualListsMngr;
 import gestionecassa.order.EntryArticleGroup;
 import java.rmi.RemoteException;
@@ -32,7 +33,7 @@ import java.rmi.RemoteException;
  *
  * @author ben
  */
-public class GuiGroupPanel extends GuiAbstrSingleEntryPanel {
+public class GuiGroupPanel extends GuiAbstrSingleEntryPanel implements VariableVisualList {
 
     ArticleGroup group;
 
@@ -106,21 +107,23 @@ public class GuiGroupPanel extends GuiAbstrSingleEntryPanel {
     public EntryArticleGroup collectOrderEntries() throws RemoteException {
         EntryArticleGroup entry = new EntryArticleGroup(group);
         for (RecordPanels<GuiAbstrSingleEntryPanel, Article>
-                recordPanels : varListMngr.getRecords()) {
-            int tempNumTot = recordPanels.displayedPanel.getNumTot();
+                record : varListMngr.getRecords()) {
+            int tempNumTot = record.displayedPanel.getNumTot();
 
-            if (recordPanels.data.hasOptions()) {
+            if (tempNumTot > 0) {
+                if (record.data.hasOptions()) {
 
-                int progressive = orderPanel.owner.getNProgressivo(
-                        recordPanels.data.getName(), tempNumTot);
-                entry.addArticleWithOptions(
-                        (ArticleWithOptions)recordPanels.data,
-                        tempNumTot, progressive,
-                        ((GuiOrderSingleArticleWOptionsPanel)
-                            (recordPanels.displayedPanel)).getPatialsList());
-            } else {
-                
-                entry.addArticle(recordPanels.data, tempNumTot);
+                    int progressive = orderPanel.owner.getNProgressivo(
+                            record.data.getName(), tempNumTot);
+                    entry.addArticleWithOptions(
+                            (ArticleWithOptions)record.data,
+                            tempNumTot, progressive,
+                            ((GuiOrderSingleArticleWOptionsPanel)
+                                (record.displayedPanel)).getPatialsList());
+                } else {
+
+                    entry.addArticle(record.data, tempNumTot);
+                }
             }
         }
         return entry;
@@ -142,5 +145,10 @@ public class GuiGroupPanel extends GuiAbstrSingleEntryPanel {
             }
         }
         return output;
+    }
+
+    @Override
+    public void rebuildVisualList() {
+        varListMngr.buildVisualList();
     }
 }

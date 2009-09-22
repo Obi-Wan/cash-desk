@@ -17,7 +17,6 @@ package gestionecassa.order;
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
 import gestionecassa.ArticleWithOptions;
-import java.io.Serializable;
 import java.util.List;
 import java.util.Vector;
 
@@ -25,9 +24,11 @@ import java.util.Vector;
  *
  * @author ben
  */
-public class EntryArticleGroup extends BaseEntry<ArticleGroup> implements Serializable {
+public class EntryArticleGroup extends BaseEntry<ArticleGroup> {
 
-    List<BaseEntry<Article>> articles;
+    public List<BaseEntry<Article>> articles;
+
+    public double partialPrice;
 
     /**
      * Default constructor
@@ -44,6 +45,10 @@ public class EntryArticleGroup extends BaseEntry<ArticleGroup> implements Serial
     EntryArticleGroup(ArticleGroup gr, int numTot, List<BaseEntry<Article>> articles) {
         super(gr, numTot);
         this.articles = articles;
+        partialPrice = 0;
+        for (BaseEntry<Article> entry : articles) {
+            partialPrice += entry.numTot * entry.data.getPrice();
+        }
     }
 
     /**
@@ -52,9 +57,10 @@ public class EntryArticleGroup extends BaseEntry<ArticleGroup> implements Serial
      * @param article
      * @param numTot
      */
-    public void addArticle(Article article, int numTot) {
-        articles.add(new BaseEntry<Article>(article, numTot));
-        this.numTot += numTot;
+    public void addArticle(Article article, int numAddTot) {
+        articles.add(new BaseEntry<Article>(article, numAddTot));
+        this.numTot += numAddTot;
+        partialPrice += numAddTot * article.getPrice();
     }
 
     /**
@@ -64,11 +70,12 @@ public class EntryArticleGroup extends BaseEntry<ArticleGroup> implements Serial
      * @param numTot
      * @param partialsList
      */
-    public void addArticleWithOptions(ArticleWithOptions article, int numTot,
+    public void addArticleWithOptions(ArticleWithOptions article, int numAddTot,
             int progressive, List<BaseEntry<String>> partialsList) {
-        articles.add(new EntrySingleArticleWithOption(article, numTot, progressive,
+        articles.add(new EntrySingleArticleWithOption(article, numAddTot, progressive,
                 partialsList));
-        this.numTot += numTot;
+        this.numTot += numAddTot;
+        partialPrice += numAddTot * article.getPrice();
     }
 
 

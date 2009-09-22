@@ -24,16 +24,16 @@ import gestionecassa.clients.gui.VisualListsMngr;
 import gestionecassa.clients.cassa.*;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.Article;
+import gestionecassa.ArticleGroup;
 import gestionecassa.ArticlesList;
-import gestionecassa.clients.gui.RecordPanels;
-import gestionecassa.order.BaseEntry;
+import gestionecassa.clients.gui.VariableVisualList;
+import gestionecassa.order.EntryArticleGroup;
 import gestionecassa.order.Order;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
 
@@ -41,7 +41,7 @@ import javax.swing.KeyStroke;
  *
  * @author ben
  */
-public class GuiNewOrderPanel extends javax.swing.JPanel {
+public class GuiNewOrderPanel extends javax.swing.JPanel implements VariableVisualList {
 
     /**
      * Reference alla classe della business logic
@@ -61,7 +61,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
     /**
      * 
      */
-    VisualListsMngr<GuiAbstrSingleEntryPanel, Article> varListMng;
+    VisualListsMngr<GuiGroupPanel, ArticleGroup> varListMng;
 
     /** 
      * Creates new form GuiNewOrderPanel
@@ -75,9 +75,9 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         
         fetchArticlesList();
 
-        varListMng = new VisualListsMngr<GuiAbstrSingleEntryPanel, Article>(this);
+        varListMng = new VisualListsMngr<GuiGroupPanel, ArticleGroup>(this);
         buildContentsList();
-        varListMng.buildVisualList();
+        rebuildVisualList();
 
         this.setPreferredSize(new Dimension(800, 450));
 
@@ -125,18 +125,38 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
     void buildContentsList() {
         varListMng.resetList();
         int i = 0;
-        for (Article art : articlesList.getArticlesList()) {
-            GuiAbstrSingleEntryPanel tempPanel;
-            if (art instanceof ArticleWithOptions) {
-                tempPanel = 
-                        new GuiOrderSingleArticleWOptionsPanel(this,
-                                                    (ArticleWithOptions)art,i);
-            } else {
-                tempPanel = new GuiOrderSingleArticlePanel(this, art, i);
+        for (ArticleGroup articleGroup : articlesList.getGroupsList()) {
+
+            GuiGroupPanel grPanel = new GuiGroupPanel(this, articleGroup);
+            this.varListMng.addRecord(grPanel, articleGroup);
+            
+            for (Article article : articleGroup.getList()) {
+                GuiAbstrSingleEntryPanel tempPanel;
+                if (article instanceof ArticleWithOptions) {
+                    tempPanel =
+                            new GuiOrderSingleArticleWOptionsPanel(this,
+                                                (ArticleWithOptions)article,i);
+                } else {
+                    tempPanel = new GuiOrderSingleArticlePanel(this, article, i);
+                }
+                grPanel.varListMngr.addRecord(tempPanel, article);
+                i++;
             }
-            varListMng.addRecord(tempPanel, art);
-            i++;
+
+            grPanel.varListMngr.buildVisualList();
         }
+//        for (Article art : articlesList.getArticlesList()) {
+//            GuiAbstrSingleEntryPanel tempPanel;
+//            if (art instanceof ArticleWithOptions) {
+//                tempPanel =
+//                        new GuiOrderSingleArticleWOptionsPanel(this,
+//                                                    (ArticleWithOptions)art,i);
+//            } else {
+//                tempPanel = new GuiOrderSingleArticlePanel(this, art, i);
+//            }
+//            varListMng.addRecord(tempPanel, art);
+//            i++;
+//        }
     }
 
     void cleanDataFields() {
@@ -173,9 +193,11 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
     void confirmAndSendNewOrder() {
         try {
             Order nuovoOrdine = createNewOrder();
+            
             if (nuovoOrdine.getTotalPrice() != 0) {
                 owner.sendRMINewOrder(nuovoOrdine);
-                frame.getStatusPanel().setEmittedOrder(computeOrderPrice(nuovoOrdine));
+                frame.getStatusPanel().setEmittedOrder(nuovoOrdine.getTotalPrice());
+//                frame.getStatusPanel().setEmittedOrder(computeOrderPrice(nuovoOrdine));
                 this.cleanDataFields();
             }
         } catch (RemoteException ex) {
@@ -196,7 +218,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         forceRMIRequestArticlesList();
         fetchArticlesList();
         buildContentsList();
-        varListMng.buildVisualList();
+        rebuildVisualList();
     }
 
     /**
@@ -210,28 +232,35 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         // TODO One day will be needed here to handle the table properly
         Order tempOrd = new Order(owner.getUsername(), owner.getHostname(), 0);
 
-        for (RecordPanels<GuiAbstrSingleEntryPanel, Article>
-                tempRecord : varListMng.getRecords()) {
-
-            int tempNumTot = tempRecord.displayedPanel.getNumTot();
-
-            if (tempRecord.displayedPanel.getNumTot() != 0) {
-
-                if (tempRecord.data.hasOptions()) {
-
-                    int progressive = owner.getNProgressivo(
-                            tempRecord.data.getName(), tempNumTot);
-                    tempOrd.addArticleWithOptions(
-                            (ArticleWithOptions)tempRecord.data,
-                            tempNumTot, progressive,
-                            ((GuiOrderSingleArticleWOptionsPanel)
-                                (tempRecord.displayedPanel)).getPatialsList());
-                } else {
-                    tempOrd.addArticle(tempRecord.data,tempNumTot);
-                }
+        for (GuiGroupPanel group : varListMng.getPanels()) {
+            EntryArticleGroup tempEntry = group.collectOrderEntries();
+            if (tempEntry.numTot > 0) {
+                tempOrd.addGroup(tempEntry);
             }
         }
-        tempOrd.setTotalPrice(computeOrderPrice(tempOrd));
+
+//        for (RecordPanels<GuiAbstrSingleEntryPanel, Article>
+//                tempRecord : varListMng.getRecords()) {
+//
+//            int tempNumTot = tempRecord.displayedPanel.getNumTot();
+//
+//            if (tempRecord.displayedPanel.getNumTot() != 0) {
+//
+//                if (tempRecord.data.hasOptions()) {
+//
+//                    int progressive = owner.getNProgressivo(
+//                            tempRecord.data.getName(), tempNumTot);
+//                    tempOrd.addArticleWithOptions(
+//                            (ArticleWithOptions)tempRecord.data,
+//                            tempNumTot, progressive,
+//                            ((GuiOrderSingleArticleWOptionsPanel)
+//                                (tempRecord.displayedPanel)).getPatialsList());
+//                } else {
+//                    tempOrd.addArticle(tempRecord.data,tempNumTot);
+//                }
+//            }
+//        }
+//        tempOrd.setTotalPrice(computeOrderPrice(tempOrd));
         return tempOrd;
     }
 
@@ -242,14 +271,17 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
      */
     private double computeCurrentOrder() {
         double output = 0;
-        for (RecordPanels<GuiAbstrSingleEntryPanel, Article>
-                tempRecord : varListMng.getRecords()) {
-            
-            if (tempRecord.displayedPanel.getNumTot() != 0) {
-                output += tempRecord.displayedPanel.getNumTot() *
-                        tempRecord.data.getPrice();
-            }
+        for (GuiGroupPanel group : varListMng.getPanels()) {
+            output += group.getPartialOrderPrice();
         }
+//        for (RecordPanels<GuiAbstrSingleEntryPanel, Article>
+//                tempRecord : varListMng.getRecords()) {
+//
+//            if (tempRecord.displayedPanel.getNumTot() != 0) {
+//                output += tempRecord.displayedPanel.getNumTot() *
+//                        tempRecord.data.getPrice();
+//            }
+//        }
         return output;
     }
 
@@ -260,21 +292,21 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
         frame.getStatusPanel().setPartialOrder(computeCurrentOrder());
     }
 
-    /**
-     * Calculate price o the given Order
-     *
-     * @param ordine the order to calculate
-     *
-     * @return Price calculated.
-     */
-    private double computeOrderPrice(Order ordine) {
-        List<BaseEntry<Article>> list = ordine.getArticlesSold();
-        double output = 0;
-        for (BaseEntry<Article> artEntry : list) {
-            output += artEntry.numTot * artEntry.data.getPrice();
-        }
-        return output;
-    }
+//    /**
+//     * Calculate price o the given Order
+//     *
+//     * @param ordine the order to calculate
+//     *
+//     * @return Price calculated.
+//     */
+//    private double computeOrderPrice(Order ordine) {
+//        List<BaseEntry<Article>> list = ordine.getArticlesSold();
+//        double output = 0;
+//        for (BaseEntry<Article> artEntry : list) {
+//            output += artEntry.numTot * artEntry.data.getPrice();
+//        }
+//        return output;
+//    }
 
     /**
      * This cancells the last commited order. It's a function to treat carefully
@@ -305,5 +337,10 @@ public class GuiNewOrderPanel extends javax.swing.JPanel {
                     javax.swing.JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+
+    @Override
+    public void rebuildVisualList() {
+        varListMng.buildVisualList();
     }
 }

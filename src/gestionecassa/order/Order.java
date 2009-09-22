@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Vector;
 
 /**
  *
@@ -44,7 +45,7 @@ public class Order implements Serializable, Comparable<Order> {
     /**
      * List of articles for this order
      */
-    List<BaseEntry<Article> > articlesList;
+    List<EntryArticleGroup> groupsList;
 
     /**
      *
@@ -61,11 +62,11 @@ public class Order implements Serializable, Comparable<Order> {
      *
      * @param username
      * @param hostname
+     * @param table 
      */
     public Order(String username, String hostname, int table) {
         this( new Date(), new String(username), new String(hostname), table,
-                new ArrayList<BaseEntry<Article>>());
-        totalPrice = 0;
+                new ArrayList<EntryArticleGroup>());
     }
 
     /**
@@ -74,30 +75,31 @@ public class Order implements Serializable, Comparable<Order> {
      * @param date
      * @param username
      * @param hostname
+     * @param table
      */
     public Order(Date data, String username, String hostname, int table) {
         this( new Date(data.getTime()), new String(username),
                 new String(hostname), table,
-                new ArrayList<BaseEntry<Article>>());
-        totalPrice = 0;
+                new ArrayList<EntryArticleGroup>());
     }
 
     /**
      * Completely explicit constructor (it's not good to use it.)
      *
-     * @param nOrdine
+     * @param table
      * @param date
      * @param username
      * @param hostname
-     * @param articlesList
+     * @param groups
      */
     private Order( Date date, String username, String hostname, int table,
-            List<BaseEntry<Article>> articles) {
+            List<EntryArticleGroup> groups) {
         this.date = date;
-        this.articlesList = articles;
+        this.groupsList = groups;
         this.username = username;
         this.hostname = hostname;
         this.table = table;
+        this.totalPrice = 0;
     }
 
     /**
@@ -110,7 +112,7 @@ public class Order implements Serializable, Comparable<Order> {
         this.hostname = new String(order.hostname);
         this.username = new String(order.username);
         this.totalPrice = order.totalPrice;
-        this.articlesList = new ArrayList<BaseEntry<Article>>(order.articlesList);
+        this.groupsList = new ArrayList<EntryArticleGroup>(order.groupsList);
     }
 
     /**
@@ -126,7 +128,19 @@ public class Order implements Serializable, Comparable<Order> {
      * @return
      */
     public List<BaseEntry<Article>> getArticlesSold() {
-        return articlesList;
+        List<BaseEntry<Article>> list = new Vector<BaseEntry<Article>>();
+        for (EntryArticleGroup group : groupsList) {
+            list.addAll(group.articles);
+        }
+        return list;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public List<EntryArticleGroup> getGroups() {
+        return groupsList;
     }
 
     /**
@@ -161,37 +175,61 @@ public class Order implements Serializable, Comparable<Order> {
         return table;
     }
 
+//    /**
+//     * Adder helper
+//     *
+//     * @param article
+//     * @param numTot
+//     */
+//    public void addArticle(Article article, int numTot) {
+//        groupsList.add(new BaseEntry<Article>(article, numTot));
+//    }
+
+//    /**
+//     * Adder helper
+//     *
+//     * @param article
+//     * @param numTot
+//     * @param partialsList
+//     */
+//    public void addArticleWithOptions(ArticleWithOptions article, int numTot,
+//            int progressive, List<BaseEntry<String>> partialsList) {
+//        groupsList.add(new EntrySingleArticleWithOption(article, numTot, progressive,
+//                partialsList));
+//    }
+
+//    /**
+//     *
+//     * @param totalPrice
+//     */
+//    public void setTotalPrice(double totalPrice) {
+//        this.totalPrice = totalPrice;
+//    }
+
     /**
-     * Adder helper
      *
-     * @param article 
-     * @param numTot
+     * @param group
      */
-    public void addArticle(Article article, int numTot) {
-        articlesList.add(new BaseEntry<Article>(article, numTot));
+    public void addGroup(EntryArticleGroup group) {
+        groupsList.add(group);
+        totalPrice += group.partialPrice;
     }
 
     /**
-     * Adder helper
      *
-     * @param article
-     * @param numTot
-     * @param partialsList 
      */
-    public void addArticleWithOptions(ArticleWithOptions article, int numTot,
-            int progressive, List<BaseEntry<String>> partialsList) {
-        articlesList.add(new EntrySingleArticleWithOption(article, numTot, progressive,
-                partialsList));
+    public void refreshTotalPrice() {
+        totalPrice = 0;
+        for (EntryArticleGroup group : groupsList) {
+            totalPrice += group.partialPrice;
+        }
     }
 
     /**
      * 
-     * @param totalPrice
+     * @param o
+     * @return
      */
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
     @Override
     public int compareTo(Order o) {
         return this.date.compareTo(o.date);
