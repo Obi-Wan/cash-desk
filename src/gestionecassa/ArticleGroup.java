@@ -52,7 +52,7 @@ public class ArticleGroup implements Serializable {
      * @param grn Name of this group
      */
     public ArticleGroup(int id, String grn) {
-        this(id, grn, new Vector());
+        this(id, grn, new Vector<Article>());
     }
 
     /**
