@@ -1,35 +1,54 @@
+/*
+ * Article.java
+ *
+ * Copyright (C) 2009 Nicola Roberto Viganò
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package gestionecassa;
 
 import java.io.Serializable;
 
 /**
+ * Class rapresenting an Article sold. Not synchronized.
+ * If accessing concurrently you need to externally synchronize it.
  *
  * @author ben
  */
 public class Article implements Serializable {
 
+    /**
+     * Id of the article
+     */
     int id;
 
     /**
-     *
+     * Name of the article
      */
     String name;
 
     /**
-     *
+     * Price of a single piece of this article
      */
     double price;
 
     /**
-     * 
+     * Whether it is enabled or not.
      */
     boolean enabled;
 
     /**
      * Explicit constructor
      *
-     * @param name Name of the good
+     * @param id Id of this article
+     * @param name Name of the article
      * @param price Price
      */
     public Article(int id, String name, double price) {
@@ -38,8 +57,9 @@ public class Article implements Serializable {
 
     /**
      * Most explicit constructor
-     * 
-     * @param name
+     *
+     * @param id Id of this article
+     * @param name Name of the article
      * @param price
      * @param enabled
      */
@@ -69,27 +89,59 @@ public class Article implements Serializable {
                              (enabled ? "Enabled " : "Disabled"), name, price);
     }
 
+    /**
+     *
+     * @return A string containing the name of this article
+     */
     final public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @return A double containing the price of this article
+     */
     final public double getPrice() {
         return price;
     }
 
+    /**
+     * Sets the new value for this article
+     *
+     * @param enabled New value for the field enabled
+     *
+     * @return A reference to this article
+     */
     public Article setEnabled(boolean enabled) {
         this.enabled = enabled;
         return this;
     }
 
+    /**
+     * Tells whether this article is enabled or not
+     *
+     * @return <code>true</code> if it's enbaled, <code>false</code> if not.
+     */
     public boolean isEnabled() {
         return enabled;
     }
 
+    /**
+     * Getter for the id of the article
+     *
+     * @return Int containing the Id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Tells whether this <code>Article</code> is the same of another.
+     *
+     * @param obj The other article to compare
+     *
+     * @return <code>true</code> if they are the same, <code>false</code> if not.
+     */
     @Override
     public boolean equals(Object obj) {
         return (obj instanceof Article) &&

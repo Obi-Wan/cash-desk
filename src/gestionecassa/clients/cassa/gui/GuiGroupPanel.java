@@ -30,18 +30,35 @@ import gestionecassa.order.EntryArticleGroup;
 import java.rmi.RemoteException;
 
 /**
+ * This panel is the visual rapresentation of a <code>ArticleGroup</code>.
+ * It manages the panels that rapresent the <code>Article</code>s contained
+ * in that group: displayes them, and asks them for their proprieties.
  *
  * @author ben
  */
 public class GuiGroupPanel extends GuiAbstrSingleEntryPanel implements VariableVisualList {
 
+    /**
+     * Reference to the group rapresented
+     */
     ArticleGroup group;
 
+    /**
+     * Reference to the panel that owns this one.
+     */
     GuiNewOrderPanel orderPanel;
 
+    /**
+     * Variable list of panels owned by this class. Those panels do rapresent
+     * in turn the articles contained in the group rapresented by this panel.
+     */
     VisualListsMngr<GuiAbstrSingleEntryPanel, Article> varListMngr;
 
-    /** Creates new form GuiGroupPanel */
+    /** Creates new form GuiGroupPanel
+     * 
+     * @param orderPanel Reference to the panel owning this one.
+     * @param group Reference to the <code>ArticleGroup</code> rapresented
+     */
     public GuiGroupPanel(GuiNewOrderPanel orderPanel, ArticleGroup group) {
         initComponents();
         this.orderPanel = orderPanel;
@@ -80,7 +97,7 @@ public class GuiGroupPanel extends GuiAbstrSingleEntryPanel implements VariableV
      * In this implementation it just tells how many things will ahve to prepare
      * the manager of this group
      * 
-     * @return
+     * @return An int containing the number of Articles selected in this group
      */
     @Override
     public int getNumTot() {
@@ -91,6 +108,9 @@ public class GuiGroupPanel extends GuiAbstrSingleEntryPanel implements VariableV
         return num;
     }
 
+    /**
+     * Cleans the data fields of owned panels
+     */
     @Override
     public void clean() {
         varListMngr.cleanDataFields();
@@ -135,7 +155,7 @@ public class GuiGroupPanel extends GuiAbstrSingleEntryPanel implements VariableV
     /**
      * It calculates the amount the "still to be committed" order will cost
      *
-     * @return
+     * @return A double rapresenting the sub total price of the article in this group
      */
     double getPartialOrderPrice() {
         double output = 0;
@@ -150,6 +170,9 @@ public class GuiGroupPanel extends GuiAbstrSingleEntryPanel implements VariableV
         return output;
     }
 
+    /**
+     * Refreshes the visual variable list of panels.
+     */
     @Override
     public void rebuildVisualList() {
         varListMngr.buildVisualList();

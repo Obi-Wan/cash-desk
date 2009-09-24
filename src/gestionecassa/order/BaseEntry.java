@@ -17,6 +17,10 @@ package gestionecassa.order;
 import java.io.Serializable;
 
 /**
+ * This generic class is used for many purposes. It's a sort of
+ * <code>pair</code> template in C++, but a bit specialized.
+ *
+ * Not synchronized. do synchronize it externally
  *
  * @author ben
  */
@@ -35,8 +39,8 @@ public class BaseEntry<DataType> implements Serializable {
     /**
      * Explicit constructor
      * 
-     * @param data
-     * @param numTot
+     * @param data Data to store in this entry
+     * @param numTot Quantity of the specified data
      */
     public BaseEntry(DataType data, int numTot) {
         this.data = data;

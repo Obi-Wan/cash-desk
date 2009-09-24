@@ -21,17 +21,30 @@ import java.util.List;
 import java.util.Vector;
 
 /**
+ * This class is the rapresentation of the <code>ArticleGroup</code> in an
+ * <code>{@link Order}</code>. Stores the reference to the group, the sub total
+ * price of the order for this group, and a list of sold articles.
+ *
+ * Not synchronized.
  *
  * @author ben
  */
 public class EntryArticleGroup extends BaseEntry<ArticleGroup> {
 
+    /**
+     * List of sold articles.
+     */
     public List<BaseEntry<Article>> articles;
 
+    /**
+     * Sub total price
+     */
     public double partialPrice;
 
     /**
      * Default constructor
+     *
+     * @param gr Reference to the rapresented ArticleGroup
      */
     public EntryArticleGroup(ArticleGroup gr) {
         this(gr, 0, new Vector<BaseEntry<Article>>());
@@ -40,7 +53,9 @@ public class EntryArticleGroup extends BaseEntry<ArticleGroup> {
     /**
      * Completely explicit constructor (it's not good to use it.)
      *
-     * @param articles
+     * @param gr Reference to the rapresented ArticleGroup
+     * @param numTot total number of articles chosen in this group
+     * @param articles List of those sold articles entries.
      */
     EntryArticleGroup(ArticleGroup gr, int numTot, List<BaseEntry<Article>> articles) {
         super(gr, numTot);
@@ -54,8 +69,8 @@ public class EntryArticleGroup extends BaseEntry<ArticleGroup> {
     /**
      * Adder helper
      *
-     * @param article
-     * @param numTot
+     * @param article Article to add to this entry
+     * @param numAddTot Quantity bought
      */
     public void addArticle(Article article, int numAddTot) {
         articles.add(new BaseEntry<Article>(article, numAddTot));
@@ -66,9 +81,9 @@ public class EntryArticleGroup extends BaseEntry<ArticleGroup> {
     /**
      * Adder helper
      *
-     * @param article
-     * @param numTot
-     * @param partialsList
+     * @param article Article to add to this entry
+     * @param numAddTot Quantity bought
+     * @param partialsList List of partials for the options
      */
     public void addArticleWithOptions(ArticleWithOptions article, int numAddTot,
             int progressive, List<BaseEntry<String>> partialsList) {
@@ -77,6 +92,4 @@ public class EntryArticleGroup extends BaseEntry<ArticleGroup> {
         this.numTot += numAddTot;
         partialPrice += numAddTot * article.getPrice();
     }
-
-
 }

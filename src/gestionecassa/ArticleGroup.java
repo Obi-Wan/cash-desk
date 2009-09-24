@@ -21,6 +21,8 @@ import java.util.Vector;
 
 /**
  * Group of Articles, not synchronized.
+ * When working on this class you need to externally synchornize it if accessing
+ * concurrently.
  *
  * @author ben
  */
@@ -82,7 +84,7 @@ public class ArticleGroup implements Serializable {
     /**
      * Gets the name of this group
      *
-     * @return
+     * @return A <code>String</code> containing the name of this group
      */
     public String getGroupName() {
         return groupName;
@@ -91,7 +93,7 @@ public class ArticleGroup implements Serializable {
     /**
      * Gets the id of the group
      * 
-     * @return
+     * @return Int value of Group Id
      */
     public int getIdGroup() {
         return idGroup;
@@ -100,7 +102,7 @@ public class ArticleGroup implements Serializable {
     /**
      * Tells if this group is enabled
      * 
-     * @return
+     * @return <code>true</code> for enabled, and <code>false</code> for disabled
      */
     public boolean isEnabled() {
         return enabled;
@@ -109,7 +111,7 @@ public class ArticleGroup implements Serializable {
     /**
      * Gets the list of articles in this group
      *
-     * @return
+     * @return A list containing the articles of this group
      */
     public List<Article> getList() {
         return list;
@@ -118,7 +120,7 @@ public class ArticleGroup implements Serializable {
     /**
      * Sets the new name of this group
      *
-     * @param groupName
+     * @param groupName String containing the new name of this group
      */
     void setGroupName(String groupName) {
         this.groupName = new String(groupName);
@@ -193,7 +195,7 @@ public class ArticleGroup implements Serializable {
     /**
      * Similar to toString but leaves it fully functional
      *
-     * @return a written description of the list
+     * @return A String containing the description of the content of this group
      */
     public String getPrintableFormat() {
         String output = new String("Articoli del gruppo " + groupName + ":\n");

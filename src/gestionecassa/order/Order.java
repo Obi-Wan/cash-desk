@@ -22,13 +22,14 @@ import java.util.List;
 import java.util.Vector;
 
 /**
+ * Stores all the information about an order emitted.
  *
  * @author ben
  */
 public class Order implements Serializable, Comparable<Order> {
 
     /**
-     * Data/ora in cui è stato effettuato l'ordine
+     * Time at which the order was committed
      */
     Date date;
 
@@ -48,7 +49,7 @@ public class Order implements Serializable, Comparable<Order> {
     List<EntryArticleGroup> groupsList;
 
     /**
-     *
+     * Total price of the order, that will be payed.
      */
     double totalPrice;
 
@@ -60,9 +61,9 @@ public class Order implements Serializable, Comparable<Order> {
     /**
      * Default constructor (well, at most :) )
      *
-     * @param username
-     * @param hostname
-     * @param table 
+     * @param username Username of the <code>Cassiere</code> that emitted this
+     * @param hostname <code>Cassa</code> at which the order was emitted
+     * @param table Table where to serve the order
      */
     public Order(String username, String hostname, int table) {
         this( new Date(), new String(username), new String(hostname), table,
@@ -72,25 +73,28 @@ public class Order implements Serializable, Comparable<Order> {
     /**
      * Explicit constructor of the date
      *
-     * @param date
-     * @param username
-     * @param hostname
-     * @param table
+     * @param date Time of creation of the order
+     * @param username Username of the <code>Cassiere</code> that emitted this
+     * @param hostname <code>Cassa</code> at which the order was emitted
+     * @param table Table where to serve the order
      */
-    public Order(Date data, String username, String hostname, int table) {
-        this( new Date(data.getTime()), new String(username),
+    public Order(Date date, String username, String hostname, int table) {
+        this( new Date(date.getTime()), new String(username),
                 new String(hostname), table,
                 new ArrayList<EntryArticleGroup>());
     }
 
     /**
-     * Completely explicit constructor (it's not good to use it.)
+     * Completely explicit constructor
      *
-     * @param table
-     * @param date
-     * @param username
-     * @param hostname
-     * @param groups
+     * Note that it's not good to use this constructor, indeed it was marked
+     * private. Groups are usualy added later to the order.
+     *
+     * @param date Time of creation of the order
+     * @param username Username of the <code>Cassiere</code> that emitted this
+     * @param hostname <code>Cassa</code> at which the order was emitted
+     * @param table Table where to serve the order
+     * @param groups List of groups that contain <code>Article</code>s sold
      */
     private Order( Date date, String username, String hostname, int table,
             List<EntryArticleGroup> groups) {
@@ -105,7 +109,7 @@ public class Order implements Serializable, Comparable<Order> {
     /**
      * Copy constructor
      * 
-     * @param order
+     * @param order The order to copy from
      */
     public Order(Order order) {
         this.date = new Date(order.date.getTime());
@@ -116,17 +120,26 @@ public class Order implements Serializable, Comparable<Order> {
     }
 
     /**
+     * Getter for the date
      *
-     * @return
+     * @return Time at which the order was emitted
      */
     public Date getDate() {
         return date;
     }
 
     /**
+     * Getter for just a list of all the <code>Article</code>s sold, without
+     * groups structure. Note that this is not good since it completely
+     * discards the structure of groups.
+     *
+     * It's reasonably used just in the Database implementation, since groups
+     * consistency is preserved by the DB structure.
+     * Otherwise it's deprecated.
      * 
-     * @return
+     * @return List of all the <code>Article</code>s sold
      */
+    @Deprecated
     public List<BaseEntry<Article>> getArticlesSold() {
         List<BaseEntry<Article>> list = new Vector<BaseEntry<Article>>();
         for (EntryArticleGroup group : groupsList) {
@@ -136,48 +149,54 @@ public class Order implements Serializable, Comparable<Order> {
     }
 
     /**
+     * Getter for the list of groups
      * 
-     * @return
+     * @return List of <code>ArticleGroup</code>s that contain <code>Article</code>s sold
      */
     public List<EntryArticleGroup> getGroups() {
         return groupsList;
     }
 
     /**
+     * Getter for the price of the order
      * 
-     * @return
+     * @return The price that needs to be payed for this order.
      */
     public double getTotalPrice() {
         return totalPrice;
     }
 
     /**
+     * Getter for the hostname of <code>Cassa</code> of creation of this order.
      *
-     * @return
+     * @return A string containing the Hostname.
      */
     public String getHostname() {
         return hostname;
     }
 
     /**
-     * 
-     * @return
+     * Getter for the username of the <code>Cassiere</code> who emitted this order.
+     *
+     * @return A string containing the Username
      */
     public String getUsername() {
         return username;
     }
 
     /**
+     * Getter for the number of the table at which the order needs to be served
      * 
-     * @return
+     * @return Numerical value of the table
      */
     public int getTable() {
         return table;
     }
 
     /**
+     * Adds a new <code>EntryArticleGroup</code> to the <code>Order</code>.
      *
-     * @param group
+     * @param group New <code>ArticleGroup</code> entry to be added.
      */
     public void addGroup(EntryArticleGroup group) {
         groupsList.add(group);
@@ -185,7 +204,7 @@ public class Order implements Serializable, Comparable<Order> {
     }
 
     /**
-     *
+     * Recalculates the total price, just in case it was modified inconsistently
      */
     public void refreshTotalPrice() {
         totalPrice = 0;
@@ -195,12 +214,16 @@ public class Order implements Serializable, Comparable<Order> {
     }
 
     /**
+     * Compares two <code>Order</code>s. I don't mind about the result: it's
+     * just used to order them in a data structure.
      * 
-     * @param o
-     * @return
+     * @param o Order to compare to
+     *
+     * @return -1, 0 or 1 just to distinguish them.
      */
     @Override
     public int compareTo(Order o) {
-        return this.date.compareTo(o.date);
+        final int dateComp = this.date.compareTo(o.date);
+        return (dateComp == 0) ? this.username.compareTo(o.username) : dateComp;
     }
 }

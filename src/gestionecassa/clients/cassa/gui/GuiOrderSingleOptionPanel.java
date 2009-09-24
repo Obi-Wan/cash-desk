@@ -40,7 +40,8 @@ public class GuiOrderSingleOptionPanel extends GuiAbstrSingleEntryPanel {
      * Creates new form GuiOrderSingleOptionPanel
      *
      * @param parent
-     * @param opzioni
+     * @param option
+     * @param quantity
      */
     public GuiOrderSingleOptionPanel(GuiOrderSingleArticleWOptionsPanel parent,
             String option, int quantity) {
@@ -129,6 +130,7 @@ public class GuiOrderSingleOptionPanel extends GuiAbstrSingleEntryPanel {
      *
      * @return
      */
+    @Override
     public int getNumTot() {
         return quantity;
     }
