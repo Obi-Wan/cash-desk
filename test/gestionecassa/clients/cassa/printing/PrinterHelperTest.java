@@ -15,8 +15,8 @@
 package gestionecassa.clients.cassa.printing;
 
 import gestionecassa.Article;
+import gestionecassa.ArticleGroup;
 import gestionecassa.ArticleWithOptions;
-import gestionecassa.order.BaseEntry;
 import gestionecassa.order.Order;
 import java.util.List;
 import java.util.Vector;
@@ -34,7 +34,8 @@ import static org.junit.Assert.*;
 public class PrinterHelperTest {
 
     static Order order;
-    private static Vector<Article> articles;
+    static List<Article> articles;
+    static List<ArticleGroup> groups;
 
     public PrinterHelperTest() {
     }
@@ -43,23 +44,37 @@ public class PrinterHelperTest {
     public static void setUpClass() throws Exception {
         order = new Order("bene", "hell", 0);
 
+        groups = new Vector<ArticleGroup>();
+
+        int idArticle = 0;
+
+        /* First group with id 0 */
         articles = new Vector<Article>();
         List<String> options = new Vector<String>();
         options.add("corta");
         options.add("media");
         options.add("lunga");
-        articles.add(new Article(articles.size()+1, "gatto", 5.5));
-        articles.add(new Article(articles.size()+1, "cane", 10));
-        articles.add(new ArticleWithOptions(articles.size()+1, "falce", 4.25, options));
-        articles.add(new Article(articles.size()+1, "vanga", 0.2));
+        articles.add(new Article(++idArticle, "gatto", 5.5));
+        articles.add(new Article(++idArticle, "cane", 10));
+        articles.add(new ArticleWithOptions(++idArticle, "falce", 4.25, options));
+        articles.add(new Article(++idArticle, "vanga", 0.2));
 
-        List<BaseEntry<String>> partialList = new Vector<BaseEntry<String>>();
-        partialList.add(new BaseEntry<String>(options.get(0), 2));
-        partialList.add(new BaseEntry<String>(options.get(1), 3));
+        groups.add(new ArticleGroup(1, "Group1", articles));
 
-        order.addArticle(articles.get(0), 3);
-        order.addArticle(articles.get(3), 2);
-        order.addArticleWithOptions((ArticleWithOptions)articles.get(2), 5, 12, partialList);
+        /* Second group, empty, with id 1 */
+        articles = new Vector<Article>();
+        groups.add(new ArticleGroup(2, "Group2", articles));
+
+        /* Articles not in group 1 to add later */
+        articles = new Vector<Article>();
+        options = new Vector<String>();
+        options.add("corta1");
+        options.add("media1");
+        options.add("lunga1");
+        articles.add(new Article(++idArticle, "gatto1", 5.5));
+        articles.add(new Article(++idArticle, "cane1", 10));
+        articles.add(new ArticleWithOptions(++idArticle, "falce1", 4.25, options));
+        articles.add(new Article(++idArticle, "vanga1", 0.2));
     }
 
     @AfterClass
@@ -81,8 +96,6 @@ public class PrinterHelperTest {
     public void testStartPrintingOrder() {
         System.out.println("startPrintingOrder");
         PrinterHelper.startPrintingOrder(order);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
     }
 
     /**
