@@ -47,7 +47,7 @@ class SessionManager extends Thread {
     private boolean stopApp;
 
     /**
-     * 
+     * Logger that takes account of logging messages.
      */
     Logger logger;
     
@@ -103,28 +103,37 @@ class SessionManager extends Thread {
                 if (++elem.timeElapsed > 14) {
                     logger.debug("eliminato sess con id: "+
                             elem.sessionId);
-                    eraseSession(elem);
+                    invalidateSession(elem);
                 }
             }
-            /*se l'ultimo corrisponde a una sessione non piu' valida
-             lo rimuovo, cosi' ad ogni minuto comprimo piano la
-             lista delle sessioni, senza toglier troppi record, nel
-             caso possa esserci un rapido picco di login*/
-            int lastPos = sessions.size()-1;
-            if (lastPos >= 0) {
-                SessionRecord last = sessions.get(lastPos);
-                if (last.sessionId == -1) {
-                    sessions.remove(lastPos);
-                }
-            }
+            cleanupSessions();
         }
         logger.debug("finito il check delle sessioni attive.");
     }
 
-    /** This method looks for the first free number in sessions list.
+    /**
+     * Removes invalidated sessions on the tail of the sessions list
+     */
+    private void cleanupSessions() {
+        synchronized (sessionListSemaphore) {
+            for (int i = (sessions.size()-1);
+                i >= 0 && sessions.get(i) != null && sessions.get(i).sessionId == -1;
+                i--)
+            {
+                sessions.remove(i);
+                recycleIds.remove(i);
+            }
+        }
+    }
+
+    /**
+     * This method finds the first free session id in sessions list, and then
+     * adds the given session, assigning it that session id.
+     *
+     * It assumes there are no duplicates, so you need to externally verify this
+     * session is unique.
      *
      * @param newRecord  the record to verify.
-     *
      * @return new sessionId.
      */
     int newSession(SessionRecord newRecord) {
@@ -132,11 +141,10 @@ class SessionManager extends Thread {
             /*vedo se esistono posti intermedi liberi.
               infatti se un thread implode lascia uno spazio libero.*/
             int id = 0;
-            for (SessionRecord elem : sessions.values()) {
-                if (elem.sessionId == -1) {
-                    break;
-                }
-                id++;
+            if (recycleIds.size() > 0) {
+                id = recycleIds.poll();
+            } else {
+                id = sessions.size();
             }
 
             sessions.put(id, newRecord);
@@ -144,17 +152,30 @@ class SessionManager extends Thread {
         }
     }
 
-    /** This method destoryes a record in the sessions' list.
-     *
+    /**
+     * This method destoryes a record in the sessions' list.
      * @param   session     the session to destroy.
      */
-    private void eraseSession(SessionRecord session) {
+    private void invalidateSession(SessionRecord session) {
         synchronized (sessionListSemaphore) {
+            recycleIds.add(session.sessionId);
+            
             session.sessionId = -1;
             session.user = null;
             session.serviceThread.stopThread();
         }
-        logger.debug("Eliminata la sessione scaduta o terminata");
+        logger.debug("Invalidata la sessione scaduta o terminata");
+    }
+
+    /**
+     * Verifies whether an already existing session is in the sessions list
+     * @param record The session to verify
+     * @return <code>true</code> if the session is already in the sessions list
+     */
+    public boolean verifySession(SessionRecord record) {
+        synchronized (sessionListSemaphore) {
+            return sessions.containsValue(record);
+        }
     }
 
     /**
@@ -163,28 +184,37 @@ class SessionManager extends Thread {
      */
     public void keepAlive(int sessionID) throws NotExistingSessionException {
         synchronized (sessionListSemaphore) {
-            SessionRecord record = sessions.get(sessionID);
-            if (record != null) {
-                record.timeElapsed = 0;
-            } else {
-                throw new NotExistingSessionException("Nessuna sessione con" +
-                        " id: " + sessionID);
-            }
+            getSession(sessionID).timeElapsed = 0;
         }
     }
 
     /**
      * Method that tell's to the thread to shut down.
+     * @param sessionID The session id, of the session to invalidate.
+     * @throws NotExistingSessionException In case the id is no more associated to any session
      */
-    public void closeService(int sessionID) {
-        synchronized (sessionListSemaphore) {
-            eraseSession(sessions.get(sessionID));
-        }
+    public void closeService(int sessionID) throws NotExistingSessionException {
+        invalidateSession(getSession(sessionID));
     }
 
-    public boolean verifySession(SessionRecord record) {
+    /**
+     * Safe session retriver.
+     * If the session is not found, or is invalidated, it gracefully fails
+     * throwing an exception.
+     *
+     * @param sessionID The id of the session needed
+     * @return The <code>SessionRecord</code> corresponding to the id
+     * @throws NotExistingSessionException In case the id is no more associated to any session
+     */
+    private SessionRecord getSession(int sessionID) throws NotExistingSessionException {
         synchronized (sessionListSemaphore) {
-            return sessions.containsValue(record);
+            SessionRecord record = sessions.get(sessionID);
+            if (record != null && record.sessionId >= 0) {
+                return record;
+            } else {
+                throw new NotExistingSessionException("Nessuna sessione con" +
+                        " id: " + sessionID);
+            }
         }
     }
 }
