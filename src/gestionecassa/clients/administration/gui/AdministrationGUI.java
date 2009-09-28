@@ -14,7 +14,8 @@
 
 package gestionecassa.clients.administration.gui;
 
-import gestionecassa.clients.gui.GUIClientAPI;
+import gestionecassa.clients.ClientAPI;
+import gestionecassa.clients.administration.AdminOptions;
 import gestionecassa.clients.gui.GuiLoginPanel;
 import gestionecassa.clients.administration.Administration;
 import gestionecassa.clients.administration.AdministrationAPI;
@@ -25,7 +26,7 @@ import java.rmi.RemoteException;
  *
  * @author ben
  */
-public class AdministrationGUI extends Administration implements GUIClientAPI {
+public class AdministrationGUI extends Administration implements ClientAPI<AdminOptions> {
 
     /**
      *

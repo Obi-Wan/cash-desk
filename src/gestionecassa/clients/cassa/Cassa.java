@@ -7,6 +7,7 @@ package gestionecassa.clients.cassa;
 
 import gestionecassa.clients.cassa.gui.GuiAppFrameCassa;
 import gestionecassa.Log;
+import gestionecassa.XmlOptionsHandler;
 import gestionecassa.order.Order;
 import gestionecassa.clients.gui.GuiLoginPanel;
 import gestionecassa.clients.Luogo;
@@ -25,7 +26,7 @@ import org.dom4j.DocumentException;
  *
  * @author ben
  */
-public class Cassa extends Luogo implements CassaAPI {
+public class Cassa extends Luogo<CassaOptions> implements CassaAPI {
 
     /**
      * Local store of himself, with restrictions
@@ -72,7 +73,7 @@ public class Cassa extends Luogo implements CassaAPI {
      * Creates a new instance of Cassa.
      */
     private Cassa(String nomeLuogo) {
-        super(nomeLuogo, Log.GESTIONECASSA_CASSA);
+        super(nomeLuogo, new CassaOptions(), Log.GESTIONECASSA_CASSA);
         loggerGUI = Log.GESTIONECASSA_CASSA_GUI;
     }
 
@@ -93,9 +94,10 @@ public class Cassa extends Luogo implements CassaAPI {
      */
     @Override
     public void run() {
-        XmlCassaHandler xmlHandler = new XmlCassaHandler();
+        XmlOptionsHandler<CassaOptions> genericXml =
+                    new XmlOptionsHandler<CassaOptions>(logger);
         try {
-            xmlHandler.loadOptions(options);
+            genericXml.loadOptions(options);
 
             logger.debug("letto dal file:\nUsername: " + options.defaultUsername
                     + " \tServer: " + options.defaultServer + "\n");
@@ -115,7 +117,8 @@ public class Cassa extends Luogo implements CassaAPI {
 
         // fine esecuzione
         try {
-            xmlHandler.saveOptions(options);
+            genericXml.saveOptions(options);
+
         } catch (IOException ex) {
             logger.warn("Unable to write data to configfile", ex);
         }

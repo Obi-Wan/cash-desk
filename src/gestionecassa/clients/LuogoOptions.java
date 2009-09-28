@@ -14,11 +14,13 @@
 
 package gestionecassa.clients;
 
+import gestionecassa.Options;
+
 /**
  *
  * @author ben
  */
-public class LuogoOptions {
+abstract public class LuogoOptions extends Options {
 
     /**
      *
@@ -29,5 +31,15 @@ public class LuogoOptions {
      * 
      */
     public String defaultUsername = "";
+
+    /**
+     * Explicit constructor, just for children classes
+     * @param server
+     * @param username
+     */
+    protected LuogoOptions(String server, String username) {
+        this.defaultServer = server;
+        this.defaultUsername = username;
+    }
 
 }

@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
  *
  * @author ben
  */
-public class Administration extends Luogo implements AdministrationAPI {
+public class Administration extends Luogo<AdminOptions> implements AdministrationAPI {
 
     /**
      *
@@ -40,7 +40,7 @@ public class Administration extends Luogo implements AdministrationAPI {
      * Creates a new instance of Administration.
      */
     protected Administration(String nomeLuogo) {
-        super(nomeLuogo, Log.GESTIONECASSA_AMMINISTRAZIONE);
+        super(nomeLuogo, new AdminOptions(), Log.GESTIONECASSA_AMMINISTRAZIONE);
         loggerGUI = Log.GESTIONECASSA_AMMINISTRAZIONE_GUI;
     }
 
@@ -52,6 +52,7 @@ public class Administration extends Luogo implements AdministrationAPI {
      * @throws gestionecassa.exceptions.ActorAlreadyExistingException
      * @throws java.rmi.RemoteException
      */
+    @Override
     public void registerUser(Person user)
             throws ActorAlreadyExistingException, RemoteException
     {
@@ -79,6 +80,7 @@ public class Administration extends Luogo implements AdministrationAPI {
      * @throws java.net.MalformedURLException
      * @throws java.rmi.NotBoundException
      */
+    @Override
     public void login(String username, String password, String serverName)
             throws WrongLoginException, RemoteException, MalformedURLException,
                 NotBoundException
@@ -106,6 +108,7 @@ public class Administration extends Luogo implements AdministrationAPI {
      *
      * @throws java.rmi.RemoteException
      */
+    @Override
     public void stopServer() throws RemoteException {
         if (this.serverCentrale != null && sessionID >= 0) {
             logout();
@@ -122,6 +125,7 @@ public class Administration extends Luogo implements AdministrationAPI {
      *
      * @throws java.rmi.RemoteException
      */
+    @Override
     public void getRMIArticlesList() throws RemoteException {
         try {
             articles = server.requestArticlesList();
@@ -142,6 +146,7 @@ public class Administration extends Luogo implements AdministrationAPI {
      *
      * @throws RemoteException
      */
+    @Override
     public void addRMIArticle(int group, Article article)
             throws RemoteException, DuplicateArticleException,
                 NotExistingGroupException {
@@ -157,6 +162,7 @@ public class Administration extends Luogo implements AdministrationAPI {
      *
      * @throws RemoteException
      */
+    @Override
     public void enableRMIArticle(int group, int position, boolean enable) throws RemoteException {
         server.enableRMIArticle(group, position, enable);
     }
@@ -169,6 +175,7 @@ public class Administration extends Luogo implements AdministrationAPI {
      *
      * @throws RemoteException
      */
+    @Override
     public void enableRMIArticle(Article article, boolean enable) throws RemoteException {
         server.enableRMIArticle(article, enable);
     }
@@ -177,6 +184,7 @@ public class Administration extends Luogo implements AdministrationAPI {
      * 
      * @return
      */
+    @Override
     public Logger getLoggerGUI() {
         return loggerGUI;
     }

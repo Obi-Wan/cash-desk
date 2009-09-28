@@ -169,7 +169,7 @@ public class Server extends UnicastRemoteObject
      */
     @Override
     public int doRMILogin(String username, String password)
-            throws    RemoteException, WrongLoginException{
+            throws RemoteException, WrongLoginException{
         
         SessionRecord record = new SessionRecord();
 

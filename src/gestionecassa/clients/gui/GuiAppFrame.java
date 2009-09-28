@@ -20,6 +20,7 @@
 
 package gestionecassa.clients.gui;
 
+import gestionecassa.clients.ClientAPI;
 import java.rmi.RemoteException;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -28,7 +29,7 @@ import javax.swing.JScrollPane;
  *
  * @author ben
  */
-abstract public class GuiAppFrame<Owner extends GUIClientAPI>
+abstract public class GuiAppFrame<Owner extends ClientAPI>
         extends javax.swing.JFrame {
 
     /**
@@ -40,6 +41,7 @@ abstract public class GuiAppFrame<Owner extends GUIClientAPI>
      * 
      */
     protected JScrollPane jScrollPanelMain;
+    
     /**
      *
      */

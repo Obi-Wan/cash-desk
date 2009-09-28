@@ -20,24 +20,18 @@
 
 package gestionecassa.clients.administration.gui;
 
+import gestionecassa.clients.administration.AdminOptions;
 import gestionecassa.clients.gui.GuiAppFrame;
 import gestionecassa.clients.gui.GuiHelper;
 import gestionecassa.clients.gui.GuiOkCancelDialog;
 import gestionecassa.clients.gui.GuiOptionsPanel;
-import gestionecassa.clients.gui.GuiToolbarPanel;
 import gestionecassa.clients.administration.AdministrationAPI;
-import java.awt.BorderLayout;
 
 /**
  *
  * @author ben
  */
 public class GuiAppFrameAdministration extends GuiAppFrame<AdministrationAPI> {
-
-    /**
-     * 
-     */
-    GuiToolbarPanel toolbar;
 
     /**
      * 
@@ -53,17 +47,12 @@ public class GuiAppFrameAdministration extends GuiAppFrame<AdministrationAPI> {
         super(owner);
         initComponents();
 
-        toolbar = new GuiToolbarPanel(this);
-
         statusPanel = new GuiStatusAdministrationPanel();
 
-        if (!(getContentPane().getLayout() instanceof BorderLayout)) {
-            getContentPane().setLayout(new BorderLayout());
-        }
-
-        getContentPane().add(toolbar, java.awt.BorderLayout.PAGE_START);
-        getContentPane().add(jScrollPanelMain, java.awt.BorderLayout.CENTER);
-        getContentPane().add(statusPanel, java.awt.BorderLayout.LINE_END);
+        GuiHelper.MngBorderLayout.init(getContentPane());
+        GuiHelper.MngBorderLayout.putTop(getContentPane(), toolbar);
+        GuiHelper.MngBorderLayout.putCenter(getContentPane(), jScrollPanelMain);
+        GuiHelper.MngBorderLayout.putRight(getContentPane(), statusPanel);
 
         enableLogout(false);
 
@@ -88,17 +77,13 @@ public class GuiAppFrameAdministration extends GuiAppFrame<AdministrationAPI> {
   // End of variables declaration//GEN-END:variables
 
     /**
-     * Enables or disables logout button.
-     *
-     * @param value
+     * 
      */
-    public void enableLogout(boolean value) {
-        toolbar.enableLogout(value);
-    }
-
     @Override
     public void selectedDialogOptions() {
         new GuiOkCancelDialog(this, "Client Options",
-                                    new GuiOptionsPanel(owner)).setVisible(true);
+                              new GuiOptionsPanel<AdminOptions>(owner,
+                                                                owner.getOptions())
+                             ).setVisible(true);
     }
 }

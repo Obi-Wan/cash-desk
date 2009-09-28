@@ -20,21 +20,35 @@
 
 package gestionecassa.clients.gui;
 
+import gestionecassa.clients.ClientAPI;
 import gestionecassa.clients.LuogoOptions;
 
 /**
  *
  * @author ben
  */
-public class GuiOptionsPanel extends OkCancelPanel {
+public class GuiOptionsPanel<OptionsType extends LuogoOptions> extends OkCancelPanel {
 
-    GUIClientAPI owner;
+    /**
+     * Local temporary storage of options
+     */
+    OptionsType tempOptions;
 
-    /** Creates new form GuiOptionsPanel */
-    public GuiOptionsPanel(GUIClientAPI owner) {
+    /**
+     * Reference to the class that ownes this panel
+     */
+    ClientAPI owner;
+
+    /**
+     * Creates new form GuiOptionsPanel
+     * @param owner
+     * @param tempOptions
+     */
+    public GuiOptionsPanel(ClientAPI owner, OptionsType tempOptions) {
         initComponents();
 
         this.owner = owner;
+        this.tempOptions = tempOptions;
 
         init();
     }
@@ -133,15 +147,16 @@ public class GuiOptionsPanel extends OkCancelPanel {
   private javax.swing.JTextField jTextFieldUser;
   // End of variables declaration//GEN-END:variables
 
+    @Override
     public void apply() {
-        LuogoOptions options = new LuogoOptions();
-        options.defaultServer = jTextFieldServer.getText();
-        options.defaultUsername = jTextFieldUser.getText();
-        owner.setOptions(options);
+        tempOptions.defaultServer = jTextFieldServer.getText();
+        tempOptions.defaultUsername = jTextFieldUser.getText();
+        owner.setOptions(tempOptions);
     }
 
+    @Override
     public void init() {
-        this.jTextFieldServer.setText(owner.getOptions().defaultServer);
-        this.jTextFieldUser.setText(owner.getOptions().defaultUsername);
+        this.jTextFieldServer.setText(tempOptions.defaultServer);
+        this.jTextFieldUser.setText(tempOptions.defaultUsername);
     }
 }

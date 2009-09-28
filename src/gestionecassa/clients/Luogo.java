@@ -19,7 +19,8 @@ import org.apache.log4j.Logger;
  *
  * @author ben
  */
-abstract public class Luogo extends Thread implements ClientAPI {
+abstract public class Luogo<OptionsType extends LuogoOptions> extends Thread
+        implements ClientAPI<OptionsType> {
     
     /** Variable that tells to the main thread he has to
      * stop working.
@@ -65,14 +66,14 @@ abstract public class Luogo extends Thread implements ClientAPI {
     /**
      *
      */
-    protected LuogoOptions options;
+    protected OptionsType options;
 
     /**
      * Costruttore esplicito che assegna subito il hostname al luogo
      *
      * @param hostname
      */
-    protected Luogo(String nome, Logger logger) {
+    protected Luogo(String nome, OptionsType options, Logger logger) {
         this.hostname = nome;
         this.logger = logger;
         this.stopApp = false;
@@ -80,12 +81,13 @@ abstract public class Luogo extends Thread implements ClientAPI {
         this.serverCentrale = null;
         this.articles = null;
         this.username = "";
-        options = new LuogoOptions();
+        this.options = options;
     }
 
     /**
      * Starts the thread
      */
+    @Override
     public void avvia() {
         start();
     }
@@ -111,6 +113,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
     /**
      * The stopping Method
      */
+    @Override
     public void stopClient() {
         try {
             logout();
@@ -127,6 +130,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
      *
      * @return
      */
+    @Override
     public Logger getLogger() {
         return logger;
     }
@@ -136,6 +140,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
      *
      * @return
      */
+    @Override
     final public String getHostname() {
         return hostname;
     }
@@ -145,6 +150,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
      *
      * @return
      */
+    @Override
     public String getUsername() {
         return username;
     }
@@ -225,6 +231,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
     /**
      * Starts the thread deputated to keep connection alive
      */
+    @Override
     public void avviaDemoneConnessione() {
         threadConnessione =
                 new DaemonReestablishConnection(serverCentrale,sessionID,logger);
@@ -234,6 +241,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
     /**
      * Stops the thread deputated to keep connection alive
      */
+    @Override
     public void stopDemoneConnessione() {
         if (threadConnessione != null)
             threadConnessione.interrupt();
@@ -244,6 +252,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
      *
      * @throws java.rmi.RemoteException
      */
+    @Override
     public void logout() throws RemoteException {
         try {
             /*Let's stop the service on the server.*/
@@ -267,6 +276,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
      *
      * @return List of goods
      */
+    @Override
     public ArticlesList getArticlesList() {
         return articles;
     }
@@ -275,7 +285,8 @@ abstract public class Luogo extends Thread implements ClientAPI {
      *
      * @return
      */
-    public LuogoOptions getOptions() {
+    @Override
+    public OptionsType getOptions() {
         return options;
     }
 
@@ -283,7 +294,8 @@ abstract public class Luogo extends Thread implements ClientAPI {
      *
      * @param options 
      */
-    public void setOptions(LuogoOptions options) {
+    @Override
+    public void setOptions(OptionsType options) {
         this.options = options;
     }
 }

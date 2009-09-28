@@ -1,5 +1,5 @@
 /*
- * XmlHandler.java
+ * Options.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -14,16 +14,16 @@
 
 package gestionecassa;
 
-import java.io.IOException;
-import org.dom4j.DocumentException;
-
 /**
  *
  * @author ben
  */
-public interface XmlHandler<type> {
+abstract public class Options {
 
-    void saveOptions(type options) throws IOException;
-
-    void loadOptions(type options) throws IOException, DocumentException;
+    abstract public String getApplication();
+    abstract public String getVersion();
+    
+    public String getFileName() {
+        return getApplication() + ".conf.xml";
+    }
 }

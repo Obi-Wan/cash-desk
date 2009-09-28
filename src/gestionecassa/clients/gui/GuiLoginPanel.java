@@ -40,7 +40,7 @@ public class GuiLoginPanel extends javax.swing.JPanel {
     /**
      * The owner to call for operations
      */
-    GUIClientAPI owner;
+    ClientAPI owner;
 
     /**
      * 
@@ -48,7 +48,7 @@ public class GuiLoginPanel extends javax.swing.JPanel {
     GuiAppFrame parent;
 
     /** Creates new form GuiLoginPanel */
-    public GuiLoginPanel(GuiAppFrame parent, GUIClientAPI owner) {
+    public GuiLoginPanel(GuiAppFrame parent, ClientAPI owner) {
         initComponents();
         jTextFieldLuogo.setText(owner.getHostname());
         this.owner = owner;
