@@ -10,21 +10,10 @@ public class Cassiere extends Person {
     /**
      * Copy constructor
      *
-     * @param tempPersona
+     * @param old the Cassiere to copy from.
      */
-    public Cassiere(Person tempPerson) {
-        this(tempPerson.id,tempPerson.username,tempPerson.password,tempPerson.enabled);
-    }
-
-    /**
-     * Creates a Cassiere from from specified fields
-     *
-     * @param idCassiere the id of cassiere
-     * @param username the username of cassiere
-     * @param the password of cassiere.
-     */
-    public Cassiere(int idCassiere, String username, String password, boolean enabled) {
-        super(idCassiere, username, password,enabled);
+    public Cassiere(Cassiere old) {
+        this(old.id, old.username, old.password, old.enabled);
     }
 
     /**
@@ -35,7 +24,20 @@ public class Cassiere extends Person {
      * @param the password of cassiere.
      */
     public Cassiere(int idCassiere, String username, String password) {
-        super(idCassiere, username, password,true);
+        this(idCassiere, username, password, true);
+    }
+
+    /**
+     * Creates a Cassiere from from specified fields
+     *
+     * @param idCassiere the id of cassiere
+     * @param username the username of cassiere
+     * @param password the password of cassiere.
+     * @param enabled if it's enabled or not.
+     */
+    public Cassiere(int idCassiere, String username, String password,
+            boolean enabled) {
+        super(idCassiere, username, password, enabled);
     }
 
     @Override

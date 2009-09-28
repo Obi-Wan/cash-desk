@@ -43,13 +43,4 @@ public interface ServerRMICommon extends Remote {
      * @throws  RemoteException because we are in RMI context.
      */
     public void closeService(int sessionID) throws RemoteException;
-
-    /**
-     * @param sessionID 
-     * 
-     * @throws RemoteException
-     *
-     * returns the id of the user in the table
-     */
-    public int getIdTable(int sessionID) throws RemoteException;
 }

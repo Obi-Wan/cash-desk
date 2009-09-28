@@ -35,8 +35,18 @@ public class Person {
     }
 
     /**
+     * Copy construcotr
+     * 
+     * @param old The person to copy from
+     */
+    public Person(Person old) {
+        this(old.id, old.username, old.password, old.enabled);
+    }
+
+    /**
+     * Explicit construcotr
      *
-     * @param id
+     * @param id 
      * @param password
      * @param username
      */
@@ -71,6 +81,10 @@ public class Person {
         return username;
     }
 
+    /**
+     * Checks if this <code>Person</code> is enabled.
+     * @return <code>true</code> if enabled, <code>false</code> otherwise
+     */
     public boolean isEnabled() {
         return enabled;
     }

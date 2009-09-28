@@ -173,20 +173,9 @@ public class Server extends UnicastRemoteObject
     }
     
     /**
-     * returns the id of the user in the table
-     *
-     * @return the id of the user in the table
-     */
-    @Override
-    public int getIdTable(int sessionID) throws  RemoteException{
-        return (sessionList.get(sessionID).userId);
-    }
-    
-    /**
      * Method which both the clients use to log themselves in.
      *
-     * @param   username    username through which they can access
-     * to their own data.
+     * @param   username    username through which they can access to their own data.
      * @param   password    the password used by the user.
      *
      * @throws RemoteException Throws a remote exception, because we are aon RMI context.
