@@ -134,6 +134,7 @@ public class Cassa extends Luogo implements CassaAPI {
      * @throws java.net.MalformedURLException
      * @throws java.rmi.NotBoundException
      */
+    @Override
     public void login(String username, String password, String serverName)
             throws WrongLoginException, RemoteException, MalformedURLException,
                 NotBoundException
@@ -156,6 +157,7 @@ public class Cassa extends Luogo implements CassaAPI {
      *
      * @throws java.rmi.RemoteException
      */
+    @Override
     public void getRMIArticlesList() throws RemoteException {
         try {
             articles = server.requestArticlesList();
@@ -172,6 +174,7 @@ public class Cassa extends Luogo implements CassaAPI {
      *
      * @throws java.rmi.RemoteException
      */
+    @Override
     public void sendRMINewOrder(Order newOrder) throws RemoteException, IOException {
         try {
             server.sendOrdine(newOrder);
@@ -190,6 +193,7 @@ public class Cassa extends Luogo implements CassaAPI {
      *
      * @throws java.rmi.RemoteException
      */
+    @Override
     public void delRMILastOrder() throws RemoteException, IOException {
         try {
             server.cancelLastOrder();
@@ -212,6 +216,7 @@ public class Cassa extends Luogo implements CassaAPI {
      *
      * @throws RemoteException
      */
+    @Override
     public int getNProgressivo(String nome, int n) throws RemoteException {
         return server.getNProgressive(nome, n);
     }
@@ -231,6 +236,7 @@ public class Cassa extends Luogo implements CassaAPI {
      * 
      * @return
      */
+    @Override
     public Logger getLoggerGUI() {
         return loggerGUI;
     }

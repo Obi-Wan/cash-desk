@@ -1,10 +1,21 @@
 /*
  * Server.java
  *
- * Created on 17 gennaio 2007, 13.12
+ * Copyright (C) 2009 Nicola Roberto Viganò
  *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+ * Server.java
+ *
+ * Created on 17 gennaio 2007, 13.12
  */
 
 package gestionecassa.server;
@@ -121,6 +132,7 @@ public class Server extends UnicastRemoteObject
      *
      * @throws java.rmi.RemoteException
      */
+    @Override
     public void remotelyStopServer() throws RemoteException {
         stopServer();
     }
@@ -165,6 +177,7 @@ public class Server extends UnicastRemoteObject
      *
      * @return the id of the user in the table
      */
+    @Override
     public int getIdTable(int sessionID)throws  RemoteException{
         return (sessionList.get(sessionID).idTable);
     }
@@ -181,6 +194,7 @@ public class Server extends UnicastRemoteObject
      *
      * @return  The id of the user, which is used in comunication, once logged.
      */
+    @Override
     public int sendRMILoginData(String username, String password) 
             throws    RemoteException, WrongLoginException{
         
@@ -308,6 +322,7 @@ public class Server extends UnicastRemoteObject
      *
      * @throws  RemoteException because we are in RMI context.
      */
+    @Override
     public void keepAlive(int sessionID) throws  RemoteException{
         synchronized (sessionListSemaphore) {
             sessionList.get(sessionID).timeElapsed = 0;
@@ -318,6 +333,7 @@ public class Server extends UnicastRemoteObject
      *
      * @throws  RemoteException because we are in RMI context.
      */
+    @Override
     public void closeService(int sessionID) throws  RemoteException{
         /*timer will do the rest.*/
         synchronized (sessionListSemaphore) {

@@ -1,16 +1,27 @@
 /*
  * SessionRecord.java
  *
- * Created on 26 gennaio 2007, 14.18
+ * Copyright (C) 2009 Nicola Roberto Viganò
  *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+ * SessionRecord.java
+ *
+ * Created on 26 gennaio 2007, 14.18
  */
 
 package gestionecassa.server;
 
 import gestionecassa.Person;
-import gestionecassa.server.clientservices.*;
+import gestionecassa.server.clientservices.SharedServerService;
 import java.io.Serializable;
 
 /** This Class stores data of a session.
@@ -31,14 +42,16 @@ public class SessionRecord implements Serializable {
     /** Reference to who is this user. */
     Person user;
     
-    /** Counter of time passed since last keep alive
-     */
+    /** Counter of time passed since last keep alive */
     int timeElapsed;
     
     /** the id of the user in the table */
     int idTable;
     
-    /** Creates a new instance of SessionRecord */
+    /**
+     * Default constructor.
+     * Creates a new instance of SessionRecord.
+     */
     public SessionRecord() {
         clientId = -1;
         username = new String("");
@@ -48,6 +61,7 @@ public class SessionRecord implements Serializable {
     }
     
     /**
+     * Explicit constructor
      * Creates a new instance of SessionRecord.
      * 
      * @param nClId     Id for this new SessionRecord.
@@ -64,7 +78,9 @@ public class SessionRecord implements Serializable {
         timeElapsed = nTime;
     }
     
-    /** Creates a new instance of SessionRecord.
+    /**
+     * Copy constructor.
+     * Creates a new instance of SessionRecord.
      *
      * @param vecchio   the one from which make the copy.
      */
@@ -76,11 +92,12 @@ public class SessionRecord implements Serializable {
         timeElapsed = vecchio.timeElapsed;
     }
     
-    /** Overridden method that will be used by the search procedure
+    /**
+     * Overridden method that will be used by the search procedure
      *
      * @param   obj     reference to the other object.
      *
-     * @return  true if it's the same.
+     * @return <code>true</code> if it's the same, <code>false</code> otherwise
      */
     @Override
     public boolean equals(Object obj) {

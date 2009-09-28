@@ -21,18 +21,19 @@
 package gestionecassa.clients.cassa.gui;
 
 /**
+ * Gui rapresentation of a single option of an article.
  *
  * @author ben
  */
 public class GuiOrderSingleOptionPanel extends GuiAbstrSingleEntryPanel {
 
     /**
-     * 
+     * Quantity ordered for this option
      */
     int quantity;
 
     /**
-     *
+     * Reference to the panel of the article that holds this option
      */
     GuiOrderSingleArticleWOptionsPanel parent;
 
@@ -128,7 +129,7 @@ public class GuiOrderSingleOptionPanel extends GuiAbstrSingleEntryPanel {
     /**
      * Gets the count of items for the selected option
      *
-     * @return
+     * @return An integer rapresenting the quantity.
      */
     @Override
     public int getNumTot() {
@@ -136,8 +137,9 @@ public class GuiOrderSingleOptionPanel extends GuiAbstrSingleEntryPanel {
     }
 
     /**
+     * Sets a value for the field quantity, and updates the visual field
      *
-     * @param quantity
+     * @param quantity New value for the quantity field
      */
     public void setNumTot(int quantity) {
         this.quantity = quantity;
@@ -147,16 +149,19 @@ public class GuiOrderSingleOptionPanel extends GuiAbstrSingleEntryPanel {
     /**
      * Getter for the selected item in combo box
      *
-     * @return The selected Option
+     * @return A String containing the selected Option
      */
     public String getComboChoice() {
         return jTextFieldOptionName.getText();
     }
 
     /**
+     * Checks if this panel is rapresenting the option passed in the parameter
+     * <code>option</code>.
      * 
-     * @param option
-     * @return
+     * @param option The option to check
+     *
+     * @return A boolean value, <code>true</code> meaning that this holds that option
      */
     public boolean hasSelected(String option) {
         return jTextFieldOptionName.getText().equals(option);
