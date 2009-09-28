@@ -94,8 +94,7 @@ public class SessionRecord implements Serializable {
     @Override
     public boolean equals(Object obj) {
         return (obj instanceof SessionRecord) &&
-                (user.getUsername().equals(
-                                    ((SessionRecord)obj).user.getUsername()));
+                (user.equals(((SessionRecord)obj).user));
     }
 
     @Override
@@ -103,7 +102,7 @@ public class SessionRecord implements Serializable {
         int hash = 7;
         hash = 53 * hash + this.sessionId;
         hash = 53 * hash +
-                (user.getUsername() != null ? user.getUsername().hashCode() : 0);
+                (user != null ? user.hashCode() : 0);
         return hash;
     }
 
