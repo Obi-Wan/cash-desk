@@ -168,7 +168,7 @@ public class Server extends UnicastRemoteObject
      * @return  The id of the user, which is used in comunication, once logged.
      */
     @Override
-    public int sendRMILoginData(String username, String password) 
+    public int doRMILogin(String username, String password)
             throws    RemoteException, WrongLoginException{
         
         SessionRecord record = new SessionRecord();

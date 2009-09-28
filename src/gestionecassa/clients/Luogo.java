@@ -173,7 +173,7 @@ abstract public class Luogo extends Thread implements ClientAPI {
             serverCentrale = (ServerRMICommon)
                 Naming.lookup("//" + serverName + "/ServerRMI");
             /* faccio il raise dell'id solo a scopo di debug. */
-            sessionID = serverCentrale.sendRMILoginData(username,password);
+            sessionID = serverCentrale.doRMILogin(username,password);
 
             /* quando il client si connette e il server crea il sessionID, il
              * server creer un nuovo thread che si chiama sessionID, il client

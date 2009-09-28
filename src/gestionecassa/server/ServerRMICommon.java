@@ -26,7 +26,7 @@ public interface ServerRMICommon extends Remote {
      *
      * @return  The id of the user, which is used in comunication, once logged.
      */
-    public int sendRMILoginData(String username, String password) 
+    public int doRMILogin(String username, String password)
             throws   RemoteException, WrongLoginException;
     
     /**
