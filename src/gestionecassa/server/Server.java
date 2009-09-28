@@ -73,7 +73,7 @@ public class Server extends UnicastRemoteObject
     /**
      * Method that grants the creation of a singleton.
      */
-    public synchronized static Server avvia() {
+    public synchronized static Server getInstance() {
         if (localBLogic == null) {
             try {
                 localBLogic = new Server();
@@ -128,7 +128,7 @@ public class Server extends UnicastRemoteObject
      */
     public static void main(String[] args) {
         
-        Server.avvia();
+        Server.getInstance();
         
         try {
             LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
@@ -136,7 +136,7 @@ public class Server extends UnicastRemoteObject
             try {
                 Naming.rebind("ServerRMI",localBLogic);
 
-                // ora avvia gli altri servizi
+                // And now start the other services
                 System.out.println("Service Up and Running");
 
             } catch (MalformedURLException ex) {
