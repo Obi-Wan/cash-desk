@@ -55,7 +55,7 @@ class ServerTimer extends Thread {
     /** This method cyclicly updates passing of time, since the last
      * "keepAlive" call from the client, and determinates the
      * timeout, when necessary. Timeout implies that the connection
-     * is no more useful, and i is erased. (set to -1)
+     * is no more useful, and it is erased. (set to -1)
      */
     private void aggiornaTimeElapsed() {
         logger.debug("faccio il check delle sessioni attive.");
@@ -63,10 +63,10 @@ class ServerTimer extends Thread {
             for (SessionRecord elem : Server.localBLogic.sessionList) {
                 /*se supera il timeout distrugge il thread e rimuove la sessione*/
                 logger.debug("elemento con session id: "+
-                        elem.clientId + "ed elapsedtime: "+elem.timeElapsed);
+                        elem.sessionId + "ed elapsedtime: "+elem.timeElapsed);
                 if (++elem.timeElapsed > 14) {
                     logger.debug("eliminato sess con id: "+
-                            elem.clientId);
+                            elem.sessionId);
                     Server.localBLogic.eraseSession(elem);
                 }
             }
@@ -77,7 +77,7 @@ class ServerTimer extends Thread {
             int lastPos = Server.localBLogic.sessionList.size()-1;
             if (lastPos >= 0) {
                 SessionRecord last = Server.localBLogic.sessionList.get(lastPos);
-                if (last.clientId == -1) {
+                if (last.sessionId == -1) {
                     Server.localBLogic.sessionList.remove(lastPos);
                 }
             }

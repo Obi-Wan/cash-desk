@@ -59,7 +59,7 @@ public class SharedServerService extends UnicastRemoteObject
     public void run(){
         try {
             Log.GESTIONECASSA_SERVER.debug("Iniziata l'esecuzione del server" +
-                    "di servizio con id: "+myself.getClientId());
+                    "di servizio con id: "+myself.getSessionId());
             while(stopThread == false) {
                 Thread.sleep(100);
             }

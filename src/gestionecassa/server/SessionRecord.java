@@ -31,13 +31,13 @@ import java.io.Serializable;
 public class SessionRecord implements Serializable {
     
     /** Session ID of the user. */
-    int clientId;
+    int sessionId;
     
     /** Username of the user. */
     String username;
     
     /** Thread that is serving this user. */
-    SharedServerService relatedThread;
+    SharedServerService serviceThread;
     
     /** Reference to who is this user. */
     Person user;
@@ -46,16 +46,16 @@ public class SessionRecord implements Serializable {
     int timeElapsed;
     
     /** the id of the user in the table */
-    int idTable;
+    int userId;
     
     /**
      * Default constructor.
      * Creates a new instance of SessionRecord.
      */
     public SessionRecord() {
-        clientId = -1;
+        sessionId = -1;
         username = new String("");
-        relatedThread = null;
+        serviceThread = null;
         user = null;
         timeElapsed = 0;
     }
@@ -70,10 +70,12 @@ public class SessionRecord implements Serializable {
      * @param nUser     Reference to the user.
      * @param nTime     new indication for timeEtimeElapsed
      */
-    public SessionRecord(final int nClId, final String nUsername, final SharedServerService nRelated, final Person nUser, final int nTime) {
-        clientId = nClId;
+    public SessionRecord(final int nClId, final String nUsername,
+            final SharedServerService nRelated, final Person nUser,
+            final int nTime) {
+        sessionId = nClId;
         username = nUsername;
-        relatedThread = nRelated;
+        serviceThread = nRelated;
         user = nUser;
         timeElapsed = nTime;
     }
@@ -82,14 +84,14 @@ public class SessionRecord implements Serializable {
      * Copy constructor.
      * Creates a new instance of SessionRecord.
      *
-     * @param vecchio   the one from which make the copy.
+     * @param record the one from which make the copy.
      */
-    public SessionRecord(final SessionRecord vecchio) {
-        clientId = vecchio.clientId;
-        username = vecchio.username;
-        relatedThread = vecchio.relatedThread;
-        user = vecchio.user;
-        timeElapsed = vecchio.timeElapsed;
+    public SessionRecord(final SessionRecord record) {
+        sessionId = record.sessionId;
+        username = record.username;
+        serviceThread = record.serviceThread;
+        user = record.user;
+        timeElapsed = record.timeElapsed;
     }
     
     /**
@@ -108,13 +110,13 @@ public class SessionRecord implements Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 53 * hash + this.clientId;
+        hash = 53 * hash + this.sessionId;
         hash = 53 * hash + (this.username != null ? this.username.hashCode() : 0);
         return hash;
     }
 
-    public int getClientId() {
-        return clientId;
+    public int getSessionId() {
+        return sessionId;
     }
 
     public String getUsername() {

@@ -178,8 +178,8 @@ public class Server extends UnicastRemoteObject
      * @return the id of the user in the table
      */
     @Override
-    public int getIdTable(int sessionID)throws  RemoteException{
-        return (sessionList.get(sessionID).idTable);
+    public int getIdTable(int sessionID) throws  RemoteException{
+        return (sessionList.get(sessionID).userId);
     }
     
     /**
@@ -198,14 +198,13 @@ public class Server extends UnicastRemoteObject
     public int sendRMILoginData(String username, String password) 
             throws    RemoteException, WrongLoginException{
         
-        SessionRecord tempRecord = new SessionRecord();
+        SessionRecord record = new SessionRecord();
+
         /* Controlla che i dati dell'utente siano presenti nel
          * database degli utenti registrati*/
+        record.user = dataManager.verifyUsername(username);
         
-        tempRecord.user = dataManager.verifyUsername(username);
-        //anche se mi son appena registrato, e' importante: fa un doppio check.
-        
-        if (tempRecord.user == null) {
+        if (record.user == null) {
             //questo indica che l'utente non e' stato trovato nel db
             throw new WrongLoginException();
         } //se non esiste restituisco un errore.
@@ -213,28 +212,29 @@ public class Server extends UnicastRemoteObject
         /* Prima constrolla che le password coincidano, poi guarda nella lista
          * degli utenti collegati e determina un nuovo session id
          */
-        SharedServerService srv = null;
         try {
-            if (tempRecord.user instanceof Cassiere) {
+            if (record.user instanceof Cassiere) {
                 
                 // se la password non e' giusta lo dico al client
-                if (!((Cassiere)tempRecord.user).getPassword().equals(password))
+                if (!((Cassiere)record.user).getPassword().equals(password))
                     throw new WrongLoginException();
                 
-                tempRecord.idTable = ((Cassiere)tempRecord.user).getId();
-                tempRecord.username = new String(username);
+                record.userId = ((Cassiere)record.user).getId();
+                record.username = new String(username);
 
-                srv = new ServiceRMICassiereImpl(tempRecord,dataManager,logger);
-            } else if(tempRecord.user instanceof Admin){
+                record.serviceThread =
+                        new ServiceRMICassiereImpl(record,dataManager,logger);
+            } else if(record.user instanceof Admin){
                 
                 // se la password non e' giusta lo dico al client
-                if (!((Admin)tempRecord.user).getPassword().equals(password))
+                if (!((Admin)record.user).getPassword().equals(password))
                     throw new WrongLoginException();
                 
-                tempRecord.idTable = ((Admin)tempRecord.user).getId();
-                tempRecord.username = new String(username);
+                record.userId = ((Admin)record.user).getId();
+                record.username = new String(username);
 
-                srv = new ServiceRMIAdminImpl(tempRecord,dataManager,logger);
+                record.serviceThread =
+                        new ServiceRMIAdminImpl(record,dataManager,logger);
             } else {
                 // Se non appartiene a nessuna delle classi di client, errore.
                 throw new WrongLoginException();
@@ -245,13 +245,12 @@ public class Server extends UnicastRemoteObject
             throw ex;
         }
         
-        tempRecord.relatedThread = srv;
-        tempRecord.clientId = newSession(tempRecord);
+        record.sessionId = newSession(record);
         
         try {
-            Naming.rebind("Server"+tempRecord.clientId,srv);
+            Naming.rebind("Server" + record.sessionId, record.serviceThread);
             logger.debug("Registrato nuovo working thread" +
-                    " raggiungibile a: /Server"+tempRecord.clientId);
+                    " raggiungibile a: /Server" + record.sessionId);
         } catch (MalformedURLException ex) {
             logger.error("L'indirzzo verso cui fare il" +
                     " bind del working thread e' sbagliato",ex);
@@ -260,9 +259,9 @@ public class Server extends UnicastRemoteObject
                     " la classe del working thread: remote exception",ex);
             throw ex;
         }
-        srv.start();
+        record.serviceThread.start();
         
-        return tempRecord.clientId;
+        return record.sessionId;
     }
     
     /** This method looks for the first free number in sessions list.
@@ -272,16 +271,15 @@ public class Server extends UnicastRemoteObject
      * @return new sessionId.
      */
     final int newSession(SessionRecord newRecord) {
-        int id = 0;
         synchronized (sessionListSemaphore) {
-            id = sessionList.indexOf(newRecord);
+            int id = sessionList.indexOf(newRecord);
             /* se non lo trova, mi restituisce -1 */
             if (id == -1) {
                 /*vedo se esistono posti intermedi liberi.
                   infatti se un thread implode lascia uno spazio libero.*/
                 int count = 0;
                 for (SessionRecord elem : sessionList) {
-                    if (elem.clientId == -1) {
+                    if (elem.sessionId == -1) {
                         break;
                     }
                     count++;
@@ -292,15 +290,15 @@ public class Server extends UnicastRemoteObject
                 if (id == sessionList.size()) {
                     sessionList.add(newRecord);
                 } else {
-                    sessionList.set(id,newRecord);
+                    sessionList.set(id, newRecord);
                 }
             } else {
                 /*se lo trova vuol dire che si sta riconnettendo..
                  gli assegno lo stesso id*/
-                sessionList.set(id,newRecord);
+                sessionList.set(id, newRecord);
             }
+            return id;
         }
-        return id;
     }
     
     /** This method destoryes a record in the sessions' list.
@@ -309,10 +307,10 @@ public class Server extends UnicastRemoteObject
      */
     final void eraseSession(SessionRecord session) {
         synchronized (sessionListSemaphore) {
-            session.clientId = -1;
+            session.sessionId = -1;
             session.user = null;
             session.username = new String("");
-            session.relatedThread.stopThread();
+            session.serviceThread.stopThread();
         }
         logger.debug("Eliminata la sessione scaduta o terminata");
     }
