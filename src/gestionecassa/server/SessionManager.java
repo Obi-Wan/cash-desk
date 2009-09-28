@@ -25,12 +25,12 @@ class SessionManager extends Thread {
     /**
      * List of the opened sessions
      */
-    Map<Integer, SessionRecord> sessions;
+    private Map<Integer, SessionRecord> sessions;
 
     /**
      * List of session ids we could reuse.
      */
-    PriorityQueue<Integer> recycleIds;
+    private PriorityQueue<Integer> recycleIds;
 
     /**
      * Semaphore for the list of opened sessions
@@ -38,7 +38,7 @@ class SessionManager extends Thread {
      * NOTE: it's randozed to avoid the JVM to make optimizations, which could
      * lead the threads to share the same semaphore.
      */
-    static final String sessionListSemaphore =
+    private static final String sessionListSemaphore =
             new String("SessionsSemaphore" + System.currentTimeMillis());
     
     /**
@@ -49,16 +49,21 @@ class SessionManager extends Thread {
     /**
      * Logger that takes account of logging messages.
      */
-    Logger logger;
+    private Logger logger;
     
     /**
      * Creates a new instance of SessionManager
      */
-    public SessionManager(Logger logger) {
+    SessionManager(Logger logger) {
         sessions = new TreeMap<Integer, SessionRecord>();
         recycleIds = new PriorityQueue<Integer>();
         stopApp = false;
         this.logger = logger;
+    }
+
+    /** The stopping Method */
+    void stopServer() {
+        stopApp = true;
     }
     
     /** Main of the thread: cycle that every minute updates
@@ -66,13 +71,13 @@ class SessionManager extends Thread {
     @Override
     public void run() {
         try {
-            int count = 1;
+            int count = 0;
             while (stopApp != true) {
                 sleep(100);
-                if (count < 600) {
+                if (count < 100) {
                     count++;
                 } else {
-                    count = 1;
+                    count = 0;
                     updateTimeElapsed();
                 }
             }
@@ -81,11 +86,6 @@ class SessionManager extends Thread {
             logger.warn("Il server e' stato interrottoda una " +
                     "InterruptedException",ex);
         }
-    }
-
-    /** The stopping Method */
-    public void stopServer() {
-        stopApp = true;
     }
     
     /** This method cyclicly updates passing of time, since the last
@@ -100,7 +100,7 @@ class SessionManager extends Thread {
                 /*se supera il timeout distrugge il thread e rimuove la sessione*/
                 logger.debug("elemento con session id: "+
                         elem.sessionId + "ed elapsedtime: "+elem.timeElapsed);
-                if (++elem.timeElapsed > 14) {
+                if (elem.timeElapsed++ > 5) {
                     logger.debug("eliminato sess con id: "+
                             elem.sessionId);
                     invalidateSession(elem);
@@ -122,6 +122,42 @@ class SessionManager extends Thread {
             {
                 sessions.remove(i);
                 recycleIds.remove(i);
+            }
+        }
+    }
+
+    /**
+     * This method destoryes a record in the sessions' list.
+     * @param   session     the session to destroy.
+     */
+    private void invalidateSession(SessionRecord session) {
+        synchronized (sessionListSemaphore) {
+            recycleIds.add(session.sessionId);
+            
+            session.sessionId = -1;
+            session.user = null;
+            session.serviceThread.stopThread();
+        }
+        logger.debug("Invalidata la sessione scaduta o terminata");
+    }
+
+    /**
+     * Safe session retriver.
+     * If the session is not found, or is invalidated, it gracefully fails
+     * throwing an exception.
+     *
+     * @param sessionID The id of the session needed
+     * @return The <code>SessionRecord</code> corresponding to the id
+     * @throws NotExistingSessionException In case the id is no more associated to any session
+     */
+    private SessionRecord getSession(int sessionID) throws NotExistingSessionException {
+        synchronized (sessionListSemaphore) {
+            SessionRecord record = sessions.get(sessionID);
+            if (record != null && record.sessionId >= 0) {
+                return record;
+            } else {
+                throw new NotExistingSessionException("Nessuna sessione con" +
+                        " id: " + sessionID);
             }
         }
     }
@@ -153,26 +189,11 @@ class SessionManager extends Thread {
     }
 
     /**
-     * This method destoryes a record in the sessions' list.
-     * @param   session     the session to destroy.
-     */
-    private void invalidateSession(SessionRecord session) {
-        synchronized (sessionListSemaphore) {
-            recycleIds.add(session.sessionId);
-            
-            session.sessionId = -1;
-            session.user = null;
-            session.serviceThread.stopThread();
-        }
-        logger.debug("Invalidata la sessione scaduta o terminata");
-    }
-
-    /**
      * Verifies whether an already existing session is in the sessions list
      * @param record The session to verify
      * @return <code>true</code> if the session is already in the sessions list
      */
-    public boolean verifySession(SessionRecord record) {
+    boolean verifySession(SessionRecord record) {
         synchronized (sessionListSemaphore) {
             return sessions.containsValue(record);
         }
@@ -182,7 +203,7 @@ class SessionManager extends Thread {
      * Method that tell's the server that the client still
      * lives and is connected.
      */
-    public void keepAlive(int sessionID) throws NotExistingSessionException {
+    void keepAlive(int sessionID) throws NotExistingSessionException {
         synchronized (sessionListSemaphore) {
             getSession(sessionID).timeElapsed = 0;
         }
@@ -193,28 +214,7 @@ class SessionManager extends Thread {
      * @param sessionID The session id, of the session to invalidate.
      * @throws NotExistingSessionException In case the id is no more associated to any session
      */
-    public void closeService(int sessionID) throws NotExistingSessionException {
+    void closeService(int sessionID) throws NotExistingSessionException {
         invalidateSession(getSession(sessionID));
-    }
-
-    /**
-     * Safe session retriver.
-     * If the session is not found, or is invalidated, it gracefully fails
-     * throwing an exception.
-     *
-     * @param sessionID The id of the session needed
-     * @return The <code>SessionRecord</code> corresponding to the id
-     * @throws NotExistingSessionException In case the id is no more associated to any session
-     */
-    private SessionRecord getSession(int sessionID) throws NotExistingSessionException {
-        synchronized (sessionListSemaphore) {
-            SessionRecord record = sessions.get(sessionID);
-            if (record != null && record.sessionId >= 0) {
-                return record;
-            } else {
-                throw new NotExistingSessionException("Nessuna sessione con" +
-                        " id: " + sessionID);
-            }
-        }
     }
 }
