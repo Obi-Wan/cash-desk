@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config version="1.0" application="server">
+  <securityLevel>0</securityLevel>
+  <dbUrl>jdbc:postgresql://localhost:5432/GCDB</dbUrl>
+  <trustOrders>true</trustOrders>
+  <kickOffOnNewSession>false</kickOffOnNewSession>
+</config>

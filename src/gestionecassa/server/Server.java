@@ -24,6 +24,7 @@ import gestionecassa.exceptions.NotExistingSessionException;
 import gestionecassa.server.datamanager.DataManager;
 import gestionecassa.Admin;
 import gestionecassa.Cassiere;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -31,6 +32,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import gestionecassa.Log;
+import gestionecassa.XmlOptionsHandler;
 import gestionecassa.exceptions.WrongLoginException;
 import gestionecassa.server.clientservices.*;
 import gestionecassa.backends.BackendAPI_1;
@@ -38,6 +40,7 @@ import gestionecassa.backends.BackendAPI_2;
 import gestionecassa.backends.PostgreSQLDataBackend;
 import gestionecassa.backends.XmlDataBackend;
 import org.apache.log4j.Logger;
+import org.dom4j.DocumentException;
 
 /** This is the main class of the server side application.
  *
@@ -60,6 +63,11 @@ public class Server extends UnicastRemoteObject
      * reference to the dataManager
      */
     DataManager dataManager;
+
+    /**
+     * Server stored options
+     */
+    ServerOptions options;
 
     /**
      * 
@@ -88,6 +96,17 @@ public class Server extends UnicastRemoteObject
      * Creates a new instance of Server
      */
     private Server() throws  RemoteException{
+        options = new ServerOptions();
+        XmlOptionsHandler<ServerOptions> xmlHandler =
+                new XmlOptionsHandler<ServerOptions>(logger);
+        try {
+            xmlHandler.loadOptions(options);
+        } catch (IOException ex) {
+            logger.warn("Error while loading preferences", ex);
+        } catch (DocumentException ex) {
+            logger.warn("Error while processing preferences", ex);
+        }
+
         sessionMngr = new SessionManager(logger);
         sessionMngr.start();
 
@@ -95,7 +114,7 @@ public class Server extends UnicastRemoteObject
         BackendAPI_1 fallbackXML = new XmlDataBackend();
         BackendAPI_2 dataBackend = new PostgreSQLDataBackend();
         
-        dataManager = new DataManager(dataBackend,fallbackXML);
+        dataManager = new DataManager(dataBackend, options.dbUrl, fallbackXML);
 
         java.util.Calendar tempCal = java.util.Calendar.getInstance();
         tempCal.setTime(new java.util.Date());
@@ -107,6 +126,16 @@ public class Server extends UnicastRemoteObject
      * The stopping Method
      */
     void stopServer() {
+        System.out.println("Service Shutting Down");
+
+        XmlOptionsHandler<ServerOptions> xmlHandler =
+                new XmlOptionsHandler<ServerOptions>(logger);
+        try {
+            xmlHandler.saveOptions(options);
+        } catch (IOException ex) {
+            logger.warn("Error while savin preferences", ex);
+        }
+
         sessionMngr.stopServer();
         localBLogic = null;
     }
@@ -128,31 +157,33 @@ public class Server extends UnicastRemoteObject
      */
     public static void main(String[] args) {
         
-        Server.getInstance();
-        
-        try {
-            LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
-            
+        if (localBLogic == null) {
             try {
-                Naming.rebind("ServerRMI",localBLogic);
+                LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
 
-                // And now start the other services
-                System.out.println("Service Up and Running");
+                try {
+                    Naming.rebind("ServerRMI", Server.getInstance());
 
-            } catch (MalformedURLException ex) {
-                logger.error("l'indirizzo e' sbagliato: ",ex);
+                    // And now start the other services
+                    System.out.println("Service Up and Running");
 
-                localBLogic.stopServer();
-            } catch (RemoteException ex) {
-                logger.error("Impossibile accedere al registry: ",ex);
+                } catch (MalformedURLException ex) {
+                    logger.error("l'indirizzo e' sbagliato: ",ex);
 
-                localBLogic.stopServer();
+                    localBLogic.stopServer();
+                } catch (RemoteException ex) {
+                    logger.error("Impossibile accedere al registry: ",ex);
+
+                    localBLogic.stopServer();
+                }
+            } catch (Exception ex) {
+                String errorMsg = "Impossibile avviare un nuovo"+
+                        " registry (e' forse gia' in esecuzione?)";
+                logger.warn(errorMsg, ex);
+                System.out.println(errorMsg);
             }
-        } catch (Exception ex) {
-            logger.warn("Impossibile avviare un nuovo"+
-                    " registry (e' forse gia' in esecuzione?)",ex);
-            
-            localBLogic.stopServer();
+        } else {
+            System.out.println("Another Instance of the Server is running");
         }
     }
     

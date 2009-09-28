@@ -130,7 +130,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      *
      * @param fallbackXML
      */
-    public DataManager(BackendAPI_2 fallback, BackendAPI_1 dataBackend) {
+    public DataManager(BackendAPI_2 fallback, String dbUrl, BackendAPI_1 dataBackend) {
         this.fallbackXML = dataBackend;
         this.dataBackendDB = fallback;
         this.logger = Log.GESTIONECASSA_SERVER_DATAMANAGER;
@@ -138,7 +138,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
         ordersTable = new TreeMap<String, List<Order>>();
 
         try {
-            dataBackendDB.init("jdbc:postgresql://localhost:5432/GCDB");
+            dataBackendDB.init(dbUrl);
             useFallback =false;
             
         } catch (IOException ex) {
@@ -249,6 +249,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      * @param user
      * @return
      */
+    @Override
     public void registerUser(Person user) {
         if (user instanceof Cassiere) {
             synchronized (listCassieriSemaphore) {
@@ -287,6 +288,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      *
      * @return 
      */
+    @Override
     public Person verifyUsername(String username) {
         synchronized (listCassieriSemaphore) {
             Cassiere tempCassiere = cassieresList.get(username);
@@ -308,6 +310,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      *
      * @return
      */
+    @Override
     public ArticlesList getArticlesList() {
         synchronized (listArticlesSemaphore) {
             return articlesList;
@@ -318,12 +321,14 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     // Cassa Client handle.
     //----------------------------//
 
+    @Override
     public void createNewCassaSession(String identifier) {
         synchronized (listOrdersSemaphore) {
             ordersTable.put(identifier, new ArrayList<Order>());
         }
     }
 
+    @Override
     public void closeCassaSession(String identifier) {
         // flush to disk
         synchronized (listOrdersSemaphore) {
@@ -340,6 +345,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
         }
     }
 
+    @Override
     public void addNewOrder(String id, Order order) throws IOException {
         synchronized (listOrdersSemaphore) {
             ordersTable.get(id).add(order);
@@ -349,6 +355,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
         }
     }
 
+    @Override
     public void delLastOrder(String id) throws IOException {
         synchronized (listOrdersSemaphore) {
             List<Order> tempOrderList = ordersTable.get(id);
@@ -370,6 +377,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      *
      * @return the first of the n progressive numbers
      */
+    @Override
     public int getNProgressivo(String articleName, int n) {
         synchronized (listProgressiviSemaphore) {
             Integer progressiv = progressivesList.get(articleName);
@@ -389,6 +397,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
 
     // FIXME potrebbe non esser corretto
     @Deprecated
+    @Override
     public void saveNewArticlesList(ArticlesList list) { // RIVEDI
         synchronized (listArticlesSemaphore) {
             articlesList = new ArticlesList(list);
@@ -415,6 +424,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      *
      * @param article
      */
+    @Override
     public void addArticle(int group, Article article)
             throws DuplicateArticleException, NotExistingGroupException {
         synchronized (listArticlesSemaphore) {
@@ -446,6 +456,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      *
      * @param article
      */
+    @Override
     public void addArticle(String group, Article article)
             throws DuplicateArticleException, NotExistingGroupException {
         synchronized (listArticlesSemaphore) {
@@ -459,6 +470,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      * @param position
      * @param enable
      */
+    @Override
     public void enableArticle(int group, int position, boolean enable) {
         synchronized (listArticlesSemaphore) {
             Article temp = articlesList.enableArticle(group, position, enable);
@@ -485,6 +497,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      * @param article
      * @param enable
      */
+    @Override
     public void enableArticle(Article article, boolean enable) {
         synchronized (listArticlesSemaphore) {
             Article temp = articlesList.enableArticle(article, enable);
@@ -511,6 +524,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
 //     * @param oldPos Old position
 //     * @param newPos New position
 //     */
+//    @Override
 //    public void moveArticle(int oldPos, int newPos) {
 //        synchronized (listArticlesSemaphore) {
 //            Article temp = articlesList.moveArticleAt(oldPos, newPos);
@@ -537,6 +551,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
 //     * @param article Article to move
 //     * @param newPos New position
 //     */
+//    @Override
 //    public void moveArticle(Article article, int newPos) {
 //        synchronized (listArticlesSemaphore) {
 //            Article temp = articlesList.moveArticleAt(article, newPos);
@@ -557,6 +572,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
 //        }
 //    }
 
+    @Override
     public void terminate() {
     }
 }
