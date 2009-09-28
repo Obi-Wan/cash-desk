@@ -33,9 +33,6 @@ public class SessionRecord implements Serializable {
     /** Session ID of the user. */
     int sessionId;
     
-    /** Username of the user. */
-    String username;
-    
     /** Thread that is serving this user. */
     SharedServerService serviceThread;
     
@@ -45,16 +42,12 @@ public class SessionRecord implements Serializable {
     /** Counter of time passed since last keep alive */
     int timeElapsed;
     
-    /** the id of the user in the table */
-    int userId;
-    
     /**
      * Default constructor.
      * Creates a new instance of SessionRecord.
      */
     public SessionRecord() {
         sessionId = -1;
-        username = new String("");
         serviceThread = null;
         user = null;
         timeElapsed = 0;
@@ -70,11 +63,9 @@ public class SessionRecord implements Serializable {
      * @param nUser     Reference to the user.
      * @param nTime     new indication for timeEtimeElapsed
      */
-    public SessionRecord(final int nClId, final String nUsername,
-            final SharedServerService nRelated, final Person nUser,
-            final int nTime) {
+    public SessionRecord(final int nClId, final SharedServerService nRelated,
+            final Person nUser, final int nTime) {
         sessionId = nClId;
-        username = nUsername;
         serviceThread = nRelated;
         user = nUser;
         timeElapsed = nTime;
@@ -88,7 +79,6 @@ public class SessionRecord implements Serializable {
      */
     public SessionRecord(final SessionRecord record) {
         sessionId = record.sessionId;
-        username = record.username;
         serviceThread = record.serviceThread;
         user = record.user;
         timeElapsed = record.timeElapsed;
@@ -104,14 +94,16 @@ public class SessionRecord implements Serializable {
     @Override
     public boolean equals(Object obj) {
         return (obj instanceof SessionRecord) &&
-                (this.username.equals(((SessionRecord)obj).username));
+                (user.getUsername().equals(
+                                    ((SessionRecord)obj).user.getUsername()));
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
         hash = 53 * hash + this.sessionId;
-        hash = 53 * hash + (this.username != null ? this.username.hashCode() : 0);
+        hash = 53 * hash +
+                (user.getUsername() != null ? user.getUsername().hashCode() : 0);
         return hash;
     }
 
@@ -120,6 +112,6 @@ public class SessionRecord implements Serializable {
     }
 
     public String getUsername() {
-        return username;
+        return user.getUsername();
     }
 }
