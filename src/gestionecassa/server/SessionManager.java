@@ -1,10 +1,21 @@
 /*
  * SessionManager.java
  *
- * Created on 26 gennaio 2007, 21.11
+ * Copyright (C) 2009 Nicola Roberto Viganò
  *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+ * SessionManager.java
+ *
+ * Created on 26 gennaio 2007, 21.11
  */
 
 package gestionecassa.server;
@@ -16,11 +27,12 @@ import java.util.TreeMap;
 import org.apache.log4j.Logger;
 
 /**
- * This class is responsible for threads' life, and sessions management.
+ * This class is a specialized sessions manager. It's responsible for sessions'
+ * life, and for intelligent using-reusing of session ids.
  *
  * @author ben
  */
-class SessionManager extends Thread {
+class SessionManager {
 
     /**
      * List of the opened sessions
@@ -33,6 +45,11 @@ class SessionManager extends Thread {
     private PriorityQueue<Integer> recycleIds;
 
     /**
+     * clock ticks, onto which we make actions when they reach predefined values
+     */
+    private int numTick;
+
+    /**
      * Semaphore for the list of opened sessions
      *
      * NOTE: it's randozed to avoid the JVM to make optimizations, which could
@@ -40,11 +57,6 @@ class SessionManager extends Thread {
      */
     private static final String sessionListSemaphore =
             new String("SessionsSemaphore" + System.currentTimeMillis());
-    
-    /**
-     * boolean that says when to stop the app.
-     */
-    private boolean stopApp;
 
     /**
      * Logger that takes account of logging messages.
@@ -57,34 +69,19 @@ class SessionManager extends Thread {
     SessionManager(Logger logger) {
         sessions = new TreeMap<Integer, SessionRecord>();
         recycleIds = new PriorityQueue<Integer>();
-        stopApp = false;
         this.logger = logger;
+        this.numTick = 0;
     }
 
-    /** The stopping Method */
-    void stopServer() {
-        stopApp = true;
-    }
-    
-    /** Main of the thread: cycle that every minute updates
-     * passing of time */
-    @Override
-    public void run() {
-        try {
-            int count = 0;
-            while (stopApp != true) {
-                sleep(100);
-                if (count < 100) {
-                    count++;
-                } else {
-                    count = 0;
-                    updateTimeElapsed();
-                }
-            }
-            System.out.println("Exiting");
-        } catch (InterruptedException ex) {
-            logger.warn("Il server e' stato interrottoda una " +
-                    "InterruptedException",ex);
+    /**
+     * Updates time and acts on predefined intervals
+     */
+    void tick() {
+        if (numTick < 10) {
+            numTick++;
+        } else {
+            numTick = 0;
+            updateTimeElapsed();
         }
     }
     

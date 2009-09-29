@@ -47,12 +47,17 @@ import org.dom4j.DocumentException;
  * @author ben
  */
 public class Server extends UnicastRemoteObject 
-        implements ServerRMICommon, ServerRMIAdmin {
+        implements ServerRMICommon, ServerRMIAdmin, Runnable {
     
     /**
      * reference to the main local business logic
      */
     public static Server localBLogic;
+
+    /**
+     * boolean that says when to stop the app.
+     */
+    private boolean stopApp;
     
     /**
      * reference to the sessionMngr and sessions manager.
@@ -108,7 +113,6 @@ public class Server extends UnicastRemoteObject
         }
 
         sessionMngr = new SessionManager(logger);
-        sessionMngr.start();
 
         // this is implementation specific. I will change it if necessary
         BackendAPI_1 fallbackXML = new XmlDataBackend();
@@ -121,24 +125,6 @@ public class Server extends UnicastRemoteObject
         final String stringaData = String.format("%1$tY-%1$tm-%1te",tempCal);
         logger.info("Server created: " + stringaData);
     }
-    
-    /**
-     * The stopping Method
-     */
-    void stopServer() {
-        System.out.println("Service Shutting Down");
-
-        XmlOptionsHandler<ServerOptions> xmlHandler =
-                new XmlOptionsHandler<ServerOptions>(logger);
-        try {
-            xmlHandler.saveOptions(options);
-        } catch (IOException ex) {
-            logger.warn("Error while savin preferences", ex);
-        }
-
-        sessionMngr.stopServer();
-        localBLogic = null;
-    }
 
     /**
      * Stops the server on this machine.
@@ -148,6 +134,41 @@ public class Server extends UnicastRemoteObject
     @Override
     public void remotelyStopServer() throws RemoteException {
         stopServer();
+    }
+
+    /** Main of the thread: cycle that every minute updates
+     * passing of time */
+    @Override
+    public void run() {
+        try {
+            while (stopApp != true) {
+                Thread.sleep(1000);
+                sessionMngr.tick();
+            }
+        } catch (InterruptedException ex) {
+            String errorMsg = "Il server e' stato interrottoda una " +
+                    "InterruptedException";
+            logger.warn(errorMsg,ex);
+            System.out.println(errorMsg);
+        } finally {
+            System.out.print("Server Shutting Down.. ");
+
+            XmlOptionsHandler<ServerOptions> xmlHandler =
+                    new XmlOptionsHandler<ServerOptions>(logger);
+            try {
+                xmlHandler.saveOptions(options);
+            } catch (IOException ex) {
+                logger.warn("Error while saving preferences", ex);
+            }
+
+            System.out.println("Done.");
+        }
+    }
+
+    /** The stopping Method */
+    void stopServer() {
+        stopApp = true;
+        localBLogic = null;
     }
     
     /**
@@ -167,6 +188,8 @@ public class Server extends UnicastRemoteObject
                     // And now start the other services
                     System.out.println("Service Up and Running");
 
+                    new Thread(Server.getInstance()).start();
+                    
                 } catch (MalformedURLException ex) {
                     logger.error("l'indirizzo e' sbagliato: ",ex);
 
