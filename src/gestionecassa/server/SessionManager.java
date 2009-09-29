@@ -160,6 +160,25 @@ class SessionManager {
     }
 
     /**
+     * Returns a session of the same user if present, otherwise throws an exception
+     * @param record
+     * @return
+     * @throws NotExistingSessionException
+     */
+    private SessionRecord getSession(SessionRecord record) throws NotExistingSessionException {
+        synchronized (sessionListSemaphore) {
+            for (SessionRecord tempRecord : sessions.values()) {
+                if (tempRecord.equals(record)) {
+                    return tempRecord;
+                }
+            }
+            /* if not found */
+            throw new NotExistingSessionException("Nessuna sessione come " +
+                        "quella indicata");
+        }
+    }
+
+    /**
      * This method finds the first free session id in sessions list, and then
      * adds the given session, assigning it that session id.
      *
@@ -170,10 +189,10 @@ class SessionManager {
      * @return new sessionId.
      */
     int newSession(SessionRecord newRecord) {
+        /*vedo se esistono posti intermedi liberi.
+          infatti se un thread implode lascia uno spazio libero.*/
+        int id = 0;
         synchronized (sessionListSemaphore) {
-            /*vedo se esistono posti intermedi liberi.
-              infatti se un thread implode lascia uno spazio libero.*/
-            int id = 0;
             if (recycleIds.size() > 0) {
                 id = recycleIds.poll();
             } else {
@@ -181,8 +200,8 @@ class SessionManager {
             }
 
             sessions.put(id, newRecord);
-            return id;
         }
+        return id;
     }
 
     /**
@@ -213,5 +232,24 @@ class SessionManager {
      */
     void closeService(int sessionID) throws NotExistingSessionException {
         invalidateSession(getSession(sessionID));
+    }
+
+    /**
+     * Kicks off, if necessary, the given session.
+     * This helps in case we trust our clients that reconnect when we expect
+     * them be still alive.
+     *
+     * @param record Session to kick off
+     */
+    void kickOff(SessionRecord record) {
+        try {
+            synchronized (sessionListSemaphore) {
+                if (sessions.containsValue(record)) {
+                        invalidateSession(getSession(record));
+                }
+            }
+        } catch (NotExistingSessionException ex) {
+            logger.debug("no session found, but expected", ex);
+        }
     }
 }

@@ -185,10 +185,10 @@ public class Server extends UnicastRemoteObject
                 try {
                     Naming.rebind("ServerRMI", Server.getInstance());
 
-                    // And now start the other services
-                    System.out.println("Service Up and Running");
-
                     new Thread(Server.getInstance()).start();
+
+                    // We are now done.
+                    System.out.println("Service Up and Running");
                     
                 } catch (MalformedURLException ex) {
                     logger.error("l'indirizzo e' sbagliato: ",ex);
@@ -227,32 +227,62 @@ public class Server extends UnicastRemoteObject
         
         SessionRecord record = new SessionRecord();
 
-        /* Controlla che i dati dell'utente siano presenti nel
-         * database degli utenti registrati*/
+        /* Checks whether user's data are in the DB or not.
+         */
         record.user = dataManager.verifyUsername(username);
-        
+
+        /* Tests if this connection should be rejected
+         */
         if (record.user == null
                 || !record.user.getPassword().equals(password)
-                || sessionMngr.verifySession(record))
+                || (sessionMngr.verifySession(record) && !options.kickOffOnNewSession)
+            )
         {
             /* questo indica che l'utente non e' stato trovato nel db,
-             * che la password non è giusta oppure che l'utente è già loggato,
-             * quindi restituisco un errore. */
+             * che la password non è giusta oppure che l'utente è già loggato
+             * e noi non permettiamo il kick off, quindi restituisco un errore.
+             */
             throw new WrongLoginException();
         }
         
-        /* Prima constrolla che le password coincidano, poi guarda nella lista
-         * degli utenti collegati e determina un nuovo session id
+        /* Instantiates the service thread that will serve the client's requests
          */
+        instantiateServiceThread(record);
+
+        /* Register new session, and if the case kick off any preceding session
+         */
+        if (options.kickOffOnNewSession) {
+            sessionMngr.kickOff(record);
+        }
+        record.sessionId = sessionMngr.newSession(record);
+
+        /* Bind the new service to an RMI socket, and finally start the service
+         */
+        bindService(record);
+        record.serviceThread.start();
+        
+        return record.sessionId;
+    }
+
+    /**
+     * Tries to instantiate the working thread that serves the requests of the
+     * clients
+     *
+     * @param record Session record describing the service
+     * @throws WrongLoginException
+     * @throws RemoteException
+     */
+    private void instantiateServiceThread(SessionRecord record)
+            throws WrongLoginException, RemoteException {
         try {
             if (record.user instanceof Cassiere) {
 
                 record.serviceThread =
-                        new ServiceRMICassiereImpl(record, dataManager, logger);
+                        new ServiceRMICassiereImpl(record.getUsername(), dataManager, logger);
             } else if (record.user instanceof Admin){
 
                 record.serviceThread =
-                        new ServiceRMIAdminImpl(record, dataManager, logger);
+                        new ServiceRMIAdminImpl(dataManager, logger);
             } else {
                 // Se non appartiene a nessuna delle classi di client, errore.
                 throw new WrongLoginException();
@@ -262,9 +292,15 @@ public class Server extends UnicastRemoteObject
                     "oggetto del working thread",ex);
             throw ex;
         }
-        
-        record.sessionId = sessionMngr.newSession(record);
-        
+    }
+
+    /**
+     * Tries to bind the service thread of the given session to an RMI socket
+     * 
+     * @param record SessionRecord that describes the new service.
+     * @throws RemoteException In case it fails
+     */
+    private void bindService(SessionRecord record) throws RemoteException {
         try {
             Naming.rebind("Server" + record.sessionId, record.serviceThread);
             logger.debug("Registrato nuovo working thread" +
@@ -278,9 +314,6 @@ public class Server extends UnicastRemoteObject
                     " la classe del working thread: remote exception",ex);
             throw ex;
         }
-        record.serviceThread.start();
-        
-        return record.sessionId;
     }
     
     /** Method that tell's the server that the client still
