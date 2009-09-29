@@ -9,15 +9,13 @@
 
 package gestionecassa.server.clientservices;
 
-import gestionecassa.Log;
-import gestionecassa.server.SessionRecord;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import org.apache.log4j.Logger;
 
-/** This class rapresents a common base for ServerRMILaureatoImpl
- * and ServerRMIAziendaImpl. It manages session and session-timer.
+/** This class rapresents a common base for ServiceRMICassiereImpl
+ * and ServiceRMIAdminImpl. It manages just keeps the service alive
  *
  * @author ben
  */
@@ -29,9 +27,6 @@ public class SharedServerService extends UnicastRemoteObject
     
     /** Boolean that tells if the thread has to die */
     private boolean stopThread;
-    
-    /** Reference to his entry in sessions table */
-    SessionRecord myself;
 
     /**
      * Reference to the logger that eats our messages.
@@ -39,9 +34,8 @@ public class SharedServerService extends UnicastRemoteObject
     Logger logger;
     
     /** Creates a new instance of SharedServerService */
-    SharedServerService(SessionRecord nMySelf, Logger logger)
+    SharedServerService(Logger logger)
                 throws  RemoteException{
-        myself = nMySelf;
         this.logger = logger;
     }
     
@@ -62,9 +56,7 @@ public class SharedServerService extends UnicastRemoteObject
     @Override
     public void run(){
         try {
-            Log.GESTIONECASSA_SERVER.debug("Iniziata l'esecuzione del server" +
-                    "di servizio con id: "+myself.getSessionId());
-            while(stopThread == false) {
+            while(!stopThread) {
                 Thread.sleep(100);
             }
         } catch (InterruptedException e) {

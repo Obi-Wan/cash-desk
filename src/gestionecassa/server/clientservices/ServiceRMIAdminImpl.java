@@ -12,7 +12,6 @@ import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.DuplicateArticleException;
 import gestionecassa.exceptions.NotExistingGroupException;
 import java.rmi.RemoteException;
-import gestionecassa.server.SessionRecord;
 import gestionecassa.server.datamanager.DMAmministrazioneAPI;
 import org.apache.log4j.Logger;
 
@@ -34,10 +33,9 @@ public class ServiceRMIAdminImpl extends SharedServerService
      * @param dataManager
      * @throws java.rmi.RemoteException
      */
-    public ServiceRMIAdminImpl(SessionRecord session, DMAmministrazioneAPI dataManager,
-            Logger logger)
-            throws  RemoteException{
-        super(session,logger);
+    public ServiceRMIAdminImpl(DMAmministrazioneAPI dataManager, Logger logger)
+            throws  RemoteException {
+        super(logger);
 
         this.dataManager = dataManager;
     }
@@ -49,6 +47,7 @@ public class ServiceRMIAdminImpl extends SharedServerService
      *
      * @throws RemoteException
      */
+    @Override
     public ArticlesList requestArticlesList() throws RemoteException {
         return dataManager.getArticlesList();
     }
@@ -68,6 +67,7 @@ public class ServiceRMIAdminImpl extends SharedServerService
      *
      * @return  The id of the user, which is used in comunication, once logged.
      */
+    @Override
     public void sendRMIDatiRegistrazione(Person user)
             throws    RemoteException, ActorAlreadyExistingException {
 
@@ -88,6 +88,7 @@ public class ServiceRMIAdminImpl extends SharedServerService
      *
      * @throws RemoteException
      */
+    @Override
     public void addRMIArticle(int group, Article article)
             throws RemoteException, DuplicateArticleException,
                 NotExistingGroupException {
@@ -101,6 +102,7 @@ public class ServiceRMIAdminImpl extends SharedServerService
      *
      * @throws RemoteException
      */
+    @Override
     public void addRMIArticle(String group, Article article)
             throws RemoteException, DuplicateArticleException,
                 NotExistingGroupException {
@@ -115,6 +117,7 @@ public class ServiceRMIAdminImpl extends SharedServerService
      *
      * @throws RemoteException
      */
+    @Override
     public void enableRMIArticle(int group, int position, boolean enable)
             throws RemoteException {
         dataManager.enableArticle(group, position, enable);
@@ -128,6 +131,7 @@ public class ServiceRMIAdminImpl extends SharedServerService
      *
      * @throws RemoteException
      */
+    @Override
     public void enableRMIArticle(Article article, boolean enable)
             throws RemoteException {
         dataManager.enableArticle(article, enable);
