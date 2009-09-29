@@ -18,7 +18,7 @@ import java.rmi.RemoteException;
 public interface ServiceRMICassiere
         extends ServiceRMICommon, Remote, Serializable {
 
-    public void sendOrdine(Order nuovoOrdine) throws RemoteException, IOException;
+    public void sendOrder(Order nuovoOrdine) throws RemoteException, IOException;
 
     void cancelLastOrder() throws RemoteException, IOException;
 

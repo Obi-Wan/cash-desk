@@ -47,7 +47,7 @@ public class DataManagerTest {
         BackendAPI_2 backend_2 = new BackendStub_2();
 
     public DataManagerTest() {
-        dataManager = new DataManager(backend_2, backend_1);
+        dataManager = new DataManager(backend_2, "", backend_1);
     }
 
     @BeforeClass
@@ -154,7 +154,7 @@ public class DataManagerTest {
     }
 
     /**
-     * Test of getNProgressivo method, of class DataManager.
+     * Test of getNProgressive method, of class DataManager.
      */
     @Test
     public void testGetNProgressivo() {

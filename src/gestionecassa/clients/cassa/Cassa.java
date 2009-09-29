@@ -180,7 +180,7 @@ public class Cassa extends Luogo<CassaOptions> implements CassaAPI {
     @Override
     public void sendRMINewOrder(Order newOrder) throws RemoteException, IOException {
         try {
-            server.sendOrdine(newOrder);
+            server.sendOrder(newOrder);
             PrinterHelper.startPrintingOrder(newOrder);
         } catch (RemoteException ex) {
             logger.warn("Errore nella comunicazione col server",ex);

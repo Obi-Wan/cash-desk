@@ -378,7 +378,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      * @return the first of the n progressive numbers
      */
     @Override
-    public int getNProgressivo(String articleName, int n) {
+    public int getNProgressive(String articleName, int n) {
         synchronized (listProgressiviSemaphore) {
             Integer progressiv = progressivesList.get(articleName);
             if (progressiv == null) {

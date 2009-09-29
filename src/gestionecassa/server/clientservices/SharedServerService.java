@@ -33,6 +33,9 @@ public class SharedServerService extends UnicastRemoteObject
     /** Reference to his entry in sessions table */
     SessionRecord myself;
 
+    /**
+     * Reference to the logger that eats our messages.
+     */
     Logger logger;
     
     /** Creates a new instance of SharedServerService */
@@ -56,6 +59,7 @@ public class SharedServerService extends UnicastRemoteObject
     
     /** Main of the thread.
      */
+    @Override
     public void run(){
         try {
             Log.GESTIONECASSA_SERVER.debug("Iniziata l'esecuzione del server" +
@@ -64,7 +68,7 @@ public class SharedServerService extends UnicastRemoteObject
                 Thread.sleep(100);
             }
         } catch (InterruptedException e) {
-            Log.GESTIONECASSA_SERVER.warn("Working thread sopped, is this" +
+            logger.warn("Working thread sopped, is this" +
                     " your will!?",e);
         }
     }

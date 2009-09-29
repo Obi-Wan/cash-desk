@@ -31,5 +31,5 @@ public interface DMCassaAPI extends DMCommonAPI {
 
     void delLastOrder(String id) throws IOException;
 
-    int getNProgressivo(String nomeBene,int n);
+    int getNProgressive(String nomeBene,int n);
 }
