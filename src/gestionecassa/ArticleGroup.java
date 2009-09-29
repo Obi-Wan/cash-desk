@@ -31,7 +31,7 @@ public class ArticleGroup implements Serializable {
     /**
      * The Id of the group
      */
-    int idGroup;
+    final int idGroup;
 
     /**
      * Name of the group

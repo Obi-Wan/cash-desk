@@ -1,5 +1,5 @@
 /*
- * GuiNuovoOrdinePanel.java
+ * EventDate.java
  *
  * Copyright (C) 2009 Nicola Roberto Viganò
  *
@@ -25,17 +25,17 @@ public class EventDate {
     /**
      * Title of this specific date.
      */
-    public String titleDate;
+    final public String titleDate;
 
     /**
      * Time/date at which the event date will start
      */
-    public Date startDate;
+    final public Date startDate;
 
     /**
      * Time/date at which the event date will stop
      */
-    public Date endDate;
+    final public Date endDate;
 
     /**
      * Explicit constructor
@@ -67,9 +67,4 @@ public class EventDate {
         hash = 73 * hash + (this.endDate != null ? this.endDate.hashCode() : 0);
         return hash;
     }
-
-//    /**
-//     * Lista degli ordini avuti all'evento
-//     */
-//    List<Order> listaOrdini;
 }

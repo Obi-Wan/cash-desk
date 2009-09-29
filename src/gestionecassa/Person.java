@@ -1,29 +1,43 @@
+/*
+ * Person.java
+ *
+ * Copyright (C) 2009 Nicola Roberto Viganò
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package gestionecassa;
 
 /**
+ * Base class that rapresent every actor interacting with this application
  *
  * @author ben
  */
 public class Person {
 
     /**
-     * id that identifies Cassiere.
+     * id that identifies a unique Person.
      */
-    int id;
+    final int id;
 
     /**
-     *
+     * Username used by this Person
      */
-    String username;
+    final String username;
 
     /**
-     *
+     * Password used by this Person
      */
-    String password;
+    final String password;
 
     /**
-     * 
+     * Tells whether this person is enabled or not
      */
     boolean enabled;
 
@@ -58,24 +72,24 @@ public class Person {
     }
 
     /**
-     *
-     * @return
+     * Getter for the id
+     * @return An integer containing the id of this Person
      */
     public int getId() {
         return id;
     }
 
     /**
-     *
-     * @return
+     * Getter for the password field
+     * @return A String containing the password
      */
     public String getPassword() {
         return password;
     }
 
     /**
-     * 
-     * @return
+     * Getter for the username field
+     * @return A String containing the username
      */
     public String getUsername() {
         return username;
@@ -89,6 +103,10 @@ public class Person {
         return enabled;
     }
 
+    /**
+     * Sets a new value for <code>{@link enabled}</code>
+     * @param enabled The new value
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }

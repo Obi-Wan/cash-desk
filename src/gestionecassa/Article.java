@@ -27,17 +27,17 @@ public class Article implements Serializable {
     /**
      * Id of the article
      */
-    int id;
+    final int id;
 
     /**
      * Name of the article
      */
-    String name;
+    final String name;
 
     /**
      * Price of a single piece of this article
      */
-    double price;
+    final double price;
 
     /**
      * Whether it is enabled or not.

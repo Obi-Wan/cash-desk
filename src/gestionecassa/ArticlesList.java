@@ -1,7 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * ArticlesList.java
+ *
+ * Copyright (C) 2009 Nicola Roberto Viganò
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 
 package gestionecassa;
 
@@ -16,6 +26,7 @@ import java.util.TreeMap;
 import java.util.Vector;
 
 /**
+ * Manages the list of groups of articles.
  *
  * @author ben
  */
@@ -26,8 +37,14 @@ public class ArticlesList implements Serializable {
      */
     List<ArticleGroup> groups;
 
+    /**
+     * Support map to retrieve cardinal number of the given group name
+     */
     Map<String, Integer> grNum;
 
+    /**
+     * Support map used to retrieve the article correpsonding to the given name
+     */
     Map<String, Article> articles;
 
     /**
@@ -38,9 +55,9 @@ public class ArticlesList implements Serializable {
     }
 
     /**
-     * Costruttore che riceve in input una list che si memorizza.
+     * Explicit constructor
      *
-     * @param list
+     * @param list List of groups
      */
     public ArticlesList(Collection<ArticleGroup> list) {
         this.groups = new Vector<ArticleGroup>(list);
@@ -51,7 +68,7 @@ public class ArticlesList implements Serializable {
     /**
      * Copy constructor
      * 
-     * @param list
+     * @param list The list to copy from
      */
     public ArticlesList(ArticlesList list) {
         this.groups = new Vector<ArticleGroup>(list.groups);
@@ -59,6 +76,9 @@ public class ArticlesList implements Serializable {
         this.articles = new TreeMap<String, Article>(list.articles);
     }
 
+    /**
+     * Support functions that regenerates the Map <code>{@link grNum}</code>
+     */
     private void generateNumMap() {
         grNum = new TreeMap<String, Integer>();
         for (int i = 0; i < groups.size(); i++) {
@@ -66,6 +86,9 @@ public class ArticlesList implements Serializable {
         }
     }
 
+    /**
+     * Support functions that regenerates the Map <code>{@link articles}</code>
+     */
     private void generateArtMap() {
         articles = new TreeMap<String, Article>();
         for (ArticleGroup artGroup : groups) {
@@ -89,6 +112,13 @@ public class ArticlesList implements Serializable {
         return output;
     }
 
+    /**
+     * Adds a new group to the list
+     *
+     * @param group New group to add
+     * @throws DuplicateGroupException
+     * @throws DuplicateArticleException
+     */
     public void addGroup(ArticleGroup group) throws DuplicateGroupException,
             DuplicateArticleException {
         if (!grNum.containsKey(group.groupName)) {
@@ -212,6 +242,12 @@ public class ArticlesList implements Serializable {
         return articles.values();
     }
 
+    /**
+     * Gets the ArticleGroup corresponding at the give position.
+     *
+     * @param pos Cardinal number of the group on the ordered list
+     * @return The requested group
+     */
     public ArticleGroup getGroup(int pos) {
         if (pos >= 0 && pos < groups.size()) {
             return groups.get(pos);
@@ -220,6 +256,12 @@ public class ArticlesList implements Serializable {
         }
     }
 
+    /**
+     * Gets group by name
+     *
+     * @param name The name of the requested group
+     * @return The group which has the given name
+     */
     public ArticleGroup getGroup(String name) {
         if (grNum.containsKey(name)) {
             return groups.get(grNum.get(name));
@@ -228,6 +270,12 @@ public class ArticlesList implements Serializable {
         }
     }
 
+    /**
+     * Returns the position of the group with the given name
+     *
+     * @param name Name of the group
+     * @return An integer rapresenting the cardinal position of the group
+     */
     public int getGroupPos(String name) {
         if (grNum.containsKey(name)) {
             return grNum.get(name);
@@ -236,6 +284,11 @@ public class ArticlesList implements Serializable {
         }
     }
 
+    /**
+     * Selects from the list of articles just the enabled ones, in enabled groups
+     *
+     * @return List of enabled articles in enabled groups
+     */
     public ArticlesList getEnabledList() {
         List<ArticleGroup> tempList = new Vector<ArticleGroup>();
         for (ArticleGroup artGr : groups) {
