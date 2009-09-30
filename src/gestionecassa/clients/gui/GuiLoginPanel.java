@@ -24,7 +24,6 @@ import gestionecassa.clients.*;
 import gestionecassa.exceptions.WrongLoginException;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import javax.swing.AbstractAction;
@@ -284,10 +283,6 @@ public class GuiLoginPanel extends javax.swing.JPanel {
         } catch (RemoteException ex) {
             javax.swing.JOptionPane.showMessageDialog(this,
                     "RemoteException nel tentativo di connessione","Errore",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
-        } catch (MalformedURLException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                    "L'URL del server e' sbagliato","Errore",
                     javax.swing.JOptionPane.ERROR_MESSAGE);
         } catch (NotBoundException ex) {
             javax.swing.JOptionPane.showMessageDialog(this,

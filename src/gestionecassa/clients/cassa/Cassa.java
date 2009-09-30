@@ -15,7 +15,6 @@ import gestionecassa.clients.cassa.printing.PrinterHelper;
 import gestionecassa.exceptions.*;
 import gestionecassa.server.clientservices.ServiceRMICassiere;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -134,13 +133,11 @@ public class Cassa extends Luogo<CassaOptions> implements CassaAPI {
      *
      * @throws gestionecassa.exceptions.WrongLoginException
      * @throws java.rmi.RemoteException
-     * @throws java.net.MalformedURLException
      * @throws java.rmi.NotBoundException
      */
     @Override
     public void login(String username, String password, String serverName)
-            throws WrongLoginException, RemoteException, MalformedURLException,
-                NotBoundException
+            throws WrongLoginException, RemoteException, NotBoundException
     {
         server = (ServiceRMICassiere)
                 sendDatiLogin(username, password, serverName);

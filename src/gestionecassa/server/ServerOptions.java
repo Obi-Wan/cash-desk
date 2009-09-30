@@ -25,7 +25,7 @@ public class ServerOptions extends Options {
     /**
      *
      */
-    public Integer securityLevel;
+    public int securityLevel;
 
     /**
      *
@@ -35,13 +35,13 @@ public class ServerOptions extends Options {
     /**
      * 
      */
-    public Boolean trustOrders;
+    public boolean trustOrders;
 
     /**
      * Specifies whether to kick off preexistent sessions on multiple login of
      * the same user.
      */
-    public Boolean kickOffOnNewSession;
+    public boolean kickOffOnNewSession;
 
     /**
      * Default constructor

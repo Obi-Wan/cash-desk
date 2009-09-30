@@ -25,8 +25,6 @@ import gestionecassa.server.datamanager.DataManager;
 import gestionecassa.Admin;
 import gestionecassa.Cassiere;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -73,6 +71,8 @@ public class Server extends UnicastRemoteObject
      * Server stored options
      */
     ServerOptions options;
+
+    static Registry registry;
 
     /**
      * 
@@ -179,21 +179,18 @@ public class Server extends UnicastRemoteObject
     public static void main(String[] args) {
         
         if (localBLogic == null) {
+
             try {
-                LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
+                registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
 
                 try {
-                    Naming.rebind("ServerRMI", Server.getInstance());
+                    registry.rebind("ServerRMI", Server.getInstance());
 
                     new Thread(Server.getInstance()).start();
 
                     // We are now done.
                     System.out.println("Service Up and Running");
                     
-                } catch (MalformedURLException ex) {
-                    logger.error("l'indirizzo e' sbagliato: ",ex);
-
-                    localBLogic.stopServer();
                 } catch (RemoteException ex) {
                     logger.error("Impossibile accedere al registry: ",ex);
 
@@ -302,13 +299,9 @@ public class Server extends UnicastRemoteObject
      */
     private void bindService(SessionRecord record) throws RemoteException {
         try {
-            Naming.rebind("Server" + record.sessionId, record.serviceThread);
+            registry.rebind("Server" + record.sessionId, record.serviceThread);
             logger.debug("Registrato nuovo working thread" +
                     " raggiungibile a: /Server" + record.sessionId);
-        } catch (MalformedURLException ex) {
-            logger.error("L'indirzzo verso cui fare il" +
-                    " bind del working thread e' sbagliato");
-            throw new RemoteException("MalformedURLException", ex);
         } catch (RemoteException ex) {
             logger.error("non e' stato possible registrare" +
                     " la classe del working thread: remote exception",ex);

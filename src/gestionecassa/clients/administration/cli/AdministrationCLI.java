@@ -18,7 +18,6 @@ import gestionecassa.clients.administration.Administration;
 import gestionecassa.clients.administration.AdministrationAPI;
 import gestionecassa.exceptions.WrongLoginException;
 import java.io.Console;
-import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
@@ -174,10 +173,6 @@ public class AdministrationCLI extends Administration {
             con.writer().println(error);
         } catch (RemoteException ex) {
             String error = "Error in comunicating with the server";
-            logger.error(error, ex);
-            con.writer().println(error);
-        } catch (MalformedURLException ex) {
-            String error = "Wrong URL of the server";
             logger.error(error, ex);
             con.writer().println(error);
         } catch (NotBoundException ex) {

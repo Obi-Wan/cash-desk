@@ -8,8 +8,6 @@ package gestionecassa.clients;
 import gestionecassa.ArticlesList;
 import gestionecassa.exceptions.WrongLoginException;
 import gestionecassa.server.ServerRMICommon;
-import java.net.MalformedURLException;
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -167,33 +165,29 @@ abstract public class Luogo<OptionsType extends LuogoOptions> extends Thread
      * 
      * @throws gestionecassa.exceptions.WrongLoginException
      * @throws java.rmi.RemoteException
-     * @throws java.net.MalformedURLException
      * @throws java.rmi.NotBoundException
      */
     protected Remote sendDatiLogin(String username, String password, String serverName)
-            throws WrongLoginException, RemoteException, MalformedURLException,
-                NotBoundException
+            throws WrongLoginException, RemoteException, NotBoundException
     {
         try {
             /* Login phase */
-            serverCentrale = (ServerRMICommon)
-                Naming.lookup("//" + serverName + "/ServerRMI");
-            /* faccio il raise dell'id solo a scopo di debug. */
-            sessionID = serverCentrale.doRMILogin(username,password);
+            java.rmi.registry.Registry registry =
+                    java.rmi.registry.LocateRegistry.getRegistry(serverName);
+            
+            serverCentrale = (ServerRMICommon) registry.lookup("ServerRMI");
+
+            sessionID = serverCentrale.doRMILogin(username, password);
 
             /* quando il client si connette e il server crea il sessionID, il
              * server creer un nuovo thread che si chiama sessionID, il client
              * far poi la lookup al suo sessionID e cos comunica cn il suo thread
              */
-            return Naming.lookup("//" + serverName + "/Server" + sessionID);
+            return registry.lookup("Server" + sessionID);
 
         } catch (RemoteException ex) {
 
             logger.warn("RemoteException nel tentativo di connessione",ex);
-            throw ex;
-        } catch (MalformedURLException ex) {
-
-            logger.warn("MalformedURLException nel tentativo di connessione",ex);
             throw ex;
         } catch (NotBoundException ex) {
             
