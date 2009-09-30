@@ -96,7 +96,13 @@ public class XmlOptionsHandler<DataType extends Options> {
             Element node = nodoRoot.element(field.getName());
             if (node != null) {
                 try {
-                    field.set(options, node.getText());
+                    if (field.getType().equals(Boolean.TYPE)) {
+                        field.setBoolean(options, new Boolean(node.getTextTrim()));
+                    } else if (field.getType().equals(Integer.TYPE)) {
+                        field.setInt(options, new Integer(node.getTextTrim()));
+                    } else {
+                        field.set(options, node.getTextTrim());
+                    }
                 } catch (IllegalArgumentException ex) {
                     logger.warn("campo sbagliato", ex);
                 } catch (IllegalAccessException ex) {

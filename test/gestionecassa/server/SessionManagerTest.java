@@ -32,7 +32,6 @@ public class SessionManagerTest {
 
     public SessionManagerTest() {
         sectMngr = new SessionManager(Log.GESTIONECASSA_SERVER);
-        sectMngr.start();
     }
 
     @BeforeClass
@@ -49,7 +48,6 @@ public class SessionManagerTest {
 
     @After
     public void tearDown() {
-        sectMngr.stopServer();
     }
 
     /**

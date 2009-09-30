@@ -47,14 +47,18 @@ public class GuiLoginPanel extends javax.swing.JPanel {
      */
     GuiAppFrame parent;
 
-    /** Creates new form GuiLoginPanel */
+    /**
+     * Creates new form GuiLoginPanel
+     * @param parent
+     * @param owner
+     */
     public GuiLoginPanel(GuiAppFrame parent, ClientAPI owner) {
         initComponents();
         jTextFieldLuogo.setText(owner.getHostname());
         this.owner = owner;
         this.parent = parent;
 
-        pulisci(owner.getOptions());
+        resetToDefault(owner.getOptions());
 
         jButtonLogin.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "ENTER");
@@ -213,7 +217,7 @@ public class GuiLoginPanel extends javax.swing.JPanel {
   }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonPulisciActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPulisciActionPerformed
-        pulisci();
+        clean();
 }//GEN-LAST:event_jButtonPulisciActionPerformed
 
     private void jButtonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoginActionPerformed
@@ -242,20 +246,28 @@ public class GuiLoginPanel extends javax.swing.JPanel {
   // End of variables declaration//GEN-END:variables
 
     /**
-     *
+     * Cleans all the fields, leaving them blank
      */
-    private void pulisci() {
+    private void clean() {
         jTextFieldUsername.setText("");
         jPasswordFieldPassword.setText("");
         jTextFieldServer.setText("");
     }
 
-    private void pulisci(LuogoOptions options) {
+    /**
+     * Cleans all the fields restoring default contents
+     * @param options Default contents to restore
+     */
+    private void resetToDefault(LuogoOptions options) {
         jTextFieldUsername.setText(options.defaultUsername);
         jPasswordFieldPassword.setText("");
         jTextFieldServer.setText(options.defaultServer);
     }
 
+    /**
+     * Passes information to the owner for a login., and eventually dsplaies to
+     * the user possible errors.
+     */
     private void login() {
         //waiting dialog!!
         JDialog waiting = new WaitingDialog(parent,false,"tring to login");

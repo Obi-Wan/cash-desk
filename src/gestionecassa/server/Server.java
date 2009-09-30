@@ -340,8 +340,8 @@ public class Server extends UnicastRemoteObject
         try {
             sessionMngr.closeService(sessionID);
         } catch (NotExistingSessionException ex) {
-            logger.warn("Sessione con quell'id inesistente", ex);
-            throw new RemoteException("Sessione con quell'id inesistente", ex);
+            logger.warn("Sessione con quell'id inesistente, era magari già" +
+                    " stata chiusa", ex);
         }
     }
 }
