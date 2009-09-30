@@ -4,5 +4,5 @@
   <securityLevel>0</securityLevel>
   <dbUrl>jdbc:postgresql://localhost:5432/GCDB</dbUrl>
   <trustOrders>true</trustOrders>
-  <kickOffOnNewSession>false</kickOffOnNewSession>
+  <kickOffOnNewSession>true</kickOffOnNewSession>
 </config>

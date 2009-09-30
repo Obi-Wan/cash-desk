@@ -91,21 +91,20 @@ class SessionManager {
      * is no more useful, and it is erased. (set to -1)
      */
     private void updateTimeElapsed() {
-        logger.debug("faccio il check delle sessioni attive.");
+//        logger.debug("faccio il check delle sessioni attive.");
         synchronized (sessionListSemaphore) {
             for (SessionRecord elem : sessions.values()) {
                 /*se supera il timeout distrugge il thread e rimuove la sessione*/
-                logger.debug("elemento con session id: "+
-                        elem.sessionId + "ed elapsedtime: "+elem.timeElapsed);
+//                logger.debug("elemento con session id: "+
+//                        elem.sessionId + "ed elapsedtime: "+elem.timeElapsed);
                 if (elem.timeElapsed++ > 5) {
-                    logger.debug("eliminato sess con id: "+
-                            elem.sessionId);
+//                    logger.debug("eliminato sess con id: " + elem.sessionId);
                     invalidateSession(elem);
                 }
             }
             cleanupSessions();
         }
-        logger.debug("finito il check delle sessioni attive.");
+//        logger.debug("finito il check delle sessioni attive.");
     }
 
     /**

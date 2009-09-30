@@ -148,7 +148,7 @@ public class Server extends UnicastRemoteObject
         } catch (InterruptedException ex) {
             String errorMsg = "Il server e' stato interrottoda una " +
                     "InterruptedException";
-            logger.warn(errorMsg,ex);
+            logger.warn(errorMsg, ex);
             System.out.println(errorMsg);
         } finally {
             System.out.print("Server Shutting Down.. ");
@@ -300,8 +300,8 @@ public class Server extends UnicastRemoteObject
     private void bindService(SessionRecord record) throws RemoteException {
         try {
             registry.rebind("Server" + record.sessionId, record.serviceThread);
-            logger.debug("Registrato nuovo working thread" +
-                    " raggiungibile a: /Server" + record.sessionId);
+//            logger.debug("Registrato nuovo working thread" +
+//                    " raggiungibile a: /Server" + record.sessionId);
         } catch (RemoteException ex) {
             logger.error("non e' stato possible registrare" +
                     " la classe del working thread: remote exception",ex);
