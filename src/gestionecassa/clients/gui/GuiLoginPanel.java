@@ -57,7 +57,7 @@ public class GuiLoginPanel extends javax.swing.JPanel {
         this.owner = owner;
         this.parent = parent;
 
-        resetToDefault(owner.getOptions());
+        resetToDefault(owner.getPrefs());
 
         jButtonLogin.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "ENTER");
@@ -257,7 +257,7 @@ public class GuiLoginPanel extends javax.swing.JPanel {
      * Cleans all the fields restoring default contents
      * @param options Default contents to restore
      */
-    private void resetToDefault(LuogoOptions options) {
+    private void resetToDefault(BaseClientPrefs options) {
         jTextFieldUsername.setText(options.defaultUsername);
         jPasswordFieldPassword.setText("");
         jTextFieldServer.setText(options.defaultServer);

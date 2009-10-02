@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
  *
  * @author ben
  */
-public interface ClientAPI<OptionsType extends LuogoOptions> {
+public interface ClientAPI<PrefsType extends BaseClientPrefs> {
 
     /**
      * Function that starts the thread.
@@ -97,13 +97,13 @@ public interface ClientAPI<OptionsType extends LuogoOptions> {
      *
      * @return
      */
-    OptionsType getOptions();
+    PrefsType getPrefs();
 
     /**
      *
      * @param options
      */
-    void setOptions(OptionsType options);
+    void setPrefs(PrefsType options);
 
     /**
      * Returns the chosen logger for the GUI objects

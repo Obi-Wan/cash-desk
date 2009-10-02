@@ -1,5 +1,5 @@
 /*
- * CassaOptions.java
+ * CassaPrefs.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -14,13 +14,13 @@
 
 package gestionecassa.clients.cassa;
 
-import gestionecassa.clients.LuogoOptions;
+import gestionecassa.clients.BaseClientPrefs;
 
 /**
  *
  * @author ben
  */
-public class CassaOptions extends LuogoOptions {
+public class CassaPrefs extends BaseClientPrefs {
 
     @Override
     public String getApplication() {
@@ -35,7 +35,7 @@ public class CassaOptions extends LuogoOptions {
     /**
      * Default constructor
      */
-    public CassaOptions() {
+    public CassaPrefs() {
         this("","");
     }
 
@@ -44,7 +44,7 @@ public class CassaOptions extends LuogoOptions {
      * @param server
      * @param username
      */
-    public CassaOptions(String server, String username) {
+    public CassaPrefs(String server, String username) {
         super(new String(server), new String(username));
     }
 
@@ -52,7 +52,7 @@ public class CassaOptions extends LuogoOptions {
      * Copy constructor
      * @param old
      */
-    public CassaOptions(CassaOptions old) {
+    public CassaPrefs(CassaPrefs old) {
         this(old.defaultServer, old.defaultUsername);
     }
 }

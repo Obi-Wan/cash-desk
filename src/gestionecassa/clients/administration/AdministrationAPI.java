@@ -18,7 +18,7 @@ import java.rmi.RemoteException;
  *
  * @author ben
  */
-public interface AdministrationAPI extends ClientAPI<AdminOptions> {
+public interface AdministrationAPI extends ClientAPI<AdminPrefs> {
 
     /**
      * Closes the remote server to which we are connected to

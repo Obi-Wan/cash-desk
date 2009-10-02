@@ -23,9 +23,9 @@ package gestionecassa.clients.cassa.gui;
 import gestionecassa.clients.gui.GuiAppFrame;
 import gestionecassa.clients.gui.GuiHelper;
 import gestionecassa.clients.gui.GuiOkCancelDialog;
-import gestionecassa.clients.gui.GuiOptionsPanel;
+import gestionecassa.clients.gui.GuiPreferencesPanel;
 import gestionecassa.clients.cassa.CassaAPI;
-import gestionecassa.clients.cassa.CassaOptions;
+import gestionecassa.clients.cassa.CassaPrefs;
 
 /**
  *
@@ -80,8 +80,8 @@ public class GuiAppFrameCassa extends GuiAppFrame<CassaAPI> {
     @Override
     public void selectedDialogOptions() {
         new GuiOkCancelDialog(this, "Client Options",
-                              new GuiOptionsPanel<CassaOptions>(owner,
-                                                                owner.getOptions())
+                              new GuiPreferencesPanel<CassaPrefs>(owner,
+                                                                owner.getPrefs())
                              ).setVisible(true);
     }
 

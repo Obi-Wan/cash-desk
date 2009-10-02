@@ -1,5 +1,5 @@
 /*
- * AdminOptions.java
+ * AdminPrefs.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -14,13 +14,13 @@
 
 package gestionecassa.clients.administration;
 
-import gestionecassa.clients.LuogoOptions;
+import gestionecassa.clients.BaseClientPrefs;
 
 /**
  *
  * @author ben
  */
-public class AdminOptions extends LuogoOptions {
+public class AdminPrefs extends BaseClientPrefs {
 
     @Override
     public String getApplication() {
@@ -36,7 +36,7 @@ public class AdminOptions extends LuogoOptions {
     /**
      * Default constructor
      */
-    public AdminOptions() {
+    public AdminPrefs() {
         this("","");
     }
 
@@ -45,7 +45,7 @@ public class AdminOptions extends LuogoOptions {
      * @param server
      * @param username
      */
-    public AdminOptions(String server, String username) {
+    public AdminPrefs(String server, String username) {
         super(new String(server), new String(username));
     }
 
@@ -53,7 +53,7 @@ public class AdminOptions extends LuogoOptions {
      * Copy constructor
      * @param old
      */
-    public AdminOptions(AdminOptions old) {
+    public AdminPrefs(AdminPrefs old) {
         this(old.defaultServer, old.defaultUsername);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * LuogoOptions.java
+ * BaseClientPrefs.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -14,13 +14,13 @@
 
 package gestionecassa.clients;
 
-import gestionecassa.Options;
+import gestionecassa.Preferences;
 
 /**
  *
  * @author ben
  */
-abstract public class LuogoOptions extends Options {
+abstract public class BaseClientPrefs extends Preferences {
 
     /**
      *
@@ -37,7 +37,7 @@ abstract public class LuogoOptions extends Options {
      * @param server
      * @param username
      */
-    protected LuogoOptions(String server, String username) {
+    protected BaseClientPrefs(String server, String username) {
         this.defaultServer = server;
         this.defaultUsername = username;
     }

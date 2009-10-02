@@ -30,7 +30,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import gestionecassa.Log;
-import gestionecassa.XmlOptionsHandler;
+import gestionecassa.XmlPreferencesHandler;
 import gestionecassa.exceptions.WrongLoginException;
 import gestionecassa.server.clientservices.*;
 import gestionecassa.backends.BackendAPI_1;
@@ -68,10 +68,13 @@ public class Server extends UnicastRemoteObject
     DataManager dataManager;
 
     /**
-     * Server stored options
+     * Server stored prefs
      */
-    ServerOptions options;
+    ServerPrefs prefs;
 
+    /**
+     * 
+     */
     static Registry registry;
 
     /**
@@ -101,11 +104,11 @@ public class Server extends UnicastRemoteObject
      * Creates a new instance of Server
      */
     private Server() throws  RemoteException{
-        options = new ServerOptions();
-        XmlOptionsHandler<ServerOptions> xmlHandler =
-                new XmlOptionsHandler<ServerOptions>(logger);
+        prefs = new ServerPrefs();
+        XmlPreferencesHandler<ServerPrefs> xmlHandler =
+                new XmlPreferencesHandler<ServerPrefs>(logger);
         try {
-            xmlHandler.loadOptions(options);
+            xmlHandler.loadPrefs(prefs);
         } catch (IOException ex) {
             logger.warn("Error while loading preferences", ex);
         } catch (DocumentException ex) {
@@ -118,7 +121,7 @@ public class Server extends UnicastRemoteObject
         BackendAPI_1 fallbackXML = new XmlDataBackend();
         BackendAPI_2 dataBackend = new PostgreSQLDataBackend();
         
-        dataManager = new DataManager(dataBackend, options.dbUrl, fallbackXML);
+        dataManager = new DataManager(dataBackend, prefs.dbUrl, fallbackXML);
 
         java.util.Calendar tempCal = java.util.Calendar.getInstance();
         tempCal.setTime(new java.util.Date());
@@ -153,10 +156,10 @@ public class Server extends UnicastRemoteObject
         } finally {
             System.out.print("Server Shutting Down.. ");
 
-            XmlOptionsHandler<ServerOptions> xmlHandler =
-                    new XmlOptionsHandler<ServerOptions>(logger);
+            XmlPreferencesHandler<ServerPrefs> xmlHandler =
+                    new XmlPreferencesHandler<ServerPrefs>(logger);
             try {
-                xmlHandler.saveOptions(options);
+                xmlHandler.savePrefs(prefs);
             } catch (IOException ex) {
                 logger.warn("Error while saving preferences", ex);
             }
@@ -232,7 +235,7 @@ public class Server extends UnicastRemoteObject
          */
         if (record.user == null
                 || !record.user.getPassword().equals(password)
-                || (sessionMngr.verifySession(record) && !options.kickOffOnNewSession)
+                || (sessionMngr.verifySession(record) && !prefs.kickOffOnNewSession)
             )
         {
             /* questo indica che l'utente non e' stato trovato nel db,
@@ -248,7 +251,7 @@ public class Server extends UnicastRemoteObject
 
         /* Register new session, and if the case kick off any preceding session
          */
-        if (options.kickOffOnNewSession) {
+        if (prefs.kickOffOnNewSession) {
             sessionMngr.kickOff(record);
         }
         record.sessionId = sessionMngr.newSession(record);

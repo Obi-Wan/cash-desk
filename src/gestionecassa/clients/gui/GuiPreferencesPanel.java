@@ -1,5 +1,5 @@
 /*
- * GuiOptionsPanel.java
+ * GuiPreferencesPanel.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,7 +13,7 @@
  */
 
 /*
- * GuiOptionsPanel.java
+ * GuiPreferencesPanel.java
  *
  * Created on 3-lug-2009, 21.31.33
  */
@@ -21,18 +21,18 @@
 package gestionecassa.clients.gui;
 
 import gestionecassa.clients.ClientAPI;
-import gestionecassa.clients.LuogoOptions;
+import gestionecassa.clients.BaseClientPrefs;
 
 /**
  *
  * @author ben
  */
-public class GuiOptionsPanel<OptionsType extends LuogoOptions> extends OkCancelPanel {
+public class GuiPreferencesPanel<PrefsType extends BaseClientPrefs> extends OkCancelPanel {
 
     /**
      * Local temporary storage of options
      */
-    OptionsType tempOptions;
+    PrefsType tempPrefs;
 
     /**
      * Reference to the class that ownes this panel
@@ -40,15 +40,15 @@ public class GuiOptionsPanel<OptionsType extends LuogoOptions> extends OkCancelP
     ClientAPI owner;
 
     /**
-     * Creates new form GuiOptionsPanel
+     * Creates new form GuiPreferencesPanel
      * @param owner
-     * @param tempOptions
+     * @param tempPrefs
      */
-    public GuiOptionsPanel(ClientAPI owner, OptionsType tempOptions) {
+    public GuiPreferencesPanel(ClientAPI owner, PrefsType tempPrefs) {
         initComponents();
 
         this.owner = owner;
-        this.tempOptions = tempOptions;
+        this.tempPrefs = tempPrefs;
 
         init();
     }
@@ -149,14 +149,14 @@ public class GuiOptionsPanel<OptionsType extends LuogoOptions> extends OkCancelP
 
     @Override
     public void apply() {
-        tempOptions.defaultServer = jTextFieldServer.getText();
-        tempOptions.defaultUsername = jTextFieldUser.getText();
-        owner.setOptions(tempOptions);
+        tempPrefs.defaultServer = jTextFieldServer.getText();
+        tempPrefs.defaultUsername = jTextFieldUser.getText();
+        owner.setPrefs(tempPrefs);
     }
 
     @Override
     public void init() {
-        this.jTextFieldServer.setText(tempOptions.defaultServer);
-        this.jTextFieldUser.setText(tempOptions.defaultUsername);
+        this.jTextFieldServer.setText(tempPrefs.defaultServer);
+        this.jTextFieldUser.setText(tempPrefs.defaultUsername);
     }
 }

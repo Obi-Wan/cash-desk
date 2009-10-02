@@ -8,7 +8,7 @@ package gestionecassa.clients.administration;
 import gestionecassa.Article;
 import gestionecassa.Log;
 import gestionecassa.Person;
-import gestionecassa.clients.Luogo;
+import gestionecassa.clients.BaseClient;
 import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.DuplicateArticleException;
 import gestionecassa.exceptions.NotExistingGroupException;
@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
  *
  * @author ben
  */
-public class Administration extends Luogo<AdminOptions> implements AdministrationAPI {
+public class Administration extends BaseClient<AdminPrefs> implements AdministrationAPI {
 
     /**
      *
@@ -39,7 +39,7 @@ public class Administration extends Luogo<AdminOptions> implements Administratio
      * Creates a new instance of Administration.
      */
     protected Administration(String nomeLuogo) {
-        super(nomeLuogo, new AdminOptions(), Log.GESTIONECASSA_AMMINISTRAZIONE);
+        super(nomeLuogo, new AdminPrefs(), Log.GESTIONECASSA_AMMINISTRAZIONE);
         loggerGUI = Log.GESTIONECASSA_AMMINISTRAZIONE_GUI;
     }
 

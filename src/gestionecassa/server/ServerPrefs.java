@@ -1,5 +1,5 @@
 /*
- * ServerOptions.java
+ * ServerPrefs.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -14,13 +14,13 @@
 
 package gestionecassa.server;
 
-import gestionecassa.Options;
+import gestionecassa.Preferences;
 
 /**
  *
  * @author ben
  */
-public class ServerOptions extends Options {
+public class ServerPrefs extends Preferences {
 
     /**
      *
@@ -46,11 +46,11 @@ public class ServerOptions extends Options {
     /**
      * Default constructor
      */
-    public ServerOptions() {
+    public ServerPrefs() {
         this(0, "jdbc:postgresql://localhost:5432/GCDB", true, false);
     }
 
-    public ServerOptions(Integer securityLevel, String dbUrl, Boolean trustOrders,
+    public ServerPrefs(Integer securityLevel, String dbUrl, Boolean trustOrders,
             Boolean kickoff) {
         this.securityLevel = new Integer(securityLevel);
         this.dbUrl = new String(dbUrl);

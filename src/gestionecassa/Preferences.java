@@ -1,5 +1,5 @@
 /*
- * Options.java
+ * Preferences.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -18,7 +18,7 @@ package gestionecassa;
  *
  * @author ben
  */
-abstract public class Options {
+abstract public class Preferences {
 
     abstract public String getApplication();
     abstract public String getVersion();

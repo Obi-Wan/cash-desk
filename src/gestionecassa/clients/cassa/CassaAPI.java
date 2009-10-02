@@ -14,7 +14,7 @@ import java.rmi.RemoteException;
  *
  * @author ben
  */
-public interface CassaAPI extends ClientAPI<CassaOptions> {
+public interface CassaAPI extends ClientAPI<CassaPrefs> {
 
     /**
      *

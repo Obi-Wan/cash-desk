@@ -20,11 +20,11 @@
 
 package gestionecassa.clients.administration.gui;
 
-import gestionecassa.clients.administration.AdminOptions;
+import gestionecassa.clients.administration.AdminPrefs;
 import gestionecassa.clients.gui.GuiAppFrame;
 import gestionecassa.clients.gui.GuiHelper;
 import gestionecassa.clients.gui.GuiOkCancelDialog;
-import gestionecassa.clients.gui.GuiOptionsPanel;
+import gestionecassa.clients.gui.GuiPreferencesPanel;
 import gestionecassa.clients.administration.AdministrationAPI;
 
 /**
@@ -82,8 +82,8 @@ public class GuiAppFrameAdministration extends GuiAppFrame<AdministrationAPI> {
     @Override
     public void selectedDialogOptions() {
         new GuiOkCancelDialog(this, "Client Options",
-                              new GuiOptionsPanel<AdminOptions>(owner,
-                                                                owner.getOptions())
+                              new GuiPreferencesPanel<AdminPrefs>(owner,
+                                                                owner.getPrefs())
                              ).setVisible(true);
     }
 }

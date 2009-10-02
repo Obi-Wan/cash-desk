@@ -7,10 +7,10 @@ package gestionecassa.clients.cassa;
 
 import gestionecassa.clients.cassa.gui.GuiAppFrameCassa;
 import gestionecassa.Log;
-import gestionecassa.XmlOptionsHandler;
+import gestionecassa.XmlPreferencesHandler;
 import gestionecassa.order.Order;
 import gestionecassa.clients.gui.GuiLoginPanel;
-import gestionecassa.clients.Luogo;
+import gestionecassa.clients.BaseClient;
 import gestionecassa.clients.cassa.printing.PrinterHelper;
 import gestionecassa.exceptions.*;
 import gestionecassa.server.clientservices.ServiceRMICassiere;
@@ -25,7 +25,7 @@ import org.dom4j.DocumentException;
  *
  * @author ben
  */
-public class Cassa extends Luogo<CassaOptions> implements CassaAPI {
+public class Cassa extends BaseClient<CassaPrefs> implements CassaAPI {
 
     /**
      * Local store of himself, with restrictions
@@ -72,7 +72,7 @@ public class Cassa extends Luogo<CassaOptions> implements CassaAPI {
      * Creates a new instance of Cassa.
      */
     private Cassa(String nomeLuogo) {
-        super(nomeLuogo, new CassaOptions(), Log.GESTIONECASSA_CASSA);
+        super(nomeLuogo, new CassaPrefs(), Log.GESTIONECASSA_CASSA);
         loggerGUI = Log.GESTIONECASSA_CASSA_GUI;
     }
 
@@ -93,13 +93,13 @@ public class Cassa extends Luogo<CassaOptions> implements CassaAPI {
      */
     @Override
     public void run() {
-        XmlOptionsHandler<CassaOptions> genericXml =
-                    new XmlOptionsHandler<CassaOptions>(logger);
+        XmlPreferencesHandler<CassaPrefs> genericXml =
+                    new XmlPreferencesHandler<CassaPrefs>(logger);
         try {
-            genericXml.loadOptions(options);
+            genericXml.loadPrefs(preferences);
 
-            logger.debug("letto dal file:\nUsername: " + options.defaultUsername
-                    + " \tServer: " + options.defaultServer + "\n");
+            logger.debug("letto dal file:\nUsername: " + preferences.defaultUsername
+                    + " \tServer: " + preferences.defaultServer + "\n");
         } catch (IOException ex) {
             logger.warn("Unable to read data from configfile", ex);
         } catch (DocumentException ex) {
@@ -116,7 +116,7 @@ public class Cassa extends Luogo<CassaOptions> implements CassaAPI {
 
         // fine esecuzione
         try {
-            genericXml.saveOptions(options);
+            genericXml.savePrefs(preferences);
 
         } catch (IOException ex) {
             logger.warn("Unable to write data to configfile", ex);

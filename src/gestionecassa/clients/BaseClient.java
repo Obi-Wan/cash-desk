@@ -17,8 +17,8 @@ import org.apache.log4j.Logger;
  *
  * @author ben
  */
-abstract public class Luogo<OptionsType extends LuogoOptions> extends Thread
-        implements ClientAPI<OptionsType> {
+abstract public class BaseClient<PrefsType extends BaseClientPrefs> extends Thread
+        implements ClientAPI<PrefsType> {
     
     /** Variable that tells to the main thread he has to
      * stop working.
@@ -64,22 +64,24 @@ abstract public class Luogo<OptionsType extends LuogoOptions> extends Thread
     /**
      *
      */
-    protected OptionsType options;
+    protected PrefsType preferences;
 
     /**
      * Costruttore esplicito che assegna subito il hostname al luogo
      *
      * @param hostname
+     * @param prefs 
+     * @param logger
      */
-    protected Luogo(String nome, OptionsType options, Logger logger) {
-        this.hostname = nome;
+    protected BaseClient(String hostname, PrefsType prefs, Logger logger) {
+        this.hostname = hostname;
         this.logger = logger;
         this.stopApp = false;
         this.sessionID = -1;
         this.serverCentrale = null;
         this.articles = null;
         this.username = "";
-        this.options = options;
+        this.preferences = prefs;
     }
 
     /**
@@ -280,16 +282,16 @@ abstract public class Luogo<OptionsType extends LuogoOptions> extends Thread
      * @return
      */
     @Override
-    public OptionsType getOptions() {
-        return options;
+    public PrefsType getPrefs() {
+        return preferences;
     }
 
     /**
      *
-     * @param options 
+     * @param preferences
      */
     @Override
-    public void setOptions(OptionsType options) {
-        this.options = options;
+    public void setPrefs(PrefsType options) {
+        this.preferences = options;
     }
 }
