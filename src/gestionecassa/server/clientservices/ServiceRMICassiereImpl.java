@@ -5,7 +5,11 @@
 
 package gestionecassa.server.clientservices;
 
+import gestionecassa.Article;
 import gestionecassa.ArticlesList;
+import gestionecassa.exceptions.MalformedOrderEXception;
+import gestionecassa.order.BaseEntry;
+import gestionecassa.order.EntryArticleGroup;
 import gestionecassa.order.Order;
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -32,17 +36,23 @@ public class ServiceRMICassiereImpl extends SharedServerService
     final String sessionIdentifier;
 
     /**
+     * 
+     */
+    final boolean trustOrders;
+
+    /**
      *
      * @param session
      * @param dataManager
      *
      * @throws java.rmi.RemoteException
      */
-    public ServiceRMICassiereImpl(String username, DMCassaAPI dataManager,
-            Logger logger)
+    public ServiceRMICassiereImpl(String username, boolean trust,
+            DMCassaAPI dataManager, Logger logger)
                 throws  RemoteException {
         super(logger);
         this.dataManager = dataManager;
+        this.trustOrders = trust;
 
         final String timestamp = new SimpleDateFormat(
                 "yyyy-MM-dd_HH-mm-ss").format(new Date());
@@ -68,6 +78,15 @@ public class ServiceRMICassiereImpl extends SharedServerService
      */
     @Override
     public void sendOrder(Order newOrder) throws RemoteException, IOException {
+        if (!trustOrders) {
+            try {
+                checkOrder(newOrder);
+            } catch (MalformedOrderEXception ex) {
+                logger.warn("Client with session: " + sessionIdentifier +
+                        " sent a Malformed Order!", ex);
+                throw new RemoteException("Malformed order detected", ex);
+            }
+        }
         dataManager.addNewOrder(sessionIdentifier, newOrder);
     }
 
@@ -101,5 +120,37 @@ public class ServiceRMICassiereImpl extends SharedServerService
     @Override
     public int getNProgressive(String articleName, int n) throws RemoteException {
         return dataManager.getNProgressive(articleName,n);
+    }
+
+    /**
+     * Checks for errors in orders compilation, preventing the DB from
+     * corrupting or the server from crashing.
+     *
+     * Creates a lot of overhead on server side, but it's useful in not
+     * completely trusted environments.
+     *
+     * @param order
+     * @throws MalformedOrderEXception
+     */
+    private void checkOrder(Order order) throws MalformedOrderEXception {
+        for (EntryArticleGroup groupEntry : order.getGroups()) {
+            if (groupEntry.numTot == 0) {
+                throw new MalformedOrderEXception("Empty group found");
+            }
+
+            double groupPrice = 0;
+            for (BaseEntry<Article> artEntry : groupEntry.articles) {
+                if (artEntry.numTot == 0) {
+                    throw new MalformedOrderEXception("Empty article found");
+                }
+                groupPrice += artEntry.numTot * artEntry.data.getPrice();
+            }
+            if (groupEntry.partialPrice != groupPrice) {
+                logger.warn("wrong partial price in session: " +
+                        sessionIdentifier + ". Recalculating.");
+                groupEntry.partialPrice = groupPrice;
+            }
+        }
+        order.refreshTotalPrice();
     }
 }

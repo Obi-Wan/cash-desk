@@ -278,7 +278,9 @@ public class Server extends UnicastRemoteObject
             if (record.user instanceof Cassiere) {
 
                 record.serviceThread =
-                        new ServiceRMICassiereImpl(record.getUsername(), dataManager, logger);
+                        new ServiceRMICassiereImpl(record.getUsername(),
+                                                   prefs.trustOrders,
+                                                   dataManager, logger);
             } else if (record.user instanceof Admin){
 
                 record.serviceThread =
