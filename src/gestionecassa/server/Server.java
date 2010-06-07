@@ -25,6 +25,8 @@ import gestionecassa.server.datamanager.DataManager;
 import gestionecassa.Admin;
 import gestionecassa.Cassiere;
 import java.io.IOException;
+import java.rmi.AccessException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -154,17 +156,43 @@ public class Server extends UnicastRemoteObject
             logger.warn(errorMsg, ex);
             System.out.println(errorMsg);
         } finally {
-            System.out.print("Server Shutting Down.. ");
+            System.out.print("Server Shutting Down:\n - Closing services... ");
+
+            sessionMngr.temrinate();
+
+            System.out.print("done.\n - Saving preferences... ");
 
             XmlPreferencesHandler<ServerPrefs> xmlHandler =
                     new XmlPreferencesHandler<ServerPrefs>(logger);
             try {
                 xmlHandler.savePrefs(prefs);
+                System.out.println("done.");
+
             } catch (IOException ex) {
                 logger.warn("Error while saving preferences", ex);
+                System.out.println("error (read in the log).");
             }
 
-            System.out.println("Done.");
+
+            System.out.print(" - Unbinding from RMI register... ");
+            try {
+                registry.unbind("ServerRMI");
+                System.out.println("done.");
+
+            } catch (AccessException ex) {
+                logger.warn("Error while accessing registry", ex);
+                System.out.println("error (read in the log).");
+            } catch (NotBoundException ex) {
+                logger.warn("Error in registry", ex);
+                System.out.println("error (read in the log).");
+            } catch (RemoteException ex) {
+                logger.warn("Error while accessing registry", ex);
+                System.out.println("error (read in the log).");
+            }
+
+            localBLogic = null;
+
+            System.out.println("Finished.");
         }
     }
 

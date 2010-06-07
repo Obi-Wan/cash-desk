@@ -251,4 +251,22 @@ class SessionManager {
             logger.debug("no session found, but expected", ex);
         }
     }
+
+    /**
+     * Closes all the open sessions to terminate the service
+     */
+    void temrinate() {
+        synchronized (sessionListSemaphore) {
+            for (Integer sessID : sessions.keySet()) {
+                try {
+                    if ( !recycleIds.contains(sessID)) {
+                        closeService(sessID);
+                    }
+                } catch (NotExistingSessionException ex) {
+                    logger.warn("While closing, found phantom sessions!", ex);
+                }
+            }
+            cleanupSessions();
+        }
+    }
 }

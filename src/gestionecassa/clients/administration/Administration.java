@@ -108,9 +108,10 @@ public class Administration extends BaseClient<AdminPrefs> implements Administra
     @Override
     public void stopServer() throws RemoteException {
         if (this.serverCentrale != null && sessionID >= 0) {
+            ServerRMIAdmin serverDaChiudere = (ServerRMIAdmin) serverCentrale;
             logout();
             try {
-                ((ServerRMIAdmin) serverCentrale).remotelyStopServer();
+                serverDaChiudere.remotelyStopServer();
             } catch (RemoteException ex) {
                 logger.warn("Errore nella chiusura del server remoto", ex);
             }
