@@ -22,10 +22,12 @@ package gestionecassa.server;
 
 import gestionecassa.exceptions.NotExistingSessionException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.TreeSet;
 import org.apache.log4j.Logger;
 
 /**
@@ -120,28 +122,35 @@ class SessionManager {
      */
     private void cleanupSessions() {
         synchronized (sessionListSemaphore) {
-            for (int i = (sessions.size()-1);
-                i >= 0 && sessions.get(i) != null && sessions.get(i).sessionId == -1;
-                i--)
-            {
-                sessions.remove(i);
-                recycleIds.remove(i);
+            if (!recycleIds.isEmpty()) {
+                
+                if (sessions.isEmpty()) {
+                    recycleIds.clear();
+                } else {
+                    int maxActive = Collections.max(sessions.keySet());
+                    TreeSet<Integer> set = new TreeSet<Integer>(recycleIds);
+                    for (Integer integer : set.tailSet(maxActive)) {
+                        recycleIds.remove(integer);
+                    }
+                }
             }
         }
     }
 
     /**
      * This method destoryes a record in the sessions' list.
+     *
+     * It's not thread safe! you should enclose it in the propoer sync block
+     *
      * @param   session     the session to destroy.
      */
     private void invalidateSession(SessionRecord session) {
-        synchronized (sessionListSemaphore) {
-            recycleIds.add(session.sessionId);
-            
-            session.sessionId = -1;
-            session.user = null;
-            session.serviceThread.stopThread();
-        }
+        sessions.remove(session.sessionId);
+        recycleIds.add(session.sessionId);
+
+        session.user = null;
+        session.serviceThread.stopThread();
+        
         logger.debug("Invalidata la sessione scaduta o terminata");
     }
 
@@ -241,7 +250,9 @@ class SessionManager {
      * @throws NotExistingSessionException In case the id is no more associated to any session
      */
     void closeService(int sessionID) throws NotExistingSessionException {
-        invalidateSession(getSession(sessionID));
+        synchronized (sessionListSemaphore) {
+            invalidateSession(getSession(sessionID));
+        }
     }
 
     /**
