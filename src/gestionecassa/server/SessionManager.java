@@ -22,8 +22,9 @@ package gestionecassa.server;
 
 import gestionecassa.exceptions.NotExistingSessionException;
 import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.TreeMap;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import org.apache.log4j.Logger;
 
 /**
@@ -42,7 +43,7 @@ class SessionManager {
     /**
      * List of session ids we could reuse.
      */
-    private PriorityQueue<Integer> recycleIds;
+    private Queue<Integer> recycleIds;
 
     /**
      * clock ticks, onto which we make actions when they reach predefined values
