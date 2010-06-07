@@ -198,6 +198,7 @@ class SessionManager {
                 id = sessions.size();
             }
 
+            newRecord.sessionId = id;
             sessions.put(id, newRecord);
         }
         return id;
