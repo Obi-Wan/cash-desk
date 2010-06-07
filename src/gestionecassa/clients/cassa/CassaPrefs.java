@@ -23,12 +23,12 @@ import gestionecassa.clients.BaseClientPrefs;
 public class CassaPrefs extends BaseClientPrefs {
 
     @Override
-    public String getApplication() {
+    final public String getApplication() {
         return "cassa";
     }
 
     @Override
-    public String getVersion() {
+    final public String getVersion() {
         return "1.0";
     }
 

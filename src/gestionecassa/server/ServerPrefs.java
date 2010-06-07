@@ -63,7 +63,7 @@ public class ServerPrefs extends Preferences {
      * @return
      */
     @Override
-    public String getApplication() {
+    final public String getApplication() {
         return "server";
     }
 
@@ -72,7 +72,7 @@ public class ServerPrefs extends Preferences {
      * @return
      */
     @Override
-    public String getVersion() {
+    final public String getVersion() {
         return "1.0";
     }
 

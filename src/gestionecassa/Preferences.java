@@ -23,7 +23,7 @@ abstract public class Preferences {
     abstract public String getApplication();
     abstract public String getVersion();
     
-    public String getFileName() {
+    final public String getFileName() {
         return getApplication() + ".conf.xml";
     }
 }
