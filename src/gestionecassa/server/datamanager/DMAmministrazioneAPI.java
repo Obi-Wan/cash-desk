@@ -93,4 +93,6 @@ public interface DMAmministrazioneAPI extends DMCommonAPI, DMServerAPI {
      */
     void registerUser(Person user);
 
+    //--------- Debug ---------------//
+    
 }

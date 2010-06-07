@@ -27,6 +27,8 @@ public interface AdministrationAPI extends ClientAPI<AdminPrefs> {
      */
     void stopServer() throws RemoteException;
 
+    //--------- Users API ------------//
+
     /**
      * Method that makes LocalBusinessLogic send registration data
      * to the server.
@@ -98,4 +100,6 @@ public interface AdministrationAPI extends ClientAPI<AdminPrefs> {
 //     * @throws RemoteException
 //     */
 //    void moveRMIArticle(Article article, int newPos) throws RemoteException;
+
+
 }
