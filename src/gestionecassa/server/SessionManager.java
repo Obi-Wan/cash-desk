@@ -272,4 +272,20 @@ class SessionManager {
             cleanupSessions();
         }
     }
+
+    /**
+     * Getter used in testing
+     * @return a copy of the map sessions
+     */
+    Map<Integer, SessionRecord> getSessions() {
+        return new TreeMap<Integer, SessionRecord>(sessions);
+    }
+
+    /**
+     * Getter used in testing
+     * @return a copy of the queue recycleIds
+     */
+    Queue<Integer> getRecycleIds() {
+        return new PriorityQueue<Integer>(recycleIds);
+    }
 }
