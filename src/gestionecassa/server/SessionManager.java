@@ -62,6 +62,11 @@ class SessionManager {
      * Logger that takes account of logging messages.
      */
     private Logger logger;
+
+    /**
+     * Max value of numTick.
+     */
+    final static int toc = 10;
     
     /**
      * Creates a new instance of SessionManager
@@ -77,7 +82,7 @@ class SessionManager {
      * Updates time and acts on predefined intervals
      */
     void tick() {
-        if (numTick < 10) {
+        if (numTick < SessionManager.toc) {
             numTick++;
         } else {
             numTick = 0;
