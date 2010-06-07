@@ -65,10 +65,10 @@ public class SessionRecord implements Serializable {
      */
     public SessionRecord(final int nClId, final SharedServerService nRelated,
             final Person nUser, final int nTime) {
-        sessionId = nClId;
-        serviceThread = nRelated;
-        user = nUser;
-        timeElapsed = nTime;
+        this.sessionId = nClId;
+        this.serviceThread = nRelated;
+        this.user = nUser;
+        this.timeElapsed = nTime;
     }
     
     /**
@@ -78,10 +78,10 @@ public class SessionRecord implements Serializable {
      * @param record the one from which make the copy.
      */
     public SessionRecord(final SessionRecord record) {
-        sessionId = record.sessionId;
-        serviceThread = record.serviceThread;
-        user = record.user;
-        timeElapsed = record.timeElapsed;
+        this.sessionId = record.sessionId;
+        this.serviceThread = record.serviceThread;
+        this.user = record.user;
+        this.timeElapsed = record.timeElapsed;
     }
     
     /**
@@ -93,7 +93,7 @@ public class SessionRecord implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof SessionRecord) &&
+        return (obj != null) && (obj instanceof SessionRecord) &&
                 (user.equals(((SessionRecord)obj).user));
     }
 
