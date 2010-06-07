@@ -102,9 +102,9 @@ class SessionManager {
         synchronized (sessionListSemaphore) {
             for (SessionRecord elem :
                     new ArrayList<SessionRecord>(sessions.values())) {
-                /*se supera il timeout distrugge il thread e rimuove la sessione*/
 //                logger.debug("elemento con session id: "+
 //                        elem.sessionId + "ed elapsedtime: "+elem.timeElapsed);
+                /*se supera il timeout distrugge il thread e rimuove la sessione*/
                 if (elem.timeElapsed++ > 5) {
 //                    logger.debug("eliminato sess con id: " + elem.sessionId);
                     invalidateSession(elem);
