@@ -255,33 +255,33 @@ public class Server extends UnicastRemoteObject
         
         SessionRecord record = new SessionRecord();
 
-        /* Checks whether user's data are in the DB or not.
-         */
+        /* Checks whether user's data are in the DB or not. */
         record.user = dataManager.verifyUsername(username);
 
-        /* Tests if this connection should be rejected
-         */
-        if (record.user == null
-                || !record.user.getPassword().equals(password)
-                || (sessionMngr.verifySession(record) && !prefs.kickOffOnNewSession)
-            )
+        /* Tests if this connection should be rejected */
+        if (record.user == null || !record.user.getPassword().equals(password))
         {
             /* questo indica che l'utente non e' stato trovato nel db,
-             * che la password non è giusta oppure che l'utente è già loggato
-             * e noi non permettiamo il kick off, quindi restituisco un errore.
-             */
+             * che la password non è giusta */
             throw new WrongLoginException();
+
+        } else if (sessionMngr.isSessionAlreadyOpen(record)) {
+            /* questo indica che l'utente è già loggato */
+            if (prefs.kickOffOnNewSession) {
+                /* se permettiamo il kick off, lo mettiamo in pratica */
+                sessionMngr.kickOff(record);
+            } else {
+                /* e noi non permettiamo il kick off, quindi restituisco
+                 * un errore. */
+                throw new WrongLoginException();
+            }
         }
         
         /* Instantiates the service thread that will serve the client's requests
          */
         instantiateServiceThread(record);
 
-        /* Register new session, and if the case kick off any preceding session
-         */
-        if (prefs.kickOffOnNewSession) {
-            sessionMngr.kickOff(record);
-        }
+        /* Register the new session */
         record.sessionId = sessionMngr.newSession(record);
 
         /* Bind the new service to an RMI socket, and finally start the service

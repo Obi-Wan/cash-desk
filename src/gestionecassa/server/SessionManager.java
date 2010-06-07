@@ -208,7 +208,7 @@ class SessionManager {
      * @param record The session to verify
      * @return <code>true</code> if the session is already in the sessions list
      */
-    boolean verifySession(SessionRecord record) {
+    boolean isSessionAlreadyOpen(SessionRecord record) {
         synchronized (sessionListSemaphore) {
             return sessions.containsValue(record);
         }
@@ -217,6 +217,8 @@ class SessionManager {
     /**
      * Method that tell's the server that the client still
      * lives and is connected.
+     * @param sessionID
+     * @throws NotExistingSessionException
      */
     void keepAlive(int sessionID) throws NotExistingSessionException {
         synchronized (sessionListSemaphore) {
