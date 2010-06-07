@@ -31,30 +31,37 @@ import java.util.Vector;
  */
 public class BackendStub_1 extends BackendStub implements BackendAPI_1 {
 
+    @Override
     public void saveListOfOrders(String id, Collection<Order> list) throws IOException {
         ordersList = new Vector<Order>(list);
     }
 
+    @Override
     public void saveArticlesList(ArticlesList list) throws IOException {
         groups = new Vector<ArticleGroup>(list.getGroupsList());
     }
 
+    @Override
     public List<ArticleGroup> loadArticlesList() throws IOException {
         return groups;
     }
 
+    @Override
     public void saveAdminsList(Collection<Admin> list) throws IOException {
         admins = new Vector<Admin>(list);
     }
 
+    @Override
     public List<Admin> loadAdminsList() throws IOException {
         return admins;
     }
 
+    @Override
     public void saveCassiereList(Collection<Cassiere> list) throws IOException {
         cassieres = new Vector<Cassiere>(list);
     }
 
+    @Override
     public List<Cassiere> loadCassiereList() throws IOException {
         return cassieres;
     }
