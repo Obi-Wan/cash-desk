@@ -37,9 +37,11 @@ public class Administration extends BaseClient<AdminPrefs> implements Administra
 
     /**
      * Creates a new instance of Administration.
+     *
+     * @param hostname
      */
-    protected Administration(String nomeLuogo) {
-        super(nomeLuogo, new AdminPrefs(), Log.GESTIONECASSA_AMMINISTRAZIONE);
+    protected Administration(String hostname) {
+        super(hostname, new AdminPrefs(), Log.GESTIONECASSA_AMMINISTRAZIONE);
         loggerGUI = Log.GESTIONECASSA_AMMINISTRAZIONE_GUI;
     }
 
