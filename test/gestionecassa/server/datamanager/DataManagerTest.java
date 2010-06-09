@@ -43,10 +43,12 @@ import static org.junit.Assert.*;
 public class DataManagerTest {
 
     DataManager dataManager;
-        BackendAPI_1 backend_1 = new BackendStub_1();
-        BackendAPI_2 backend_2 = new BackendStub_2();
+    BackendAPI_1 backend_1;
+    BackendAPI_2 backend_2;
 
     public DataManagerTest() {
+        backend_1 = new BackendStub_1();
+        backend_2 = new BackendStub_2();
         dataManager = new DataManager(backend_2, "", backend_1);
     }
 
@@ -60,8 +62,6 @@ public class DataManagerTest {
 
     @Before
     public void setUp() {
-        Cassiere temp = new Cassiere(0, "bene", "male");
-        dataManager.cassieresList.put("bene", temp);
     }
 
     @After
@@ -74,9 +74,9 @@ public class DataManagerTest {
     @Test
     public void testRegisterCasssiere() {
         System.out.println("registerUser: Cassiere's part");
-        Cassiere temp = new Cassiere(dataManager.cassieresList.size(), "yeah", "bhoo");
+        Cassiere temp = new Cassiere(dataManager.getCassieresList().size(), "yeah", "bhoo");
         dataManager.registerUser(temp);
-        assertEquals(temp, dataManager.cassieresList.get(temp.getUsername()));
+        assertEquals(temp, dataManager.getCassieresList().get(temp.getUsername()));
     }
 
     /**
@@ -85,9 +85,9 @@ public class DataManagerTest {
     @Test
     public void testRegisterAdmin() {
         System.out.println("registerUser: Admin's part");
-        Admin temp = new Admin(dataManager.adminsList.size(), "yeah", "bhoo");
+        Admin temp = new Admin(dataManager.getAdminsList().size(), "yeah", "bhoo");
         dataManager.registerUser(temp);
-        assertEquals(temp, dataManager.adminsList.get(temp.getUsername()));
+        assertEquals(temp, dataManager.getAdminsList().get(temp.getUsername()));
     }
 
     /**
@@ -98,7 +98,7 @@ public class DataManagerTest {
         System.out.println("verifyUsername: Test searching for a present one");
         Person temp = dataManager.verifyUsername("bene");
         assertNotNull(temp);
-        assertEquals(temp, dataManager.cassieresList.get("bene"));
+        assertEquals(temp, dataManager.getCassieresList().get("bene"));
     }
 
     /**
@@ -168,7 +168,7 @@ public class DataManagerTest {
     public void testSaveNewArticlesList() throws IOException {
         System.out.println("saveNewArticlesList");
 
-        Collection<Article> oldArticles = dataManager.articlesList.getArticlesList();
+        Collection<Article> oldArticles = dataManager.getArticlesList().getArticlesList();
         
         List<Article> articles = new Vector<Article>();
         Collection<String> listaOpzioni = new Vector<String>();
@@ -185,7 +185,7 @@ public class DataManagerTest {
         dataManager.saveNewArticlesList(new ArticlesList(groups));
 
         // FIXME non preservato l'ordine!
-        assertEquals(dataManager.articlesList.getGroup(0).getList(), articles);
+        assertEquals(dataManager.getArticlesList().getGroup(0).getList(), articles);
 
         assertEquals(
                 ((List<ArticleGroup>)
