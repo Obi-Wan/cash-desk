@@ -13,6 +13,7 @@ import gestionecassa.clients.gui.GuiLoginPanel;
 import gestionecassa.clients.BaseClient;
 import gestionecassa.clients.cassa.printing.PrinterHelper;
 import gestionecassa.exceptions.*;
+import gestionecassa.server.ServerRMICommon;
 import gestionecassa.server.clientservices.ServiceRMICassiereAPI;
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -25,7 +26,8 @@ import org.dom4j.DocumentException;
  *
  * @author ben
  */
-public class Cassa extends BaseClient<CassaPrefs> implements CassaAPI {
+public class Cassa extends BaseClient<ServerRMICommon, CassaPrefs>
+        implements CassaAPI {
 
     /**
      * Local reference of himself, with restrictions.

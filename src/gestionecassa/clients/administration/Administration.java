@@ -23,7 +23,8 @@ import org.apache.log4j.Logger;
  *
  * @author ben
  */
-public class Administration extends BaseClient<AdminPrefs> implements AdministrationAPI {
+public class Administration extends BaseClient<ServerRMIAdmin, AdminPrefs>
+        implements AdministrationAPI {
 
     /**
      *
@@ -110,7 +111,7 @@ public class Administration extends BaseClient<AdminPrefs> implements Administra
     @Override
     public void stopServer() throws RemoteException {
         if (this.serverCentrale != null && sessionID >= 0) {
-            ServerRMIAdmin serverDaChiudere = (ServerRMIAdmin) serverCentrale;
+            ServerRMIAdmin serverDaChiudere = serverCentrale;
             logout();
             try {
                 serverDaChiudere.remotelyStopServer();

@@ -17,8 +17,10 @@ import org.apache.log4j.Logger;
  *
  * @author ben
  */
-abstract public class BaseClient<PrefsType extends BaseClientPrefs> extends Thread
-        implements ClientAPI<PrefsType> {
+abstract public class BaseClient
+        <ServerType extends ServerRMICommon,
+         PrefsType extends BaseClientPrefs>
+        extends Thread implements ClientAPI<PrefsType> {
     
     /** Variable that tells to the main thread he has to
      * stop working.
@@ -28,7 +30,7 @@ abstract public class BaseClient<PrefsType extends BaseClientPrefs> extends Thre
     /**
      * Reference to the central server
      */
-    protected ServerRMICommon serverCentrale;
+    protected ServerType serverCentrale;
     
     /**
      * The ID returned from the server, that we will use
@@ -175,7 +177,7 @@ abstract public class BaseClient<PrefsType extends BaseClientPrefs> extends Thre
             java.rmi.registry.Registry registry =
                     java.rmi.registry.LocateRegistry.getRegistry(serverName);
             
-            serverCentrale = (ServerRMICommon) registry.lookup("ServerRMI");
+            serverCentrale = (ServerType) registry.lookup("ServerRMI");
 
             sessionID = serverCentrale.doRMILogin(username, password);
 
