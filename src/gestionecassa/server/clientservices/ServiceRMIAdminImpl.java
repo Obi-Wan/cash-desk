@@ -47,7 +47,7 @@ public class ServiceRMIAdminImpl extends SharedServerService
      */
     @Override
     public ArticlesList getRMIArticlesList() throws RemoteException {
-        return dataManager.getArticlesList();
+        return dataManager.getAllArticlesList();
     }
 
 

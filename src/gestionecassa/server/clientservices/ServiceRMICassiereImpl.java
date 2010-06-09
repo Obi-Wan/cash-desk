@@ -108,7 +108,7 @@ public class ServiceRMICassiereImpl extends SharedServerService
      */
     @Override
     public ArticlesList getEnabledArticlesList() throws RemoteException {
-        return dataManager.getArticlesList().getEnabledList();
+        return dataManager.getEnabledArticlesList();
     }
 
     /**

@@ -24,16 +24,22 @@ import gestionecassa.exceptions.NotExistingGroupException;
  *
  * @author ben
  */
-public interface DMAmministrazioneAPI extends DMCommonAPI, DMServerAPI {
+public interface DMAmministrazioneAPI extends DMServerAPI {
 
     //--------- Articles ------------//
 
     /**
+     * Method that returns all the articles
+     * @return The list of all the articles
+     */
+    ArticlesList getAllArticlesList();
+
+    /**
      * Saves the new list of goods sold.
      * 
-     * @param lista
+     * @param list
      */
-    void saveNewArticlesList(ArticlesList lista);
+    void saveNewArticlesList(ArticlesList list);
 
     /**
      * Adds an article to the common list.

@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
  *
  * @author ben
  */
-public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
+public class DataManager implements DMCassaAPI, DMServerAPI,
         DMAmministrazioneAPI {
 
     /**
@@ -308,12 +308,26 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     /**
      * Getter for the Articles List hold by the server
      *
-     * @return
+     * @return a copy of the list of articles
      */
     @Override
-    public ArticlesList getArticlesList() {
+    public ArticlesList getAllArticlesList() {
         synchronized (listArticlesSemaphore) {
-            return articlesList;
+            return new ArticlesList(articlesList);
+        }
+    }
+
+    /**
+     * Method to get the list of all the enabled Articles
+     * Note that the method <method>getEnabledList()</method> already makes a
+     * copy of the original list
+     * @return the list of all enabled articles
+     * @throws RemoteException
+     */
+    @Override
+    public ArticlesList getEnabledArticlesList() {
+        synchronized (listArticlesSemaphore) {
+            return articlesList.getEnabledList();
         }
     }
 

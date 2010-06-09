@@ -111,12 +111,12 @@ public class DataManagerTest {
     }
 
     /**
-     * Test of getArticlesList method, of class DataManager.
+     * Test of getAllArticlesList method, of class DataManager.
      */
     @Test
     public void testGetCurrentArticlesList() throws IOException {
         System.out.println("getCurrentArticlesList");
-        assertEquals(dataManager.getArticlesList().getGroupsList(),
+        assertEquals(dataManager.getAllArticlesList().getGroupsList(),
                 backend_1.loadArticlesList());
     }
 
@@ -168,7 +168,7 @@ public class DataManagerTest {
     public void testSaveNewArticlesList() throws IOException {
         System.out.println("saveNewArticlesList");
 
-        Collection<Article> oldArticles = dataManager.getArticlesList().getArticlesList();
+        Collection<Article> oldArticles = dataManager.getAllArticlesList().getArticlesList();
         
         List<Article> articles = new Vector<Article>();
         Collection<String> listaOpzioni = new Vector<String>();
@@ -185,7 +185,7 @@ public class DataManagerTest {
         dataManager.saveNewArticlesList(new ArticlesList(groups));
 
         // FIXME non preservato l'ordine!
-        assertEquals(dataManager.getArticlesList().getGroup(0).getList(), articles);
+        assertEquals(dataManager.getAllArticlesList().getGroup(0).getList(), articles);
 
         assertEquals(
                 ((List<ArticleGroup>)

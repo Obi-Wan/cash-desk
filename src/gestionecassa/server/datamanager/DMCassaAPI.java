@@ -14,6 +14,7 @@
 
 package gestionecassa.server.datamanager;
 
+import gestionecassa.ArticlesList;
 import gestionecassa.order.Order;
 import java.io.IOException;
 
@@ -21,7 +22,7 @@ import java.io.IOException;
  *
  * @author ben
  */
-public interface DMCassaAPI extends DMCommonAPI {
+public interface DMCassaAPI {
 
     void createNewCassaSession(String identifier);
 
@@ -31,5 +32,21 @@ public interface DMCassaAPI extends DMCommonAPI {
 
     void delLastOrder(String id) throws IOException;
 
-    int getNProgressive(String nomeBene,int n);
+
+    /**
+     * Used to ask "n" progressive numbers to associate to the
+     * <code>ArticleWithPreparation</code>
+     *
+     * @param artName
+     *
+     * @return the first of the n progressive numbers
+     */
+    int getNProgressive(String artName,int n);
+
+    /**
+     * Method to get the list of all the enabled Articles
+     * @return the list of all enabled articles
+     * @throws RemoteException
+     */
+    public ArticlesList getEnabledArticlesList();
 }
