@@ -35,42 +35,42 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     /**
      * 
      */
-    Logger logger;
+    private Logger logger;
 
     /**
      * The data store backend
      */
-    BackendAPI_1 fallbackXML;
+    private BackendAPI_1 fallbackXML;
 
     /**
      * The data store backend
      */
-    BackendAPI_2 dataBackendDB;
+    private BackendAPI_2 dataBackendDB;
 
     /**
      * 
      */
-    boolean useFallback;
+    private boolean useFallback;
 
     /**
      * List of registered users
      */
-    TreeMap<String,Cassiere> cassieresList;
+    private TreeMap<String,Cassiere> cassieresList;
 
     /**
      * List of registered users
      */
-    TreeMap<String,Admin> adminsList;
+    private TreeMap<String,Admin> adminsList;
 
     /**
      *
      */
-    TreeMap<String, List<Order> > ordersTable;
+    private TreeMap<String, List<Order> > ordersTable;
 
     /**
      * list of handled good
      */
-    ArticlesList articlesList;
+    private ArticlesList articlesList;
 
     /**
      * For the goods with time of preparation is nice to have a number of
@@ -78,7 +78,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      *
      * NOTE: in this implementation it is resetted everytime the server starts/stops
      */
-    TreeMap<String, Integer> progressivesList;
+    private TreeMap<String, Integer> progressivesList;
 
     /**
      * Semaphore for the list of users
@@ -86,7 +86,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      * NOTE: it's randozed to avoid the JVM to make optimizations, which could
      * lead the threads to share the same semaphore.
      */
-    static final String listAdminsSemaphore =
+    static final private String listAdminsSemaphore =
             new String("AdminsSemaphore" + System.currentTimeMillis());
 
     /**
@@ -95,7 +95,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      * NOTE: it's randozed to avoid the JVM to make optimizations, which could
      * lead the threads to share the same semaphore.
      */
-    static final String listCassieriSemaphore =
+    static final private String listCassieriSemaphore =
             new String("CassieriSemaphore" + System.currentTimeMillis());
 
     /**
@@ -104,7 +104,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      * NOTE: it's randozed to avoid the JVM to make optimizations, which could
      * lead the threads to share the same semaphore.
      */
-    static final String listArticlesSemaphore =
+    static final private String listArticlesSemaphore =
             new String("ArticlesSemaphore" + System.currentTimeMillis());
 
     /**
@@ -113,7 +113,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      * NOTE: it's randozed to avoid the JVM to make optimizations, which could
      * lead the threads to share the same semaphore.
      */
-    static final String listProgressiviSemaphore =
+    static final private String listProgressiviSemaphore =
             new String("ProgressiviSemaphore" + System.currentTimeMillis());
 
     /**
@@ -122,7 +122,7 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
      * NOTE: it's randozed to avoid the JVM to make optimizations, which could
      * lead the threads to share the same semaphore.
      */
-    static final String listOrdersSemaphore =
+    static final private String listOrdersSemaphore =
             new String("OrdersSemaphore" + System.currentTimeMillis());
 
     /**
@@ -575,4 +575,35 @@ public class DataManager implements DMCassaAPI, DMCommonAPI, DMServerAPI,
     @Override
     public void terminate() {
     }
+    
+    //--------- Debug Helpers API -----------//
+
+    TreeMap<String, Admin> getAdminsList() {
+        synchronized (listAdminsSemaphore) {
+            return new TreeMap<String, Admin>(adminsList);
+        }
+    }
+
+    TreeMap<String, Cassiere> getCassieresList() {
+        synchronized (listCassieriSemaphore) {
+            return new TreeMap<String, Cassiere>(cassieresList);
+        }
+    }
+
+    TreeMap<String, List<Order>> getOrdersTable() {
+        synchronized (listOrdersSemaphore) {
+            return new TreeMap<String, List<Order>>(ordersTable);
+        }
+    }
+
+    TreeMap<String, Integer> getProgressivesList() {
+        synchronized (listProgressiviSemaphore) {
+            return new TreeMap<String, Integer>(progressivesList);
+        }
+    }
+
+    public boolean isUseFallback() {
+        return useFallback;
+    }
+    
 }
