@@ -74,11 +74,10 @@ public interface ClientAPI<PrefsType extends BaseClientPrefs> {
     public void stopDemoneConnessione();
 
     /**
-     *
-     *
-     * @throws java.rmi.RemoteException
+     * Fetches the remote list of articles
+     * @throws RemoteException
      */
-    public void getRMIArticlesList() throws RemoteException;
+    public void fetchRMIArticlesList() throws RemoteException;
 
     /**
      * 

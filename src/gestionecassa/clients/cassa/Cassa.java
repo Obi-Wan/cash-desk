@@ -158,7 +158,7 @@ public class Cassa extends BaseClient<CassaPrefs> implements CassaAPI {
      * @throws java.rmi.RemoteException
      */
     @Override
-    public void getRMIArticlesList() throws RemoteException {
+    public void fetchRMIArticlesList() throws RemoteException {
         try {
             articles = server.getEnabledArticlesList();
         } catch (RemoteException ex) {

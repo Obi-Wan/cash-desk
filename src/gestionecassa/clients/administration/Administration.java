@@ -126,7 +126,7 @@ public class Administration extends BaseClient<AdminPrefs> implements Administra
      * @throws java.rmi.RemoteException
      */
     @Override
-    public void getRMIArticlesList() throws RemoteException {
+    public void fetchRMIArticlesList() throws RemoteException {
         try {
             articles = server.getRMIArticlesList();
         } catch (RemoteException ex) {

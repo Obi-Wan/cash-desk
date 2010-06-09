@@ -209,7 +209,7 @@ abstract public class BaseClient<PrefsType extends BaseClientPrefs> extends Thre
         this.username = new String(username);
         avviaDemoneConnessione();
         try {
-            getRMIArticlesList();
+            fetchRMIArticlesList();
         } catch (RemoteException ex) {
             logger.warn("Il server non ha risposto alla richiesta della " +
                     "lista beni, subio dopo la connessione", ex);

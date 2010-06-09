@@ -179,7 +179,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel implements VariableVisu
      */
     void forceRMIRequestArticlesList() {
         try {
-            owner.getRMIArticlesList();
+            owner.fetchRMIArticlesList();
         } catch (RemoteException ex) {
             javax.swing.JOptionPane.showMessageDialog(this,
                 "Il server non ha risposto alla richiesta della lista",
