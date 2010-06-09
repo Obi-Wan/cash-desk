@@ -6,6 +6,7 @@
 package gestionecassa.server.clientservices;
 
 import gestionecassa.Article;
+import gestionecassa.ArticlesList;
 import gestionecassa.Person;
 import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.DuplicateArticleException;
@@ -18,8 +19,7 @@ import java.rmi.RemoteException;
  *
  * @author ben
  */
-public interface ServiceRMIAdminAPI
-        extends ServiceRMICommon, Remote, Serializable {
+public interface ServiceRMIAdminAPI extends Remote, Serializable {
 
     /** Method which both the clients use to register themselves in.
      *
@@ -34,6 +34,13 @@ public interface ServiceRMIAdminAPI
 
 
     //--------- Articles API ---------//
+
+    /**
+     * Method to get the complete list of Articles
+     * @return the list of articles
+     * @throws RemoteException
+     */
+    public ArticlesList getRMIArticlesList() throws RemoteException;
 
     /**
      * Adds an article to the common list.

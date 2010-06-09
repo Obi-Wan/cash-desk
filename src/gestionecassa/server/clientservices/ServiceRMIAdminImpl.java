@@ -31,7 +31,7 @@ public class ServiceRMIAdminImpl extends SharedServerService
      *
      * @param session
      * @param dataManager
-     * @throws java.rmi.RemoteException
+     * @throws RemoteException
      */
     public ServiceRMIAdminImpl(DMAmministrazioneAPI dataManager, Logger logger)
             throws  RemoteException {
@@ -41,14 +41,12 @@ public class ServiceRMIAdminImpl extends SharedServerService
     }
 
     /**
-     * 
-     * 
-     * @return The articles list.
-     *
-     * @throws RemoteException
+     * Method to get the complete list of Articles
+     * @return the list of articles
+     * @throws jRemoteException
      */
     @Override
-    public ArticlesList requestArticlesList() throws RemoteException {
+    public ArticlesList getRMIArticlesList() throws RemoteException {
         return dataManager.getArticlesList();
     }
 

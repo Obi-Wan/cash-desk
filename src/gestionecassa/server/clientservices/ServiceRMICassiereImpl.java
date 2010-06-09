@@ -23,7 +23,7 @@ import java.util.Date;
  * @author ben
  */
 public class ServiceRMICassiereImpl extends SharedServerService
-        implements ServiceRMICassiere {
+        implements ServiceRMICassiereAPI {
 
     /**
      * Reference to the data manager
@@ -91,35 +91,36 @@ public class ServiceRMICassiereImpl extends SharedServerService
     }
 
     /**
-     * 
+     * Deletes the last submitted order
      *
-     * @throws java.rmi.RemoteException
+     * @throws RemoteException
+     * @throws IOException
      */
     @Override
-    public void cancelLastOrder() throws RemoteException, IOException {
+    public void delLastOrder() throws RemoteException, IOException {
         dataManager.delLastOrder(sessionIdentifier);
     }
 
     /**
-     * 
-     * @return
+     * Method to get the list of all the enabled Articles
+     * @return the list of all enabled articles
      * @throws RemoteException
      */
     @Override
-    public ArticlesList requestArticlesList() throws RemoteException {
+    public ArticlesList getEnabledArticlesList() throws RemoteException {
         return dataManager.getArticlesList().getEnabledList();
     }
 
     /**
      * 
-     * @param articleName
+     * @param artName
      * @param n 
      * @return
      * @throws RemoteException
      */
     @Override
-    public int getNProgressive(String articleName, int n) throws RemoteException {
-        return dataManager.getNProgressive(articleName,n);
+    public int getNProgressive(String artName, int n) throws RemoteException {
+        return dataManager.getNProgressive(artName,n);
     }
 
     /**

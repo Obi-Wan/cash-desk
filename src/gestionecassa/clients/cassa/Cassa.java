@@ -13,7 +13,7 @@ import gestionecassa.clients.gui.GuiLoginPanel;
 import gestionecassa.clients.BaseClient;
 import gestionecassa.clients.cassa.printing.PrinterHelper;
 import gestionecassa.exceptions.*;
-import gestionecassa.server.clientservices.ServiceRMICassiere;
+import gestionecassa.server.clientservices.ServiceRMICassiereAPI;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
@@ -35,7 +35,7 @@ public class Cassa extends BaseClient<CassaPrefs> implements CassaAPI {
     /**
      * Specific Server
      */
-    ServiceRMICassiere server;
+    ServiceRMICassiereAPI server;
 
     /**
      *
@@ -139,7 +139,7 @@ public class Cassa extends BaseClient<CassaPrefs> implements CassaAPI {
     public void login(String username, String password, String serverName)
             throws WrongLoginException, RemoteException, NotBoundException
     {
-        server = (ServiceRMICassiere)
+        server = (ServiceRMICassiereAPI)
                 sendDatiLogin(username, password, serverName);
 
         setupAfterLogin(username);
@@ -160,7 +160,7 @@ public class Cassa extends BaseClient<CassaPrefs> implements CassaAPI {
     @Override
     public void getRMIArticlesList() throws RemoteException {
         try {
-            articles = server.requestArticlesList();
+            articles = server.getEnabledArticlesList();
         } catch (RemoteException ex) {
             logger.warn("Il server non ha risposto alla richiesta della lista",
                     ex);
@@ -196,7 +196,7 @@ public class Cassa extends BaseClient<CassaPrefs> implements CassaAPI {
     @Override
     public void delRMILastOrder() throws RemoteException, IOException {
         try {
-            server.cancelLastOrder();
+            server.delLastOrder();
         } catch (RemoteException ex) {
             logger.warn("Errore nella comunicazione col server",ex);
             throw ex;
