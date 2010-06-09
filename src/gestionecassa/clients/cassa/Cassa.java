@@ -28,31 +28,41 @@ import org.dom4j.DocumentException;
 public class Cassa extends BaseClient<CassaPrefs> implements CassaAPI {
 
     /**
-     * Local store of himself, with restrictions
+     * Local reference of himself, with restrictions.
      */
     static CassaAPI businessLogicLocale;
 
     /**
-     * Specific Server
+     * Specific Server for this client
      */
     ServiceRMICassiereAPI server;
 
     /**
-     *
+     * Logger dedicated to the gui messages
      */
     protected final Logger loggerGUI;
     
     /**
-     * 
+     * The main gui frame
      */
     protected GuiAppFrameCassa appFrame;
+
+    /**
+     * The main of the Cassiere Client side application.
+     *
+     * @param args Useless. Not considered yet.
+     */
+    public static void main(String[] args) {
+        // Let's start the execution of the main thread
+        Cassa.getInstance().startClient();
+    }
 
     /**
      * Public method that grants the singleton
      * 
      * @return
      */
-    public static synchronized CassaAPI crea() {
+    public static synchronized CassaAPI getInstance() {
         // Fase di set-up
         if (businessLogicLocale == null) {
             String hostname;
@@ -75,18 +85,6 @@ public class Cassa extends BaseClient<CassaPrefs> implements CassaAPI {
         super(nomeLuogo, new CassaPrefs(), Log.GESTIONECASSA_CASSA);
         loggerGUI = Log.GESTIONECASSA_CASSA_GUI;
     }
-
-    /**
-     * The main of the Cassiere Client side application.
-     *
-     * @param args Useless. Not considered yet.
-     */
-    public static void main(String[] args) {
-
-        // cominciamo l'esecuzione del thread principale
-        Cassa.crea().avvia();
-
-    }
     
     /**
      * The Real Main of he application.
@@ -105,7 +103,7 @@ public class Cassa extends BaseClient<CassaPrefs> implements CassaAPI {
         } catch (DocumentException ex) {
             logger.warn("Parse exception in conf file", ex);
         }
-        // avvia la fase di login
+        // startClient la fase di login
         appFrame = new GuiAppFrameCassa(this);
         // concludi fase preparatoria al login
         appFrame.setContentPanel(new GuiLoginPanel(appFrame, this));

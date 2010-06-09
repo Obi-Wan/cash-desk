@@ -48,7 +48,7 @@ public class AdministrationCLI extends Administration {
      *
      * @return reference to the main class
      */
-    public static AdministrationAPI crea() {
+    public static AdministrationAPI getInstance() {
         return new AdministrationCLI(System.getenv("HOSTNAME"));
     }
 
@@ -60,7 +60,7 @@ public class AdministrationCLI extends Administration {
     public static void main(String[] args) {
 
         // cominciamo l'esecuzione del thread principale
-        AdministrationCLI.crea().avvia();
+        AdministrationCLI.getInstance().startClient();
 
     }
 

@@ -12,7 +12,7 @@ import java.rmi.RemoteException;
 import org.apache.log4j.Logger;
 
 /**
- *
+ * Base interface of clients
  * @author ben
  */
 public interface ClientAPI<PrefsType extends BaseClientPrefs> {
@@ -20,19 +20,17 @@ public interface ClientAPI<PrefsType extends BaseClientPrefs> {
     /**
      * Function that starts the thread.
      */
-    void avvia();
+    void startClient();
 
     /**
      * Returns the chosen logger for the application
-     *
-     * @return
+     * @return a reference to the logger for the client
      */
     Logger getLogger();
 
     /**
      * Returns the hostname
-     *
-     * @return
+     * @return A String containing the Hostname of the server
      */
     String getHostname();
 
@@ -58,20 +56,19 @@ public interface ClientAPI<PrefsType extends BaseClientPrefs> {
 
     /**
      * Logs out the current user from the remote app-server
-     *
-     * @throws java.rmi.RemoteException
+     * @throws RemoteException
      */
     public void logout() throws RemoteException;
     
     /**
      * Starts the thread deputated to keep connection alive
      */
-    public void avviaDemoneConnessione();
+    public void startDaemonConnection();
 
     /**
      * Stops the thread deputated to keep connection alive
      */
-    public void stopDemoneConnessione();
+    public void stopDaemonConnection();
 
     /**
      * Fetches the remote list of articles
@@ -80,34 +77,32 @@ public interface ClientAPI<PrefsType extends BaseClientPrefs> {
     public void fetchRMIArticlesList() throws RemoteException;
 
     /**
-     * 
-     * @return
+     * Getter for the local copy of the list of articles
+     * @return Reference to the local list
      */
     public ArticlesList getArticlesList();
 
     /**
      * Returns the username of the logged user.
-     *
-     * @return
+     * @return A String contain the username of the logged user
      */
     String getUsername();
 
     /**
-     *
-     * @return
+     * Method to get the preferences of this app
+     * @return The object (subclass os BaseClientPrefs) containing the preferences
      */
     PrefsType getPrefs();
 
     /**
-     *
-     * @param options
+     * Sets the new preferences
+     * @param prefs Subclass of BaseClientPrefs containing the new prefs
      */
-    void setPrefs(PrefsType options);
+    void setPrefs(PrefsType prefs);
 
     /**
-     * Returns the chosen logger for the GUI objects
-     *
-     * @return
+     * Returns the chosen logger for the UI objects
+     * @return reference to the logger for the UI
      */
     Logger getLoggerUI();
 }

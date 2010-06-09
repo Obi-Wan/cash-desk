@@ -61,7 +61,7 @@ public class AdministrationGUI extends Administration implements ClientAPI<Admin
     public static void main(String[] args) {
 
         // cominciamo l'esecuzione del thread principale
-        AdministrationGUI.crea().avvia();
+        AdministrationGUI.crea().startClient();
 
     }
 
@@ -70,7 +70,7 @@ public class AdministrationGUI extends Administration implements ClientAPI<Admin
      */
     @Override
     public void run() {
-        // avvia la fase di login
+        // startClient la fase di login
         appFrame = new GuiAppFrameAdministration(this);
 
         // concludi fase preparatoria al login

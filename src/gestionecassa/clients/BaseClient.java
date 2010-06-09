@@ -57,12 +57,12 @@ abstract public class BaseClient<PrefsType extends BaseClientPrefs> extends Thre
     protected DaemonReestablishConnection threadConnessione;
 
     /**
-     *
+     * locally saved list
      */
     protected ArticlesList articles;
 
     /**
-     *
+     * 
      */
     protected PrefsType preferences;
 
@@ -85,11 +85,11 @@ abstract public class BaseClient<PrefsType extends BaseClientPrefs> extends Thre
     }
 
     /**
-     * Starts the thread
+     * Starts the thread. It's just a wrapper.
      */
     @Override
-    public void avvia() {
-        start();
+    public void startClient() {
+        super.start();
     }
 
     /**
@@ -98,13 +98,14 @@ abstract public class BaseClient<PrefsType extends BaseClientPrefs> extends Thre
     @Override
     public void run() {
         
-        // Comincia l'esecuzione normale
+        // Start the normal execution
         try {
             while (stopApp == false) {
                 Thread.sleep(100);
             }
-        } catch (InterruptedException e) {
+        } catch (InterruptedException ex) {
             Thread.dumpStack();
+            ex.printStackTrace();
         }
         //exit
         System.out.println("sto uscendo dal client");
@@ -127,8 +128,7 @@ abstract public class BaseClient<PrefsType extends BaseClientPrefs> extends Thre
 
     /**
      * Returns chosen logger for the application
-     *
-     * @return
+     * @return a reference to the logger
      */
     @Override
     public Logger getLogger() {
@@ -137,8 +137,7 @@ abstract public class BaseClient<PrefsType extends BaseClientPrefs> extends Thre
 
     /**
      * Returns the hostname
-     *
-     * @return
+     * @return a String containing the hostname
      */
     @Override
     final public String getHostname() {
@@ -147,8 +146,7 @@ abstract public class BaseClient<PrefsType extends BaseClientPrefs> extends Thre
 
     /**
      * Returns the username of the logged user.
-     *
-     * @return
+     * @return a String containing the username
      */
     @Override
     public String getUsername() {
@@ -200,14 +198,14 @@ abstract public class BaseClient<PrefsType extends BaseClientPrefs> extends Thre
 
     /**
      * Sets up the work environment at the end of the login
-     *
-     * @throws java.rmi.RemoteException
+     * @param username The username of the user just connected
+     * @throws RemoteException
      */
     protected void setupAfterLogin(String username) throws RemoteException {
         logger.info("Connessione avvenuta con id: " + sessionID);
 
         this.username = new String(username);
-        avviaDemoneConnessione();
+        startDaemonConnection();
         try {
             fetchRMIArticlesList();
         } catch (RemoteException ex) {
@@ -228,7 +226,7 @@ abstract public class BaseClient<PrefsType extends BaseClientPrefs> extends Thre
      * Starts the thread deputated to keep connection alive
      */
     @Override
-    public void avviaDemoneConnessione() {
+    public void startDaemonConnection() {
         threadConnessione =
                 new DaemonReestablishConnection(serverCentrale,sessionID,logger);
         threadConnessione.start();
@@ -238,15 +236,15 @@ abstract public class BaseClient<PrefsType extends BaseClientPrefs> extends Thre
      * Stops the thread deputated to keep connection alive
      */
     @Override
-    public void stopDemoneConnessione() {
-        if (threadConnessione != null)
+    public void stopDaemonConnection() {
+        if (threadConnessione != null) {
             threadConnessione.interrupt();
+        }
     }
 
     /**
      * Logs out the current user from the remote app-server
-     *
-     * @throws java.rmi.RemoteException
+     * @throws RemoteException
      */
     @Override
     public void logout() throws RemoteException {
@@ -259,7 +257,7 @@ abstract public class BaseClient<PrefsType extends BaseClientPrefs> extends Thre
             logger.warn("Connessione interrotta in modo brusco", ex);
             throw ex;
         } finally {
-            stopDemoneConnessione();
+            stopDaemonConnection();
             sessionID = -1;
             serverCentrale = null;
             articles = null;
@@ -268,9 +266,8 @@ abstract public class BaseClient<PrefsType extends BaseClientPrefs> extends Thre
     }
 
     /**
-     *
-     *
-     * @return List of goods
+     * Getter for the list of <code>Article</code>s
+     * @return List of articles
      */
     @Override
     public ArticlesList getArticlesList() {
@@ -278,8 +275,8 @@ abstract public class BaseClient<PrefsType extends BaseClientPrefs> extends Thre
     }
 
     /**
-     *
-     * @return
+     * Getter for the prefs
+     * @return the Object containing the prefs
      */
     @Override
     public PrefsType getPrefs() {
@@ -287,8 +284,8 @@ abstract public class BaseClient<PrefsType extends BaseClientPrefs> extends Thre
     }
 
     /**
-     *
-     * @param prefs
+     * Setter for the prefs
+     * @param prefs the new preferences to set
      */
     @Override
     public void setPrefs(PrefsType prefs) {
