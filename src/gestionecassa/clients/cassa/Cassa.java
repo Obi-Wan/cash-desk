@@ -237,7 +237,7 @@ public class Cassa extends BaseClient<CassaPrefs> implements CassaAPI {
      * @return
      */
     @Override
-    public Logger getLoggerGUI() {
+    public Logger getLoggerUI() {
         return loggerGUI;
     }
 }

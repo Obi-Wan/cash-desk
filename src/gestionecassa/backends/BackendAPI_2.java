@@ -57,18 +57,14 @@ public interface BackendAPI_2 {
     /**
      * Adds a new order to the specified session by id, and if none present
      * creates a new entry.
-     *
-     * @param order The order to add
-     *
+     * @param order The order to add to the DB
      * @throws IOException
      */
     public void addNewOrder( Order order) throws IOException;
 
     /**
      * Deletes the last saved order of the cassiere recorded in the order
-     *
-     * @param order
-     *
+     * @param order the order to delete from the DB
      * @throws IOException
      */
     public void delLastOrder(Order order) throws IOException;
@@ -77,38 +73,34 @@ public interface BackendAPI_2 {
 
     /**
      * Loads and returns the list of sold articles.
-     *
      * @return the list of sold articles
-     *
      * @throws IOException
      */
     List<ArticleGroup> loadArticlesList() throws IOException;
 
     /**
      * Loads the list of admins and returns it.
-     *
-     * @return
-     *
+     * @return a List containing all the <code>Admin</code>s
      * @throws IOException
      */
     List<Admin> loadAdminsList() throws IOException;
 
     /**
      * Loads the list of all the cassieres and returns it
-     *
-     * @return
-     *
+     * @return a List containing all the <code>Cassiere</code>s
      * @throws IOException
      */
     List<Cassiere> loadCassiereList() throws IOException;
 
     /**
-     *
-     * @param article
-     * @param position
+     * Moves the specified article to the given position
+     * @param article the article to move
+     * @param position new position for the article
      * @throws IOException
      */
     void moveArticleAt(Article article, int position) throws IOException;
+
+    //--------------------//
 
     List<EventDate> getDatesOfOrgEvent(String name) throws IOException;
 

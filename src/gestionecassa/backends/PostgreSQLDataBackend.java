@@ -136,9 +136,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 
     /**
      * Initialization method: if it fails the DB is useless.
-     *
      * @param url Url of the DB to use
-     * 
      * @throws IOException
      */
     @Override
@@ -248,9 +246,9 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
     }
 
     /**
-     * 
-     * @param article
-     * @param position
+     * Moves the specified article to the given position in it's group
+     * @param article the article to move
+     * @param position new position for the article
      * @throws IOException
      */
     @Override
@@ -436,8 +434,8 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
     }
 
     /**
-     *
-     * @return
+     * Loads the list of admins and returns it.
+     * @return a List containing all the <code>Admin</code>s
      * @throws IOException
      */
     @Override
@@ -499,8 +497,8 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
     }
 
     /**
-     * 
-     * @return
+     * Loads the list of all the cassieres and returns it
+     * @return a List containing all the <code>Cassiere</code>s
      * @throws IOException
      */
     @Override
@@ -599,9 +597,9 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
     }
 
     /**
-     *
-     * @param name
-     * @return
+     * Method to retrieve the dates of an organized event
+     * @param name Name of the event
+     * @return a List of <class>EventDate</class> for the given event
      * @throws IOException
      */
     @Override
@@ -636,8 +634,8 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
     }
 
     /**
-     *
-     * @return
+     * Method to get all the organized events
+     * @return a List of <class>OrganizedEvent</class>
      * @throws IOException
      */
     @Override
@@ -689,8 +687,9 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
     //-----------------//
 
     /**
-     * 
-     * @param order
+     * Adds a new order to the specified session by id, and if none present
+     * creates a new entry.
+     * @param order The order to add to the DB
      * @throws IOException
      */
     @Override
@@ -741,9 +740,8 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
     }
 
     /**
-     * 
-     * @param order 
-     *
+     * Deletes the last saved order of the cassiere recorded in the order
+     * @param order the order to delete from the DB
      * @throws IOException
      */
     @Override

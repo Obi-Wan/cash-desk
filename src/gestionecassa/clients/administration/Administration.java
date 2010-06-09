@@ -185,7 +185,7 @@ public class Administration extends BaseClient<AdminPrefs> implements Administra
      * @return
      */
     @Override
-    public Logger getLoggerGUI() {
+    public Logger getLoggerUI() {
         return loggerGUI;
     }
 

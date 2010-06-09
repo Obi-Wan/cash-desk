@@ -110,5 +110,5 @@ public interface ClientAPI<PrefsType extends BaseClientPrefs> {
      *
      * @return
      */
-    Logger getLoggerGUI();
+    Logger getLoggerUI();
 }

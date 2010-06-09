@@ -99,7 +99,7 @@ abstract public class GuiAppFrame<Owner extends ClientAPI>
      */
     @Override
     public void dispose() {
-        owner.getLoggerGUI().info("sto chiudendo l'interfaccia.");
+        owner.getLoggerUI().info("sto chiudendo l'interfaccia.");
 
         owner.stopClient();
         super.dispose();
