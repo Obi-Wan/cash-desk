@@ -34,13 +34,10 @@ public interface AdministrationAPI extends ClientAPI<AdminPrefs> {
      * to the server.
      *
      * @param user Data of the user who wants to be registered.
-     * @param serverName Hostname of the server
      *
      * @throws gestionecassa.exceptions.ActorAlreadyExistingException
      * @throws gestionecassa.exceptions.WrongLoginException
      * @throws java.rmi.RemoteException
-     * @throws java.net.MalformedURLException
-     * @throws java.rmi.NotBoundException
      */
     public void registerUser(Person user)
             throws ActorAlreadyExistingException, WrongLoginException,
@@ -51,10 +48,11 @@ public interface AdministrationAPI extends ClientAPI<AdminPrefs> {
     /**
      * Adds an article to the common list.
      *
+     * @param group
      * @param article
-     * @param group 
-     *
      * @throws RemoteException
+     * @throws DuplicateArticleException
+     * @throws NotExistingGroupException
      */
     void addRMIArticle(int group, Article article)
             throws RemoteException, DuplicateArticleException,

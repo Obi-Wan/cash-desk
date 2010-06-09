@@ -58,7 +58,6 @@ public interface BackendAPI_2 {
      * Adds a new order to the specified session by id, and if none present
      * creates a new entry.
      *
-     * @param id Id of the session
      * @param order The order to add
      *
      * @throws IOException

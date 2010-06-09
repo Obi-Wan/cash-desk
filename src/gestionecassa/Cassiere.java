@@ -32,9 +32,9 @@ public class Cassiere extends Person {
     /**
      * Creates a Cassiere from from specified fields
      *
-     * @param idCassiere the id of cassiere
-     * @param username the username of cassiere
-     * @param the password of cassiere.
+     * @param idCassiere The id of cassiere
+     * @param username The username of cassiere
+     * @param password The password of cassiere.
      */
     public Cassiere(int idCassiere, String username, String password) {
         this(idCassiere, username, password, true);

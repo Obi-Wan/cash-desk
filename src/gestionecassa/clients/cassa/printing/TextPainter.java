@@ -65,7 +65,6 @@ public class TextPainter {
      * Adds the given <code>ArticleWithOptions</code> to the file to print
      * 
      * @param article the article to print
-     * @param copies number of times to print the text
      * @param prog
      * @param option
      *

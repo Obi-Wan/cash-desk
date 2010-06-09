@@ -29,7 +29,6 @@ public class GuiAccelSingleOptionPanel extends GuiAbstrMoreLessPanel {
     /**
      * Creates new form GuiAccelSingleOptionPanel
      *
-     * @param parent
      * @param option
      * @param startOptionQuantity
      * @param indexPanel

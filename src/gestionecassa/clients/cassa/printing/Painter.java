@@ -48,7 +48,9 @@ public class Painter implements Printable {
     /**
      * Constructor for <code>ArticleWithOption</code>
      * 
-     * @param entry
+     * @param article
+     * @param prog
+     * @param option
      */
     public Painter(ArticleWithOptions article, int prog, String option) {
         this.article = article;
@@ -68,13 +70,14 @@ public class Painter implements Printable {
     }
 
     /**
-     * 
+     * Function that prints the paper
      * @param graphics
      * @param pageFormat
      * @param pageIndex
      * @return
      * @throws PrinterException
      */
+    @Override
     public int print(Graphics graphics, PageFormat pageFormat, int pageIndex)
             throws PrinterException {
         if (pageIndex > 0) {

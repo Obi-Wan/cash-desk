@@ -28,9 +28,9 @@ public class ServiceRMIAdminImpl extends SharedServerService
     DMAmministrazioneAPI dataManager;
 
     /**
-     *
-     * @param session
+     * 
      * @param dataManager
+     * @param logger
      * @throws RemoteException
      */
     public ServiceRMIAdminImpl(DMAmministrazioneAPI dataManager, Logger logger)

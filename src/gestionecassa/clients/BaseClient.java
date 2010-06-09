@@ -288,10 +288,10 @@ abstract public class BaseClient<PrefsType extends BaseClientPrefs> extends Thre
 
     /**
      *
-     * @param preferences
+     * @param prefs
      */
     @Override
-    public void setPrefs(PrefsType options) {
-        this.preferences = options;
+    public void setPrefs(PrefsType prefs) {
+        this.preferences = prefs;
     }
 }

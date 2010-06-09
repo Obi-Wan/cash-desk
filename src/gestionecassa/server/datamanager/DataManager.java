@@ -126,9 +126,10 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
             new String("OrdersSemaphore" + System.currentTimeMillis());
 
     /**
-     * Default constructor
-     *
-     * @param fallbackXML
+     * Creates a new DataManager class
+     * @param fallback
+     * @param dbUrl
+     * @param dataBackend
      */
     public DataManager(BackendAPI_2 fallback, String dbUrl, BackendAPI_1 dataBackend) {
         this.fallbackXML = dataBackend;
@@ -154,7 +155,7 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
     }
 
     /**
-     * 
+     * Initialization method for the list of Admins
      */
     private void loadAdminsList() {
         Collection<Admin> listaAdmin;
@@ -187,7 +188,7 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
     }
 
     /**
-     * 
+     * Initialization method for the list of Cassieres
      */
     private void loadCassieresList() {
         Collection<Cassiere> listaCassiere;
@@ -213,7 +214,7 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
     }
 
     /**
-     * 
+     * Initialization method for the list of Articles
      */
     private void loadArticlesList() {
         Collection<ArticleGroup> lista;
@@ -284,9 +285,9 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
      * Verifies a username exists, and if is the case, 
      * it creates a new read only copy of the user to prevent problems in syncronization
      *
-     * @param username
+     * @param username Username of the desired person
      *
-     * @return 
+     * @return <code>null</code> if not found, or the reference to the person
      */
     @Override
     public Person verifyUsername(String username) {
@@ -384,23 +385,24 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
     }
 
     /**
-     * Used to ask "n" progressive numbers to associate to the 
+     * Used to ask "n" progressive numbers to associate to the
      * <code>ArticleWithPreparation</code>
      *
-     * @param nomeBene
+     * @param artName Name of the article with multiple progressive numbers
+     * @param n How many progressive numbers to associate to the article
      *
      * @return the first of the n progressive numbers
      */
     @Override
-    public int getNProgressive(String articleName, int n) {
+    public int getNProgressive(String artName, int n) {
         synchronized (listProgressiviSemaphore) {
-            Integer progressiv = progressivesList.get(articleName);
+            Integer progressiv = progressivesList.get(artName);
             if (progressiv == null) {
                 throw new RuntimeException("ho trovato un nome che ci sarebbe " +
                         "dovuto essere nella lista dei progressivi ma che" +
                         " non c'era!!!");
             }
-            progressivesList.put(articleName, progressiv+n);
+            progressivesList.put(artName, progressiv + n);
             return progressiv.intValue();
         }
     }

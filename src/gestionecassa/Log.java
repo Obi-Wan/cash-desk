@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 
 /** Class used to log every important or intresting thing.
  *
- * @author 
+ * @author BeN
  */
 public class Log {
 

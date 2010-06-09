@@ -181,7 +181,7 @@ public class ArticlesList implements Serializable {
     /**
      * Enables/disables a specified article
      *
-     * @param gruop Cardinal number of the group
+     * @param group Cardinal number of the group
      * @param pos Position of the article
      * @param enable Enable/disable
      */

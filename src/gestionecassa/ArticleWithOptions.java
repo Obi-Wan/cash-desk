@@ -83,8 +83,8 @@ public class ArticleWithOptions extends Article implements ArticleWithPreparatio
     }
 
     /**
-     * 
-     * @return
+     * Method that returns the options of this article
+     * @return reference to the options
      */
     public List<String> getOptions() {
         return options;

@@ -19,17 +19,36 @@ import gestionecassa.order.Order;
 import java.io.IOException;
 
 /**
- *
+ * Interface to the DataManager class used by the Cassa Service
  * @author ben
  */
 public interface DMCassaAPI {
 
+    /**
+     * Creates a new session for the identifier supplied as argument
+     * @param identifier the identifier to which attach a session
+     */
     void createNewCassaSession(String identifier);
 
+    /**
+     * Closes the specified session by the identifier
+     * @param identifier Specifies uniquely the session to close
+     */
     void closeCassaSession(String identifier);
 
+    /**
+     * Adds a new order to the specified session
+     * @param id identifier of the session
+     * @param order New order to add
+     * @throws IOException
+     */
     void addNewOrder(String id, Order order) throws IOException;
 
+    /**
+     * Deletes the last order submitted for this session
+     * @param id
+     * @throws IOException
+     */
     void delLastOrder(String id) throws IOException;
 
 
@@ -37,7 +56,8 @@ public interface DMCassaAPI {
      * Used to ask "n" progressive numbers to associate to the
      * <code>ArticleWithPreparation</code>
      *
-     * @param artName
+     * @param artName Name of the article with multiple progressive numbers
+     * @param n How many progressive numbers to associate to the article
      *
      * @return the first of the n progressive numbers
      */

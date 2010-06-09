@@ -24,18 +24,19 @@ public class Admin extends Person {
     /**
      * Copy constructor
      *
-     * @param tempPersona
+     * @param person old Person class from which we copy information
      */
-    public Admin(Person tempPerson) {
-        this(tempPerson.id, tempPerson.username, tempPerson.password, tempPerson.enabled);
+    public Admin(Person person) {
+        this(person.id, person.username, person.password, person.enabled);
     }
 
     /**
      * Creates an Admin from from specified fields
      *
-     * @param idAdmin the id of Admin
-     * @param username the username of the Admin
-     * @param the password of the Admin
+     * @param idAdmin The id of Admin
+     * @param username The username of the Admin
+     * @param password The password of the Admin
+     * @param enabled Wheather he is enabled or not
      */
     public Admin(int idAdmin, String username, String password, boolean enabled) {
         super(idAdmin, username, password,enabled);
@@ -44,9 +45,9 @@ public class Admin extends Person {
     /**
      * Creates an Admin from from specified fields
      *
-     * @param idAdmin the id of Admin
-     * @param username the username of the Admin
-     * @param the password of the Admin
+     * @param idAdmin The id of Admin
+     * @param username The username of the Admin
+     * @param password The password of the Admin
      */
     public Admin(int idAdmin, String username, String password) {
         super(idAdmin, username, password,true);
@@ -54,7 +55,7 @@ public class Admin extends Person {
 
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof Admin) && super.equals(obj);
+        return (obj != null) && (obj instanceof Admin) && super.equals(obj);
     }
 
     @Override

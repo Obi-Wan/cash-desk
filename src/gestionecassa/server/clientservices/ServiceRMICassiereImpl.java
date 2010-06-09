@@ -41,11 +41,12 @@ public class ServiceRMICassiereImpl extends SharedServerService
     final boolean trustOrders;
 
     /**
-     *
-     * @param session
+     * 
+     * @param username
+     * @param trust
      * @param dataManager
-     *
-     * @throws java.rmi.RemoteException
+     * @param logger
+     * @throws RemoteException
      */
     public ServiceRMICassiereImpl(String username, boolean trust,
             DMCassaAPI dataManager, Logger logger)
@@ -71,10 +72,11 @@ public class ServiceRMICassiereImpl extends SharedServerService
     }
 
     /**
-     *
-     * @param nuovoOrdine
-     *
-     * @throws java.rmi.RemoteException
+     * Method to send new orders from clients
+     * 
+     * @param newOrder
+     * @throws RemoteException
+     * @throws IOException
      */
     @Override
     public void sendOrder(Order newOrder) throws RemoteException, IOException {
