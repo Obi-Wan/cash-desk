@@ -28,7 +28,7 @@ import java.io.Serializable;
  *
  * @author ben
  */
-public class SessionRecord implements Serializable {
+class SessionRecord implements Serializable {
     
     /** Session ID of the user. */
     int sessionId;
