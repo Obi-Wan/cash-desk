@@ -128,7 +128,7 @@ public class Administration extends BaseClient<AdminPrefs> implements Administra
     @Override
     public void getRMIArticlesList() throws RemoteException {
         try {
-            articles = server.requestArticlesList();
+            articles = server.getRMIArticlesList();
         } catch (RemoteException ex) {
             logger.warn("Il server non ha risposto alla richiesta della lista",
                     ex);
