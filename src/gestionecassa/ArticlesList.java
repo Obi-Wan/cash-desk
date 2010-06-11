@@ -35,17 +35,17 @@ public class ArticlesList implements Serializable {
     /**
      * List of the articles sold.
      */
-    List<ArticleGroup> groups;
+    private List<ArticleGroup> groups;
 
     /**
      * Support map to retrieve cardinal number of the given group name
      */
-    Map<String, Integer> grNum;
+    private Map<String, Integer> grNum;
 
     /**
      * Support map used to retrieve the article correpsonding to the given name
      */
-    Map<String, Article> articles;
+    private Map<String, Article> articles;
 
     /**
      * Default constructor
@@ -230,7 +230,7 @@ public class ArticlesList implements Serializable {
      * @return the list in a <code>java.util.List</code> form.
      */
     final public List<ArticleGroup> getGroupsList() {
-        return groups;
+        return new Vector<ArticleGroup>(groups);
     }
 
     /**
@@ -239,7 +239,7 @@ public class ArticlesList implements Serializable {
      * @return the list in a <code>java.util.List</code> form.
      */
     final public Collection<Article> getArticlesList() {
-        return articles.values();
+        return new Vector<Article>(articles.values());
     }
 
     /**
