@@ -16,7 +16,6 @@ package gestionecassa.order;
 
 import gestionecassa.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
@@ -67,7 +66,7 @@ public class Order implements Serializable, Comparable<Order> {
      */
     public Order(String username, String hostname, int table) {
         this( new Date(), new String(username), new String(hostname), table,
-                new ArrayList<EntryArticleGroup>());
+                new Vector<EntryArticleGroup>());
     }
 
     /**
@@ -81,7 +80,7 @@ public class Order implements Serializable, Comparable<Order> {
     public Order(Date date, String username, String hostname, int table) {
         this( new Date(date.getTime()), new String(username),
                 new String(hostname), table,
-                new ArrayList<EntryArticleGroup>());
+                new Vector<EntryArticleGroup>());
     }
 
     /**
@@ -116,7 +115,7 @@ public class Order implements Serializable, Comparable<Order> {
         this.hostname = new String(order.hostname);
         this.username = new String(order.username);
         this.totalPrice = order.totalPrice;
-        this.groupsList = new ArrayList<EntryArticleGroup>(order.groupsList);
+        this.groupsList = new Vector<EntryArticleGroup>(order.groupsList);
     }
 
     /**

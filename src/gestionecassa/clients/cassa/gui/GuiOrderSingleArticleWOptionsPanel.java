@@ -26,7 +26,7 @@ import gestionecassa.ArticleWithOptions;
 import gestionecassa.clients.gui.RecordPanels;
 import gestionecassa.order.BaseEntry;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
+import java.util.Vector;
 import java.util.List;
 import javax.swing.AbstractAction;
 
@@ -237,7 +237,7 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
      */
     public List<BaseEntry<String>> getPatialsList() {
         List<BaseEntry<String>> tempLista
-                = new ArrayList<BaseEntry<String>>();
+                = new Vector<BaseEntry<String>>();
         for (RecordPanels<GuiOrderSingleOptionPanel, String> recordPanels
                 : listMngr.getRecords()) {
             if (recordPanels.displayedPanel.getNumTot() != 0) {

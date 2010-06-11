@@ -14,7 +14,7 @@
 
 package gestionecassa;
 
-import java.util.ArrayList;
+import java.util.Vector;
 import java.util.Collection;
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class ArticleWithOptions extends Article implements ArticleWithPreparatio
      */
     public ArticleWithOptions(int id, String name, double price, Collection<String> options) {
         super(id,name, price);
-        this.options = new ArrayList<String>(options);
+        this.options = new Vector<String>(options);
     }
 
     /**
@@ -50,7 +50,7 @@ public class ArticleWithOptions extends Article implements ArticleWithPreparatio
      */
     public ArticleWithOptions(int id, String name, double price, Collection<String> options, boolean b) {
         super(id, name, price, b);
-        this.options = new ArrayList<String>(options);
+        this.options = new Vector<String>(options);
     }
 
     /**
@@ -60,7 +60,7 @@ public class ArticleWithOptions extends Article implements ArticleWithPreparatio
      * @param price 
      */
     public ArticleWithOptions(int id, String name, double price) {
-        this(id, name, price, new ArrayList<String>());
+        this(id, name, price, new Vector<String>());
     }
 
     /**
