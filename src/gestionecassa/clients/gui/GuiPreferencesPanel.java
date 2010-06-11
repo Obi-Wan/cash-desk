@@ -37,18 +37,18 @@ public class GuiPreferencesPanel<PrefsType extends BaseClientPrefs> extends OkCa
     /**
      * Reference to the class that ownes this panel
      */
-    ClientAPI owner;
+    ClientAPI<PrefsType> owner;
 
     /**
      * Creates new form GuiPreferencesPanel
      * @param owner
      * @param tempPrefs
      */
-    public GuiPreferencesPanel(ClientAPI owner, PrefsType tempPrefs) {
+    public GuiPreferencesPanel(ClientAPI<PrefsType> owner) {
         initComponents();
 
         this.owner = owner;
-        this.tempPrefs = tempPrefs;
+        this.tempPrefs = owner.getPrefs();
 
         init();
     }

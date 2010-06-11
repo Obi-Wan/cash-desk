@@ -80,9 +80,7 @@ public class GuiAppFrameCassa extends GuiAppFrame<CassaAPI> {
     @Override
     public void selectedDialogOptions() {
         new GuiOkCancelDialog(this, "Client Options",
-                              new GuiPreferencesPanel<CassaPrefs>(owner,
-                                                                owner.getPrefs())
-                             ).setVisible(true);
+                  new GuiPreferencesPanel<CassaPrefs>(owner)).setVisible(true);
     }
 
     /**

@@ -82,8 +82,6 @@ public class GuiAppFrameAdministration extends GuiAppFrame<AdministrationAPI> {
     @Override
     public void selectedDialogOptions() {
         new GuiOkCancelDialog(this, "Client Options",
-                              new GuiPreferencesPanel<AdminPrefs>(owner,
-                                                                owner.getPrefs())
-                             ).setVisible(true);
+                  new GuiPreferencesPanel<AdminPrefs>(owner)).setVisible(true);
     }
 }
