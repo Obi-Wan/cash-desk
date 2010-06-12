@@ -6,6 +6,7 @@
 package gestionecassa.server.clientservices;
 
 import gestionecassa.ArticlesList;
+import gestionecassa.exceptions.WrongArticlesListException;
 import gestionecassa.order.Order;
 import java.io.IOException;
 import java.io.Serializable;
@@ -31,7 +32,8 @@ public interface ServiceRMICassiereAPI extends Remote, Serializable {
      * @throws RemoteException
      * @throws IOException
      */
-    public void sendOrder(Order newOrder) throws RemoteException, IOException;
+    public void sendOrder(Order newOrder)
+            throws RemoteException, IOException, WrongArticlesListException;
 
     /**
      * Deletes the last submitted order

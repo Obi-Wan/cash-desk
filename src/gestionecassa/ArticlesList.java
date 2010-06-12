@@ -48,10 +48,16 @@ public class ArticlesList implements Serializable {
     private Map<String, Article> articles;
 
     /**
+     * The signature of this list
+     */
+    private int[] signature;
+
+    /**
      * Default constructor
      */
     public ArticlesList() {
         this(new Vector<ArticleGroup>());
+        generateSignature();
     }
 
     /**
@@ -61,6 +67,19 @@ public class ArticlesList implements Serializable {
      */
     public ArticlesList(Collection<ArticleGroup> list) {
         this.groups = new Vector<ArticleGroup>(list);
+        generateArtMap();
+        generateNumMap();
+        generateSignature();
+    }
+
+    /**
+     * private constructor for enabled list creation
+     * @param list list of Groups of Articles
+     * @param listSign the signature of the original list
+     */
+    private ArticlesList(Collection<ArticleGroup> list, int[] listSign) {
+        this.groups = new Vector<ArticleGroup>(list);
+        this.signature = listSign;
         generateArtMap();
         generateNumMap();
     }
@@ -74,6 +93,7 @@ public class ArticlesList implements Serializable {
         this.groups = new Vector<ArticleGroup>(list.groups);
         this.grNum = new TreeMap<String, Integer>(list.grNum);
         this.articles = new TreeMap<String, Article>(list.articles);
+        this.signature = list.signature;
     }
 
     /**
@@ -136,6 +156,9 @@ public class ArticlesList implements Serializable {
             throw new DuplicateGroupException("Already existing group: "
                     + group.groupName);
         }
+
+        //FIXME can be heavy if in a batch of adds
+        generateSignature();
     }
 
     /**
@@ -156,6 +179,9 @@ public class ArticlesList implements Serializable {
             articles.put(article.name, article);
             groups.get(grNum.get(groupName)).addArticle(article);
         }
+
+        //FIXME can be heavy if in a batch of adds
+        generateSignature();
     }
 
     /**
@@ -176,6 +202,9 @@ public class ArticlesList implements Serializable {
             articles.put(article.name, article);
             groups.get(groupNum).addArticle(article);
         }
+
+        //FIXME can be heavy if in a batch of adds
+        generateSignature();
     }
 
     /**
@@ -302,6 +331,40 @@ public class ArticlesList implements Serializable {
                 tempList.add(tempGroup);
             }
         }
-        return new ArticlesList(tempList);
+        return new ArticlesList(tempList, this.signature);
+    }
+
+    /**
+     * Gets a copy of the signature
+     * @return an array of bytes containing the signature
+     */
+    public int[] getSignature() {
+        return signature;
+    }
+
+    /**
+     * Generates a new signature for the list.
+     *
+     * It's invoked after updates. It's not much performance oriented in a batch
+     * of updates.
+     */
+    public void generateSignature() {
+        List<Integer> bytes = new Vector<Integer>();
+        for (ArticleGroup articleGroup : groups) {
+            if (articleGroup.isEnabled()) {
+                bytes.add(articleGroup.hashCode());
+                for (Article article : articleGroup.list) {
+                    if (article.isEnabled()) {
+                        bytes.add(article.hashCode());
+                    }
+                }
+            }
+        }
+        signature = new int[bytes.size()+1];
+        for (int i = 0; i < bytes.size(); i++) {
+            signature[i] = bytes.get(i);
+        }
+        signature[signature.length-1]
+                = java.util.Calendar.getInstance().getTime().hashCode();
     }
 }

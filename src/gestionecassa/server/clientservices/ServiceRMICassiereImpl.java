@@ -8,6 +8,7 @@ package gestionecassa.server.clientservices;
 import gestionecassa.Article;
 import gestionecassa.ArticlesList;
 import gestionecassa.exceptions.MalformedOrderEXception;
+import gestionecassa.exceptions.WrongArticlesListException;
 import gestionecassa.order.BaseEntry;
 import gestionecassa.order.EntryArticleGroup;
 import gestionecassa.order.Order;
@@ -79,7 +80,8 @@ public class ServiceRMICassiereImpl extends SharedServerService
      * @throws IOException
      */
     @Override
-    public void sendOrder(Order newOrder) throws RemoteException, IOException {
+    public void sendOrder(Order newOrder)
+            throws RemoteException, IOException, WrongArticlesListException {
         if (!trustOrders) {
             try {
                 checkOrder(newOrder);

@@ -18,6 +18,7 @@ import gestionecassa.exceptions.DuplicateArticleException;
 import gestionecassa.order.Order;
 import gestionecassa.Person;
 import gestionecassa.exceptions.NotExistingGroupException;
+import gestionecassa.exceptions.WrongArticlesListException;
 import java.io.IOException;
 import java.util.Vector;
 import java.util.Collection;
@@ -361,8 +362,12 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
     }
 
     @Override
-    public void addNewOrder(String id, Order order) throws IOException {
+    public void addNewOrder(String id, Order order)
+            throws IOException, WrongArticlesListException {
         synchronized (listOrdersSemaphore) {
+            if (articlesList.getSignature() != order.getListSignature()) {
+                throw new WrongArticlesListException("Lists' signatures don't match");
+            }
             ordersTable.get(id).add(order);
             if (!useFallback) {
                 dataBackendDB.addNewOrder(order);

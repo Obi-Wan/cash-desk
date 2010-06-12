@@ -17,6 +17,7 @@ package gestionecassa.clients.cassa.printing;
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
 import gestionecassa.ArticleWithOptions;
+import gestionecassa.ArticlesList;
 import gestionecassa.order.Order;
 import java.util.List;
 import java.util.Vector;
@@ -36,14 +37,13 @@ public class PrinterHelperTest {
     static Order order;
     static List<Article> articles;
     static List<ArticleGroup> groups;
+    static ArticlesList list;
 
     public PrinterHelperTest() {
     }
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        order = new Order("bene", "hell", 0);
-
         groups = new Vector<ArticleGroup>();
 
         int idArticle = 0;
@@ -75,6 +75,9 @@ public class PrinterHelperTest {
         articles.add(new Article(++idArticle, "cane1", 10));
         articles.add(new ArticleWithOptions(++idArticle, "falce1", 4.25, options));
         articles.add(new Article(++idArticle, "vanga1", 0.2));
+
+        list = new ArticlesList(groups);
+        order = new Order("bene", "hell", 0, list.getSignature());
     }
 
     @AfterClass
@@ -96,6 +99,7 @@ public class PrinterHelperTest {
     public void testStartPrintingOrder() {
         System.out.println("startPrintingOrder");
         PrinterHelper.startPrintingOrder(order);
+        assertTrue(true);
     }
 
     /**

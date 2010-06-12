@@ -175,7 +175,8 @@ public class Cassa extends BaseClient<ServerRMICommon, CassaPrefs>
      * @throws java.rmi.RemoteException
      */
     @Override
-    public void sendRMINewOrder(Order newOrder) throws RemoteException, IOException {
+    public void sendRMINewOrder(Order newOrder)
+            throws RemoteException, IOException, WrongArticlesListException {
         try {
             server.sendOrder(newOrder);
             PrinterHelper.startPrintingOrder(newOrder);

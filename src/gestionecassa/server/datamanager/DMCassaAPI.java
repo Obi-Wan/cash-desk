@@ -15,6 +15,7 @@
 package gestionecassa.server.datamanager;
 
 import gestionecassa.ArticlesList;
+import gestionecassa.exceptions.WrongArticlesListException;
 import gestionecassa.order.Order;
 import java.io.IOException;
 
@@ -42,7 +43,8 @@ public interface DMCassaAPI {
      * @param order New order to add
      * @throws IOException
      */
-    void addNewOrder(String id, Order order) throws IOException;
+    void addNewOrder(String id, Order order)
+            throws IOException, WrongArticlesListException;
 
     /**
      * Deletes the last order submitted for this session

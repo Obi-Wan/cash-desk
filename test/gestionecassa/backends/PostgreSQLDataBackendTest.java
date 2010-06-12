@@ -19,6 +19,7 @@ import gestionecassa.Admin;
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
 import gestionecassa.ArticleWithOptions;
+import gestionecassa.ArticlesList;
 import gestionecassa.Cassiere;
 import gestionecassa.EventDate;
 import gestionecassa.OrganizedEvent;
@@ -68,6 +69,8 @@ public class PostgreSQLDataBackendTest {
     OrganizedEvent event;
 
     List<EventDate> dates;
+
+    ArticlesList listOfArts;
 
     public PostgreSQLDataBackendTest() {
         dbUrl = "jdbc:postgresql://localhost:5432/TestGCDB";
@@ -154,6 +157,8 @@ public class PostgreSQLDataBackendTest {
                     ex.getLocalizedMessage());
         }
         dates.add(new EventDate("gli oribbili", startDate.getTime(), endDate.getTime()));
+
+        listOfArts = new ArticlesList(groups);
     }
 
     @BeforeClass
@@ -529,7 +534,8 @@ public class PostgreSQLDataBackendTest {
 
         articles = backend.loadArticlesOfGroup(1);
 
-        Order tempOrder = new Order(testCassiere.getUsername(), "hell", 0);
+        Order tempOrder = new Order(testCassiere.getUsername(), "hell", 0,
+                                    listOfArts.getSignature());
         EntryArticleGroup entry = new EntryArticleGroup(groups.get(0));
         entry.addArticle(groups.get(0).getList().get(0), 3);
         entry.addArticle(groups.get(0).getList().get(3), 2);
@@ -614,7 +620,8 @@ public class PostgreSQLDataBackendTest {
         }
 
         SimpleDateFormat date = new SimpleDateFormat("yyyyMMddhhmmss");
-        tempOrder = new Order(date.parse("20090904213000"),testCassiere.getUsername(), "hell", 0);
+        tempOrder = new Order(date.parse("20090904213000"),
+                testCassiere.getUsername(), "hell", 0, listOfArts.getSignature());
         entry = new EntryArticleGroup(groups.get(0));
         entry.addArticle(groups.get(0).getList().get(0), 3);
         entry.addArticle(groups.get(0).getList().get(3), 2);
@@ -673,7 +680,8 @@ public class PostgreSQLDataBackendTest {
         optionsList.add(new BaseEntry<String>(
                 ((ArticleWithOptions)articles.get(2)).getOptions().get(1), 3));
 
-        Order tempOrder = new Order(testCassiere.getUsername(), "hell", 0);
+        Order tempOrder = new Order(testCassiere.getUsername(), "hell", 0,
+                                    listOfArts.getSignature());
         EntryArticleGroup entry = new EntryArticleGroup(groups.get(0));
         entry.addArticleWithOptions(
                 (ArticleWithOptions)articles.get(2), 5, 0, optionsList);
@@ -817,7 +825,8 @@ public class PostgreSQLDataBackendTest {
 
         articles = backend.loadArticlesOfGroup(1);
 
-        Order tempOrder = new Order(testCassiere.getUsername(), "hell", 0);
+        Order tempOrder = new Order(testCassiere.getUsername(), "hell", 0,
+                                    listOfArts.getSignature());
         EntryArticleGroup entry = new EntryArticleGroup(groups.get(0));
         entry.addArticle(groups.get(0).getList().get(0), 3);
         entry.addArticle(groups.get(0).getList().get(3), 2);

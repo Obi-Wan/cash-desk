@@ -58,15 +58,21 @@ public class Order implements Serializable, Comparable<Order> {
     int table;
 
     /**
+     *
+     */
+    final private int[] listSignature;
+
+    /**
      * Default constructor (well, at most :) )
      *
      * @param username Username of the <code>Cassiere</code> that emitted this
      * @param hostname <code>Cassa</code> at which the order was emitted
      * @param table Table where to serve the order
+     * @param listSign Signature of the list from which the groups are taken
      */
-    public Order(String username, String hostname, int table) {
+    public Order(String username, String hostname, int table, int[] listSign) {
         this( new Date(), new String(username), new String(hostname), table,
-                new Vector<EntryArticleGroup>());
+                new Vector<EntryArticleGroup>(), listSign);
     }
 
     /**
@@ -76,11 +82,13 @@ public class Order implements Serializable, Comparable<Order> {
      * @param username Username of the <code>Cassiere</code> that emitted this
      * @param hostname <code>Cassa</code> at which the order was emitted
      * @param table Table where to serve the order
+     * @param listSign Signature of the list from which the groups are taken
      */
-    public Order(Date date, String username, String hostname, int table) {
+    public Order(Date date, String username, String hostname, int table,
+                int[] listSign) {
         this( new Date(date.getTime()), new String(username),
                 new String(hostname), table,
-                new Vector<EntryArticleGroup>());
+                new Vector<EntryArticleGroup>(), listSign);
     }
 
     /**
@@ -94,15 +102,17 @@ public class Order implements Serializable, Comparable<Order> {
      * @param hostname <code>Cassa</code> at which the order was emitted
      * @param table Table where to serve the order
      * @param groups List of groups that contain <code>Article</code>s sold
+     * @param listSign Signature of the list from which the groups are taken
      */
     private Order( Date date, String username, String hostname, int table,
-            List<EntryArticleGroup> groups) {
+            List<EntryArticleGroup> groups, int[] listSign) {
         this.date = date;
         this.groupsList = groups;
         this.username = username;
         this.hostname = hostname;
         this.table = table;
         this.totalPrice = 0;
+        this.listSignature = listSign;
     }
 
     /**
@@ -116,6 +126,7 @@ public class Order implements Serializable, Comparable<Order> {
         this.username = new String(order.username);
         this.totalPrice = order.totalPrice;
         this.groupsList = new Vector<EntryArticleGroup>(order.groupsList);
+        this.listSignature = order.listSignature;
     }
 
     /**
@@ -224,5 +235,13 @@ public class Order implements Serializable, Comparable<Order> {
     public int compareTo(Order o) {
         final int dateComp = this.date.compareTo(o.date);
         return (dateComp == 0) ? this.username.compareTo(o.username) : dateComp;
+    }
+
+    /**
+     * Getts the signature of the list used to create the order
+     * @return an array of integers containing the signature
+     */
+    public int[] getListSignature() {
+        return listSignature;
     }
 }

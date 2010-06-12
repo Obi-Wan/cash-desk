@@ -27,6 +27,7 @@ import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
 import gestionecassa.ArticlesList;
 import gestionecassa.clients.gui.VariableVisualList;
+import gestionecassa.exceptions.WrongArticlesListException;
 import gestionecassa.order.EntryArticleGroup;
 import gestionecassa.order.Order;
 import java.awt.Dimension;
@@ -197,7 +198,8 @@ public class GuiNewOrderPanel extends javax.swing.JPanel implements VariableVisu
      */
     private Order createNewOrder() throws RemoteException {
         // TODO One day will be needed here to handle the table properly
-        Order tempOrd = new Order(owner.getUsername(), owner.getHostname(), 0);
+        Order tempOrd = new Order(owner.getUsername(), owner.getHostname(), 0,
+                                    articlesList.getSignature());
 
         for (GuiGroupPanel group : varListMng.getPanels()) {
             EntryArticleGroup tempEntry = group.collectOrderEntries();
@@ -241,6 +243,13 @@ public class GuiNewOrderPanel extends javax.swing.JPanel implements VariableVisu
                 frame.getStatusPanel().setEmittedOrder(nuovoOrdine.getTotalPrice());
                 this.cleanDataFields();
             }
+        } catch (WrongArticlesListException ex) {
+            owner.getLogger().warn("The list of articles is outdated", ex);
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "La lista degli articoli non coincide con quella del server\n" +
+                "Per favore aggiornala",
+                "Errore nella lista degli articoli",
+                javax.swing.JOptionPane.ERROR_MESSAGE);
         } catch (RemoteException ex) {
             javax.swing.JOptionPane.showMessageDialog(this,
                 "Il server non ha risposto alla richiesta dell'invio del " +
