@@ -12,14 +12,16 @@ package gestionecassa.exceptions;
 public class ActorAlreadyExistingException extends Exception {
 
     /**
-     * Creates a new instance of <code>ActorAlreadyExistingException</code> without detail message.
+     * Creates a new instance of <code>ActorAlreadyExistingException</code>
+     * without detail message.
      */
     public ActorAlreadyExistingException() {
     }
 
 
     /**
-     * Constructs an instance of <code>ActorAlreadyExistingException</code> with the specified detail message.
+     * Constructs an instance of <code>ActorAlreadyExistingException</code> with
+     * the specified detail message.
      * @param msg the detail message.
      */
     public ActorAlreadyExistingException(String msg) {

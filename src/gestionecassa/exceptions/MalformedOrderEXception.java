@@ -21,14 +21,16 @@ package gestionecassa.exceptions;
 public class MalformedOrderEXception extends Exception {
 
     /**
-     * Creates a new instance of <code>MalformedOrderEXception</code> without detail message.
+     * Creates a new instance of <code>MalformedOrderEXception</code> without
+     * detail message.
      */
     public MalformedOrderEXception() {
     }
 
 
     /**
-     * Constructs an instance of <code>MalformedOrderEXception</code> with the specified detail message.
+     * Constructs an instance of <code>MalformedOrderEXception</code> with the
+     * specified detail message.
      * @param msg the detail message.
      */
     public MalformedOrderEXception(String msg) {

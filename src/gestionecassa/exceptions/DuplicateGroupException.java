@@ -21,14 +21,16 @@ package gestionecassa.exceptions;
 public class DuplicateGroupException extends Exception {
 
     /**
-     * Creates a new instance of <code>DuplicateGroupException</code> without detail message.
+     * Creates a new instance of <code>DuplicateGroupException</code> without
+     * detail message.
      */
     public DuplicateGroupException() {
     }
 
 
     /**
-     * Constructs an instance of <code>DuplicateGroupException</code> with the specified detail message.
+     * Constructs an instance of <code>DuplicateGroupException</code> with the
+     * specified detail message.
      * @param msg the detail message.
      */
     public DuplicateGroupException(String msg) {

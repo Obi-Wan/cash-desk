@@ -21,14 +21,16 @@ package gestionecassa.exceptions;
 public class DuplicateArticleException extends Exception {
 
     /**
-     * Creates a new instance of <code>DuplicateArticleException</code> without detail message.
+     * Creates a new instance of <code>DuplicateArticleException</code> without
+     * detail message.
      */
     public DuplicateArticleException() {
     }
 
 
     /**
-     * Constructs an instance of <code>DuplicateArticleException</code> with the specified detail message.
+     * Constructs an instance of <code>DuplicateArticleException</code> with the
+     * specified detail message.
      * @param msg the detail message.
      */
     public DuplicateArticleException(String msg) {

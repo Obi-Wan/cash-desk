@@ -21,14 +21,16 @@ package gestionecassa.exceptions;
 public class NotExistingSessionException extends Exception {
 
     /**
-     * Creates a new instance of <code>NotExistingSessionException</code> without detail message.
+     * Creates a new instance of <code>NotExistingSessionException</code>
+     * without detail message.
      */
     public NotExistingSessionException() {
     }
 
 
     /**
-     * Constructs an instance of <code>NotExistingSessionException</code> with the specified detail message.
+     * Constructs an instance of <code>NotExistingSessionException</code> with
+     * the specified detail message.
      * @param msg the detail message.
      */
     public NotExistingSessionException(String msg) {
