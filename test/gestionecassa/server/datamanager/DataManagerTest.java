@@ -14,8 +14,6 @@
 
 package gestionecassa.server.datamanager;
 
-import gestionecassa.backends.BackendAPI_2;
-import gestionecassa.backends.BackendAPI_1;
 import gestionecassa.Admin;
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
@@ -23,12 +21,18 @@ import gestionecassa.ArticleWithOptions;
 import gestionecassa.ArticlesList;
 import gestionecassa.Cassiere;
 import gestionecassa.Person;
+import gestionecassa.exceptions.WrongArticlesListException;
+import gestionecassa.order.BaseEntry;
+import gestionecassa.order.EntryArticleGroup;
+import gestionecassa.order.Order;
 import gestionecassa.stubs.BackendStub_1;
 import gestionecassa.stubs.BackendStub_2;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -43,8 +47,8 @@ import static org.junit.Assert.*;
 public class DataManagerTest {
 
     DataManager dataManager;
-    BackendAPI_1 backend_1;
-    BackendAPI_2 backend_2;
+    BackendStub_1 backend_1;
+    BackendStub_2 backend_2;
 
     public DataManagerTest() {
         backend_1 = new BackendStub_1();
@@ -75,7 +79,9 @@ public class DataManagerTest {
     public void testRegisterCasssiere() {
         System.out.println("registerUser: Cassiere's part");
         Cassiere temp = new Cassiere(dataManager.getCassieresList().size(), "yeah", "bhoo");
+        int numPrima = dataManager.getCassieresList().size();
         dataManager.registerUser(temp);
+        assertEquals(numPrima+1, dataManager.getCassieresList().size());
         assertEquals(temp, dataManager.getCassieresList().get(temp.getUsername()));
     }
 
@@ -86,7 +92,9 @@ public class DataManagerTest {
     public void testRegisterAdmin() {
         System.out.println("registerUser: Admin's part");
         Admin temp = new Admin(dataManager.getAdminsList().size(), "yeah", "bhoo");
+        int numPrima = dataManager.getAdminsList().size();
         dataManager.registerUser(temp);
+        assertEquals(numPrima+1, dataManager.getAdminsList().size());
         assertEquals(temp, dataManager.getAdminsList().get(temp.getUsername()));
     }
 
@@ -127,6 +135,17 @@ public class DataManagerTest {
     @Test
     public void testCreateNewCassaSession() {
         System.out.println("createNewCassaSession");
+
+        final String timestamp = new SimpleDateFormat(
+                "yyyy-MM-dd_HH-mm-ss").format(new Date());
+
+        assertTrue("no Cassieres in the list", dataManager.getCassieresList().size() > 0);
+        String username = dataManager.getCassieresList().firstKey();
+        String identifier = username + "@" + timestamp;
+
+        dataManager.createNewCassaSession(identifier);
+
+        assertNotNull(dataManager.getOrdersTable().get(username + "@" + timestamp));
     }
 
     /**
@@ -135,31 +154,143 @@ public class DataManagerTest {
     @Test
     public void testCloseCassaSession() {
         System.out.println("closeCassaSession");
+
+        /* create session */
+        final String timestamp = new SimpleDateFormat(
+                "yyyy-MM-dd_HH-mm-ss").format(new Date());
+        String username = dataManager.getCassieresList().firstKey();
+        String identifier = username + "@" + timestamp;
+        dataManager.createNewCassaSession(identifier);
+
+        /* test it */
+        int numPrima = dataManager.getOrdersTable().size();
+        dataManager.closeCassaSession(identifier);
+
+        assertEquals("Not closed", numPrima-1, dataManager.getOrdersTable().size());
+        assertNull(dataManager.getOrdersTable().get(identifier));
+
+        assertEquals("not flushed", 0, backend_1.ordersList.size());
     }
 
     /**
      * Test of addNewOrder method, of class DataManager.
+     * @throws IOException
+     * @throws WrongArticlesListException 
      */
     @Test
-    public void testAddNewOrder() {
+    public void testAddNewOrder() throws IOException, WrongArticlesListException {
         System.out.println("addNewOrder");
+        
+        /* create session */
+        final String timestamp = new SimpleDateFormat(
+                "yyyy-MM-dd_HH-mm-ss").format(new Date());
+        String username = dataManager.getCassieresList().firstKey();
+        String identifier = username + "@" + timestamp;
+        dataManager.createNewCassaSession(identifier);
+
+        /* add orders */
+        Order order = new Order(username, "here", 0,
+                            dataManager.getAllArticlesList().getSignature());
+        ArticleGroup group = dataManager.getAllArticlesList().getEnabledList().getGroup(0);
+        EntryArticleGroup groupsToAdd = new EntryArticleGroup(group);
+        groupsToAdd.addArticle(group.getList().get(0), 2);
+
+        order.addGroup(groupsToAdd);
+
+        dataManager.addNewOrder(identifier, order);
+        assertEquals("Order not added", 1,
+                        dataManager.getOrdersTable().get(identifier).size());
+        
+        /* Verify orders were flushed */
+        int numPrima = dataManager.getOrdersTable().size();
+        dataManager.closeCassaSession(identifier);
+
+        assertEquals("Not closed", numPrima-1, dataManager.getOrdersTable().size());
+        assertNull(dataManager.getOrdersTable().get(identifier));
+
+        assertEquals("not flushed", 1, backend_1.ordersList.size());
     }
 
     /**
      * Test of delLastOrder method, of class DataManager.
+     * @throws IOException
+     * @throws WrongArticlesListException
      */
     @Test
 
-    public void testDelLastOrder() {
+    public void testDelLastOrder() throws IOException, WrongArticlesListException {
         System.out.println("delLastOrder");
+
+        /* create session */
+        final String timestamp = new SimpleDateFormat(
+                "yyyy-MM-dd_HH-mm-ss").format(new Date());
+        String username = dataManager.getCassieresList().firstKey();
+        String identifier = username + "@" + timestamp;
+        dataManager.createNewCassaSession(identifier);
+
+        /* add orders */
+        Order order = new Order(username, "here", 0,
+                            dataManager.getAllArticlesList().getSignature());
+        ArticleGroup group = dataManager.getAllArticlesList().getEnabledList().getGroup(0);
+        EntryArticleGroup groupsToAdd = new EntryArticleGroup(group);
+        groupsToAdd.addArticle(group.getList().get(0), 2);
+
+        order.addGroup(groupsToAdd);
+
+        dataManager.addNewOrder(identifier, order);
+
+        dataManager.delLastOrder(identifier);
+        assertEquals("Order not added", 0,
+                        dataManager.getOrdersTable().get(identifier).size());
+
+        /* Verify orders were flushed */
+        int numPrima = dataManager.getOrdersTable().size();
+        dataManager.closeCassaSession(identifier);
+
+        assertEquals("Not closed", numPrima-1,
+                                        dataManager.getOrdersTable().size());
+        assertNull(dataManager.getOrdersTable().get(identifier));
+
+        assertEquals("Flushed something it wasn't meant to be", 0,
+                                                backend_1.ordersList.size());
     }
 
     /**
      * Test of getNProgressive method, of class DataManager.
+     * @throws IOException
+     * @throws WrongArticlesListException
      */
     @Test
-    public void testGetNProgressivo() {
+    public void testGetNProgressivo() throws IOException, WrongArticlesListException {
         System.out.println("getNProgressivo");
+
+        /* create session */
+        final String timestamp = new SimpleDateFormat(
+                "yyyy-MM-dd_HH-mm-ss").format(new Date());
+        String username = dataManager.getCassieresList().firstKey();
+        String identifier = username + "@" + timestamp;
+        dataManager.createNewCassaSession(identifier);
+
+        /* add orders */
+        Order order = new Order(username, "here", 0,
+                            dataManager.getAllArticlesList().getSignature());
+        ArticleGroup group = dataManager.getAllArticlesList().getEnabledList().getGroup(0);
+        EntryArticleGroup groupsToAdd = new EntryArticleGroup(group);
+
+        ArticleWithOptions articleWO = (ArticleWithOptions) group.getList().get(3);
+
+        int progressive = dataManager.getNProgressive(articleWO.getName(), 2);
+        groupsToAdd.addArticleWithOptions(
+                articleWO, 2, progressive, new ArrayList<BaseEntry<String>>());
+
+        order.addGroup(groupsToAdd);
+        
+        dataManager.addNewOrder(identifier, order);
+
+
+        /* Verify orders were flushed */
+        int numPrima = dataManager.getOrdersTable().size();
+        dataManager.closeCassaSession(identifier);
     }
 
     /**
