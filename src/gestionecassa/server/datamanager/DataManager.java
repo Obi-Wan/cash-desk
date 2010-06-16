@@ -88,7 +88,7 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
      * lead the threads to share the same semaphore.
      */
     static final private String listAdminsSemaphore =
-            new String("AdminsSemaphore" + System.currentTimeMillis());
+            "AdminsSemaphore" + System.currentTimeMillis();
 
     /**
      * Semaphore for the list of users
@@ -97,7 +97,7 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
      * lead the threads to share the same semaphore.
      */
     static final private String listCassieriSemaphore =
-            new String("CassieriSemaphore" + System.currentTimeMillis());
+            "CassieriSemaphore" + System.currentTimeMillis();
 
     /**
      * Semaphore for the list of Articles
@@ -106,7 +106,7 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
      * lead the threads to share the same semaphore.
      */
     static final private String listArticlesSemaphore =
-            new String("ArticlesSemaphore" + System.currentTimeMillis());
+            "ArticlesSemaphore" + System.currentTimeMillis();
 
     /**
      * Semaphore for the list of progressive numbers
@@ -115,7 +115,7 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
      * lead the threads to share the same semaphore.
      */
     static final private String listProgressiviSemaphore =
-            new String("ProgressiviSemaphore" + System.currentTimeMillis());
+            "ProgressiviSemaphore" + System.currentTimeMillis();
 
     /**
      * Semaphore for the list of orders
@@ -124,7 +124,7 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
      * lead the threads to share the same semaphore.
      */
     static final private String listOrdersSemaphore =
-            new String("OrdersSemaphore" + System.currentTimeMillis());
+            "OrdersSemaphore" + System.currentTimeMillis();
 
     /**
      * Creates a new DataManager class
@@ -247,9 +247,8 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
     }
 
     /**
-     *
-     * @param user
-     * @return
+     * Registers the new {@code Person} to the list of new users
+     * @param user New user to add
      */
     @Override
     public void registerUser(Person user) {
@@ -324,7 +323,6 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
      * Note that the method <method>getEnabledList()</method> already makes a
      * copy of the original list
      * @return the list of all enabled articles
-     * @throws RemoteException
      */
     @Override
     public ArticlesList getEnabledArticlesList() {
@@ -442,8 +440,10 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
 
     /**
      * Adds an article to the common list.
-     *
-     * @param article
+     * @param group Cardinal number refering to the group of this new article
+     * @param article The article to add
+     * @throws DuplicateArticleException
+     * @throws NotExistingGroupException
      */
     @Override
     public void addArticle(int group, Article article)
@@ -474,8 +474,10 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
 
     /**
      * Adds an article to the common list.
-     *
-     * @param article
+     * @param group Cardinal number refering to the group of this new article
+     * @param article The article to add
+     * @throws DuplicateArticleException
+     * @throws NotExistingGroupException
      */
     @Override
     public void addArticle(String group, Article article)

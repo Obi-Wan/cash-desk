@@ -58,7 +58,7 @@ public class ServiceRMICassiereImpl extends SharedServerService
 
         final String timestamp = new SimpleDateFormat(
                 "yyyy-MM-dd_HH-mm-ss").format(new Date());
-        sessionIdentifier = new String(username + "@" + timestamp);
+        sessionIdentifier = username + "@" + timestamp;
 
         dataManager.createNewCassaSession(sessionIdentifier);
     }
@@ -75,9 +75,10 @@ public class ServiceRMICassiereImpl extends SharedServerService
     /**
      * Method to send new orders from clients
      * 
-     * @param newOrder
+     * @param newOrder the new order to verify and append
      * @throws RemoteException
      * @throws IOException
+     * @throws WrongArticlesListException
      */
     @Override
     public void sendOrder(Order newOrder)

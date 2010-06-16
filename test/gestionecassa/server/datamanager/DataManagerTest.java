@@ -112,6 +112,7 @@ public class DataManagerTest {
 
     /**
      * Test of getAllArticlesList method, of class DataManager.
+     * @throws IOException
      */
     @Test
     public void testGetCurrentArticlesList() throws IOException {
@@ -163,6 +164,7 @@ public class DataManagerTest {
 
     /**
      * Test of saveNewArticlesList method, of class DataManager.
+     * @throws IOException 
      */
     @Test
     public void testSaveNewArticlesList() throws IOException {
