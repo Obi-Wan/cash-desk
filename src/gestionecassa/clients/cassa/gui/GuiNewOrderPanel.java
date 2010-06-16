@@ -42,7 +42,7 @@ import javax.swing.KeyStroke;
  *
  * @author ben
  */
-public class GuiNewOrderPanel extends javax.swing.JPanel implements VariableVisualList {
+public final class GuiNewOrderPanel extends javax.swing.JPanel implements VariableVisualList {
 
     /**
      * Reference alla classe della business logic
@@ -67,7 +67,8 @@ public class GuiNewOrderPanel extends javax.swing.JPanel implements VariableVisu
     /** 
      * Creates new form GuiNewOrderPanel
      *
-     * @param owner
+     * @param owner Reference to the client app
+     * @param frame Reference to the frame containing this panel
      */
     public GuiNewOrderPanel(CassaAPI owner, GuiAppFrameCassa frame) {
         initComponents();
@@ -77,7 +78,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel implements VariableVisu
         fetchArticlesList();
 
         varListMng = new VisualListsMngr<GuiGroupPanel, ArticleGroup>(this);
-        varListMng.setInitialGap(true);
+        varListMng.setHasInitialGap(true);
         buildContentsList();
         rebuildVisualList();
 
@@ -125,13 +126,17 @@ public class GuiNewOrderPanel extends javax.swing.JPanel implements VariableVisu
      * Populates the list of the panels related to each article sold.
      */
     void buildContentsList() {
-        varListMng.resetList();
+        this.varListMng.resetList();
+        /* Visual Id of articles for shortcuts from keyboard */
         int i = 0;
+        /* Every group will have its panel */
         for (ArticleGroup articleGroup : articlesList.getGroupsList()) {
 
+            /* create and add to the manager the panel for this group */
             GuiGroupPanel grPanel = new GuiGroupPanel(this, articleGroup);
             this.varListMng.addRecord(grPanel, articleGroup);
-            
+
+            /* for every article in that group */
             for (Article article : articleGroup.getList()) {
                 GuiAbstrSingleEntryPanel tempPanel;
                 if (article instanceof ArticleWithOptions) {
@@ -145,6 +150,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel implements VariableVisu
                 i++;
             }
 
+            /* let's create the internal list for this group panel */
             grPanel.varListMngr.buildVisualList();
         }
     }
@@ -178,7 +184,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel implements VariableVisu
      * it fetches the ArticleList from the server (through the CassaAPI)
      * and makes the client store it locally
      */
-    void forceRMIRequestArticlesList() {
+    private void forceRMIRequestArticlesList() {
         try {
             owner.fetchRMIArticlesList();
         } catch (RemoteException ex) {
@@ -191,9 +197,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel implements VariableVisu
 
     /**
      * Creates a new order from the chosen Articles
-     *
      * @return the created order
-     * 
      * @throws RemoteException
      */
     private Order createNewOrder() throws RemoteException {
@@ -212,8 +216,7 @@ public class GuiNewOrderPanel extends javax.swing.JPanel implements VariableVisu
 
     /**
      * It calculates the amount the "still to be committed" order will cost
-     *
-     * @return
+     * @return count of this partial order
      */
     private double computeCurrentOrder() {
         double output = 0;

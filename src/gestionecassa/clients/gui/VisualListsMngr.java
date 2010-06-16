@@ -31,7 +31,9 @@ import javax.swing.GroupLayout.SequentialGroup;
 import javax.swing.JPanel;
 
 /**
- *
+ * Manager of the dynamical list of panels
+ * @param <PanelType> Type of panels managed
+ * @param <DataType> Type of the data associated to the panels
  * @author ben
  */
 public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataType> {
@@ -54,10 +56,11 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
     /**
      * Visual effect of an initial blanck space in the list.
      */
-    protected boolean initialGap;
+    protected boolean hasInitialGap;
 
     /**
      * Default constructor
+     * @param managed
      */
     public VisualListsMngr(JPanel managed) {
         this(managed, new ArrayList<RecordPanels<PanelType, DataType>>() );
@@ -66,6 +69,7 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
     /**
      * Explicit constructor
      *
+     * @param managed
      * @param panelses
      */
     public VisualListsMngr(JPanel managed,
@@ -88,15 +92,23 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
         for (RecordPanels<PanelType, DataType> recordPanels : panelses) {
             panelsMap.put(recordPanels.displayedPanel, recordPanels);
         }
-        this.initialGap = initGap;
+        this.hasInitialGap = initGap;
     }
 
-    public void setInitialGap(boolean initialGap) {
-        this.initialGap = initialGap;
+    /**
+     * Sets the initial gap or it's absence
+     * @param initialGap Boolean meaning enbaled for yes
+     */
+    public void setHasInitialGap(boolean initialGap) {
+        this.hasInitialGap = initialGap;
     }
 
-    public boolean getInitialGap() {
-        return this.initialGap;
+    /**
+     * Tells whether it is enbaled the initial gap or not
+     * @return true for enabled
+     */
+    public boolean hasInitialGap() {
+        return this.hasInitialGap;
     }
 
     /**
@@ -119,7 +131,7 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
         SequentialGroup tempSequGroup = layout.createSequentialGroup();
 
         /* If requested leave a gap before the first item */
-        if (initialGap) {
+        if (hasInitialGap) {
             tempSequGroup.addContainerGap();
         }
 
@@ -175,7 +187,7 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
     }
 
     /**
-     *
+     * it resets the lists and removes panels
      */
     public void resetList() {
         panelsList.clear();
@@ -184,8 +196,8 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
     }
 
     /**
-     * 
-     * @param panel
+     * Removes a specific panel
+     * @param panel the panel to remove
      */
     public void remove(PanelType panel) {
         RecordPanels<PanelType, DataType> record = panelsMap.get(panel);
@@ -197,9 +209,9 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
     }
 
     /**
-     * 
-     * @param pan
-     * @param data
+     * Adds a panel with related data
+     * @param pan Panel to add
+     * @param data data of the panel
      */
     public void addRecord(PanelType pan, DataType data) {
         RecordPanels<PanelType, DataType> record =
@@ -209,16 +221,16 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
     }
 
     /**
-     *
-     * @return
+     * Getter for the records
+     * @return the list of records
      */
     public List<RecordPanels<PanelType, DataType>> getRecords() {
         return panelsList;
     }
 
     /**
-     * 
-     * @return
+     * Getter for the panels
+     * @return returns the panels
      */
     public Collection<PanelType> getPanels() {
         return panelsMap.keySet();

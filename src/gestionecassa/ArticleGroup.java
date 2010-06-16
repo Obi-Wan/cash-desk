@@ -31,26 +31,27 @@ public class ArticleGroup implements Serializable {
     /**
      * The Id of the group
      */
-    final int idGroup;
+    final private int idGroup;
 
     /**
      * Name of the group
      */
-    String groupName;
+    private String groupName;
 
     /**
      * Tells if it's enabled
      */
-    boolean enabled;
+    private boolean enabled;
 
     /**
      * List of the articles sold in this group
      */
-    List<Article> list;
+    private List<Article> list;
 
     /**
      * Default constructor for the list of articles (but explicit for the name)
      * 
+     * @param id
      * @param grn Name of this group
      */
     public ArticleGroup(int id, String grn) {
@@ -60,6 +61,7 @@ public class ArticleGroup implements Serializable {
     /**
      * Explicit constructor
      *
+     * @param id
      * @param grn Name of this group
      * @param list List of articles of this group
      */
@@ -70,12 +72,13 @@ public class ArticleGroup implements Serializable {
     /**
      * Explicit constructor
      *
+     * @param id
      * @param grn Name of this group
      * @param en If group is enabled/disabled
      * @param list List of articles of this group
      */
     public ArticleGroup(int id, String grn, boolean en, Collection<Article> list) {
-        this.groupName = new String(grn);
+        this.groupName = grn;
         this.list = new ArrayList<Article>(list);
         this.enabled = en;
         this.idGroup = id;
@@ -123,7 +126,7 @@ public class ArticleGroup implements Serializable {
      * @param groupName String containing the new name of this group
      */
     void setGroupName(String groupName) {
-        this.groupName = new String(groupName);
+        this.groupName = groupName;
     }
 
 
@@ -167,6 +170,7 @@ public class ArticleGroup implements Serializable {
      *
      * @param oldPos Old position
      * @param newPos New position
+     * @return reference to the article moved
      */
     public Article moveArticleAt(int oldPos, int newPos) {
         Article temp = list.remove(oldPos);
@@ -179,6 +183,7 @@ public class ArticleGroup implements Serializable {
      *
      * @param a Article to move
      * @param newPos New position
+     * @return reference to the article moved
      */
     public Article moveArticleAt(Article a, int newPos) {
         for (Article article : list) {
@@ -198,7 +203,7 @@ public class ArticleGroup implements Serializable {
      * @return A String containing the description of the content of this group
      */
     public String getPrintableFormat() {
-        String output = new String("Articoli del gruppo " + groupName + ":\n");
+        String output = "Articoli del gruppo " + groupName + ":\n";
         for (int i = 0; i < list.size(); i++) {
             Article article = list.get(i);
             output += String.format("%2d %s\n",i,article.getPrintableFormat());

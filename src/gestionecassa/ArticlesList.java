@@ -102,7 +102,7 @@ public class ArticlesList implements Serializable {
     private void generateNumMap() {
         grNum = new TreeMap<String, Integer>();
         for (int i = 0; i < groups.size(); i++) {
-            grNum.put(groups.get(i).groupName, i);
+            grNum.put(groups.get(i).getGroupName(), i);
         }
     }
 
@@ -141,20 +141,20 @@ public class ArticlesList implements Serializable {
      */
     public void addGroup(ArticleGroup group) throws DuplicateGroupException,
             DuplicateArticleException {
-        if (!grNum.containsKey(group.groupName)) {
-            for (Article article : group.list) {
+        if (!grNum.containsKey(group.getGroupName())) {
+            for (Article article : group.getList()) {
                 if (articles.containsKey(article.name)) {
                     throw new DuplicateArticleException("Duplicated article: "
                             + article.name + " in group that's being added: " + 
-                            group.groupName);
+                            group.getGroupName());
                 }
             }
             groups.add(group);
-            grNum.put(group.groupName, groups.size()-1);
+            grNum.put(group.getGroupName(), groups.size()-1);
             generateArtMap();
         } else {
             throw new DuplicateGroupException("Already existing group: "
-                    + group.groupName);
+                    + group.getGroupName());
         }
 
         //FIXME can be heavy if in a batch of adds
@@ -166,6 +166,8 @@ public class ArticlesList implements Serializable {
      *
      * @param article The article to add.
      * @param groupName Name of the group.
+     * @throws DuplicateArticleException
+     * @throws NotExistingGroupException
      */
     public void addArticleToGroup(String groupName, Article article)
             throws DuplicateArticleException, NotExistingGroupException {
@@ -189,6 +191,8 @@ public class ArticlesList implements Serializable {
      *
      * @param article The article to add.
      * @param groupNum Cardinal number of the group
+     * @throws DuplicateArticleException
+     * @throws NotExistingGroupException
      */
     public void addArticleToGroup(int groupNum, Article article)
             throws DuplicateArticleException, NotExistingGroupException {
@@ -213,6 +217,7 @@ public class ArticlesList implements Serializable {
      * @param group Cardinal number of the group
      * @param pos Position of the article
      * @param enable Enable/disable
+     * @return reference to the article enabled
      */
     public Article enableArticle(int group, int pos, boolean enable) {
         if ((group >= 0 && group < groups.size()) &&
@@ -228,6 +233,7 @@ public class ArticlesList implements Serializable {
      *
      * @param art The article to modify
      * @param enable Enable/disable
+     * @return reference to the article enabled
      */
     public Article enableArticle(Article art, boolean enable) {
         if (articles.containsKey(art.name)) {
@@ -321,7 +327,8 @@ public class ArticlesList implements Serializable {
     public ArticlesList getEnabledList() {
         List<ArticleGroup> tempList = new ArrayList<ArticleGroup>();
         for (ArticleGroup artGr : groups) {
-            ArticleGroup tempGroup = new ArticleGroup(artGr.idGroup, artGr.groupName);
+            ArticleGroup tempGroup =
+                    new ArticleGroup(artGr.getIdGroup(), artGr.getGroupName());
             if (tempGroup.isEnabled()) {
                 for (Article art : artGr.getList()) {
                     if (art.enabled) {
@@ -353,7 +360,7 @@ public class ArticlesList implements Serializable {
         for (ArticleGroup articleGroup : groups) {
             if (articleGroup.isEnabled()) {
                 bytes.add(articleGroup.hashCode());
-                for (Article article : articleGroup.list) {
+                for (Article article : articleGroup.getList()) {
                     if (article.isEnabled()) {
                         bytes.add(article.hashCode());
                     }
