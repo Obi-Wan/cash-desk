@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
 import javax.swing.JPanel;
@@ -60,7 +60,7 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
      * Default constructor
      */
     public VisualListsMngr(JPanel managed) {
-        this(managed, new Vector<RecordPanels<PanelType, DataType>>() );
+        this(managed, new ArrayList<RecordPanels<PanelType, DataType>>() );
     }
 
     /**

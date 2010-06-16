@@ -39,7 +39,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import org.apache.log4j.Logger;
@@ -350,7 +350,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
             try {
                 ResultSet rs = st.executeQuery(query);
 
-                List<ArticleGroup> outout = new Vector<ArticleGroup>();
+                List<ArticleGroup> outout = new ArrayList<ArticleGroup>();
                 while (rs.next()) {
                     int idGroup = rs.getInt("id_group");
                     
@@ -387,7 +387,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
             try {
                 ResultSet rs = st.executeQuery(query);
 
-                List<Article> outout = new Vector<Article>();
+                List<Article> outout = new ArrayList<Article>();
                 while (rs.next()) {
                     int idArticle = rs.getInt("id_article");
 

@@ -15,7 +15,7 @@
 package gestionecassa;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  *
@@ -35,7 +35,7 @@ public class OrganizedEvent {
 
     public OrganizedEvent(String title) {
         this.name = new String(title);
-        this.datesList = new Vector<EventDate>();
+        this.datesList = new ArrayList<EventDate>();
     }
 
     @Override

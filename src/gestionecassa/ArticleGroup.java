@@ -17,7 +17,7 @@ package gestionecassa;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * Group of Articles, not synchronized.
@@ -54,7 +54,7 @@ public class ArticleGroup implements Serializable {
      * @param grn Name of this group
      */
     public ArticleGroup(int id, String grn) {
-        this(id, grn, new Vector<Article>());
+        this(id, grn, new ArrayList<Article>());
     }
 
     /**
@@ -76,7 +76,7 @@ public class ArticleGroup implements Serializable {
      */
     public ArticleGroup(int id, String grn, boolean en, Collection<Article> list) {
         this.groupName = new String(grn);
-        this.list = new Vector<Article>(list);
+        this.list = new ArrayList<Article>(list);
         this.enabled = en;
         this.idGroup = id;
     }

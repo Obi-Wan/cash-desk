@@ -18,7 +18,7 @@ import gestionecassa.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * Stores all the information about an order emitted.
@@ -72,7 +72,7 @@ public class Order implements Serializable, Comparable<Order> {
      */
     public Order(String username, String hostname, int table, int[] listSign) {
         this( new Date(), new String(username), new String(hostname), table,
-                new Vector<EntryArticleGroup>(), listSign);
+                new ArrayList<EntryArticleGroup>(), listSign);
     }
 
     /**
@@ -88,7 +88,7 @@ public class Order implements Serializable, Comparable<Order> {
                 int[] listSign) {
         this( new Date(date.getTime()), new String(username),
                 new String(hostname), table,
-                new Vector<EntryArticleGroup>(), listSign);
+                new ArrayList<EntryArticleGroup>(), listSign);
     }
 
     /**
@@ -125,7 +125,7 @@ public class Order implements Serializable, Comparable<Order> {
         this.hostname = new String(order.hostname);
         this.username = new String(order.username);
         this.totalPrice = order.totalPrice;
-        this.groupsList = new Vector<EntryArticleGroup>(order.groupsList);
+        this.groupsList = new ArrayList<EntryArticleGroup>(order.groupsList);
         this.listSignature = order.listSignature;
     }
 
@@ -151,7 +151,7 @@ public class Order implements Serializable, Comparable<Order> {
      */
     @Deprecated
     public List<BaseEntry<Article>> getArticlesSold() {
-        List<BaseEntry<Article>> list = new Vector<BaseEntry<Article>>();
+        List<BaseEntry<Article>> list = new ArrayList<BaseEntry<Article>>();
         for (EntryArticleGroup group : groupsList) {
             list.addAll(group.articles);
         }

@@ -20,7 +20,7 @@ import gestionecassa.Person;
 import gestionecassa.exceptions.NotExistingGroupException;
 import gestionecassa.exceptions.WrongArticlesListException;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.TreeMap;
@@ -340,7 +340,7 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
     @Override
     public void createNewCassaSession(String identifier) {
         synchronized (listOrdersSemaphore) {
-            ordersTable.put(identifier, new Vector<Order>());
+            ordersTable.put(identifier, new ArrayList<Order>());
         }
     }
 

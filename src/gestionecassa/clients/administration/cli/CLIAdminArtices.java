@@ -23,7 +23,7 @@ import gestionecassa.exceptions.NotExistingGroupException;
 import java.io.Console;
 import java.rmi.RemoteException;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  *
@@ -147,7 +147,7 @@ public class CLIAdminArtices {
         String name = con.readLine("Name: ");
         double price = Double.parseDouble(con.readLine("Price: "));
         boolean hasOptions = Boolean.parseBoolean(con.readLine("Has options (true to say yes): "));
-        List<String> options = new Vector<String>();
+        List<String> options = new ArrayList<String>();
         if (hasOptions) {
             String opt;
             while ( !(opt = con.readLine()).isEmpty() ) {
@@ -204,7 +204,7 @@ public class CLIAdminArtices {
         int id = art.getId();
         double price = art.getPrice();
         boolean enabled = art.isEnabled();
-        List<String> options = new Vector<String>();
+        List<String> options = new ArrayList<String>();
         if (art.hasOptions()) {
             options = ((ArticleWithOptions)art).getOptions();
         }

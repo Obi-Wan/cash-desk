@@ -21,7 +21,7 @@
 package gestionecassa.server;
 
 import gestionecassa.exceptions.NotExistingSessionException;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
@@ -103,7 +103,7 @@ class SessionManager {
 //        logger.debug("faccio il check delle sessioni attive.");
         synchronized (sessionListSemaphore) {
             for (SessionRecord elem :
-                    new Vector<SessionRecord>(sessions.values())) {
+                    new ArrayList<SessionRecord>(sessions.values())) {
 //                logger.debug("elemento con session id: "+
 //                        elem.sessionId + "ed elapsedtime: "+elem.timeElapsed);
                 /*se supera il timeout distrugge il thread e rimuove la sessione*/

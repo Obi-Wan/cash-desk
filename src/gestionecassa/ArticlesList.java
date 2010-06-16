@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * Manages the list of groups of articles.
@@ -56,7 +56,7 @@ public class ArticlesList implements Serializable {
      * Default constructor
      */
     public ArticlesList() {
-        this(new Vector<ArticleGroup>());
+        this(new ArrayList<ArticleGroup>());
         generateSignature();
     }
 
@@ -66,7 +66,7 @@ public class ArticlesList implements Serializable {
      * @param list List of groups
      */
     public ArticlesList(Collection<ArticleGroup> list) {
-        this.groups = new Vector<ArticleGroup>(list);
+        this.groups = new ArrayList<ArticleGroup>(list);
         generateArtMap();
         generateNumMap();
         generateSignature();
@@ -78,7 +78,7 @@ public class ArticlesList implements Serializable {
      * @param listSign the signature of the original list
      */
     private ArticlesList(Collection<ArticleGroup> list, int[] listSign) {
-        this.groups = new Vector<ArticleGroup>(list);
+        this.groups = new ArrayList<ArticleGroup>(list);
         this.signature = listSign;
         generateArtMap();
         generateNumMap();
@@ -90,7 +90,7 @@ public class ArticlesList implements Serializable {
      * @param list The list to copy from
      */
     public ArticlesList(ArticlesList list) {
-        this.groups = new Vector<ArticleGroup>(list.groups);
+        this.groups = new ArrayList<ArticleGroup>(list.groups);
         this.grNum = new TreeMap<String, Integer>(list.grNum);
         this.articles = new TreeMap<String, Article>(list.articles);
         this.signature = list.signature;
@@ -124,7 +124,7 @@ public class ArticlesList implements Serializable {
      * @return a written description of the list
      */
     public String getPrintableFormat() {
-        String output = new String("Lista degli articoli venduti (per gruppi):\n");
+        String output = "Lista degli articoli venduti (per gruppi):\n";
         for (int i = 0; i < groups.size(); i++) {
             ArticleGroup artgr = groups.get(i);
             output += String.format("%2d %s\n",i,artgr.getPrintableFormat());
@@ -259,7 +259,7 @@ public class ArticlesList implements Serializable {
      * @return the list in a <code>java.util.List</code> form.
      */
     final public List<ArticleGroup> getGroupsList() {
-        return new Vector<ArticleGroup>(groups);
+        return new ArrayList<ArticleGroup>(groups);
     }
 
     /**
@@ -268,7 +268,7 @@ public class ArticlesList implements Serializable {
      * @return the list in a <code>java.util.List</code> form.
      */
     final public Collection<Article> getArticlesList() {
-        return new Vector<Article>(articles.values());
+        return new ArrayList<Article>(articles.values());
     }
 
     /**
@@ -319,7 +319,7 @@ public class ArticlesList implements Serializable {
      * @return List of enabled articles in enabled groups
      */
     public ArticlesList getEnabledList() {
-        List<ArticleGroup> tempList = new Vector<ArticleGroup>();
+        List<ArticleGroup> tempList = new ArrayList<ArticleGroup>();
         for (ArticleGroup artGr : groups) {
             ArticleGroup tempGroup = new ArticleGroup(artGr.idGroup, artGr.groupName);
             if (tempGroup.isEnabled()) {
@@ -348,8 +348,8 @@ public class ArticlesList implements Serializable {
      * It's invoked after updates. It's not much performance oriented in a batch
      * of updates.
      */
-    public void generateSignature() {
-        List<Integer> bytes = new Vector<Integer>();
+    public final void generateSignature() {
+        List<Integer> bytes = new ArrayList<Integer>();
         for (ArticleGroup articleGroup : groups) {
             if (articleGroup.isEnabled()) {
                 bytes.add(articleGroup.hashCode());

@@ -22,7 +22,7 @@ import gestionecassa.Cassiere;
 import gestionecassa.order.Order;
 import java.util.Collection;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  *
@@ -39,13 +39,13 @@ public class BackendStub {
     public List<Cassiere> cassieres;
 
     public BackendStub() {
-        admins = new Vector<Admin>();
+        admins = new ArrayList<Admin>();
         admins.add(new Admin(admins.size(), "admin", "password"));
-        cassieres = new Vector<Cassiere>();
+        cassieres = new ArrayList<Cassiere>();
         cassieres.add(new Cassiere(cassieres.size(), "bene", "male"));
 
-        List<Article> articles = new Vector<Article>();
-        Collection<String> listaOpzioni = new Vector<String>();
+        List<Article> articles = new ArrayList<Article>();
+        Collection<String> listaOpzioni = new ArrayList<String>();
         listaOpzioni.add("cacca secca");
         listaOpzioni.add("cacca liquida");
         articles.add(new Article(1,"fagiolo", 25));
@@ -53,7 +53,7 @@ public class BackendStub {
         articles.add(new Article(3,"merda dello stige", 5.5));
         articles.add(new ArticleWithOptions(4,"panino alla", 10.25, listaOpzioni));
 
-        groups = new Vector<ArticleGroup>();
+        groups = new ArrayList<ArticleGroup>();
         groups.add(new ArticleGroup(1, "group", articles));
     }
 

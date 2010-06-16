@@ -19,7 +19,7 @@ import gestionecassa.ArticleWithOptions;
 import java.awt.print.PrinterJob;
 import java.io.File;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.Destination;
@@ -42,8 +42,8 @@ public class PainterTest {
     List<Article> articles;
 
     public PainterTest() {
-        articles = new Vector<Article>();
-        List<String> options = new Vector<String>();
+        articles = new ArrayList<Article>();
+        List<String> options = new ArrayList<String>();
         options.add("corta");
         options.add("media");
         options.add("lunga");

@@ -17,7 +17,7 @@ package gestionecassa.clients.cassa.printing;
 import gestionecassa.Article;
 import gestionecassa.ArticleWithOptions;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -34,8 +34,8 @@ public class TextPainterTest {
     List<Article> articles;
 
     public TextPainterTest() {
-        articles = new Vector<Article>();
-        List<String> options = new Vector<String>();
+        articles = new ArrayList<Article>();
+        List<String> options = new ArrayList<String>();
         options.add("corta");
         options.add("media");
         options.add("lunga");

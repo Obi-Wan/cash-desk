@@ -23,7 +23,7 @@ import gestionecassa.backends.BackendAPI_1;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  *
@@ -33,12 +33,12 @@ public class BackendStub_1 extends BackendStub implements BackendAPI_1 {
 
     @Override
     public void saveListOfOrders(String id, Collection<Order> list) throws IOException {
-        ordersList = new Vector<Order>(list);
+        ordersList = new ArrayList<Order>(list);
     }
 
     @Override
     public void saveArticlesList(ArticlesList list) throws IOException {
-        groups = new Vector<ArticleGroup>(list.getGroupsList());
+        groups = new ArrayList<ArticleGroup>(list.getGroupsList());
     }
 
     @Override
@@ -48,7 +48,7 @@ public class BackendStub_1 extends BackendStub implements BackendAPI_1 {
 
     @Override
     public void saveAdminsList(Collection<Admin> list) throws IOException {
-        admins = new Vector<Admin>(list);
+        admins = new ArrayList<Admin>(list);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class BackendStub_1 extends BackendStub implements BackendAPI_1 {
 
     @Override
     public void saveCassiereList(Collection<Cassiere> list) throws IOException {
-        cassieres = new Vector<Cassiere>(list);
+        cassieres = new ArrayList<Cassiere>(list);
     }
 
     @Override

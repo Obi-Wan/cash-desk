@@ -20,7 +20,7 @@ import gestionecassa.ArticleWithOptions;
 import gestionecassa.ArticlesList;
 import gestionecassa.order.Order;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -44,13 +44,13 @@ public class PrinterHelperTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        groups = new Vector<ArticleGroup>();
+        groups = new ArrayList<ArticleGroup>();
 
         int idArticle = 0;
 
         /* First group with id 0 */
-        articles = new Vector<Article>();
-        List<String> options = new Vector<String>();
+        articles = new ArrayList<Article>();
+        List<String> options = new ArrayList<String>();
         options.add("corta");
         options.add("media");
         options.add("lunga");
@@ -62,12 +62,12 @@ public class PrinterHelperTest {
         groups.add(new ArticleGroup(1, "Group1", articles));
 
         /* Second group, empty, with id 1 */
-        articles = new Vector<Article>();
+        articles = new ArrayList<Article>();
         groups.add(new ArticleGroup(2, "Group2", articles));
 
         /* Articles not in group 1 to add later */
-        articles = new Vector<Article>();
-        options = new Vector<String>();
+        articles = new ArrayList<Article>();
+        options = new ArrayList<String>();
         options.add("corta1");
         options.add("media1");
         options.add("lunga1");

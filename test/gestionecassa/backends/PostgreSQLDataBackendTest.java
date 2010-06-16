@@ -40,7 +40,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentSkipListSet;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -77,13 +77,13 @@ public class PostgreSQLDataBackendTest {
         testAdmin = new Admin(1, "admin", "password");
         testCassiere = new Cassiere(1, "bene", "male");
 
-        groups = new Vector<ArticleGroup>();
+        groups = new ArrayList<ArticleGroup>();
 
         int idArticle = 0;
 
         /* First group with id 0 */
-        articles = new Vector<Article>();
-        List<String> options = new Vector<String>();
+        articles = new ArrayList<Article>();
+        List<String> options = new ArrayList<String>();
         options.add("corta");
         options.add("media");
         options.add("lunga");
@@ -95,12 +95,12 @@ public class PostgreSQLDataBackendTest {
         groups.add(new ArticleGroup(1, "Group1", articles));
 
         /* Second group, empty, with id 1 */
-        articles = new Vector<Article>();
+        articles = new ArrayList<Article>();
         groups.add(new ArticleGroup(2, "Group2", articles));
 
         /* Articles not in group 1 to add later */
-        articles = new Vector<Article>();
-        options = new Vector<String>();
+        articles = new ArrayList<Article>();
+        options = new ArrayList<String>();
         options.add("corta1");
         options.add("media1");
         options.add("lunga1");
@@ -674,7 +674,7 @@ public class PostgreSQLDataBackendTest {
 
         articles = backend.loadArticlesOfGroup(1);
 
-        List<BaseEntry<String>> optionsList = new Vector<BaseEntry<String>>();
+        List<BaseEntry<String>> optionsList = new ArrayList<BaseEntry<String>>();
         optionsList.add(new BaseEntry<String>(
                 ((ArticleWithOptions)articles.get(2)).getOptions().get(0), 2));
         optionsList.add(new BaseEntry<String>(

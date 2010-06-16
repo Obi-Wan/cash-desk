@@ -18,7 +18,7 @@ import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
 import gestionecassa.ArticleWithOptions;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * This class is the rapresentation of the <code>ArticleGroup</code> in an
@@ -47,7 +47,7 @@ public class EntryArticleGroup extends BaseEntry<ArticleGroup> {
      * @param gr Reference to the rapresented ArticleGroup
      */
     public EntryArticleGroup(ArticleGroup gr) {
-        this(gr, 0, new Vector<BaseEntry<Article>>());
+        this(gr, 0, new ArrayList<BaseEntry<Article>>());
     }
 
     /**

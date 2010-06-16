@@ -28,7 +28,7 @@ import gestionecassa.stubs.BackendStub_2;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -170,8 +170,8 @@ public class DataManagerTest {
 
         Collection<Article> oldArticles = dataManager.getAllArticlesList().getArticlesList();
         
-        List<Article> articles = new Vector<Article>();
-        Collection<String> listaOpzioni = new Vector<String>();
+        List<Article> articles = new ArrayList<Article>();
+        Collection<String> listaOpzioni = new ArrayList<String>();
         listaOpzioni.add("cacca secca");
         listaOpzioni.add("cacca liquida");
         articles.add(new Article(1,"fagiolo", 25));
@@ -179,7 +179,7 @@ public class DataManagerTest {
         articles.add(new Article(3,"merda dello stige", 5.5));
         articles.add(new ArticleWithOptions(4,"yeah", 10.25, listaOpzioni));
         
-        List<ArticleGroup> groups = new Vector<ArticleGroup>();
+        List<ArticleGroup> groups = new ArrayList<ArticleGroup>();
         groups.add(new ArticleGroup(1, "group", articles));
 
         dataManager.saveNewArticlesList(new ArticlesList(groups));

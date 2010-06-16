@@ -2,7 +2,7 @@ package gestionecassa.order;
 
 import gestionecassa.Article;
 import gestionecassa.ArticleWithOptions;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,6 +35,6 @@ public class EntrySingleArticleWithOption extends BaseEntry<Article> {
             int startProg, List<BaseEntry<String>> numPartial) {
         super(article, numTot);
         this.startProgressive = startProg;
-        this.numPartial = new Vector<BaseEntry<String>>(numPartial);
+        this.numPartial = new ArrayList<BaseEntry<String>>(numPartial);
     }
 }
