@@ -198,8 +198,8 @@ public final class GuiNewOrderPanel extends javax.swing.JPanel implements Variab
         Order tempOrd = new Order(baseClient.getUsername(), baseClient.getHostname(), 0,
                                     articlesList.getSignature());
 
-        for (GuiGroupPanel group : varListMng.getPanels()) {
-            EntryArticleGroup tempEntry = group.collectOrderEntries();
+        for (GuiGroupPanel groupPanel : varListMng.getPanels()) {
+            EntryArticleGroup tempEntry = groupPanel.collectOrderEntries();
             if (tempEntry.numTot > 0) {
                 tempOrd.addGroup(tempEntry);
             }

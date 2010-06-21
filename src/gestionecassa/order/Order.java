@@ -71,7 +71,7 @@ public class Order implements Serializable, Comparable<Order> {
      * @param listSign Signature of the list from which the groups are taken
      */
     public Order(String username, String hostname, int table, int[] listSign) {
-        this( new Date(), new String(username), new String(hostname), table,
+        this( new Date(), username, hostname, table,
                 new ArrayList<EntryArticleGroup>(), listSign);
     }
 
@@ -86,8 +86,7 @@ public class Order implements Serializable, Comparable<Order> {
      */
     public Order(Date date, String username, String hostname, int table,
                 int[] listSign) {
-        this( new Date(date.getTime()), new String(username),
-                new String(hostname), table,
+        this( new Date(date.getTime()), username, hostname, table,
                 new ArrayList<EntryArticleGroup>(), listSign);
     }
 
@@ -122,8 +121,8 @@ public class Order implements Serializable, Comparable<Order> {
      */
     public Order(Order order) {
         this.date = new Date(order.date.getTime());
-        this.hostname = new String(order.hostname);
-        this.username = new String(order.username);
+        this.hostname = order.hostname;
+        this.username = order.username;
         this.totalPrice = order.totalPrice;
         this.groupsList = new ArrayList<EntryArticleGroup>(order.groupsList);
         this.listSignature = order.listSignature;
@@ -148,6 +147,7 @@ public class Order implements Serializable, Comparable<Order> {
      * Otherwise it's deprecated.
      * 
      * @return List of all the <code>Article</code>s sold
+     * @deprecated Irrespective of the group
      */
     @Deprecated
     public List<BaseEntry<Article>> getArticlesSold() {

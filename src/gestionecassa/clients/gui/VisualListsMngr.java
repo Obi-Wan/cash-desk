@@ -54,7 +54,7 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
     protected SortedMap<PanelType, RecordPanels<PanelType, DataType>> panelsMap;
 
     /**
-     * Visual effect of an initial blanck space in the list.
+     * Visual effect of an initial blank space in the list.
      */
     protected boolean hasInitialGap;
 
@@ -200,10 +200,12 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
      * @param panel the panel to remove
      */
     public void remove(PanelType panel) {
-        RecordPanels<PanelType, DataType> record = panelsMap.get(panel);
-        if (record != null) {
-            panelsList.remove(record);
-            panelsMap.remove(panel);
+        if (panel != null) {
+            RecordPanels<PanelType, DataType> record = panelsMap.get(panel);
+            if (record != null) {
+                panelsList.remove(record);
+                panelsMap.remove(panel);
+            }
         }
         // FIXME i should throw an exception
     }

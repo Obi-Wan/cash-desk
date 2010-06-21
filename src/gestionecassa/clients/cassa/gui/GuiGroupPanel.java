@@ -122,9 +122,7 @@ public class GuiGroupPanel extends GuiAbstrSingleEntryPanel implements VariableV
 
     /**
      * Creates a new order from the chosen Articles
-     *
-     * @return the created order
-     *
+     * @return the created group part of the order
      * @throws RemoteException
      */
     public EntryArticleGroup collectOrderEntries() throws RemoteException {
