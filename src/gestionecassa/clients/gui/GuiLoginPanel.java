@@ -270,6 +270,7 @@ public class GuiLoginPanel extends javax.swing.JPanel {
     private void login() {
         //waiting dialog!!
         JDialog waiting = new WaitingDialog(frame,false,"tring to login");
+        GuiHelper.packAndCenter(waiting);
         waiting.setVisible(true);
 
         try {

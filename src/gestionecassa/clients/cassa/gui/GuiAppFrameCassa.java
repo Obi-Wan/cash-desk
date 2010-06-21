@@ -53,8 +53,6 @@ public class GuiAppFrameCassa extends GuiAppFrame<CassaAPI> {
         GuiHelper.MngBorderLayout.putTop(getContentPane(), toolbar);
         GuiHelper.MngBorderLayout.putCenter(getContentPane(), jScrollPanelMain);
         GuiHelper.MngBorderLayout.putRight(getContentPane(), statusPanel);
-
-        GuiHelper.packAndCenter(this);
     }
 
     /** This method is called from within the constructor to

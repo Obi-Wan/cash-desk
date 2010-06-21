@@ -15,6 +15,8 @@ import org.apache.log4j.Logger;
 
 /**
  *
+ * @param <ServerType> Type of the server the client will be comunicating with
+ * @param <PrefsType> Type of the preferences class that will store preferences
  * @author ben
  */
 abstract public class BaseClient
@@ -106,8 +108,7 @@ abstract public class BaseClient
                 Thread.sleep(100);
             }
         } catch (InterruptedException ex) {
-            Thread.dumpStack();
-            ex.printStackTrace();
+            System.out.println(ex.getMessage());
         }
         //exit
         System.out.println("sto uscendo dal client");
@@ -123,7 +124,7 @@ abstract public class BaseClient
         } catch (RemoteException ex) {
             /* mando il messaggio all'utente */
             logger.warn("Disconnessione avvenuta con errore", ex);
-            ex.printStackTrace();
+            System.out.println(ex.getMessage());
         }
         stopApp = true;
     }
@@ -206,7 +207,7 @@ abstract public class BaseClient
     protected void setupAfterLogin(String username) throws RemoteException {
         logger.info("Connessione avvenuta con id: " + sessionID);
 
-        this.username = new String(username);
+        this.username = username;
         startDaemonConnection();
         try {
             fetchRMIArticlesList();

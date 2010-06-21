@@ -33,6 +33,7 @@ public interface ServerRMICommon extends Remote {
      * Method that tell's the server that the client still
      * lives and is connected.
      *
+     * @param sessionID Id of the session to keep alive
      * @throws  RemoteException because we are in RMI context.
      */
     public void keepAlive(int sessionID) throws RemoteException;
@@ -40,6 +41,7 @@ public interface ServerRMICommon extends Remote {
     /**
      * Method that tell's to the thread to shut down.
      *
+     * @param sessionID Id of the session to close
      * @throws  RemoteException because we are in RMI context.
      */
     public void closeService(int sessionID) throws RemoteException;

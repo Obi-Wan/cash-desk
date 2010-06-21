@@ -169,10 +169,12 @@ public class Cassa extends BaseClient<ServerRMICommon, CassaPrefs>
     }
 
     /**
+     * Sends a new order to the server
+     * @param newOrder the new order committed
      *
-     * @param newOrder 
-     *
-     * @throws java.rmi.RemoteException
+     * @throws RemoteException
+     * @throws IOException
+     * @throws WrongArticlesListException
      */
     @Override
     public void sendRMINewOrder(Order newOrder)
@@ -190,9 +192,9 @@ public class Cassa extends BaseClient<ServerRMICommon, CassaPrefs>
     }
 
     /**
-     *
-     *
+     * Deletes the last order committed
      * @throws java.rmi.RemoteException
+     * @throws IOException
      */
     @Override
     public void delRMILastOrder() throws RemoteException, IOException {

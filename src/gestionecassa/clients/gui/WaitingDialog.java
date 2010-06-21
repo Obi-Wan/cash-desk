@@ -12,15 +12,17 @@ package gestionecassa.clients.gui;
  */
 public class WaitingDialog extends javax.swing.JDialog {
     
-    /** Creates new form WaitingDialog */
+    /** Creates new form WaitingDialog
+     * @param parent reference to the parent frame
+     * @param modal Whether it's modal or not
+     * @param message massage to display
+     */
     public WaitingDialog(java.awt.Frame parent, boolean modal,
             String message) {
         super(parent, modal);
         initComponents();
         jLabelMessage.setText(message);
         jProgressBarWorking.setIndeterminate(true);
-        
-        GuiHelper.packAndCenter(this);
     }
     
     /** This method is called from within the constructor to

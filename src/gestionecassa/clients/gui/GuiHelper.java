@@ -29,8 +29,7 @@ public class GuiHelper {
 
     /**
      * Packs and centers the windows
-     * 
-     * @param wind
+     * @param wind the windows to pack and center to the screen
      */
     static public void packAndCenter(Window wind) {
         wind.pack();

@@ -54,8 +54,6 @@ public class GuiAppFrameAdministration extends GuiAppFrame<AdministrationAPI> {
         GuiHelper.MngBorderLayout.putRight(getContentPane(), statusPanel);
 
         enableLogout(false);
-
-        GuiHelper.packAndCenter(this);
     }
 
     /** This method is called from within the constructor to
