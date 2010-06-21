@@ -181,7 +181,9 @@ public class Cassa extends BaseClient<ServerRMICommon, CassaPrefs>
             throws RemoteException, IOException, WrongArticlesListException {
         try {
             server.sendOrder(newOrder);
-            PrinterHelper.startPrintingOrder(newOrder);
+            if (preferences.printOrder) {
+                PrinterHelper.startPrintingOrder(newOrder);
+            }
         } catch (RemoteException ex) {
             logger.warn("Errore nella comunicazione col server",ex);
             throw ex;

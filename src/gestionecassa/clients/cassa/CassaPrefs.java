@@ -22,6 +22,8 @@ import gestionecassa.clients.BaseClientPrefs;
  */
 public class CassaPrefs extends BaseClientPrefs {
 
+    public Boolean printOrder;
+
     @Override
     final public String getApplication() {
         return "cassa";
@@ -36,16 +38,18 @@ public class CassaPrefs extends BaseClientPrefs {
      * Default constructor
      */
     public CassaPrefs() {
-        this("","");
+        this("","", true);
     }
 
     /**
      * Explicit constructor
      * @param server
      * @param username
+     * @param printOrder
      */
-    public CassaPrefs(String server, String username) {
-        super(new String(server), new String(username));
+    public CassaPrefs(String server, String username, Boolean printOrder) {
+        super(server, username);
+        this.printOrder = printOrder;
     }
 
     /**
@@ -53,6 +57,6 @@ public class CassaPrefs extends BaseClientPrefs {
      * @param old
      */
     public CassaPrefs(CassaPrefs old) {
-        this(old.defaultServer, old.defaultUsername);
+        this(old.defaultServer, old.defaultUsername, old.printOrder);
     }
 }
