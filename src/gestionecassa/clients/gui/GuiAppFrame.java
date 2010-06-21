@@ -147,10 +147,8 @@ abstract public class GuiAppFrame<ClientTypeAPI extends ClientAPI>
         try {
             baseClient.logout();
         } catch (RemoteException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                "Il server non ha risposto nel tentativo di chiuder la connessione",
-                "Errore di comunicazione",
-                javax.swing.JOptionPane.ERROR_MESSAGE);
+            this.showMessageDialog( "Il server non ha risposto nel tentativo " +
+                   "di chiuder la connessione", MessageType.ErrorComunication);
         }
     }
 
@@ -160,5 +158,82 @@ abstract public class GuiAppFrame<ClientTypeAPI extends ClientAPI>
     public void setdownAfterLogout() {
         this.enableLogout(false);
         this.setContentPanel(new GuiLoginPanel(this, baseClient));
+    }
+
+
+    /* Messages to the user */
+
+    public enum MessageType {
+        ErrorGeneric,
+        ErrorComunication,
+        ErrorServerBackend,
+        ErrorList,
+        WarningGeneric,
+        InformationGeneric,
+        InformationTerminatedOp,
+    }
+
+    /**
+     * Method to show messages to the user
+     * @param msg message to show
+     * @param type type of the message
+     */
+    public void showMessageDialog(String msg, MessageType type) {
+        switch (type) {
+            case ErrorGeneric:
+                javax.swing.JOptionPane.showMessageDialog(this,
+                    msg, "Errore", javax.swing.JOptionPane.ERROR_MESSAGE);
+                break;
+            case ErrorComunication:
+                javax.swing.JOptionPane.showMessageDialog(this,
+                    msg, "Errore di comunicazione",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+                break;
+            case ErrorServerBackend:
+                javax.swing.JOptionPane.showMessageDialog(this,
+                    msg, "Errore nel Backend del server",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+                break;
+            case ErrorList:
+                javax.swing.JOptionPane.showMessageDialog(this,
+                    msg, "Errore nella lista degli articoli",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+                break;
+            case WarningGeneric:
+                javax.swing.JOptionPane.showMessageDialog(this,
+                    msg, "Attenzione",
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
+                break;
+            case InformationGeneric:
+                javax.swing.JOptionPane.showMessageDialog(this,
+                    msg, "Informazione",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case InformationTerminatedOp:
+                javax.swing.JOptionPane.showMessageDialog(this,
+                    msg, "Operazione terminata",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                break;
+            default:
+                throw new RuntimeException("wrong message type");
+        }
+    }
+
+    /**
+     * Method to ask questions to the user
+     * @param msg message to show
+     * @param title title of the window
+     * @param type type of the message
+     * @return the answer of the user
+     */
+    public int showConfirmDialog(String msg, String title, MessageType type) {
+        switch (type) {
+            case WarningGeneric:
+                return javax.swing.JOptionPane.showConfirmDialog(this,
+                    msg, title, javax.swing.JOptionPane.YES_NO_OPTION,
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
+            default:
+                throw new AssertionError();
+        }
     }
 }

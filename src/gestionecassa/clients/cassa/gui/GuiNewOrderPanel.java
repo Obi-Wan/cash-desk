@@ -26,6 +26,7 @@ import gestionecassa.ArticleWithOptions;
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
 import gestionecassa.ArticlesList;
+import gestionecassa.clients.gui.GuiAppFrame.MessageType;
 import gestionecassa.clients.gui.VariableVisualList;
 import gestionecassa.exceptions.WrongArticlesListException;
 import gestionecassa.order.EntryArticleGroup;
@@ -181,11 +182,9 @@ public final class GuiNewOrderPanel extends javax.swing.JPanel implements Variab
             fillContentsList();
             rebuildVisualList();
         } catch (RemoteException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                "Il server non ha risposto alla richiesta della lista, "
-                + "che non sarà aggiornata.",
-                "Errore di comunicazione",
-                javax.swing.JOptionPane.ERROR_MESSAGE);
+            frame.showMessageDialog("Il server non ha risposto alla richiesta "
+                + "della lista, che non sarà aggiornata.",
+                MessageType.ErrorComunication);
         }
     }
 
@@ -242,22 +241,15 @@ public final class GuiNewOrderPanel extends javax.swing.JPanel implements Variab
             }
         } catch (WrongArticlesListException ex) {
             baseClient.getLogger().warn("The list of articles is outdated", ex);
-            javax.swing.JOptionPane.showMessageDialog(this,
-                "La lista degli articoli non coincide con quella del server\n" +
-                "Per favore aggiornala",
-                "Errore nella lista degli articoli",
-                javax.swing.JOptionPane.ERROR_MESSAGE);
+            frame.showMessageDialog("La lista degli articoli non coincide con "
+                    + "quella del server\nPer favore aggiornala",
+                    MessageType.ErrorList);
         } catch (RemoteException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                "Il server non ha risposto alla richiesta dell'invio del " +
-                "nuovo ordine",
-                "Errore di comunicazione",
-                javax.swing.JOptionPane.ERROR_MESSAGE);
+            frame.showMessageDialog("Il server non ha risposto alla richiesta "
+                    + "dell'invio del nuovo ordine", MessageType.ErrorComunication);
         } catch (IOException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                "Il server ha avuto problemi col DB",
-                "Errore del Backend sul server",
-                javax.swing.JOptionPane.ERROR_MESSAGE);
+            frame.showMessageDialog("Il server ha avuto problemi col DB",
+                    MessageType.ErrorServerBackend);
         }
     }
 
@@ -265,29 +257,22 @@ public final class GuiNewOrderPanel extends javax.swing.JPanel implements Variab
      * This cancells the last commited order. It's a function to treat carefully
      */
     void undoLastOrder() {
-        final int result = javax.swing.JOptionPane.showConfirmDialog(this,
-                "Vuoi veramente annullare l'ultimo ordine emesso?",
-                "Annulla ultimo Ordine", javax.swing.JOptionPane.YES_NO_OPTION,
-                javax.swing.JOptionPane.WARNING_MESSAGE);
+        final int result = frame.showConfirmDialog("Vuoi veramente annullare "
+                + "l'ultimo ordine emesso?", "Annulla ultimo Ordine",
+                MessageType.WarningGeneric);
         if (result == javax.swing.JOptionPane.YES_OPTION) {
             try {
                 baseClient.delRMILastOrder();
                 frame.getStatusPanel().cleanLastOrder();
-                
-                javax.swing.JOptionPane.showMessageDialog(this,
-                    "L'ultimo Ordine emesso è stato annullato",
-                    "Operazione terminata",
-                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+                frame.showMessageDialog("L'ultimo Ordine emesso è stato "
+                        + "annullato", MessageType.InformationTerminatedOp);
             } catch (RemoteException ex) {
-                javax.swing.JOptionPane.showMessageDialog(this,
-                    "Il server non ha risposto alla richiesta di annullamento",
-                    "Errore di comunicazione",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
+                frame.showMessageDialog("Il server non ha risposto alla "
+                    + "richiesta di annullamento", MessageType.ErrorComunication);
             } catch (IOException ex) {
-                javax.swing.JOptionPane.showMessageDialog(this,
-                    "Il server ha avuto problemi col DB",
-                    "Errore del Backend sul server",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
+                frame.showMessageDialog("Il server ha avuto problemi col DB",
+                    MessageType.ErrorServerBackend);
             }
         }
     }

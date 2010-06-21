@@ -277,17 +277,17 @@ public class GuiLoginPanel extends javax.swing.JPanel {
                     new String(jPasswordFieldPassword.getPassword()),
                     jTextFieldServer.getText());
         } catch (WrongLoginException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                    "Il nome e/o la password immessi non sono validi","Errore",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            frame.showMessageDialog(
+                    "Il nome e/o la password immessi non sono validi",
+                    GuiAppFrame.MessageType.ErrorGeneric);
         } catch (RemoteException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                    "RemoteException nel tentativo di connessione","Errore",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            frame.showMessageDialog(
+                    "RemoteException nel tentativo di connessione",
+                    GuiAppFrame.MessageType.ErrorComunication);
         } catch (NotBoundException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                    "La classe non e' stata registrata sul server","Errore!",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            frame.showMessageDialog(
+                    "La classe non e' stata registrata sul server",
+                    GuiAppFrame.MessageType.ErrorComunication);
         } finally {
             waiting.dispose();
         }
