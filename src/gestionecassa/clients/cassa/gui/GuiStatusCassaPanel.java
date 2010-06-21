@@ -32,10 +32,12 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
 
     GuiNewOrderPanel orderPanel;
 
-    /** Creates new form GuiStatusCassaPanel */
+    /** Creates new form GuiStatusCassaPanel
+     * @param hostname Hostname of the machine onto which we are running
+     */
     public GuiStatusCassaPanel(String hostname) {
         initComponents();
-        jTextFieldHostname.setText(new String(hostname));
+        jTextFieldHostname.setText(hostname);
 
         enableButtons(false);
     }
@@ -300,7 +302,7 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
 }//GEN-LAST:event_jButtonPulisciActionPerformed
 
     private void jButtonAggiornaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAggiornaActionPerformed
-        orderPanel.updateList();
+        orderPanel.refreshList();
 }//GEN-LAST:event_jButtonAggiornaActionPerformed
 
     private void jButtonAnnullaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAnnullaActionPerformed
@@ -340,7 +342,7 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
     void setLogin( String name ) {
         final String timestamp = new SimpleDateFormat(
                 "HH:mm:ss dd/MM/yy", Locale.ITALIAN).format(new Date());
-        jTextFieldUser.setText(new String(name));
+        jTextFieldUser.setText(name);
         jTextFieldLogged.setText(timestamp);
     }
 

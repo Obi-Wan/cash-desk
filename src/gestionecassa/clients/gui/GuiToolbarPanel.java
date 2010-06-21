@@ -31,16 +31,22 @@ import javax.swing.KeyStroke;
  */
 public class GuiToolbarPanel extends javax.swing.JPanel {
 
-    GuiAppFrame owner;
+    /**
+     * Reference to the main frame
+     */
+    GuiAppFrame frame;
 
-    /** Creates new form GuiToolbarPanel */
-    public GuiToolbarPanel(GuiAppFrame owner) {
+    /** Creates new form GuiToolbarPanel
+     * @param frame reference to the frame owning this panel
+     */
+    public GuiToolbarPanel(GuiAppFrame frame) {
         initComponents();
-        this.owner = owner;
+        this.frame = frame;
 
         jButtonLogout.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESC");
         jButtonLogout.getActionMap().put("ESC", new AbstractAction() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 jButtonLogoutActionPerformed(e);
             }
@@ -102,11 +108,11 @@ public class GuiToolbarPanel extends javax.swing.JPanel {
   }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLogoutActionPerformed
-        owner.logout();
+        frame.logout();
 }//GEN-LAST:event_jButtonLogoutActionPerformed
 
     private void jButtonOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptionsActionPerformed
-        owner.selectedDialogOptions();
+        frame.selectedDialogOptions();
 }//GEN-LAST:event_jButtonOptionsActionPerformed
 
 

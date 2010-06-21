@@ -45,12 +45,12 @@ import javax.swing.KeyStroke;
 public final class GuiNewOrderPanel extends javax.swing.JPanel implements VariableVisualList {
 
     /**
-     * Reference alla classe della business logic
+     * Reference to the base client logic
      */
-    CassaAPI owner;
+    CassaAPI baseClient;
 
     /**
-     * 
+     * Reference to the visual frame fo the client
      */
     GuiAppFrameCassa frame;
 
@@ -67,19 +67,19 @@ public final class GuiNewOrderPanel extends javax.swing.JPanel implements Variab
     /** 
      * Creates new form GuiNewOrderPanel
      *
-     * @param owner Reference to the client app
+     * @param baseClient Reference to the client app
      * @param frame Reference to the frame containing this panel
      */
-    public GuiNewOrderPanel(CassaAPI owner, GuiAppFrameCassa frame) {
+    public GuiNewOrderPanel(CassaAPI baseClient, GuiAppFrameCassa frame) {
         initComponents();
-        this.owner = owner;
+        this.baseClient = baseClient;
         this.frame = frame;
-        
-        fetchArticlesList();
+        this.articlesList = baseClient.getArticlesList();
 
         varListMng = new VisualListsMngr<GuiGroupPanel, ArticleGroup>(this);
         varListMng.setHasInitialGap(true);
-        buildContentsList();
+
+        fillContentsList();
         rebuildVisualList();
 
         this.setPreferredSize(new Dimension(800, 450));
@@ -125,7 +125,7 @@ public final class GuiNewOrderPanel extends javax.swing.JPanel implements Variab
     /**
      * Populates the list of the panels related to each article sold.
      */
-    void buildContentsList() {
+    void fillContentsList() {
         this.varListMng.resetList();
         /* Visual Id of articles for shortcuts from keyboard */
         int i = 0;
@@ -166,30 +166,24 @@ public final class GuiNewOrderPanel extends javax.swing.JPanel implements Variab
         frame.refreshContentPanel();
     }
 
-    void updateList() {
-        forceRMIRequestArticlesList();
-        fetchArticlesList();
-        buildContentsList();
-        rebuildVisualList();
-    }
-
     /**
-     * Gets the ArticleList and stores it locally.
+     * Refreshes the list from the server and then rebuilds visual lists
      */
-    private void fetchArticlesList() {
-        articlesList = owner.getArticlesList();
-    }
-
-    /**
-     * it fetches the ArticleList from the server (through the CassaAPI)
-     * and makes the client store it locally
-     */
-    private void forceRMIRequestArticlesList() {
+    void refreshList() {
         try {
-            owner.fetchRMIArticlesList();
+            /* it fetches the ArticleList from the server (through the CassaAPI)
+             * and makes the client store it */
+            baseClient.fetchRMIArticlesList();
+        
+            /* And now reference it locally */
+            articlesList = baseClient.getArticlesList();
+
+            fillContentsList();
+            rebuildVisualList();
         } catch (RemoteException ex) {
             javax.swing.JOptionPane.showMessageDialog(this,
-                "Il server non ha risposto alla richiesta della lista",
+                "Il server non ha risposto alla richiesta della lista, "
+                + "che non sarà aggiornata.",
                 "Errore di comunicazione",
                 javax.swing.JOptionPane.ERROR_MESSAGE);
         }
@@ -202,7 +196,7 @@ public final class GuiNewOrderPanel extends javax.swing.JPanel implements Variab
      */
     private Order createNewOrder() throws RemoteException {
         // TODO One day will be needed here to handle the table properly
-        Order tempOrd = new Order(owner.getUsername(), owner.getHostname(), 0,
+        Order tempOrd = new Order(baseClient.getUsername(), baseClient.getHostname(), 0,
                                     articlesList.getSignature());
 
         for (GuiGroupPanel group : varListMng.getPanels()) {
@@ -242,12 +236,12 @@ public final class GuiNewOrderPanel extends javax.swing.JPanel implements Variab
             Order nuovoOrdine = createNewOrder();
 
             if (nuovoOrdine.getTotalPrice() != 0) {
-                owner.sendRMINewOrder(nuovoOrdine);
+                baseClient.sendRMINewOrder(nuovoOrdine);
                 frame.getStatusPanel().setEmittedOrder(nuovoOrdine.getTotalPrice());
                 this.cleanDataFields();
             }
         } catch (WrongArticlesListException ex) {
-            owner.getLogger().warn("The list of articles is outdated", ex);
+            baseClient.getLogger().warn("The list of articles is outdated", ex);
             javax.swing.JOptionPane.showMessageDialog(this,
                 "La lista degli articoli non coincide con quella del server\n" +
                 "Per favore aggiornala",
@@ -277,7 +271,7 @@ public final class GuiNewOrderPanel extends javax.swing.JPanel implements Variab
                 javax.swing.JOptionPane.WARNING_MESSAGE);
         if (result == javax.swing.JOptionPane.YES_OPTION) {
             try {
-                owner.delRMILastOrder();
+                baseClient.delRMILastOrder();
                 frame.getStatusPanel().cleanLastOrder();
                 
                 javax.swing.JOptionPane.showMessageDialog(this,

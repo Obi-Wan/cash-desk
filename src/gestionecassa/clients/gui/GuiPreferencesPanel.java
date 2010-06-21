@@ -25,6 +25,7 @@ import gestionecassa.clients.BaseClientPrefs;
 
 /**
  *
+ * @param <PrefsType> Type of the preferences class
  * @author ben
  */
 public class GuiPreferencesPanel<PrefsType extends BaseClientPrefs> extends OkCancelPanel {
@@ -37,18 +38,17 @@ public class GuiPreferencesPanel<PrefsType extends BaseClientPrefs> extends OkCa
     /**
      * Reference to the class that ownes this panel
      */
-    ClientAPI<PrefsType> owner;
+    ClientAPI<PrefsType> baseClient;
 
     /**
      * Creates new form GuiPreferencesPanel
-     * @param owner
-     * @param tempPrefs
+     * @param baseClient
      */
-    public GuiPreferencesPanel(ClientAPI<PrefsType> owner) {
+    public GuiPreferencesPanel(ClientAPI<PrefsType> baseClient) {
         initComponents();
 
-        this.owner = owner;
-        this.tempPrefs = owner.getPrefs();
+        this.baseClient = baseClient;
+        this.tempPrefs = baseClient.getPrefs();
 
         init();
     }
@@ -151,7 +151,7 @@ public class GuiPreferencesPanel<PrefsType extends BaseClientPrefs> extends OkCa
     public void apply() {
         tempPrefs.defaultServer = jTextFieldServer.getText();
         tempPrefs.defaultUsername = jTextFieldUser.getText();
-        owner.setPrefs(tempPrefs);
+        baseClient.setPrefs(tempPrefs);
     }
 
     @Override

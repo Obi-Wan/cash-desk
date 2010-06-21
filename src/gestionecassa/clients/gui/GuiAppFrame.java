@@ -27,15 +27,16 @@ import javax.swing.JScrollPane;
 
 /**
  *
+ * @param <ClientTypeAPI> Specifies the type of the client
  * @author ben
  */
-abstract public class GuiAppFrame<Owner extends ClientAPI>
+abstract public class GuiAppFrame<ClientTypeAPI extends ClientAPI>
         extends javax.swing.JFrame {
 
     /**
-     * The owner of this frame.
+     * The baseClient of this frame.
      */
-    protected Owner owner;
+    protected ClientTypeAPI baseClient;
 
     /**
      * 
@@ -50,11 +51,11 @@ abstract public class GuiAppFrame<Owner extends ClientAPI>
     /**
      * Creates new form GuiAppFrame
      * 
-     * @param owner
+     * @param baseClient
      */
-    public GuiAppFrame(Owner owner) {
+    public GuiAppFrame(ClientTypeAPI baseClient) {
         initComponents();
-        this.owner = owner;
+        this.baseClient = baseClient;
 
         jScrollPanelMain = new javax.swing.JScrollPane();
 
@@ -99,9 +100,9 @@ abstract public class GuiAppFrame<Owner extends ClientAPI>
      */
     @Override
     public void dispose() {
-        owner.getLoggerUI().info("sto chiudendo l'interfaccia.");
+        baseClient.getLoggerUI().info("sto chiudendo l'interfaccia.");
 
-        owner.stopClient();
+        baseClient.stopClient();
         super.dispose();
     }
 
@@ -130,7 +131,7 @@ abstract public class GuiAppFrame<Owner extends ClientAPI>
      *
      * @param value
      */
-    public void enableLogout(boolean value) {
+    public final void enableLogout(boolean value) {
         toolbar.enableLogout(value);
     }
 
@@ -144,7 +145,7 @@ abstract public class GuiAppFrame<Owner extends ClientAPI>
      */
     public void logout() {
         try {
-            owner.logout();
+            baseClient.logout();
         } catch (RemoteException ex) {
             javax.swing.JOptionPane.showMessageDialog(this,
                 "Il server non ha risposto nel tentativo di chiuder la connessione",
@@ -154,10 +155,10 @@ abstract public class GuiAppFrame<Owner extends ClientAPI>
     }
 
     /**
-     *
+     * Resets the components that are no longer legal in that state after logout
      */
     public void setdownAfterLogout() {
         this.enableLogout(false);
-        this.setContentPanel(new GuiLoginPanel(this, owner));
+        this.setContentPanel(new GuiLoginPanel(this, baseClient));
     }
 }

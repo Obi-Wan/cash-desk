@@ -37,27 +37,27 @@ import javax.swing.KeyStroke;
 public class GuiLoginPanel extends javax.swing.JPanel {
 
     /**
-     * The owner to call for operations
+     * The baseClient to call for operations
      */
-    ClientAPI owner;
+    ClientAPI baseClient;
 
     /**
      * 
      */
-    GuiAppFrame parent;
+    GuiAppFrame frame;
 
     /**
      * Creates new form GuiLoginPanel
-     * @param parent
-     * @param owner
+     * @param parentFrame
+     * @param baseClient
      */
-    public GuiLoginPanel(GuiAppFrame parent, ClientAPI owner) {
+    public GuiLoginPanel(GuiAppFrame parentFrame, ClientAPI baseClient) {
         initComponents();
-        jTextFieldLuogo.setText(owner.getHostname());
-        this.owner = owner;
-        this.parent = parent;
+        jTextFieldLuogo.setText(baseClient.getHostname());
+        this.baseClient = baseClient;
+        this.frame = parentFrame;
 
-        resetToDefault(owner.getPrefs());
+        resetToDefault(baseClient.getPrefs());
 
         jButtonLogin.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "ENTER");
@@ -224,7 +224,7 @@ public class GuiLoginPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonLoginActionPerformed
 
     private void jButtonAnnullaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAnnullaActionPerformed
-        parent.dispose();
+        frame.dispose();
     }//GEN-LAST:event_jButtonAnnullaActionPerformed
 
 
@@ -264,16 +264,16 @@ public class GuiLoginPanel extends javax.swing.JPanel {
     }
 
     /**
-     * Passes information to the owner for a login., and eventually dsplaies to
+     * Passes information to the baseClient for a login., and eventually dsplaies to
      * the user possible errors.
      */
     private void login() {
         //waiting dialog!!
-        JDialog waiting = new WaitingDialog(parent,false,"tring to login");
+        JDialog waiting = new WaitingDialog(frame,false,"tring to login");
         waiting.setVisible(true);
 
         try {
-            owner.login(jTextFieldUsername.getText(),
+            baseClient.login(jTextFieldUsername.getText(),
                     new String(jPasswordFieldPassword.getPassword()),
                     jTextFieldServer.getText());
         } catch (WrongLoginException ex) {

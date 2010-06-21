@@ -41,13 +41,13 @@ public class GuiAppFrameCassa extends GuiAppFrame<CassaAPI> {
     /**
      * Creates new form GuiAppFrameCassa
      *
-     * @param owner
+     * @param baseClient
      */
-    public GuiAppFrameCassa(CassaAPI owner) {
-        super(owner);
+    public GuiAppFrameCassa(CassaAPI baseClient) {
+        super(baseClient);
         initComponents();
 
-        statusPanel = new GuiStatusCassaPanel(owner.getHostname());
+        statusPanel = new GuiStatusCassaPanel(baseClient.getHostname());
 
         GuiHelper.MngBorderLayout.init(getContentPane());
         GuiHelper.MngBorderLayout.putTop(getContentPane(), toolbar);
@@ -80,7 +80,7 @@ public class GuiAppFrameCassa extends GuiAppFrame<CassaAPI> {
     @Override
     public void selectedDialogOptions() {
         new GuiOkCancelDialog(this, "Client Options",
-                  new GuiPreferencesPanel<CassaPrefs>(owner)).setVisible(true);
+                  new GuiPreferencesPanel<CassaPrefs>(baseClient)).setVisible(true);
     }
 
     /**

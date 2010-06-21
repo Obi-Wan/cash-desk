@@ -136,7 +136,7 @@ public class GuiGroupPanel extends GuiAbstrSingleEntryPanel implements VariableV
             if (tempNumTot > 0) {
                 if (record.data.hasOptions()) {
 
-                    int progressive = orderPanel.owner.getNProgressivo(
+                    int progressive = orderPanel.baseClient.getNProgressivo(
                             record.data.getName(), tempNumTot);
                     entry.addArticleWithOptions(
                             (ArticleWithOptions)record.data,

@@ -31,17 +31,17 @@ import java.util.ArrayList;
  */
 public class CLIAdminArtices {
 
-    AdministrationAPI owner;
+    AdministrationAPI baseClient;
 
     Console con;
 
     /**
      * 
-     * @param owner
+     * @param baseClient
      * @param con
      */
-    public CLIAdminArtices(AdministrationAPI owner, Console con) {
-        this.owner = owner;
+    public CLIAdminArtices(AdministrationAPI baseClient, Console con) {
+        this.baseClient = baseClient;
         this.con = con;
     }
 
@@ -56,13 +56,13 @@ public class CLIAdminArtices {
                 " - q - Quit\n" +
                 "Choice: ";
         char choice;
-        con.writer().println("\n"+owner.getArticlesList().getPrintableFormat());
+        con.writer().println("\n"+baseClient.getArticlesList().getPrintableFormat());
         do {
             choice = con.readLine(menu).charAt(0);
             switch (choice) {
                 case 's': {
                     con.writer().println("\n" +
-                            owner.getArticlesList().getPrintableFormat() +
+                            baseClient.getArticlesList().getPrintableFormat() +
                             "\nPress Enter to continue..");
                     con.readLine();
                     break;
@@ -72,7 +72,7 @@ public class CLIAdminArtices {
                 }
                 case 'c': {
                     int groupPos = Integer.parseInt(con.readLine("Group number: "));
-                    printMenuArticles(owner.getArticlesList().getGroup(groupPos));
+                    printMenuArticles(baseClient.getArticlesList().getGroup(groupPos));
                     break;
                 }
                 case 'e': {
@@ -111,7 +111,7 @@ public class CLIAdminArtices {
             switch (choice) {
                 case 's': {
                     con.writer().println("\n" +
-                            owner.getArticlesList().getPrintableFormat() +
+                            baseClient.getArticlesList().getPrintableFormat() +
                             "\nPress Enter to continue..");
                     con.readLine();
                     break;
@@ -157,7 +157,7 @@ public class CLIAdminArtices {
         
         if (Boolean.parseBoolean(con.readLine("Do you want to proceed? (true to say yes): "))) {
             try {
-                owner.addRMIArticle(group.getIdGroup(),
+                baseClient.addRMIArticle(group.getIdGroup(),
                         hasOptions ?
                             new ArticleWithOptions(0, name, price, options) :
                             new Article(0, name, price));
@@ -176,14 +176,14 @@ public class CLIAdminArtices {
     private void enableDisableArticle(ArticleGroup group) throws RemoteException {
         int num = Integer.parseInt(
                 con.readLine("Position of the article to enable/disable: "));
-        Article art = owner.getArticlesList().getGroupsList()
+        Article art = baseClient.getArticlesList().getGroupsList()
                 .get(group.getIdGroup()).getList().get(num);
         boolean disen = Boolean.parseBoolean(
                 con.readLine(art.isEnabled() ?
                     "Do you want to disable it? (true to say yes)" :
                     "Do you want to enable it? (true to say yes)" ));
         if (disen) {
-            owner.enableRMIArticle(art, disen);
+            baseClient.enableRMIArticle(art, disen);
         }
     }
 
@@ -193,7 +193,7 @@ public class CLIAdminArtices {
     private void modifyArticle(ArticleGroup group) {
         int num = Integer.parseInt(
                 con.readLine("Position of the article to modify: "));
-        Article art = owner.getArticlesList().getGroupsList()
+        Article art = baseClient.getArticlesList().getGroupsList()
                 .get(group.getIdGroup()).getList().get(num);
         char choice = con.readLine(
                 "Press:\n" +
@@ -224,7 +224,7 @@ public class CLIAdminArtices {
 
         if (Boolean.parseBoolean(
                 con.readLine("Do you want to proceed? (true to say yes): "))) {
-//            owner.modify???
+//            baseClient.modify???
         }
     }
 
@@ -235,14 +235,14 @@ public class CLIAdminArtices {
 //    private void moveArticle(ArticleGroup group) throws RemoteException {
 //        int num = Integer.parseInt(
 //                con.readLine("Position of the article to move: "));
-//        Article art = owner.getArticlesList().getGroupsList()
+//        Article art = baseClient.getArticlesList().getGroupsList()
 //                .get(group.getIdGroup()).getList().get(num);
 //        int n_num = Integer.parseInt(
 //                con.readLine("New position of the article " + art.getName() + ": "));
 //
 //        if (Boolean.parseBoolean(
 //                con.readLine("Do you want to proceed? (true to say yes): "))) {
-//            owner.moveRMIArticle(art, n_num);
+//            baseClient.moveRMIArticle(art, n_num);
 //        }
 //    }
 }

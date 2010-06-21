@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 
 /**
  * Base interface of clients
+ * @param <PrefsType> Specifies the type of the preferences class to use
  * @author ben
  */
 public interface ClientAPI<PrefsType extends BaseClientPrefs> {

@@ -40,11 +40,10 @@ public class GuiAppFrameAdministration extends GuiAppFrame<AdministrationAPI> {
 
     /**
      * Creates new form GuiAppFrameAdministration
-     * 
-     * @param owner 
+     * @param baseClient reference to the client implementation
      */
-    public GuiAppFrameAdministration(AdministrationAPI owner) {
-        super(owner);
+    public GuiAppFrameAdministration(AdministrationAPI baseClient) {
+        super(baseClient);
         initComponents();
 
         statusPanel = new GuiStatusAdministrationPanel();
@@ -82,6 +81,6 @@ public class GuiAppFrameAdministration extends GuiAppFrame<AdministrationAPI> {
     @Override
     public void selectedDialogOptions() {
         new GuiOkCancelDialog(this, "Client Options",
-                  new GuiPreferencesPanel<AdminPrefs>(owner)).setVisible(true);
+                  new GuiPreferencesPanel<AdminPrefs>(baseClient)).setVisible(true);
     }
 }
