@@ -205,6 +205,7 @@ abstract public class BaseClient
      * @throws java.rmi.RemoteException
      * @throws java.rmi.NotBoundException
      */
+    @SuppressWarnings("unchecked")
     protected Remote sendDatiLogin(String username, String password, String serverName)
             throws WrongLoginException, RemoteException, NotBoundException
     {
