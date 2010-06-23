@@ -26,6 +26,9 @@ import gestionecassa.clients.gui.GuiHelper;
 import gestionecassa.clients.gui.GuiOkCancelDialog;
 import gestionecassa.clients.gui.GuiPreferencesPanel;
 import gestionecassa.clients.administration.AdministrationAPI;
+import java.util.Map;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -34,9 +37,15 @@ import gestionecassa.clients.administration.AdministrationAPI;
 public class GuiAppFrameAdministration extends GuiAppFrame<AdministrationAPI> {
 
     /**
-     * 
+     * Reference to the status pannel for the Admin client
      */
     GuiStatusAdministrationPanel statusPanel;
+
+    /**
+     * Main container for admin client action: in this tabbed pane will be
+     * opened tabs about work done on the data.
+     */
+    JTabbedPane mainTabbedPanel;
 
     /**
      * Creates new form GuiAppFrameAdministration
@@ -46,7 +55,8 @@ public class GuiAppFrameAdministration extends GuiAppFrame<AdministrationAPI> {
         super(baseClient);
         initComponents();
 
-        statusPanel = new GuiStatusAdministrationPanel();
+        statusPanel = new GuiStatusAdministrationPanel(this);
+        mainTabbedPanel = new JTabbedPane();
 
         GuiHelper.MngBorderLayout.init(getContentPane());
         GuiHelper.MngBorderLayout.putTop(getContentPane(), toolbar);
@@ -74,11 +84,41 @@ public class GuiAppFrameAdministration extends GuiAppFrame<AdministrationAPI> {
   // End of variables declaration//GEN-END:variables
 
     /**
-     * 
+     * Opens a dialog for setting the options
      */
     @Override
     public void selectedDialogOptions() {
         new GuiOkCancelDialog(this, "Client Options",
                   new GuiPreferencesPanel<AdminPrefs>(baseClient)).setVisible(true);
+    }
+
+    /**
+     * Sets up the gui after a successful login
+     * @param username String containing the username of the logged user
+     */
+    @Override
+    public void setupAfterLogin(String username) {
+        super.setupAfterLogin(username);
+        statusPanel.enableButtons(true);
+        jScrollPanelMain.setViewportView(mainTabbedPanel);
+    }
+
+    /**
+     * Creates a new tab for the chioce of new content tabs
+     */
+    void openTabelsViewChioce() {
+        mainTabbedPanel.add("Open..", new GuiOpenTablePanel(this));
+    }
+
+    /**
+     * Substitutes the old tab with new tabs give in the second argument
+     * @param previous The tab to remove
+     * @param newOnes Set of new tabs with titles
+     */
+    void substituteTabeWithOther(JPanel previous, Map<String,JPanel> newOnes) {
+        mainTabbedPanel.remove(previous);
+        for (String title : newOnes.keySet()) {
+            mainTabbedPanel.add(title, newOnes.get(title));
+        }
     }
 }

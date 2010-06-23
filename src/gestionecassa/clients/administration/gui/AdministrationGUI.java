@@ -70,6 +70,9 @@ public class AdministrationGUI extends Administration implements ClientAPI<Admin
      */
     @Override
     public void run() {
+        // preparing for execution
+        loadPreferences();
+
         // startClient la fase di login
         appFrame = new GuiAppFrameAdministration(this);
 
@@ -77,14 +80,18 @@ public class AdministrationGUI extends Administration implements ClientAPI<Admin
         appFrame.setContentPanel(new GuiLoginPanel(appFrame, this));
         appFrame.setVisible(true);
 
+        // esecuzione principale
         super.run();
+
+        // fine esecuzione
+        savePreferences();
     }
 
     @Override
     protected void setupAfterLogin(String username) throws RemoteException {
         super.setupAfterLogin(username);
         
-        appFrame.enableLogout(true);
+        appFrame.setupAfterLogin(username);
     }
 
     @Override

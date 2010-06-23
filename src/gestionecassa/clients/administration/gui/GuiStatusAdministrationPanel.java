@@ -20,17 +20,22 @@
 
 package gestionecassa.clients.administration.gui;
 
-import gestionecassa.clients.cassa.gui.*;
-
 /**
  *
  * @author ben
  */
 public class GuiStatusAdministrationPanel extends javax.swing.JPanel {
 
-    /** Creates new form GuiStatusCassaPanel */
-    public GuiStatusAdministrationPanel() {
+    GuiAppFrameAdministration frame;
+
+    /** Creates new form GuiStatusCassaPanel
+     * @param frame reference to the frame owning this panel
+     */
+    public GuiStatusAdministrationPanel(GuiAppFrameAdministration frame) {
         initComponents();
+        this.frame = frame;
+
+        enableButtons(false);
     }
 
     /** This method is called from within the constructor to
@@ -42,20 +47,63 @@ public class GuiStatusAdministrationPanel extends javax.swing.JPanel {
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
 
+    jCheckBoxModifyState = new javax.swing.JCheckBox();
+    jSeparator1 = new javax.swing.JSeparator();
+    jButtonOpen = new javax.swing.JButton();
+
+    jCheckBoxModifyState.setText("Modalità Modifica");
+    jCheckBoxModifyState.setEnabled(false);
+
+    jButtonOpen.setText("Apri..");
+    jButtonOpen.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonOpenActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
     this.setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 230, Short.MAX_VALUE)
+      .addGroup(layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(jCheckBoxModifyState, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
+          .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
+          .addComponent(jButtonOpen))
+        .addContainerGap())
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 454, Short.MAX_VALUE)
+      .addGroup(layout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(jCheckBoxModifyState)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(jButtonOpen)
+        .addContainerGap(374, Short.MAX_VALUE))
     );
   }// </editor-fold>//GEN-END:initComponents
 
+    private void jButtonOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOpenActionPerformed
+        frame.openTabelsViewChioce();
+    }//GEN-LAST:event_jButtonOpenActionPerformed
+
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JButton jButtonOpen;
+  private javax.swing.JCheckBox jCheckBoxModifyState;
+  private javax.swing.JSeparator jSeparator1;
   // End of variables declaration//GEN-END:variables
 
+
+    /**
+     * Enables/Disables all the buttons related to order committing at once
+     *
+     * @param b true is enalbe, false disable
+     */
+    final void enableButtons(boolean b) {
+        jButtonOpen.setEnabled(b);
+    }
 }

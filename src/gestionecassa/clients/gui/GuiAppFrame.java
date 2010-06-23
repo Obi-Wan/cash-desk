@@ -153,6 +153,14 @@ abstract public class GuiAppFrame<ClientTypeAPI extends ClientAPI>
     }
 
     /**
+     * Sets up the gui after a successful login
+     * @param username String containing the username of the logged user
+     */
+    public void setupAfterLogin(String username) {
+        this.enableLogout(true);
+    }
+
+    /**
      * Resets the components that are no longer legal in that state after logout
      */
     public void setdownAfterLogout() {

@@ -6,12 +6,15 @@
 package gestionecassa.clients;
 
 import gestionecassa.ArticlesList;
+import gestionecassa.XmlPreferencesHandler;
 import gestionecassa.exceptions.WrongLoginException;
 import gestionecassa.server.ServerRMICommon;
+import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import org.apache.log4j.Logger;
+import org.dom4j.DocumentException;
 
 /**
  *
@@ -127,6 +130,38 @@ abstract public class BaseClient
             System.out.println(ex.getMessage());
         }
         stopApp = true;
+    }
+
+    /**
+     * Loads from a file the preferences into the class used at runtime
+     */
+    protected void loadPreferences() {
+        XmlPreferencesHandler<PrefsType> genericXml =
+                    new XmlPreferencesHandler<PrefsType>(logger);
+        try {
+            genericXml.loadPrefs(preferences);
+
+            logger.debug("letto dal file:\nUsername: " + preferences.defaultUsername
+                    + " \tServer: " + preferences.defaultServer + "\n");
+        } catch (IOException ex) {
+            logger.warn("Unable to read data from configfile", ex);
+        } catch (DocumentException ex) {
+            logger.warn("Parse exception in conf file", ex);
+        }
+    }
+
+    /**
+     * Saves the preferences to a file
+     */
+    protected void savePreferences() {
+        XmlPreferencesHandler<PrefsType> genericXml =
+                    new XmlPreferencesHandler<PrefsType>(logger);
+        try {
+            genericXml.savePrefs(preferences);
+
+        } catch (IOException ex) {
+            logger.warn("Unable to write data to configfile", ex);
+        }
     }
 
     /**

@@ -7,7 +7,6 @@ package gestionecassa.clients.cassa;
 
 import gestionecassa.clients.cassa.gui.GuiAppFrameCassa;
 import gestionecassa.Log;
-import gestionecassa.XmlPreferencesHandler;
 import gestionecassa.order.Order;
 import gestionecassa.clients.gui.GuiLoginPanel;
 import gestionecassa.clients.BaseClient;
@@ -20,7 +19,6 @@ import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import org.apache.log4j.Logger;
-import org.dom4j.DocumentException;
 
 /**
  *
@@ -93,18 +91,9 @@ public class Cassa extends BaseClient<ServerRMICommon, CassaPrefs>
      */
     @Override
     public void run() {
-        XmlPreferencesHandler<CassaPrefs> genericXml =
-                    new XmlPreferencesHandler<CassaPrefs>(logger);
-        try {
-            genericXml.loadPrefs(preferences);
+        // preparing for execution
+        loadPreferences();
 
-            logger.debug("letto dal file:\nUsername: " + preferences.defaultUsername
-                    + " \tServer: " + preferences.defaultServer + "\n");
-        } catch (IOException ex) {
-            logger.warn("Unable to read data from configfile", ex);
-        } catch (DocumentException ex) {
-            logger.warn("Parse exception in conf file", ex);
-        }
         // startClient la fase di login
         appFrame = new GuiAppFrameCassa(this);
         // concludi fase preparatoria al login
@@ -115,12 +104,7 @@ public class Cassa extends BaseClient<ServerRMICommon, CassaPrefs>
         super.run();
 
         // fine esecuzione
-        try {
-            genericXml.savePrefs(preferences);
-
-        } catch (IOException ex) {
-            logger.warn("Unable to write data to configfile", ex);
-        }
+        savePreferences();
     }
 
     /**
@@ -149,7 +133,7 @@ public class Cassa extends BaseClient<ServerRMICommon, CassaPrefs>
     protected void setupAfterLogin(String username) throws RemoteException {
         super.setupAfterLogin(username);
 
-        appFrame.setupAfterLogin(this,username);
+        appFrame.setupAfterLogin(username);
     }
 
     /**

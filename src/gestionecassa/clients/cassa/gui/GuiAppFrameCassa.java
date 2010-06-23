@@ -82,20 +82,20 @@ public class GuiAppFrameCassa extends GuiAppFrame<CassaAPI> {
     }
 
     /**
-     *
-     * @param cassaAPI
-     * @param username
+     * Sets up the gui after a successful login
+     * @param username String containing the username of the logged user
      */
-    public void setupAfterLogin(CassaAPI cassaAPI, String username) {
-        this.enableLogout(true);
-        GuiNewOrderPanel orderPanel = new GuiNewOrderPanel(cassaAPI,this);
+    @Override
+    public void setupAfterLogin(String username) {
+        super.setupAfterLogin(username);
+        GuiNewOrderPanel orderPanel = new GuiNewOrderPanel(baseClient, this);
         this.setContentPanel(orderPanel);
         statusPanel.setOrderPanel(orderPanel);
         statusPanel.setLogin(username);
     }
 
     /**
-     *
+     * Resets the components that are no longer legal in that state after logout
      */
     @Override
     public void setdownAfterLogout() {
