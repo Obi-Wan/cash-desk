@@ -31,7 +31,7 @@ import org.apache.log4j.Logger;
  * @author ben
  */
 public class DataManager implements DMCassaAPI, DMServerAPI,
-        DMAmministrazioneAPI {
+        DMAdminAPI {
 
     /**
      * 

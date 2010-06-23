@@ -1,5 +1,5 @@
 /*
- * DMAmministrazioneAPI.java
+ * DMAdminAPI.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -24,7 +24,7 @@ import gestionecassa.exceptions.NotExistingGroupException;
  *
  * @author ben
  */
-public interface DMAmministrazioneAPI extends DMServerAPI {
+public interface DMAdminAPI extends DMServerAPI {
 
     //--------- Articles ------------//
 

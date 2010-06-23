@@ -12,7 +12,7 @@ import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.DuplicateArticleException;
 import gestionecassa.exceptions.NotExistingGroupException;
 import java.rmi.RemoteException;
-import gestionecassa.server.datamanager.DMAmministrazioneAPI;
+import gestionecassa.server.datamanager.DMAdminAPI;
 import org.apache.log4j.Logger;
 
 /**
@@ -25,7 +25,7 @@ public class ServiceRMIAdminImpl extends SharedServerService
     /**
      * 
      */
-    DMAmministrazioneAPI dataManager;
+    DMAdminAPI dataManager;
 
     /**
      * 
@@ -33,7 +33,7 @@ public class ServiceRMIAdminImpl extends SharedServerService
      * @param logger
      * @throws RemoteException
      */
-    public ServiceRMIAdminImpl(DMAmministrazioneAPI dataManager, Logger logger)
+    public ServiceRMIAdminImpl(DMAdminAPI dataManager, Logger logger)
             throws  RemoteException {
         super(logger);
 
