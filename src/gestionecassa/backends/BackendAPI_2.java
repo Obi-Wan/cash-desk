@@ -29,7 +29,13 @@ import java.util.List;
  * @author ben
  */
 public interface BackendAPI_2 {
-    
+
+    /**
+     * Sets up the class: it opens the db located at the url, and verifies
+     * integrity
+     * @param url where the db is located
+     * @throws IOException
+     */
     public void init(String url) throws IOException;
 
     //--------------------//

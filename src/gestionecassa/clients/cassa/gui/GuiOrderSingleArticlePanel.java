@@ -176,6 +176,7 @@ public class GuiOrderSingleArticlePanel extends GuiAbstrMoreLessPanel
   private javax.swing.JSpinner jSpinnerNum;
   // End of variables declaration//GEN-END:variables
     
+    @Override
     public void stateChanged(ChangeEvent e) {
         parent.updateCurrentOrder();
     }
