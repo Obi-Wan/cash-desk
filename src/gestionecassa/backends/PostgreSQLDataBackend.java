@@ -141,7 +141,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
         tempList.add("id_option serial PRIMARY KEY");
         tempList.add("id_article integer REFERENCES articles ON DELETE CASCADE");
         tempList.add("name text");
-        tempList.add("description text");
+//        tempList.add("description text");
         tables.put("09_options", tempList);
 
         tempList = new ArrayList<String>();
