@@ -177,13 +177,12 @@ public class PostgreSQLDataBackendTest {
                 try {
                     st.execute(query);
                 } catch (SQLException ex) {
-                    fail("Failed in Cleaning the DB: ");
-                    ex.printStackTrace();
+                    fail("Failed in Cleaning the DB: " + ex.getMessage());
                 } finally {
                     st.close();
                 }
             } catch (SQLException ex) {
-                fail("Failed in connecting to the DB");
+                fail("Failed in connecting to the DB: " + ex.getMessage());
             }
         }
     }
@@ -198,6 +197,7 @@ public class PostgreSQLDataBackendTest {
 
     /**
      * Test of init method, of class PostgreSQLDataBackend.
+     * @throws Exception
      */
     @Test
     public void testInit() throws Exception {
@@ -226,19 +226,18 @@ public class PostgreSQLDataBackendTest {
                     }
                 }
             } catch (SQLException ex) {
-                fail("Failed in interrogating the DB");
-                ex.printStackTrace();
+                fail("Failed in interrogating the DB: " + ex.getMessage());
             } finally {
                 st.close();
             }
         } catch (SQLException ex) {
-            fail("Failed in initializing the DB: ");
-            ex.printStackTrace();
+            fail("Failed in initializing the DB: " + ex.getMessage());
         }
     }
 
     /**
      * Test of addGroupToList method, of class PostgreSQLDataBackend.
+     * @throws Exception
      */
     @Test
     public void testAddGroupToList() throws Exception {
@@ -251,6 +250,7 @@ public class PostgreSQLDataBackendTest {
 
     /**
      * Test of loadArticlesList method, of class PostgreSQLDataBackend.
+     * @throws Exception
      */
     @Test
     public void testLoadArticlesOfGroup() throws Exception {
@@ -263,6 +263,7 @@ public class PostgreSQLDataBackendTest {
 
     /**
      * Test of addArticleToList method, of class PostgreSQLDataBackend.
+     * @throws Exception
      */
     @Test
     public void testAddArticleToList() throws Exception {
@@ -297,6 +298,7 @@ public class PostgreSQLDataBackendTest {
 
     /**
      * Test of moveArticleAt method, of class PostgreSQLDataBackend.
+     * @throws Exception
      */
     @Test
     public void testMoveArticleAt() throws Exception {
@@ -310,6 +312,7 @@ public class PostgreSQLDataBackendTest {
 
     /**
      * Test of addArticleToListAt method, of class PostgreSQLDataBackend.
+     * @throws Exception
      */
     @Test
     public void testAddArticleToListAt() throws Exception {
@@ -326,6 +329,7 @@ public class PostgreSQLDataBackendTest {
 
     /**
      * Test of loadArticlesOfGroup method, of class PostgreSQLDataBackend.
+     * @throws Exception
      */
     @Test
     public void testLoadArticlesList() throws Exception {
@@ -357,6 +361,7 @@ public class PostgreSQLDataBackendTest {
 
     /**
      * Test of enableArticleFromList method, of class PostgreSQLDataBackend.
+     * @throws Exception
      */
     @Test
     public void testEnableArticleFromList() throws Exception {
@@ -379,6 +384,7 @@ public class PostgreSQLDataBackendTest {
 
     /**
      * Test of addAdmin method, of class PostgreSQLDataBackend.
+     * @throws Exception
      */
     @Test
     public void testAddAdmin() throws Exception {
@@ -396,6 +402,7 @@ public class PostgreSQLDataBackendTest {
 
     /**
      * Test of loadAdminsList method, of class PostgreSQLDataBackend.
+     * @throws Exception
      */
     @Test
     public void testLoadAdminsList() throws Exception {
@@ -410,6 +417,7 @@ public class PostgreSQLDataBackendTest {
 
     /**
      * Test of enableAdmin method, of class PostgreSQLDataBackend.
+     * @throws Exception
      */
     @Test
     public void testEnableAdmin() throws Exception {
@@ -447,6 +455,7 @@ public class PostgreSQLDataBackendTest {
 
     /**
      * Test of loadCassiereList method, of class PostgreSQLDataBackend.
+     * @throws Exception
      */
     @Test
     public void testLoadCassiereList() throws Exception {
@@ -461,6 +470,7 @@ public class PostgreSQLDataBackendTest {
 
     /**
      * Test of enableCassiere method, of class PostgreSQLDataBackend.
+     * @throws Exception
      */
     @Test
     public void testEnableCassiere() throws Exception {
@@ -481,6 +491,7 @@ public class PostgreSQLDataBackendTest {
 
     /**
      * Test of addOrganizedEvent method, of class PostgreSQLDataBackend.
+     * @throws Exception
      */
     @Test
     public void testAddOrganizedEvent() throws Exception {
@@ -491,6 +502,7 @@ public class PostgreSQLDataBackendTest {
 
     /**
      * Test of getOrganizedEvents method, of class PostgreSQLDataBackend.
+     * @throws Exception
      */
     @Test
     public void testGetOrganizedEvents() throws Exception {
@@ -505,6 +517,7 @@ public class PostgreSQLDataBackendTest {
 
     /**
      * Test of addDateToOrgEvent method, of class PostgreSQLDataBackend.
+     * @throws Exception
      */
     @Test
     public void testAddDateToOrgEvent() throws Exception {
@@ -515,6 +528,7 @@ public class PostgreSQLDataBackendTest {
 
     /**
      * Test of getDatesOfOrgEvent method, of class PostgreSQLDataBackend.
+     * @throws Exception
      */
     @Test
     public void testGetDatesOfOrgEvent() throws Exception {
@@ -528,6 +542,7 @@ public class PostgreSQLDataBackendTest {
 
     /**
      * Test of addNewOrder method, of class PostgreSQLDataBackend.
+     * @throws Exception
      */
     @Test
     public void testAddNewOrder() throws Exception {
@@ -564,14 +579,12 @@ public class PostgreSQLDataBackendTest {
                 assertEquals(tempOrder.getTable(), rs.getInt("table"));
                 
             } catch (SQLException ex) {
-                fail("Failed in interrogating the DB");
-                ex.printStackTrace();
+                fail("Failed in interrogating the DB: " + ex.getMessage());
             } finally {
                 st.close();
             }
         } catch (SQLException ex) {
-            fail("Failed in initializing the DB: ");
-            ex.printStackTrace();
+            fail("Failed in initializing the DB: " + ex.getMessage());
         }
 
         // verify presence
@@ -610,14 +623,12 @@ public class PostgreSQLDataBackendTest {
                                 rs.getInt("num_tot"));
 
             } catch (SQLException ex) {
-                fail("Failed in interrogating the DB" + ex.getMessage());
-                ex.printStackTrace();
+                fail("Failed in interrogating the DB: " + ex.getMessage());
             } finally {
                 st.close();
             }
         } catch (SQLException ex) {
-            fail("Failed in initializing the DB: ");
-            ex.printStackTrace();
+            fail("Failed in initializing the DB: " + ex.getMessage());
         }
 
         SimpleDateFormat date = new SimpleDateFormat("yyyyMMddhhmmss");
@@ -655,19 +666,18 @@ public class PostgreSQLDataBackendTest {
                 assertEquals(event.datesList.get(1).titleDate,rs.getString("d_title"));
 
             } catch (SQLException ex) {
-                fail("Failed in interrogating the DB" + ex.getMessage());
-                ex.printStackTrace();
+                fail("Failed in interrogating the DB: " + ex.getMessage());
             } finally {
                 st.close();
             }
         } catch (SQLException ex) {
-            fail("Failed in initializing the DB: ");
-            ex.printStackTrace();
+            fail("Failed in initializing the DB: " + ex.getMessage());
         }
     }
 
     /**
      * Test of addNewOrder method, of class PostgreSQLDataBackend.
+     * @throws Exception
      */
     @Test
     public void testAddNewOrderWithOptions() throws Exception {
@@ -711,14 +721,12 @@ public class PostgreSQLDataBackendTest {
                         rs.getTimestamp("time"));
 
             } catch (SQLException ex) {
-                fail("Failed in interrogating the DB");
-                ex.printStackTrace();
+                fail("Failed in interrogating the DB: " + ex.getMessage());
             } finally {
                 st.close();
             }
         } catch (SQLException ex) {
-            fail("Failed in initializing the DB: ");
-            ex.printStackTrace();
+            fail("Failed in initializing the DB: " + ex.getMessage());
         }
 
         // verify presence
@@ -750,14 +758,12 @@ public class PostgreSQLDataBackendTest {
                                 rs.getInt("num_tot"));
 
             } catch (SQLException ex) {
-                fail("Failed in interrogating the DB" + ex.getMessage());
-                ex.printStackTrace();
+                fail("Failed in interrogating the DB: " + ex.getMessage());
             } finally {
                 st.close();
             }
         } catch (SQLException ex) {
-            fail("Failed in initializing the DB: ");
-            ex.printStackTrace();
+            fail("Failed in initializing the DB: " + ex.getMessage());
         }
 
         // verify presence
@@ -804,14 +810,12 @@ public class PostgreSQLDataBackendTest {
                                 rs.getString("op_name"));
 
             } catch (SQLException ex) {
-                fail("Failed in interrogating the DB" + ex.getMessage());
-                ex.printStackTrace();
+                fail("Failed in interrogating the DB: " + ex.getMessage());
             } finally {
                 st.close();
             }
         } catch (SQLException ex) {
-            fail("Failed in initializing the DB: ");
-            ex.printStackTrace();
+            fail("Failed in initializing the DB: " + ex.getMessage());
         }
     }
 
@@ -819,6 +823,7 @@ public class PostgreSQLDataBackendTest {
 
     /**
      * Test of delLastOrder method, of class PostgreSQLDataBackend.
+     * @throws Exception
      */
     @Test
     public void testDelLastOrder() throws Exception {
@@ -846,14 +851,12 @@ public class PostgreSQLDataBackendTest {
                 assertEquals(rs.getInt("count"), 4);
 
             } catch (SQLException ex) {
-                fail("Failed in interrogating the DB" + ex.getMessage());
-                ex.printStackTrace();
+                fail("Failed in interrogating the DB: " + ex.getMessage());
             } finally {
                 st.close();
             }
         } catch (SQLException ex) {
-            fail("Failed in initializing the DB: ");
-            ex.printStackTrace();
+            fail("Failed in initializing the DB: " + ex.getMessage());
         }
 
         query = "SELECT count( id_art_in_ord ) FROM articles_in_order;";
@@ -868,13 +871,11 @@ public class PostgreSQLDataBackendTest {
 
             } catch (SQLException ex) {
                 fail("Failed in interrogating the DB" + ex.getMessage());
-                ex.printStackTrace();
             } finally {
                 st.close();
             }
         } catch (SQLException ex) {
-            fail("Failed in initializing the DB: ");
-            ex.printStackTrace();
+            fail("Failed in initializing the DB: " + ex.getMessage());
         }
 
         query = "SELECT count( id_option ) FROM opts_of_article_in_order;";
@@ -888,14 +889,12 @@ public class PostgreSQLDataBackendTest {
                 assertEquals(rs.getInt("count"), 2);
 
             } catch (SQLException ex) {
-                fail("Failed in interrogating the DB" + ex.getMessage());
-                ex.printStackTrace();
+                fail("Failed in interrogating the DB: " + ex.getMessage());
             } finally {
                 st.close();
             }
         } catch (SQLException ex) {
-            fail("Failed in initializing the DB: ");
-            ex.printStackTrace();
+            fail("Failed in initializing the DB: " + ex.getMessage());
         }
 
         backend.delLastOrder(tempOrder);
@@ -912,13 +911,11 @@ public class PostgreSQLDataBackendTest {
 
             } catch (SQLException ex) {
                 fail("Failed in interrogating the DB" + ex.getMessage());
-                ex.printStackTrace();
             } finally {
                 st.close();
             }
         } catch (SQLException ex) {
-            fail("Failed in initializing the DB: ");
-            ex.printStackTrace();
+            fail("Failed in initializing the DB: " + ex.getMessage());
         }
 
         query = "SELECT count( id_art_in_ord ) FROM articles_in_order;";
@@ -933,13 +930,11 @@ public class PostgreSQLDataBackendTest {
 
             } catch (SQLException ex) {
                 fail("Failed in interrogating the DB" + ex.getMessage());
-                ex.printStackTrace();
             } finally {
                 st.close();
             }
         } catch (SQLException ex) {
-            fail("Failed in initializing the DB: ");
-            ex.printStackTrace();
+            fail("Failed in initializing the DB: " + ex.getMessage());
         }
 
         query = "SELECT count( id_option ) FROM opts_of_article_in_order;";
@@ -954,13 +949,11 @@ public class PostgreSQLDataBackendTest {
 
             } catch (SQLException ex) {
                 fail("Failed in interrogating the DB" + ex.getMessage());
-                ex.printStackTrace();
             } finally {
                 st.close();
             }
         } catch (SQLException ex) {
-            fail("Failed in initializing the DB: ");
-            ex.printStackTrace();
+            fail("Failed in initializing the DB: " + ex.getMessage());
         }
     }
     
@@ -985,12 +978,11 @@ public class PostgreSQLDataBackendTest {
                         rs.getString("password"), person.getPassword());
             } catch (SQLException ex) {
                 fail("Failed in executing the query: " + query + "\n" + ex.getMessage());
-                ex.printStackTrace();
             } finally {
                 st.close();
             }
         } catch (SQLException ex) {
-            fail("Failed in connecting to the DB");
+            fail("Failed in connecting to the DB: " + ex.getMessage());
         }
     }
 
@@ -1020,12 +1012,11 @@ public class PostgreSQLDataBackendTest {
                 }
             } catch (SQLException ex) {
                 fail("Failed in executing the query: " + query + "\n" + ex.getMessage());
-                ex.printStackTrace();
             } finally {
                 st.close();
             }
         } catch (SQLException ex) {
-            fail("Failed in connecting to the DB");
+            fail("Failed in connecting to the DB: " + ex.getMessage());
         }
     }
 
@@ -1047,12 +1038,11 @@ public class PostgreSQLDataBackendTest {
                         rs.getInt("id_group"));
             } catch (SQLException ex) {
                 fail("Failed in executing the query: " + query + "\n" + ex.getMessage());
-                ex.printStackTrace();
             } finally {
                 st.close();
             }
         } catch (SQLException ex) {
-            fail("Failed in connecting to the DB");
+            fail("Failed in connecting to the DB: " + ex.getMessage());
         }
     }
 
@@ -1070,12 +1060,11 @@ public class PostgreSQLDataBackendTest {
                 assertTrue("Non è l'ultimo!",rs.isLast());
             } catch (SQLException ex) {
                 fail("Failed in executing the query: " + query + "\n" + ex.getMessage());
-                ex.printStackTrace();
             } finally {
                 st.close();
             }
         } catch (SQLException ex) {
-            fail("Failed in connecting to the DB");
+            fail("Failed in connecting to the DB: " + ex.getMessage());
         }
     }
     
