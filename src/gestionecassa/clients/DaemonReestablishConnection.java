@@ -59,11 +59,11 @@ public class DaemonReestablishConnection extends Thread {
     public void run() {
         try {
             while (true) {
-                /*sleeps for 10 minutes*/
-                sleep(600000);
+                /*sleeps for 30 seconds*/
+                Thread.sleep(30000);
                 server.keepAlive(id);
                 
-                logger.info("keepalive mandato al server.");
+//                logger.info("keepalive mandato al server.");
             }
         } catch (RemoteException ex) {
             logger.warn("RemoteException nel tentativo "+
