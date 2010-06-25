@@ -27,7 +27,8 @@ import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
 /**
- *
+ * Class that manages loading and saving preferences to file
+ * @param <DataType> Type of preferences to manage
  * @author ben
  */
 public class XmlPreferencesHandler<DataType extends Preferences> {
@@ -114,25 +115,25 @@ public class XmlPreferencesHandler<DataType extends Preferences> {
             throws IllegalArgumentException, IllegalAccessException {
 
         if (field.getType().equals(Boolean.TYPE)) {
-            if (nodeText.toLowerCase().equals("yes")) {
+            if (nodeText.toLowerCase().equals("true")) {
                 nodeText = "true";
             }
-            field.setBoolean(preferences, new Boolean(nodeText));
+            field.setBoolean(preferences, Boolean.valueOf(nodeText));
         } else if (field.getType().equals(Integer.TYPE)) {
             if (nodeText.equals("")) {
                 nodeText = "0";
             }
-            field.setInt(preferences, new Integer(nodeText));
-        } else if (field.getClass().isInstance(new Boolean("true"))) {
-            if (nodeText.toLowerCase().equals("yes")) {
+            field.setInt(preferences, Integer.valueOf(nodeText));
+        } else if (field.getType().isInstance(Boolean.valueOf("true"))) {
+            if (nodeText.toLowerCase().equals("true")) {
                 nodeText = "true";
             }
-            field.set(preferences, new Boolean(nodeText));
-        } else if (field.getClass().isInstance(new Integer("0"))) {
+            field.set(preferences, Boolean.valueOf(nodeText));
+        } else if (field.getType().isInstance(Integer.valueOf("0"))) {
             if (nodeText.equals("")) {
                 nodeText = "0";
             }
-            field.set(preferences, new Integer(nodeText));
+            field.set(preferences, Integer.valueOf(nodeText));
         } else {
             field.set(preferences, nodeText);
         }
