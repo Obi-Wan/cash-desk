@@ -60,7 +60,7 @@ public class Order implements Serializable, Comparable<Order> {
     /**
      *
      */
-    final private int[] listSignature;
+    final private List<Integer> listSignature;
 
     /**
      * Default constructor (well, at most :) )
@@ -70,7 +70,7 @@ public class Order implements Serializable, Comparable<Order> {
      * @param table Table where to serve the order
      * @param listSign Signature of the list from which the groups are taken
      */
-    public Order(String username, String hostname, int table, int[] listSign) {
+    public Order(String username, String hostname, int table, List<Integer> listSign) {
         this( new Date(), username, hostname, table,
                 new ArrayList<EntryArticleGroup>(), listSign);
     }
@@ -85,7 +85,7 @@ public class Order implements Serializable, Comparable<Order> {
      * @param listSign Signature of the list from which the groups are taken
      */
     public Order(Date date, String username, String hostname, int table,
-                int[] listSign) {
+                List<Integer> listSign) {
         this( new Date(date.getTime()), username, hostname, table,
                 new ArrayList<EntryArticleGroup>(), listSign);
     }
@@ -104,7 +104,7 @@ public class Order implements Serializable, Comparable<Order> {
      * @param listSign Signature of the list from which the groups are taken
      */
     private Order( Date date, String username, String hostname, int table,
-            List<EntryArticleGroup> groups, int[] listSign) {
+            List<EntryArticleGroup> groups, List<Integer> listSign) {
         this.date = date;
         this.groupsList = groups;
         this.username = username;
@@ -241,7 +241,7 @@ public class Order implements Serializable, Comparable<Order> {
      * Getts the signature of the list used to create the order
      * @return an array of integers containing the signature
      */
-    public int[] getListSignature() {
+    public List<Integer> getListSignature() {
         return listSignature;
     }
 }

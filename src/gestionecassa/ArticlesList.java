@@ -50,7 +50,7 @@ public class ArticlesList implements Serializable {
     /**
      * The signature of this list
      */
-    private int[] signature;
+    private List<Integer> signature;
 
     /**
      * Default constructor
@@ -77,7 +77,7 @@ public class ArticlesList implements Serializable {
      * @param list list of Groups of Articles
      * @param listSign the signature of the original list
      */
-    private ArticlesList(Collection<ArticleGroup> list, int[] listSign) {
+    private ArticlesList(Collection<ArticleGroup> list, List<Integer> listSign) {
         this.groups = new ArrayList<ArticleGroup>(list);
         this.signature = listSign;
         generateArtMap();
@@ -347,7 +347,7 @@ public class ArticlesList implements Serializable {
      * Gets a copy of the signature
      * @return an array of bytes containing the signature
      */
-    public int[] getSignature() {
+    public List<Integer> getSignature() {
         return signature;
     }
 
@@ -358,22 +358,17 @@ public class ArticlesList implements Serializable {
      * of updates.
      */
     public final void generateSignature() {
-        List<Integer> bytes = new ArrayList<Integer>();
+        signature = new ArrayList<Integer>();
         for (ArticleGroup articleGroup : groups) {
             if (articleGroup.isEnabled()) {
-                bytes.add(articleGroup.hashCode());
+                signature.add(articleGroup.hashCode());
                 for (Article article : articleGroup.getList()) {
                     if (article.isEnabled()) {
-                        bytes.add(article.hashCode());
+                        signature.add(article.hashCode());
                     }
                 }
             }
         }
-        signature = new int[bytes.size()+1];
-        for (int i = 0; i < bytes.size(); i++) {
-            signature[i] = bytes.get(i);
-        }
-        signature[signature.length-1]
-                = java.util.Calendar.getInstance().getTime().hashCode();
+        signature.add(java.util.Calendar.getInstance().getTime().hashCode());
     }
 }
