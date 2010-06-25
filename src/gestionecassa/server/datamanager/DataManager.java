@@ -363,8 +363,11 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
     public void addNewOrder(String id, Order order)
             throws IOException, WrongArticlesListException {
         synchronized (listOrdersSemaphore) {
-            if (articlesList.getSignature() != order.getListSignature()) {
-                throw new WrongArticlesListException("Lists' signatures don't match");
+            if (!articlesList.getSignature().equals(order.getListSignature())) {
+                throw new WrongArticlesListException(
+                        "Lists' signatures don't match\nmain: "
+                        + articlesList.getSignature() + "\nclient:"
+                        + order.getListSignature());
             }
             ordersTable.get(id).add(order);
             if (!useFallback) {
@@ -377,12 +380,14 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
     public void delLastOrder(String id) throws IOException {
         synchronized (listOrdersSemaphore) {
             List<Order> tempOrderList = ordersTable.get(id);
-            if (tempOrderList.size() >= 0) {
+            if (tempOrderList!= null && tempOrderList.size() >= 0) {
                 Order tempOrder = tempOrderList.get( tempOrderList.size()-1 );
                 if (!useFallback) {
                     dataBackendDB.delLastOrder( tempOrder );
                 }
                 tempOrderList.remove( tempOrder );
+            } else {
+                throw new IOException("no Orders to delete! is the session alive?");
             }
         }
     }

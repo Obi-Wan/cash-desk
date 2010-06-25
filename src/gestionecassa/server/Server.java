@@ -90,6 +90,7 @@ public class Server extends UnicastRemoteObject
     
     /**
      * Method that grants the creation of a singleton.
+     * @return
      */
     public synchronized static Server getInstance() {
         if (localBLogic == null) {

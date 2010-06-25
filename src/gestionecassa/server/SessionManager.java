@@ -60,7 +60,7 @@ class SessionManager {
      * lead the threads to share the same semaphore.
      */
     private static final String sessionListSemaphore =
-            new String("SessionsSemaphore" + System.currentTimeMillis());
+            "SessionsSemaphore" + System.currentTimeMillis();
 
     /**
      * Logger that takes account of logging messages.

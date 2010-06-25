@@ -43,7 +43,7 @@ public class ServiceRMIAdminImpl extends SharedServerService
     /**
      * Method to get the complete list of Articles
      * @return the list of articles
-     * @throws jRemoteException
+     * @throws RemoteException
      */
     @Override
     public ArticlesList getRMIArticlesList() throws RemoteException {
@@ -61,9 +61,6 @@ public class ServiceRMIAdminImpl extends SharedServerService
      *
      * @throws RemoteException Throws a remote exception, because we are aon RMI context.
      * @throws ActorAlreadyExistingException
-     * @throws WrongLoginException
-     *
-     * @return  The id of the user, which is used in comunication, once logged.
      */
     @Override
     public void sendRMIDatiRegistrazione(Person user)
@@ -82,9 +79,12 @@ public class ServiceRMIAdminImpl extends SharedServerService
     /**
      * Adds an article to the common list.
      *
+     * @param group
      * @param article
      *
      * @throws RemoteException
+     * @throws DuplicateArticleException
+     * @throws NotExistingGroupException
      */
     @Override
     public void addRMIArticle(int group, Article article)
@@ -96,9 +96,12 @@ public class ServiceRMIAdminImpl extends SharedServerService
     /**
      * Adds an article to the common list.
      *
+     * @param group
      * @param article
      *
      * @throws RemoteException
+     * @throws DuplicateArticleException
+     * @throws NotExistingGroupException
      */
     @Override
     public void addRMIArticle(String group, Article article)
@@ -110,6 +113,7 @@ public class ServiceRMIAdminImpl extends SharedServerService
     /**
      * Enables/disables an article at the index specified by position.
      *
+     * @param group 
      * @param position
      * @param enable
      *

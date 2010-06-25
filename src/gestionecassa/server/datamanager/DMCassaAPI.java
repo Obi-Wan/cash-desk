@@ -42,6 +42,7 @@ public interface DMCassaAPI {
      * @param id identifier of the session
      * @param order New order to add
      * @throws IOException
+     * @throws WrongArticlesListException 
      */
     void addNewOrder(String id, Order order)
             throws IOException, WrongArticlesListException;
@@ -68,7 +69,6 @@ public interface DMCassaAPI {
     /**
      * Method to get the list of all the enabled Articles
      * @return the list of all enabled articles
-     * @throws RemoteException
      */
     public ArticlesList getEnabledArticlesList();
 }
