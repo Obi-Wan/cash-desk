@@ -15,6 +15,7 @@
 package gestionecassa.clients.cassa.printing;
 
 import gestionecassa.Article;
+import gestionecassa.ArticleOption;
 import gestionecassa.ArticleWithOptions;
 import java.util.List;
 import java.util.ArrayList;
@@ -35,10 +36,10 @@ public class TextPainterTest {
 
     public TextPainterTest() {
         articles = new ArrayList<Article>();
-        List<String> options = new ArrayList<String>();
-        options.add("corta");
-        options.add("media");
-        options.add("lunga");
+        List<ArticleOption> options = new ArrayList<ArticleOption>();
+        options.add(new ArticleOption(0, "corta", true));
+        options.add(new ArticleOption(1, "media", true));
+        options.add(new ArticleOption(2, "lunga", true));
         articles.add(new Article(articles.size()+1, "gatto", 5.5));
         articles.add(new Article(articles.size()+1, "cane", 10));
         articles.add(new ArticleWithOptions(articles.size()+1, "falce", 4.25, options));
@@ -63,6 +64,7 @@ public class TextPainterTest {
 
     /**
      * Test of addArticle method, of class TextPainter.
+     * @throws Exception 
      */
     @Test
     public void testDoPrint() throws Exception {
@@ -71,10 +73,12 @@ public class TextPainterTest {
         instance.addArticle(articles.get(0), 1);
         instance.doPrint();
 
-
         TextPainter instance2 = new TextPainter("test2");
-        instance2.addArticleWOptions((ArticleWithOptions)articles.get(2), 12,
-                ((ArticleWithOptions)articles.get(2)).getOptions().get(0));
+
+        ArticleWithOptions articleChosen = (ArticleWithOptions)articles.get(2);
+        String optionName = articleChosen.getOptions().get(0).getName();
+        instance2.addArticleWOptions(articleChosen, 12, optionName);
+
         instance2.doPrint();
     }
 

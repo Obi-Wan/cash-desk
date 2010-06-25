@@ -15,6 +15,7 @@
 package gestionecassa.clients.cassa.printing;
 
 import gestionecassa.Article;
+import gestionecassa.ArticleOption;
 import gestionecassa.ArticleWithOptions;
 import java.awt.print.PrinterJob;
 import java.io.File;
@@ -43,10 +44,10 @@ public class PainterTest {
 
     public PainterTest() {
         articles = new ArrayList<Article>();
-        List<String> options = new ArrayList<String>();
-        options.add("corta");
-        options.add("media");
-        options.add("lunga");
+        List<ArticleOption> options = new ArrayList<ArticleOption>();
+        options.add(new ArticleOption(0, "corta", true));
+        options.add(new ArticleOption(1, "media", true));
+        options.add(new ArticleOption(2, "lunga", true));
         articles.add(new Article(articles.size()+1, "gatto", 5.5));
         articles.add(new Article(articles.size()+1, "cane", 10));
         articles.add(new ArticleWithOptions(articles.size()+1, "falce", 4.25, options));
@@ -71,6 +72,7 @@ public class PainterTest {
 
     /**
      * Test of print method, of class Painter.
+     * @throws Exception
      */
     @Test
     public void testPrint() throws Exception {
@@ -105,8 +107,9 @@ public class PainterTest {
 
         System.out.println("printing: " + articles.get(2).getName());
 
-        job.setPrintable(new Painter((ArticleWithOptions)articles.get(2), 12,
-                ((ArticleWithOptions)articles.get(2)).getOptions().get(0)));
+        ArticleWithOptions articleChosen = (ArticleWithOptions)articles.get(2);
+        String nameOfTheOption = articleChosen.getOptions().get(0).getName();
+        job.setPrintable(new Painter(articleChosen, 12, nameOfTheOption));
 
         job.print(attribs);
     }

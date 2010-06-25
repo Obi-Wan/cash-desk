@@ -16,6 +16,7 @@ package gestionecassa.clients.administration.cli;
 
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
+import gestionecassa.ArticleOption;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.clients.administration.AdministrationAPI;
 import gestionecassa.exceptions.DuplicateArticleException;
@@ -147,17 +148,18 @@ public class CLIAdminArtices {
         String name = con.readLine("Name: ");
         double price = Double.parseDouble(con.readLine("Price: "));
         boolean hasOptions = Boolean.parseBoolean(con.readLine("Has options (true to say yes): "));
-        List<String> options = new ArrayList<String>();
+        List<ArticleOption> options = new ArrayList<ArticleOption>();
+        int idOpt = 0;
         if (hasOptions) {
             String opt;
             while ( !(opt = con.readLine()).isEmpty() ) {
-                options.add(opt);
+                options.add(new ArticleOption(idOpt, opt, true));
             }
         }
         
         if (Boolean.parseBoolean(con.readLine("Do you want to proceed? (true to say yes): "))) {
             try {
-                baseClient.addRMIArticle(group.getIdGroup(),
+                baseClient.addRMIArticle(group.getId(),
                         hasOptions ?
                             new ArticleWithOptions(0, name, price, options) :
                             new Article(0, name, price));
@@ -177,7 +179,7 @@ public class CLIAdminArtices {
         int num = Integer.parseInt(
                 con.readLine("Position of the article to enable/disable: "));
         Article art = baseClient.getArticlesList().getGroupsList()
-                .get(group.getIdGroup()).getList().get(num);
+                .get(group.getId()).getList().get(num);
         boolean disen = Boolean.parseBoolean(
                 con.readLine(art.isEnabled() ?
                     "Do you want to disable it? (true to say yes)" :
@@ -194,7 +196,7 @@ public class CLIAdminArtices {
         int num = Integer.parseInt(
                 con.readLine("Position of the article to modify: "));
         Article art = baseClient.getArticlesList().getGroupsList()
-                .get(group.getIdGroup()).getList().get(num);
+                .get(group.getId()).getList().get(num);
         char choice = con.readLine(
                 "Press:\n" +
                 " - n - To modify the name\n" +
@@ -204,7 +206,7 @@ public class CLIAdminArtices {
         int id = art.getId();
         double price = art.getPrice();
         boolean enabled = art.isEnabled();
-        List<String> options = new ArrayList<String>();
+        List<ArticleOption> options = new ArrayList<ArticleOption>();
         if (art.hasOptions()) {
             options = ((ArticleWithOptions)art).getOptions();
         }
@@ -236,7 +238,7 @@ public class CLIAdminArtices {
 //        int num = Integer.parseInt(
 //                con.readLine("Position of the article to move: "));
 //        Article art = baseClient.getArticlesList().getGroupsList()
-//                .get(group.getIdGroup()).getList().get(num);
+//                .get(group.getId()).getList().get(num);
 //        int n_num = Integer.parseInt(
 //                con.readLine("New position of the article " + art.getName() + ": "));
 //

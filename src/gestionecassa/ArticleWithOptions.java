@@ -27,40 +27,45 @@ public class ArticleWithOptions extends Article implements ArticleWithPreparatio
     /**
      * Lista delle options disponibili per questo bene.
      */
-    List<String> options;
+    List<ArticleOption> options;
 
     /**
      * Explicit Constructor
-     *
-     * @param name 
+     * @param id
+     * @param name
      * @param price
      * @param options
      */
-    public ArticleWithOptions(int id, String name, double price, Collection<String> options) {
+    public ArticleWithOptions(int id, String name, double price,
+            Collection<ArticleOption> options) {
         super(id,name, price);
-        this.options = new ArrayList<String>(options);
+        this.options = new ArrayList<ArticleOption>(options);
     }
 
     /**
      * Explicit Constructor
      *
-     * @param name 
+     * @param id
+     * @param name
      * @param price
      * @param options
+     * @param b
      */
-    public ArticleWithOptions(int id, String name, double price, Collection<String> options, boolean b) {
+    public ArticleWithOptions(int id, String name, double price,
+            Collection<ArticleOption> options, boolean b) {
         super(id, name, price, b);
-        this.options = new ArrayList<String>(options);
+        this.options = new ArrayList<ArticleOption>(options);
     }
 
     /**
      * Explicit base constructor
      *
+     * @param id
      * @param name
      * @param price 
      */
     public ArticleWithOptions(int id, String name, double price) {
-        this(id, name, price, new ArrayList<String>());
+        this(id, name, price, new ArrayList<ArticleOption>());
     }
 
     /**
@@ -75,9 +80,9 @@ public class ArticleWithOptions extends Article implements ArticleWithPreparatio
 
     @Override
     public String getPrintableFormat() {
-        String output = new String(super.getPrintableFormat());
-        for (String option : options) {
-            output += String.format("\n\t      . %10s", option);
+        String output = super.getPrintableFormat();
+        for (ArticleOption option : options) {
+            output += String.format("\n\t      . %10s", option.getPrintableFormat());
         }
         return output;
     }
@@ -86,7 +91,7 @@ public class ArticleWithOptions extends Article implements ArticleWithPreparatio
      * Method that returns the options of this article
      * @return reference to the options
      */
-    public List<String> getOptions() {
+    public List<ArticleOption> getOptions() {
         return options;
     }
 

@@ -17,6 +17,7 @@ package gestionecassa.backends;
 import gestionecassa.Admin;
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
+import gestionecassa.ArticleOption;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.Cassiere;
 import gestionecassa.EventDate;
@@ -346,14 +347,14 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 
         //then just if it has options
         if (article.hasOptions()) {
-            List<String> opts = ((ArticleWithOptions)article).getOptions();
+            List<ArticleOption> opts = ((ArticleWithOptions)article).getOptions();
             String insOptsQuery =
                     "INSERT INTO options (id_article, name) VALUES ";
-            for (Iterator<String> it = opts.iterator(); it.hasNext();) {
-                String option = it.next();
-                insOptsQuery += "('" + idArticle + "', '" + option + "')" +
+            for (Iterator<ArticleOption> it = opts.iterator(); it.hasNext();) {
+                ArticleOption option = it.next();
+                insOptsQuery += "('" + idArticle + "', '" + option.getName() + "')" +
                         (it.hasNext() ? "," : ";");
-            }
+            } //FIXME aggiungere altre parti dell'oggetto
             genericCommit(insOptsQuery);
         }
     }
@@ -905,8 +906,8 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      *
      * @throws IOException
      */
-    private List<String> loadOptionsOfArticle(int art_id) throws IOException {
-        String queryOpts =  "SELECT name" +
+    private List<ArticleOption> loadOptionsOfArticle(int art_id) throws IOException {
+        String queryOpts =  "SELECT id_option, name" +
                             "   FROM options" +
                             "   WHERE id_article = '" + art_id + "';";
         try {
@@ -914,10 +915,12 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 
             try {
                 ResultSet rsOpts = stOpts.executeQuery(queryOpts);
-                List<String> options = new LinkedList<String>();
+                List<ArticleOption> options = new LinkedList<ArticleOption>();
                 while (rsOpts.next()) {
-                    options.add(rsOpts.getString("name"));
-                }
+                    options.add(new ArticleOption(rsOpts.getInt("id_option"),
+                                                  rsOpts.getString("name"), true)
+                                );
+                }//FIXME carica anche la descrizione
                 return options;
             } catch (SQLException ex) {
                 logger.error("Errore con la query: " + queryOpts, ex);

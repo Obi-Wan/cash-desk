@@ -20,6 +20,7 @@
 
 package gestionecassa.clients.cassa.gui;
 
+import gestionecassa.ArticleOption;
 import gestionecassa.clients.gui.VisualListsMngr;
 import gestionecassa.clients.gui.OkCancelPanel;
 import gestionecassa.clients.gui.RecordPanels;
@@ -113,17 +114,17 @@ public class GuiAccelOptionsPanel extends OkCancelPanel {
     @Override
     public void init() {
         int i = 0;
-        for (String option : targetPanel.article.getOptions()) {
+        for (ArticleOption option : targetPanel.article.getOptions()) {
             GuiAccelSingleOptionPanel tempDiagPanel;
             GuiOrderSingleOptionPanel tempOrigPanel =
-                    targetPanel.getSingleOptionPanel(option);
+                    targetPanel.getSingleOptionPanel(option.getName());
 
-            tempDiagPanel = new GuiAccelSingleOptionPanel(option,
+            tempDiagPanel = new GuiAccelSingleOptionPanel(option.getName(),
                     (tempOrigPanel == null) ? 0 : tempOrigPanel.getNumTot(),
                     i++);
 
             varListMng.addRecord(tempDiagPanel,
-                                new OptionPanelRelation(tempOrigPanel, option));
+                    new OptionPanelRelation(tempOrigPanel, option.getName()));
         }
 
         varListMng.buildVisualList();

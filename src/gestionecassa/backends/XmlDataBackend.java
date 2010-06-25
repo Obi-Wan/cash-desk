@@ -18,6 +18,7 @@ import gestionecassa.Admin;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
+import gestionecassa.ArticleOption;
 import gestionecassa.Cassiere;
 import gestionecassa.ArticlesList;
 import gestionecassa.Log;
@@ -88,10 +89,10 @@ public class XmlDataBackend implements BackendAPI_1 {
                     tempArt.addAttribute("options", "true");
                     Element tempOpzioni = tempArt.addElement("options");
 
-                    Collection<String> options = ((ArticleWithOptions)art).getOptions();
-                    for (String option : options) {
-                        tempOpzioni.addElement("option").addText(option);
-                    }
+                    Collection<ArticleOption> options = ((ArticleWithOptions)art).getOptions();
+                    for (ArticleOption option : options) {
+                        tempOpzioni.addElement("option").addText(option.getName());
+                    } //FIXME aggiungi altre parti di ArticleOption
                 } else {
                     tempArt.addAttribute("options", "false");
                 }
@@ -140,9 +141,10 @@ public class XmlDataBackend implements BackendAPI_1 {
                 Article article;
                 if (tempRefArt.attribute("options").getValue().equals("true")) {
 
-                    Collection<String> opts = new LinkedList<String>();
+                    Collection<ArticleOption> opts = new LinkedList<ArticleOption>();
+                    int idOpt = 0;
                     for (Object opt : tempRefArt.element("options").elements("option")) {
-                        opts.add(((Element)opt).getText());
+                        opts.add(new ArticleOption(idOpt++,((Element)opt).getText(),true));
                     }
 
                     article = new ArticleWithOptions(id, name, price, opts);

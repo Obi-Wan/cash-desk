@@ -16,6 +16,7 @@ package gestionecassa.clients.cassa.printing;
 
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
+import gestionecassa.ArticleOption;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.ArticlesList;
 import gestionecassa.order.Order;
@@ -50,10 +51,10 @@ public class PrinterHelperTest {
 
         /* First group with id 0 */
         articles = new ArrayList<Article>();
-        List<String> options = new ArrayList<String>();
-        options.add("corta");
-        options.add("media");
-        options.add("lunga");
+        List<ArticleOption> options = new ArrayList<ArticleOption>();
+        options.add(new ArticleOption(0, "corta", true));
+        options.add(new ArticleOption(1, "media", true));
+        options.add(new ArticleOption(2, "lunga", true));
         articles.add(new Article(++idArticle, "gatto", 5.5));
         articles.add(new Article(++idArticle, "cane", 10));
         articles.add(new ArticleWithOptions(++idArticle, "falce", 4.25, options));
@@ -66,11 +67,10 @@ public class PrinterHelperTest {
         groups.add(new ArticleGroup(2, "Group2", articles));
 
         /* Articles not in group 1 to add later */
-        articles = new ArrayList<Article>();
-        options = new ArrayList<String>();
-        options.add("corta1");
-        options.add("media1");
-        options.add("lunga1");
+        articles = new ArrayList<Article>();options = new ArrayList<ArticleOption>();
+        options.add(new ArticleOption(3, "corta1", true));
+        options.add(new ArticleOption(4, "media1", true));
+        options.add(new ArticleOption(5, "lunga1", true));
         articles.add(new Article(++idArticle, "gatto1", 5.5));
         articles.add(new Article(++idArticle, "cane1", 10));
         articles.add(new ArticleWithOptions(++idArticle, "falce1", 4.25, options));

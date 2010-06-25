@@ -18,6 +18,7 @@ import gestionecassa.backends.PostgreSQLDataBackend;
 import gestionecassa.Admin;
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
+import gestionecassa.ArticleOption;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.ArticlesList;
 import gestionecassa.Cassiere;
@@ -83,10 +84,10 @@ public class PostgreSQLDataBackendTest {
 
         /* First group with id 0 */
         articles = new ArrayList<Article>();
-        List<String> options = new ArrayList<String>();
-        options.add("corta");
-        options.add("media");
-        options.add("lunga");
+        List<ArticleOption> options = new ArrayList<ArticleOption>();
+        options.add(new ArticleOption(0, "corta", true));
+        options.add(new ArticleOption(1, "media", true));
+        options.add(new ArticleOption(2, "lunga", true));
         articles.add(new Article(++idArticle, "gatto", 5.5));
         articles.add(new Article(++idArticle, "cane", 10));
         articles.add(new ArticleWithOptions(++idArticle, "falce", 4.25, options));
@@ -100,10 +101,10 @@ public class PostgreSQLDataBackendTest {
 
         /* Articles not in group 1 to add later */
         articles = new ArrayList<Article>();
-        options = new ArrayList<String>();
-        options.add("corta1");
-        options.add("media1");
-        options.add("lunga1");
+        options = new ArrayList<ArticleOption>();
+        options.add(new ArticleOption(3, "corta1", true));
+        options.add(new ArticleOption(4, "media1", true));
+        options.add(new ArticleOption(5, "lunga1", true));
         articles.add(new Article(++idArticle, "gatto1", 5.5));
         articles.add(new Article(++idArticle, "cane1", 10));
         articles.add(new ArticleWithOptions(++idArticle, "falce1", 4.25, options));
@@ -676,9 +677,9 @@ public class PostgreSQLDataBackendTest {
 
         List<BaseEntry<String>> optionsList = new ArrayList<BaseEntry<String>>();
         optionsList.add(new BaseEntry<String>(
-                ((ArticleWithOptions)articles.get(2)).getOptions().get(0), 2));
+                ((ArticleWithOptions)articles.get(2)).getOptions().get(0).getName(), 2));
         optionsList.add(new BaseEntry<String>(
-                ((ArticleWithOptions)articles.get(2)).getOptions().get(1), 3));
+                ((ArticleWithOptions)articles.get(2)).getOptions().get(1).getName(), 3));
 
         Order tempOrder = new Order(testCassiere.getUsername(), "hell", 0,
                                     listOfArts.getSignature());
@@ -1013,8 +1014,8 @@ public class PostgreSQLDataBackendTest {
                                 : "Non dovrebbe aver opzioni ma ne ha!",
                              testArticle.hasOptions(),rs.getBoolean("has_options"));
                 if (testArticle.hasOptions()) {
-                    for (String option : ((ArticleWithOptions)testArticle).getOptions()) {
-                        testOptionPresence(option);
+                    for (ArticleOption option : ((ArticleWithOptions)testArticle).getOptions()) {
+                        testOptionPresence(option.getName());
                     }
                 }
             } catch (SQLException ex) {
@@ -1042,7 +1043,7 @@ public class PostgreSQLDataBackendTest {
                 assertTrue("Non è l'ultimo!",rs.isLast());
 
                 assertTrue("Non è enabled", rs.getBoolean("enabled"));
-                assertEquals("Non ha lo stesso id", testGroup.getIdGroup(),
+                assertEquals("Non ha lo stesso id", testGroup.getId(),
                         rs.getInt("id_group"));
             } catch (SQLException ex) {
                 fail("Failed in executing the query: " + query + "\n" + ex.getMessage());

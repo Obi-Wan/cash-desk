@@ -17,6 +17,7 @@ package gestionecassa.server.datamanager;
 import gestionecassa.Admin;
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
+import gestionecassa.ArticleOption;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.ArticlesList;
 import gestionecassa.Cassiere;
@@ -304,9 +305,9 @@ public class DataManagerTest {
         Collection<Article> oldArticles = dataManager.getAllArticlesList().getArticlesList();
         
         List<Article> articles = new ArrayList<Article>();
-        Collection<String> listaOpzioni = new ArrayList<String>();
-        listaOpzioni.add("cacca secca");
-        listaOpzioni.add("cacca liquida");
+        Collection<ArticleOption> listaOpzioni = new ArrayList<ArticleOption>();
+        listaOpzioni.add(new ArticleOption(0, "cacca secca", true));
+        listaOpzioni.add(new ArticleOption(1, "cacca liquida", true));
         articles.add(new Article(1,"fagiolo", 25));
         articles.add(new Article(2,"blabla", 35));
         articles.add(new Article(3,"merda dello stige", 5.5));
