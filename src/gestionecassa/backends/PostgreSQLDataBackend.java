@@ -63,7 +63,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
     /**
      * List of tables and information on how to create them if missing
      */
-    Map<String,String> tables;
+    Map<String,List<String>> tables;
 
     /**
      * Default constructor
@@ -71,67 +71,92 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
     public PostgreSQLDataBackend() {
         logger = Log.GESTIONECASSA_SERVER_DATAMANAGER_DB;
 
-        tables = new ConcurrentSkipListMap<String, String>();
-        tables.put("01_cassieres",
-                "id_cassiere serial PRIMARY KEY, " +
-                "username text UNIQUE, " +
-                "password text, " +
-                "enabled boolean " +
-//                "trusted boolean " +
-                "");
-        tables.put("02_viewers",
-                "id_viewer serial PRIMARY KEY, " +
-                "username text UNIQUE, " +
-                "password text, " +
-                "enabled boolean ");
-        tables.put("03_admins",
-                "id_admin serial PRIMARY KEY, " +
-                "username text UNIQUE, " +
-                "password text, " +
-                "enabled boolean ");
-        tables.put("04_events",
-                "id_event serial PRIMARY KEY, " +
-                "name text UNIQUE ");
-        tables.put("05_dates_event",
-                "id_date_event serial PRIMARY KEY, " +
-                "id_event integer REFERENCES events ON DELETE CASCADE, " +
-                "title text, " +
-                "start_date timestamp UNIQUE, " +
-                "end_date timestamp UNIQUE ");
-        tables.put("06_orders",
-                "id_order serial PRIMARY KEY, " +
-                "time_order timestamp, " +
-                "id_date_event integer DEFAULT '1' REFERENCES dates_event ON DELETE SET DEFAULT, " +
-                "hostname text, " +
-                "id_cassiere integer REFERENCES cassieres ON DELETE RESTRICT, " +
-                "table_num integer, " +
-                "price_tot numeric ");
-        tables.put("07_groups",
-                "id_group serial PRIMARY KEY, " +
-                "name text UNIQUE, " +
-                "enabled boolean, " +
-                "num_pos integer NOT NULL");
-        tables.put("08_articles",
-                "id_article serial PRIMARY KEY, " +
-                "id_group integer REFERENCES groups ON DELETE CASCADE, " +
-                "name text UNIQUE, " +
-                "enabled boolean, " +
-                "has_options boolean, " +
-                "price numeric, " +
-                "num_pos integer NOT NULL ");
-        tables.put("09_options",
-                "id_option serial PRIMARY KEY, " +
-                "id_article integer REFERENCES articles ON DELETE CASCADE, " +
-                "name text ");
-        tables.put("10_articles_in_order",
-                "id_art_in_ord serial PRIMARY KEY, " +
-                "id_order integer REFERENCES orders ON DELETE CASCADE ON UPDATE CASCADE, " +
-                "id_article integer REFERENCES articles ON DELETE RESTRICT, " +
-                "num_tot integer ");
-        tables.put("11_opts_of_article_in_order",
-                "id_art_in_ord integer REFERENCES articles_in_order ON DELETE CASCADE ON UPDATE CASCADE, " +
-                "id_option integer REFERENCES options ON DELETE RESTRICT, " +
-                "num_parz integer ");
+        tables = new ConcurrentSkipListMap<String, List<String>>();
+
+        List<String> tempList = new ArrayList<String>();
+        tempList.add("id_cassiere serial PRIMARY KEY");
+        tempList.add("username text UNIQUE");
+        tempList.add("password text");
+        tempList.add("enabled boolean");
+//        tempList.add("trusted boolean");
+        tables.put("01_cassieres", tempList);
+
+        tempList = new ArrayList<String>();
+        tempList.add("id_viewer serial PRIMARY KEY");
+        tempList.add("username text UNIQUE");
+        tempList.add("password text");
+        tempList.add("enabled boolean");
+        tables.put("02_viewers", tempList);
+
+        tempList = new ArrayList<String>();
+        tempList.add("id_admin serial PRIMARY KEY");
+        tempList.add("username text UNIQUE");
+        tempList.add("password text");
+        tempList.add("enabled boolean");
+        tables.put("03_admins", tempList);
+
+        tempList = new ArrayList<String>();
+        tempList.add("id_event serial PRIMARY KEY");
+        tempList.add("name text UNIQUE");
+        tables.put("04_events", tempList);
+
+        tempList = new ArrayList<String>();
+        tempList.add("id_date_event serial PRIMARY KEY");
+        tempList.add("id_event integer REFERENCES events ON DELETE CASCADE");
+        tempList.add("title text");
+        tempList.add("start_date timestamp UNIQUE");
+        tempList.add("end_date timestamp UNIQUE");
+        tables.put("05_dates_event", tempList);
+
+        tempList = new ArrayList<String>();
+        tempList.add("id_order serial PRIMARY KEY");
+        tempList.add("time_order timestamp");
+        tempList.add("id_date_event integer DEFAULT '1' REFERENCES dates_event "
+                    + "ON DELETE SET DEFAULT");
+        tempList.add("hostname text");
+        tempList.add("id_cassiere integer REFERENCES cassieres ON DELETE RESTRICT");
+        tempList.add("table_num integer");
+        tempList.add("price_tot numeric");
+        tables.put("06_orders", tempList);
+
+        tempList = new ArrayList<String>();
+        tempList.add("id_group serial PRIMARY KEY");
+        tempList.add("name text UNIQUE");
+        tempList.add("enabled boolean");
+        tempList.add("num_pos integer NOT NULL");
+        tables.put("07_groups", tempList);
+
+        tempList = new ArrayList<String>();
+        tempList.add("id_article serial PRIMARY KEY");
+        tempList.add("id_group integer REFERENCES groups ON DELETE CASCADE");
+        tempList.add("name text UNIQUE");
+        tempList.add("enabled boolean");
+        tempList.add("has_options boolean");
+        tempList.add("price numeric");
+        tempList.add("num_pos integer NOT NULL");
+        tables.put("08_articles", tempList);
+
+        tempList = new ArrayList<String>();
+        tempList.add("id_option serial PRIMARY KEY");
+        tempList.add("id_article integer REFERENCES articles ON DELETE CASCADE");
+        tempList.add("name text");
+        tempList.add("description text");
+        tables.put("09_options", tempList);
+
+        tempList = new ArrayList<String>();
+        tempList.add("id_art_in_ord serial PRIMARY KEY");
+        tempList.add("id_order integer REFERENCES orders ON DELETE CASCADE "
+                    + "ON UPDATE CASCADE");
+        tempList.add("id_article integer REFERENCES articles ON DELETE RESTRICT");
+        tempList.add("num_tot integer");
+        tables.put("10_articles_in_order", tempList);
+
+        tempList = new ArrayList<String>();
+        tempList.add("id_art_in_ord integer REFERENCES articles_in_order "
+                    + "ON DELETE CASCADE ON UPDATE CASCADE");
+        tempList.add("id_option integer REFERENCES options ON DELETE RESTRICT");
+        tempList.add("num_parz integer");
+        tables.put("11_opts_of_article_in_order", tempList);
     }
 
     /**
@@ -163,19 +188,31 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
             try {
                 ResultSet rs = st.executeQuery(query);
 
-                Set<String> tabelleDB = new ConcurrentSkipListSet<String>();
+                /* Let's get all the tables names in the DB */
+                Set<String> dbTables = new ConcurrentSkipListSet<String>();
                 while (rs.next()) {
-                    tabelleDB.add(rs.getString("table_name"));
+                    dbTables.add(rs.getString("table_name"));
                 }
                 rs.close();
 
+                /* Check tables existance */
                 for (String table_ref : tables.keySet()) {
                     String table_name = table_ref.substring(3);
-                    if (!tabelleDB.contains(table_name)) {
+                    if (!dbTables.contains(table_name)) {
                         logger.warn(table_name + " is not in the table list. Creating " +
                                 " blank one");
-                        genericCommit("CREATE TABLE " + table_name + " ( " +
-                                        tables.get(table_ref) + " );");
+                        if (!tables.get(table_ref).isEmpty()) {
+                            String columns = tables.get(table_ref).get(0);
+                            for (int i = 1; i < tables.get(table_ref).size(); i++) {
+                                columns += ", " + tables.get(table_ref).get(i);
+                            }
+                            genericCommit("CREATE TABLE " + table_name + " ( " +
+                                            columns + " );");
+                        } else {
+                            // scream for vengence!
+                        }
+                    } else {
+                        checkTableColumns(table_ref);
                     }
                 }
 
@@ -1089,5 +1126,46 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
             throw new IOException(ex);
         }
         return neededOpts;
+    }
+
+    /**
+     * Sanity check for db tables
+     * @param table_ref refernece of the table in the tables map
+     */
+    private void checkTableColumns(String table_ref) throws IOException {
+        String table_name = table_ref.substring(3);
+        List<String> rawColumnsFormat = tables.get(table_ref);
+        List<String> gotColumns = new ArrayList<String>();
+
+        /* Let's extract columns */
+        String query = "SELECT column_name"
+                     + "   FROM information_schema.columns"
+                     + "   WHERE table_name = '" + table_name + "'"
+                     + "      AND table_schema='public';";
+        try {
+            Statement st = db.createStatement();
+            try {
+                ResultSet rs = st.executeQuery(query);
+                while (rs.next()) {
+                    gotColumns.add(rs.getString("column_name"));
+                }
+            } catch (SQLException ex) {
+                logger.error("Errore con la query: " + query, ex);
+                throw new IOException(ex);
+            } finally {
+                st.close();
+            }
+        } catch (SQLException ex) {
+            logger.error("Errore nel connettermi al DB", ex);
+            throw new IOException(ex);
+        }
+
+        /* Let's check columns */
+        for (String rawColumn : rawColumnsFormat) {
+            if (!gotColumns.contains(rawColumn.split(" ")[0])) {
+                throw new IOException("No column: " + rawColumn.split(" ")[0] +
+                        " found in table: " + table_name);
+            }
+        }
     }
 }
