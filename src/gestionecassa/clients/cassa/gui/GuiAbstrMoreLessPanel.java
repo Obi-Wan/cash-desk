@@ -43,11 +43,13 @@ abstract public class GuiAbstrMoreLessPanel extends GuiAbstrSingleEntryPanel {
             this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
                     Shortcuts.moreKeys[index], "MORE"+index);
             this.getActionMap().put("MORE"+index, new AbstractAction() {
+                @Override
                 public void actionPerformed(ActionEvent e) { more(); }
             });
             this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
                     Shortcuts.lessKeys[index], "LESS"+index);
             this.getActionMap().put("LESS"+index, new AbstractAction() {
+                @Override
                 public void actionPerformed(ActionEvent e) { less(); }
             });
         }
@@ -66,6 +68,7 @@ abstract public class GuiAbstrMoreLessPanel extends GuiAbstrSingleEntryPanel {
      * 
      * @return
      */
+    @Override
     public int getNumTot() {
         return spinnerModel.getNumber().intValue();
     }

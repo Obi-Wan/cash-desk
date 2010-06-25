@@ -1,5 +1,5 @@
 /*
- * GuiOrderSingleOptionPanel.java
+ * GuiOrderOptionPanel.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,45 +13,53 @@
  */
 
 /*
- * GuiOrderSingleOptionPanel.java
+ * GuiOrderOptionPanel.java
  *
  * Created on 23-mag-2009, 14.11.41
  */
 
 package gestionecassa.clients.cassa.gui;
 
+import gestionecassa.ArticleOption;
+
 /**
  * Gui rapresentation of a single option of an article.
  *
  * @author ben
  */
-public class GuiOrderSingleOptionPanel extends GuiAbstrSingleEntryPanel {
+public final class GuiOrderOptionPanel extends GuiAbstrSingleEntryPanel {
 
     /**
      * Quantity ordered for this option
      */
-    int quantity;
+    private int quantity;
 
     /**
      * Reference to the panel of the article that holds this option
      */
-    GuiOrderSingleArticleWOptionsPanel parent;
+    private GuiOrderArticleWithOptionsPanel parent;
 
     /**
-     * Creates new form GuiOrderSingleOptionPanel
+     * Reference to the option described by this panel
+     */
+    private final ArticleOption option;
+
+    /**
+     * Creates new form GuiOrderOptionPanel
      *
      * @param parent
      * @param option
      * @param quantity
      */
-    public GuiOrderSingleOptionPanel(GuiOrderSingleArticleWOptionsPanel parent,
-            String option, int quantity) {
+    public GuiOrderOptionPanel(GuiOrderArticleWithOptionsPanel parent,
+            ArticleOption option, int quantity) {
         initComponents();
         this.parent = parent;
         this.quantity = quantity;
+        this.option = option;
 
         this.setNumTot(quantity);
-        jTextFieldOptionName.setText(option);
+        jTextFieldOptionName.setText(option.getName());
     }
 
     /** This method is called from within the constructor to
@@ -80,11 +88,11 @@ public class GuiOrderSingleOptionPanel extends GuiAbstrSingleEntryPanel {
     jLabelDots.setText(":");
 
     jTextFieldQuantity.setEditable(false);
-    jTextFieldQuantity.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+    jTextFieldQuantity.setFont(new java.awt.Font("Dialog", 1, 14));
     jTextFieldQuantity.setPreferredSize(new java.awt.Dimension(30, 21));
 
     jTextFieldOptionName.setEditable(false);
-    jTextFieldOptionName.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+    jTextFieldOptionName.setFont(new java.awt.Font("Dialog", 1, 14));
     jTextFieldOptionName.setText("Nome");
     jTextFieldOptionName.setPreferredSize(new java.awt.Dimension(200, 21));
 
@@ -147,15 +155,6 @@ public class GuiOrderSingleOptionPanel extends GuiAbstrSingleEntryPanel {
     }
 
     /**
-     * Getter for the selected item in combo box
-     *
-     * @return A String containing the selected Option
-     */
-    public String getComboChoice() {
-        return jTextFieldOptionName.getText();
-    }
-
-    /**
      * Checks if this panel is rapresenting the option passed in the parameter
      * <code>option</code>.
      * 
@@ -163,7 +162,7 @@ public class GuiOrderSingleOptionPanel extends GuiAbstrSingleEntryPanel {
      *
      * @return A boolean value, <code>true</code> meaning that this holds that option
      */
-    public boolean hasSelected(String option) {
-        return jTextFieldOptionName.getText().equals(option);
+    public boolean hasSelected(ArticleOption option) {
+        return this.option.equals(option);
     }
 }

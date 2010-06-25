@@ -1,5 +1,5 @@
 /*
- * BaseEntry.java
+ * PairObjectInteger.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -22,14 +22,15 @@ import java.io.Serializable;
  *
  * Not synchronized. do synchronize it externally
  *
+ * @param <DataType>
  * @author ben
  */
-public class BaseEntry<DataType> implements Serializable {
+public class PairObjectInteger<DataType> implements Serializable {
 
     /**
-     * Reference to the data object.
+     * Reference to the object object.
      */
-    public DataType data;
+    public DataType object;
 
     /**
      * Num of requests for this object
@@ -39,11 +40,11 @@ public class BaseEntry<DataType> implements Serializable {
     /**
      * Explicit constructor
      * 
-     * @param data Data to store in this entry
-     * @param numTot Quantity of the specified data
+     * @param object Object referenced in this entry
+     * @param numTot Quantity of the specified object
      */
-    public BaseEntry(DataType data, int numTot) {
-        this.data = data;
+    public PairObjectInteger(DataType object, int numTot) {
+        this.object = object;
         this.numTot = numTot;
     }
 }

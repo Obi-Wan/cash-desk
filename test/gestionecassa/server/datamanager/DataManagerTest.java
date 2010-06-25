@@ -23,7 +23,7 @@ import gestionecassa.ArticlesList;
 import gestionecassa.Cassiere;
 import gestionecassa.Person;
 import gestionecassa.exceptions.WrongArticlesListException;
-import gestionecassa.order.BaseEntry;
+import gestionecassa.order.PairObjectInteger;
 import gestionecassa.order.EntryArticleGroup;
 import gestionecassa.order.Order;
 import gestionecassa.stubs.BackendStub_1;
@@ -282,7 +282,7 @@ public class DataManagerTest {
 
         int progressive = dataManager.getNProgressive(articleWO.getName(), 2);
         groupsToAdd.addArticleWithOptions(
-                articleWO, 2, progressive, new ArrayList<BaseEntry<String>>());
+                articleWO, 2, progressive, new ArrayList<PairObjectInteger<ArticleOption>>());
 
         order.addGroup(groupsToAdd);
         

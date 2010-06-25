@@ -1,5 +1,5 @@
 /*
- * GuiGroupPanel.java
+ * GuiOrderGroupPanel.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,7 +13,7 @@
  */
 
 /*
- * GuiGroupPanel.java
+ * GuiOrderGroupPanel.java
  *
  * Created on 18-set-2009, 14.37.11
  */
@@ -23,6 +23,7 @@ package gestionecassa.clients.cassa.gui;
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
 import gestionecassa.ArticleWithOptions;
+import gestionecassa.clients.cassa.CassaAPI;
 import gestionecassa.clients.gui.RecordPanels;
 import gestionecassa.clients.gui.VariableVisualList;
 import gestionecassa.clients.gui.VisualListsMngr;
@@ -36,7 +37,7 @@ import java.rmi.RemoteException;
  *
  * @author ben
  */
-public class GuiGroupPanel extends GuiAbstrSingleEntryPanel implements VariableVisualList {
+public class GuiOrderGroupPanel extends GuiAbstrSingleEntryPanel implements VariableVisualList {
 
     /**
      * Reference to the group rapresented
@@ -44,9 +45,9 @@ public class GuiGroupPanel extends GuiAbstrSingleEntryPanel implements VariableV
     ArticleGroup group;
 
     /**
-     * Reference to the panel that owns this one.
+     * Reference to the base client
      */
-    GuiNewOrderPanel orderPanel;
+    CassaAPI baseClient;
 
     /**
      * Variable list of panels owned by this class. Those panels do rapresent
@@ -54,14 +55,14 @@ public class GuiGroupPanel extends GuiAbstrSingleEntryPanel implements VariableV
      */
     VisualListsMngr<GuiAbstrSingleEntryPanel, Article> varListMngr;
 
-    /** Creates new form GuiGroupPanel
+    /** Creates new form GuiOrderGroupPanel
      * 
-     * @param orderPanel Reference to the panel owning this one.
+     * @param baseClient Reference to the underlying base client
      * @param group Reference to the <code>ArticleGroup</code> rapresented
      */
-    public GuiGroupPanel(GuiNewOrderPanel orderPanel, ArticleGroup group) {
+    public GuiOrderGroupPanel(CassaAPI baseClient, ArticleGroup group) {
         initComponents();
-        this.orderPanel = orderPanel;
+        this.baseClient = baseClient;
         this.group = group;
 
         this.setBorder(
@@ -109,7 +110,7 @@ public class GuiGroupPanel extends GuiAbstrSingleEntryPanel implements VariableV
     }
 
     /**
-     * Cleans the data fields of owned panels
+     * Cleans the object fields of owned panels
      */
     @Override
     public void clean() {
@@ -132,18 +133,18 @@ public class GuiGroupPanel extends GuiAbstrSingleEntryPanel implements VariableV
             int tempNumTot = record.displayedPanel.getNumTot();
 
             if (tempNumTot > 0) {
-                if (record.data.hasOptions()) {
+                if (record.object.hasOptions()) {
+                    ArticleWithOptions article =
+                            (ArticleWithOptions)record.object;
+                    GuiOrderArticleWithOptionsPanel articlePanel =
+                            (GuiOrderArticleWithOptionsPanel) record.displayedPanel;
 
-                    int progressive = orderPanel.baseClient.getNProgressivo(
-                            record.data.getName(), tempNumTot);
-                    entry.addArticleWithOptions(
-                            (ArticleWithOptions)record.data,
-                            tempNumTot, progressive,
-                            ((GuiOrderSingleArticleWOptionsPanel)
-                                (record.displayedPanel)).getPatialsList());
+                    int progressive = baseClient.getNProgressivo(
+                                        article.getName(), tempNumTot);
+                    entry.addArticleWithOptions( article, tempNumTot, progressive,
+                                                 articlePanel.getPatialsList());
                 } else {
-
-                    entry.addArticle(record.data, tempNumTot);
+                    entry.addArticle(record.object, tempNumTot);
                 }
             }
         }
@@ -162,7 +163,7 @@ public class GuiGroupPanel extends GuiAbstrSingleEntryPanel implements VariableV
 
             if (tempRecord.displayedPanel.getNumTot() != 0) {
                 output += tempRecord.displayedPanel.getNumTot() *
-                        tempRecord.data.getPrice();
+                        tempRecord.object.getPrice();
             }
         }
         return output;

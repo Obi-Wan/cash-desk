@@ -30,7 +30,7 @@ import java.util.Locale;
  */
 public class GuiStatusCassaPanel extends javax.swing.JPanel {
 
-    GuiNewOrderPanel orderPanel;
+    GuiOrderPanel orderPanel;
 
     /** Creates new form GuiStatusCassaPanel
      * @param hostname Hostname of the machine onto which we are running
@@ -400,7 +400,7 @@ public class GuiStatusCassaPanel extends javax.swing.JPanel {
      * Sets the panel that manages the orders.
      * @param orderPanel
      */
-    public void setOrderPanel(GuiNewOrderPanel orderPanel) {
+    public void setOrderPanel(GuiOrderPanel orderPanel) {
         this.orderPanel = orderPanel;
         if (orderPanel == null) {
             enableButtons(false);

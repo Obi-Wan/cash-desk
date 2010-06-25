@@ -150,8 +150,8 @@ public class Order implements Serializable, Comparable<Order> {
      * @deprecated Irrespective of the group
      */
     @Deprecated
-    public List<BaseEntry<Article>> getArticlesSold() {
-        List<BaseEntry<Article>> list = new ArrayList<BaseEntry<Article>>();
+    public List<PairObjectInteger<Article>> getArticlesSold() {
+        List<PairObjectInteger<Article>> list = new ArrayList<PairObjectInteger<Article>>();
         for (EntryArticleGroup group : groupsList) {
             list.addAll(group.articles);
         }

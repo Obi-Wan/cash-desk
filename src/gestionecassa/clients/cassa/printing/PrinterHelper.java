@@ -15,9 +15,10 @@
 package gestionecassa.clients.cassa.printing;
 
 import gestionecassa.Article;
+import gestionecassa.ArticleOption;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.Log;
-import gestionecassa.order.BaseEntry;
+import gestionecassa.order.PairObjectInteger;
 import gestionecassa.order.EntrySingleArticleWithOption;
 import gestionecassa.order.Order;
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class PrinterHelper extends Thread {
 
     public static void startPrintingOrder(Order order) {
         PrinterHelper printerHelper = new PrinterHelper(new Order(order));
-        printerHelper.run();
+        printerHelper.start();
     }
     
     /**
@@ -52,20 +53,20 @@ public class PrinterHelper extends Thread {
         try {
             TextPainter painter = new TextPainter(order.getUsername());
             
-            for (BaseEntry<Article> entrySingleArticle : order.getArticlesSold()) {
-                if (entrySingleArticle.data.hasOptions()) {
+            for (PairObjectInteger<Article> entrySingleArticle : order.getArticlesSold()) {
+                if (entrySingleArticle.object.hasOptions()) {
                     EntrySingleArticleWithOption entry =
                             (EntrySingleArticleWithOption)entrySingleArticle;
                     int prog = entry.startProgressive;
-                    for (BaseEntry<String> entrySingleOption : entry.numPartial) {
+                    for (PairObjectInteger<ArticleOption> entrySingleOption : entry.numPartial) {
                         for (int i = 0; i < entrySingleOption.numTot; i++) {
                             painter.addArticleWOptions(
-                                    (ArticleWithOptions)entrySingleArticle.data,
-                                    prog++, entrySingleOption.data);
+                                    (ArticleWithOptions)entrySingleArticle.object,
+                                    prog++, entrySingleOption.object);
                         }
                     }
                 } else {
-                    painter.addArticle(entrySingleArticle.data,
+                    painter.addArticle(entrySingleArticle.object,
                             entrySingleArticle.numTot);
                 }
             }

@@ -1,22 +1,23 @@
 package gestionecassa.order;
 
 import gestionecassa.Article;
+import gestionecassa.ArticleOption;
 import gestionecassa.ArticleWithOptions;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Specialized version of <code>{@link BaseEntry}</code> that holds information
+ * Specialized version of <code>{@link PairObjectInteger}</code> that holds information
  * about an entry rapresenting an <code>{@link ArticleWithOptions}</code>.
  *
  * @author ben
  */
-public class EntrySingleArticleWithOption extends BaseEntry<Article> {
+public class EntrySingleArticleWithOption extends PairObjectInteger<Article> {
 
     /**
      * Partials
      */
-    public List<BaseEntry<String>> numPartial;
+    public List<PairObjectInteger<ArticleOption>> numPartial;
 
     /**
      * Numbert at which start the progressive numbers (they are numTot in number)
@@ -32,9 +33,9 @@ public class EntrySingleArticleWithOption extends BaseEntry<Article> {
      * @param numPartial List of partials for the options
      */
     public EntrySingleArticleWithOption(ArticleWithOptions article, int numTot,
-            int startProg, List<BaseEntry<String>> numPartial) {
+            int startProg, List<PairObjectInteger<ArticleOption>> numPartial) {
         super(article, numTot);
         this.startProgressive = startProg;
-        this.numPartial = new ArrayList<BaseEntry<String>>(numPartial);
+        this.numPartial = new ArrayList<PairObjectInteger<ArticleOption>>(numPartial);
     }
 }

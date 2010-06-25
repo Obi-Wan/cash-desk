@@ -15,6 +15,7 @@
 package gestionecassa.clients.cassa.printing;
 
 import gestionecassa.Article;
+import gestionecassa.ArticleOption;
 import gestionecassa.ArticleWithOptions;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -34,8 +35,8 @@ public class TextPainter {
     /**
      * Constructor tat initializes the file descriptor and the name of who
      * emitted the order
-     *
      * @param username
+     * @throws IOException
      */
     public TextPainter(String username) throws IOException {
         outputStream = new BufferedWriter(new FileWriter("output.txt"));
@@ -71,18 +72,19 @@ public class TextPainter {
      * @throws IOException
      */
     public void addArticleWOptions(ArticleWithOptions article, int prog,
-            String option) throws IOException {
+            ArticleOption option) throws IOException {
 
-        if (!article.hasOptions())
+        if (!article.hasOptions()) {
             throw new IOException("wrong article type: this should be with" +
                     " options");
+        }
         
         for (int i = 0; i < 2; i++) {
 
             outputStream.write("  " + String.format("N. %03d", prog) + "\n");
 
             String centralString =
-                    "  " + article.getName() + ":\n" + "  " + option;
+                    "  " + article.getName() + ":\n" + "  " + option.getName();
             centralString = centralString.toUpperCase();
 
             outputStream.write(centralString + "\n\n\n");

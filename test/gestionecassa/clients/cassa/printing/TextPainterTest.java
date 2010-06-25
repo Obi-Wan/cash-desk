@@ -76,8 +76,8 @@ public class TextPainterTest {
         TextPainter instance2 = new TextPainter("test2");
 
         ArticleWithOptions articleChosen = (ArticleWithOptions)articles.get(2);
-        String optionName = articleChosen.getOptions().get(0).getName();
-        instance2.addArticleWOptions(articleChosen, 12, optionName);
+        ArticleOption option = articleChosen.getOptions().get(0);
+        instance2.addArticleWOptions(articleChosen, 12, option);
 
         instance2.doPrint();
     }

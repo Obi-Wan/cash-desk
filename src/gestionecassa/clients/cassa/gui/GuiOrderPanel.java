@@ -1,5 +1,5 @@
 /*
- * GuiNewOrderPanel.java
+ * GuiOrderPanel.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,7 +13,7 @@
  */
 
 /*
- * GuiNewOrderPanel.java
+ * GuiOrderPanel.java
  *
  * Created on 12-mag-2009, 22.16.39
  */
@@ -43,7 +43,7 @@ import javax.swing.KeyStroke;
  *
  * @author ben
  */
-public final class GuiNewOrderPanel extends javax.swing.JPanel implements VariableVisualList {
+public final class GuiOrderPanel extends javax.swing.JPanel implements VariableVisualList {
 
     /**
      * Reference to the base client logic
@@ -63,21 +63,21 @@ public final class GuiNewOrderPanel extends javax.swing.JPanel implements Variab
     /**
      * 
      */
-    VisualListsMngr<GuiGroupPanel, ArticleGroup> varListMng;
+    VisualListsMngr<GuiOrderGroupPanel, ArticleGroup> varListMng;
 
     /** 
-     * Creates new form GuiNewOrderPanel
+     * Creates new form GuiOrderPanel
      *
      * @param baseClient Reference to the client app
      * @param frame Reference to the frame containing this panel
      */
-    public GuiNewOrderPanel(CassaAPI baseClient, GuiAppFrameCassa frame) {
+    public GuiOrderPanel(CassaAPI baseClient, GuiAppFrameCassa frame) {
         initComponents();
         this.baseClient = baseClient;
         this.frame = frame;
         this.articlesList = baseClient.getArticlesList();
 
-        varListMng = new VisualListsMngr<GuiGroupPanel, ArticleGroup>(this);
+        varListMng = new VisualListsMngr<GuiOrderGroupPanel, ArticleGroup>(this);
         varListMng.setHasInitialGap(true);
 
         fillContentsList();
@@ -134,18 +134,18 @@ public final class GuiNewOrderPanel extends javax.swing.JPanel implements Variab
         for (ArticleGroup articleGroup : articlesList.getGroupsList()) {
 
             /* create and add to the manager the panel for this group */
-            GuiGroupPanel grPanel = new GuiGroupPanel(this, articleGroup);
+            GuiOrderGroupPanel grPanel =
+                    new GuiOrderGroupPanel(baseClient, articleGroup);
             this.varListMng.addRecord(grPanel, articleGroup);
 
             /* for every article in that group */
             for (Article article : articleGroup.getList()) {
                 GuiAbstrSingleEntryPanel tempPanel;
                 if (article instanceof ArticleWithOptions) {
-                    tempPanel =
-                            new GuiOrderSingleArticleWOptionsPanel(this,
+                    tempPanel = new GuiOrderArticleWithOptionsPanel(this,
                                                 (ArticleWithOptions)article,i);
                 } else {
-                    tempPanel = new GuiOrderSingleArticlePanel(this, article, i);
+                    tempPanel = new GuiOrderArticlePanel(this, article, i);
                 }
                 grPanel.varListMngr.addRecord(tempPanel, article);
                 i++;
@@ -195,16 +195,17 @@ public final class GuiNewOrderPanel extends javax.swing.JPanel implements Variab
      */
     private Order createNewOrder() throws RemoteException {
         // TODO One day will be needed here to handle the table properly
-        Order tempOrd = new Order(baseClient.getUsername(), baseClient.getHostname(), 0,
+        Order order = new Order(baseClient.getUsername(),
+                                    baseClient.getHostname(), 0,
                                     articlesList.getSignature());
 
-        for (GuiGroupPanel groupPanel : varListMng.getPanels()) {
+        for (GuiOrderGroupPanel groupPanel : varListMng.getPanels()) {
             EntryArticleGroup tempEntry = groupPanel.collectOrderEntries();
             if (tempEntry.numTot > 0) {
-                tempOrd.addGroup(tempEntry);
+                order.addGroup(tempEntry);
             }
         }
-        return tempOrd;
+        return order;
     }
 
     /**
@@ -213,7 +214,7 @@ public final class GuiNewOrderPanel extends javax.swing.JPanel implements Variab
      */
     private double computeCurrentOrder() {
         double output = 0;
-        for (GuiGroupPanel group : varListMng.getPanels()) {
+        for (GuiOrderGroupPanel group : varListMng.getPanels()) {
             output += group.getPartialOrderPrice();
         }
         return output;

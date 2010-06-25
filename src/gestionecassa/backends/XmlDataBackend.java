@@ -22,7 +22,7 @@ import gestionecassa.ArticleOption;
 import gestionecassa.Cassiere;
 import gestionecassa.ArticlesList;
 import gestionecassa.Log;
-import gestionecassa.order.BaseEntry;
+import gestionecassa.order.PairObjectInteger;
 import gestionecassa.order.Order;
 import gestionecassa.order.EntrySingleArticleWithOption;
 import java.io.FileWriter;
@@ -39,7 +39,7 @@ import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
 /**
- * XML based backend for saving/loading data.
+ * XML based backend for saving/loading object.
  *
  * @author ben
  */
@@ -294,31 +294,31 @@ public class XmlDataBackend implements BackendAPI_1 {
         Element xmlOrder = root.addElement("ordine");
         xmlOrder.addElement("data").addText(order.getDate().toString());
         xmlOrder.addElement("prezzo_totale").addText(order.getTotalPrice()+"");
-        Collection<BaseEntry<Article>> listaBeni = order.getArticlesSold();
+        Collection<PairObjectInteger<Article>> listaBeni = order.getArticlesSold();
 
-        for (BaseEntry<Article> singleArticle : listaBeni) {
+        for (PairObjectInteger<Article> singleArticle : listaBeni) {
             Element xmlArticle = xmlOrder.addElement("singolo_bene");
 
-            xmlArticle.addElement("nome").addText(singleArticle.data.getName());
-            xmlArticle.addElement("prezzo").addText(singleArticle.data.getPrice()+"");
+            xmlArticle.addElement("nome").addText(singleArticle.object.getName());
+            xmlArticle.addElement("prezzo").addText(singleArticle.object.getPrice()+"");
             xmlArticle.addElement("numero").addText(singleArticle.numTot+"");
 
-            if (singleArticle.data.hasOptions()) {
+            if (singleArticle.object.hasOptions()) {
                 xmlArticle.addAttribute("opzioni", "true");
                 Element xmlOptions = xmlArticle.addElement("opzioni");
                 int progressivo =
                         ((EntrySingleArticleWithOption)singleArticle).startProgressive;
-                Collection<BaseEntry<String>> options =
+                Collection<PairObjectInteger<ArticleOption>> options =
                         ((EntrySingleArticleWithOption)singleArticle).numPartial;
 
-                for (BaseEntry<String> option : options) {
+                for (PairObjectInteger<ArticleOption> option : options) {
 
                     String stringaProgressivi = (progressivo++) + "";
                     for (int i = 1; i < option.numTot; i++) {
                         stringaProgressivi += ", " + progressivo++;
                     }
                     Element xmlOption = xmlOptions.addElement("opzione");
-                    xmlOption.addElement("nome").addText(option.data);
+                    xmlOption.addElement("nome").addText(option.object.getName());
                     xmlOption.addElement("numero").addText(
                             ""+option.numTot);
                     xmlOption.addElement("n_progressivi").addText(stringaProgressivi);

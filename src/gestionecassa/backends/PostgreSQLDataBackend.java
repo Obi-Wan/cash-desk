@@ -23,7 +23,7 @@ import gestionecassa.Cassiere;
 import gestionecassa.EventDate;
 import gestionecassa.Log;
 import gestionecassa.OrganizedEvent;
-import gestionecassa.order.BaseEntry;
+import gestionecassa.order.PairObjectInteger;
 import gestionecassa.order.EntrySingleArticleWithOption;
 import gestionecassa.order.Order;
 import java.io.IOException;
@@ -739,11 +739,11 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
         int idCassiere = getIdCassiereByUsername(order.getUsername());
         int idOrder = addOrderToOrdersTable(order, idCassiere);
 
-        for (BaseEntry<Article> entry : order.getArticlesSold()) {
+        for (PairObjectInteger<Article> entryArticle : order.getArticlesSold()) {
 
             int idArticle; // if trusted is > 0, otherwise < 0
 //            if (idCassiere > 0) {
-                idArticle = entry.data.getId();
+                idArticle = entryArticle.object.getId();
 //            } else {
 //                idArticle = getIdArticleByName(entry.article.getName());
 //                idCassiere = - idCassiere;
@@ -754,24 +754,26 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                 "INSERT INTO articles_in_order (id_art_in_ord, id_article, " +
                     "id_order, num_tot )" +
                 "VALUES ('" + idArtInOrd + "', '" + idArticle + "', '" + idOrder
-                    + "', '" + entry.numTot + "' )";
+                    + "', '" + entryArticle.numTot + "' )";
             genericCommit(addEntry);
 
-            if (entry.data.hasOptions()) {
+            if (entryArticle.object.hasOptions()) {
+                //FIXME potrei fidarmi degli id negli oggetti delle opzioni
 
                 EntrySingleArticleWithOption entryOpts =
-                        (EntrySingleArticleWithOption)entry;
-                Map<String,Integer> neededOpts =
-                        getNeededOpts(idArticle, entryOpts);
+                        (EntrySingleArticleWithOption)entryArticle;
+//                Map<String,Integer> neededOpts =
+//                        getNeededOpts(idArticle, entryOpts);
 
                 String addOpt = "INSERT INTO opts_of_article_in_order " +
                                 "(id_art_in_ord, id_option, num_parz ) VALUES ";
-                for (Iterator<BaseEntry<String>> iter =
+                for (Iterator<PairObjectInteger<ArticleOption>> iter =
                         entryOpts.numPartial.iterator(); iter.hasNext(); )
                 {
-                    BaseEntry<String> option = iter.next();
+                    PairObjectInteger<ArticleOption> option = iter.next();
                     addOpt += "('" + idArtInOrd + "', '" +
-                            neededOpts.get(option.data) + "', '" +
+//                            neededOpts.get(option.object.getName()) + "', '" +
+                            option.object.getId() + "', '" +
                             option.numTot + "')" +
                             (iter.hasNext() ? "," : ";");
                 }
@@ -1102,14 +1104,14 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
     private Map<String,Integer> getNeededOpts(int idArticle,
             EntrySingleArticleWithOption entry) throws IOException {
         
-        List<BaseEntry<String>> opts = entry.numPartial;
+        List<PairObjectInteger<ArticleOption>> opts = entry.numPartial;
         String optionsQuery = "SELECT name, id_option" +
                             "   FROM options" +
                             "   WHERE id_article = '" + idArticle + "'"+
                             "       AND name IN (";
-        for (Iterator<BaseEntry<String>> it = opts.iterator(); it.hasNext();) {
-            BaseEntry<String> opt = it.next();
-            optionsQuery += " '"+opt.data+"'" + (it.hasNext() ? "," : "");
+        for (Iterator<PairObjectInteger<ArticleOption>> it = opts.iterator(); it.hasNext();) {
+            PairObjectInteger<ArticleOption> opt = it.next();
+            optionsQuery += " '"+opt.object.getName()+"'" + (it.hasNext() ? "," : "");
         }
         optionsQuery += " );";
         Map<String,Integer> neededOpts = new HashMap<String,Integer>();

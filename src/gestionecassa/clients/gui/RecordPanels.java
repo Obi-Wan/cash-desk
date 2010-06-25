@@ -25,14 +25,16 @@ import gestionecassa.clients.cassa.gui.GuiAbstrSingleEntryPanel;
 /**
  * Class that defines a record of panels and other useful info.
  *
+ * @param <PanelType> Type of the panels referenced here
+ * @param <DataType> Type of the object referenced
  * @author ben
  */
 public class RecordPanels<PanelType extends GuiAbstrSingleEntryPanel, DataType> {
 
     /**
-     *
+     * Reference to the object storing data
      */
-    public final DataType data;
+    public final DataType object;
 
     /**
      * Reference to the panel that will show up in the gui
@@ -43,10 +45,10 @@ public class RecordPanels<PanelType extends GuiAbstrSingleEntryPanel, DataType> 
      * Explicit constructor
      * 
      * @param pan
-     * @param data
+     * @param obj
      */
-    public RecordPanels(PanelType pan, DataType data) {
+    public RecordPanels(PanelType pan, DataType obj) {
         this.displayedPanel = pan;
-        this.data = data;
+        this.object = obj;
     }
 }

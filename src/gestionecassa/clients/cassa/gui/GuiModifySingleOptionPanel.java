@@ -1,5 +1,5 @@
 /*
- * GuiOrderSingleArticlePanel.java
+ * GuiModifySingleOptionPanel.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,58 +13,38 @@
  */
 
 /*
- * GuiOrderSingleArticlePanel.java
+ * GuiModifySingleOptionPanel.java
  *
- * Created on 22-mag-2009, 12.36.51
+ * Created on 4-set-2009, 15.42.54
  */
 
 package gestionecassa.clients.cassa.gui;
 
-import gestionecassa.Article;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import gestionecassa.ArticleOption;
 
 /**
  *
  * @author ben
  */
-public class GuiOrderSingleArticlePanel extends GuiAbstrMoreLessPanel
-        implements ChangeListener {
+public class GuiModifySingleOptionPanel extends GuiAbstrMoreLessPanel {
 
     /**
+     * Creates new form GuiModifySingleOptionPanel
      *
+     * @param option
+     * @param startOptionQuantity
+     * @param indexPanel
      */
-    Article article;
-
-    /**
-     * 
-     */
-    GuiNewOrderPanel parent;
-
-    /**
-     * Creates new form GuiOrderSingleArticlePanel
-     *
-     * @param parent
-     * @param art
-     * @param index
-     */
-    public GuiOrderSingleArticlePanel(GuiNewOrderPanel parent, Article art,
-            int index) {
-        super(index, 0);
+    public GuiModifySingleOptionPanel(ArticleOption option, int startOptionQuantity,
+            int indexPanel) {
+        super(indexPanel, startOptionQuantity);
 
         initComponents();
 
-        this.article = art;
-        this.parent = parent;
-
         jSpinnerNum.setModel(spinnerModel);
 
-        jLabelNameArticle.setText(art.getName());
-        jLabelPrice.setText("€ " + art.getPrice());
-
-        jLabelNum.setText((index + 1) + ".");
-
-        jSpinnerNum.addChangeListener(this);
+        jLabelOptionName.setText(option.getName());
+        jLabelNum.setText((indexPanel + 1) + ".");
     }
 
     /** This method is called from within the constructor to
@@ -76,16 +56,15 @@ public class GuiOrderSingleArticlePanel extends GuiAbstrMoreLessPanel
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
 
-    jLabelNameArticle = new javax.swing.JLabel();
+    jLabelOptionName = new javax.swing.JLabel();
     jButtonMore = new javax.swing.JButton();
     jSpinnerNum = new javax.swing.JSpinner();
     jButtonLess = new javax.swing.JButton();
-    jLabelPrice = new javax.swing.JLabel();
     jLabelNum = new javax.swing.JLabel();
 
     setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-    jLabelNameArticle.setText("Nome");
+    jLabelOptionName.setText("Nome");
 
     jButtonMore.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestionecassa/resources/list-add.png"))); // NOI18N
     jButtonMore.setFocusable(false);
@@ -101,7 +80,6 @@ public class GuiOrderSingleArticlePanel extends GuiAbstrMoreLessPanel
     });
 
     jSpinnerNum.setMaximumSize(new java.awt.Dimension(48, 32767));
-    jSpinnerNum.setPreferredSize(new java.awt.Dimension(35, 20));
 
     jButtonLess.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gestionecassa/resources/list-remove.png"))); // NOI18N
     jButtonLess.setMaximumSize(new java.awt.Dimension(28, 34));
@@ -113,8 +91,6 @@ public class GuiOrderSingleArticlePanel extends GuiAbstrMoreLessPanel
       }
     });
 
-    jLabelPrice.setText("Prezzo");
-
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
     this.setLayout(layout);
     layout.setHorizontalGroup(
@@ -123,13 +99,11 @@ public class GuiOrderSingleArticlePanel extends GuiAbstrMoreLessPanel
         .addContainerGap()
         .addComponent(jLabelNum)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jLabelNameArticle)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 188, Short.MAX_VALUE)
-        .addComponent(jLabelPrice)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(jLabelOptionName)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 218, Short.MAX_VALUE)
         .addComponent(jButtonLess, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jSpinnerNum, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(jSpinnerNum, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jButtonMore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap())
@@ -138,46 +112,31 @@ public class GuiOrderSingleArticlePanel extends GuiAbstrMoreLessPanel
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-            .addComponent(jLabelNameArticle)
-            .addComponent(jButtonMore, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jSpinnerNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jLabelNum)
-            .addComponent(jLabelPrice))
-          .addComponent(jButtonLess, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(jLabelOptionName)
+          .addComponent(jButtonMore, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jSpinnerNum, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jButtonLess, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jLabelNum))
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
   }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     *
-     * @param evt
-     */
     private void jButtonMoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMoreActionPerformed
         more();
 }//GEN-LAST:event_jButtonMoreActionPerformed
 
-    /**
-     *
-     * @param evt
-     */
     private void jButtonLessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLessActionPerformed
         less();
-    }//GEN-LAST:event_jButtonLessActionPerformed
+}//GEN-LAST:event_jButtonLessActionPerformed
 
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton jButtonLess;
   private javax.swing.JButton jButtonMore;
-  private javax.swing.JLabel jLabelNameArticle;
   private javax.swing.JLabel jLabelNum;
-  private javax.swing.JLabel jLabelPrice;
+  private javax.swing.JLabel jLabelOptionName;
   private javax.swing.JSpinner jSpinnerNum;
   // End of variables declaration//GEN-END:variables
-    
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        parent.updateCurrentOrder();
-    }
+
 }

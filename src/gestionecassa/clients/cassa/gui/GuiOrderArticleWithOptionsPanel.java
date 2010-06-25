@@ -1,5 +1,5 @@
 /*
- * GuiOrderSingleArticleWOptionsPanel.java
+ * GuiOrderArticleWithOptionsPanel.java
  * 
  * Copyright (C) 2009 Nicola Roberto Viganò
  * 
@@ -13,18 +13,19 @@
  */
 
 /*
- * GuiOrderSingleArticleWOptionsPanel.java
+ * GuiOrderArticleWithOptionsPanel.java
  *
  * Created on 23-mag-2009, 14.06.45
  */
 
 package gestionecassa.clients.cassa.gui;
 
+import gestionecassa.ArticleOption;
 import gestionecassa.clients.gui.VisualListsMngr;
 import gestionecassa.clients.gui.GuiOkCancelDialog;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.clients.gui.RecordPanels;
-import gestionecassa.order.BaseEntry;
+import gestionecassa.order.PairObjectInteger;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ import javax.swing.AbstractAction;
  *
  * @author ben
  */
-public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel {
+public class GuiOrderArticleWithOptionsPanel extends GuiAbstrSingleEntryPanel {
 
     /**
      * 
@@ -44,21 +45,21 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
     /**
      *
      */
-    VisualListsMngr<GuiOrderSingleOptionPanel, String> listMngr;
+    VisualListsMngr<GuiOrderOptionPanel, ArticleOption> listMngr;
 
     /**
      *
      */
-    GuiNewOrderPanel orderPanel;
+    GuiOrderPanel orderPanel;
 
     /**
-     * Creates new form GuiOrderSingleArticleWOptionsPanel
+     * Creates new form GuiOrderArticleWithOptionsPanel
      *
      * @param orderPanel
      * @param art 
      * @param index 
      */
-    public GuiOrderSingleArticleWOptionsPanel(GuiNewOrderPanel orderPanel,
+    public GuiOrderArticleWithOptionsPanel(GuiOrderPanel orderPanel,
             ArticleWithOptions art, int index) {
         initComponents();
 
@@ -67,7 +68,7 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
         this.jLabelName.setText(art.getName());
         this.jLabelPrice.setText("€ " + art.getPrice());
 
-        listMngr = new VisualListsMngr<GuiOrderSingleOptionPanel, String>(jPanelOpzioni);
+        listMngr = new VisualListsMngr<GuiOrderOptionPanel, ArticleOption>(jPanelOpzioni);
         
         if (index < 10) {
             this.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(
@@ -191,7 +192,7 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
      * the selected <code>ArticleWithOptions</code>
      */
     private void modifyOptions() {
-        GuiAccelOptionsPanel panel = new GuiAccelOptionsPanel(this);
+        GuiModifyOptionsPanel panel = new GuiModifyOptionsPanel(this);
         GuiOkCancelDialog dialog =
                 new GuiOkCancelDialog(orderPanel.frame, article.getName(), panel);
         dialog.setVisible(true);
@@ -205,9 +206,9 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
      * @param choice
      * @param num
      */
-    void addNewOptionPanel(String choice, int num) {
-        GuiOrderSingleOptionPanel tempPanel =
-                new GuiOrderSingleOptionPanel(this, choice, num);
+    void addNewOptionPanel(ArticleOption choice, int num) {
+        GuiOrderOptionPanel tempPanel =
+                new GuiOrderOptionPanel(this, choice, num);
         listMngr.addRecord(tempPanel, choice);
     }
 
@@ -218,7 +219,7 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
      *
      * @param panel
      */
-    void removeOptionPanel(GuiOrderSingleOptionPanel panel) {
+    void removeOptionPanel(GuiOrderOptionPanel panel) {
         listMngr.remove(panel);
     }
 
@@ -232,23 +233,23 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
     }
 
     /**
-     * 
-     * @return
+     * Collects and return the list of the chosen options with quantities
+     * @return The list
      */
-    public List<BaseEntry<String>> getPatialsList() {
-        List<BaseEntry<String>> tempLista
-                = new ArrayList<BaseEntry<String>>();
-        for (RecordPanels<GuiOrderSingleOptionPanel, String> recordPanels
+    public List<PairObjectInteger<ArticleOption>> getPatialsList() {
+        List<PairObjectInteger<ArticleOption>> partialList
+                = new ArrayList<PairObjectInteger<ArticleOption>>();
+        for (RecordPanels<GuiOrderOptionPanel, ArticleOption> recordPanels
                 : listMngr.getRecords()) {
             if (recordPanels.displayedPanel.getNumTot() != 0) {
-                BaseEntry<String> tempArray =
-                    new BaseEntry<String>(
-                        recordPanels.data,
+                PairObjectInteger<ArticleOption> pairOptionQuantity =
+                    new PairObjectInteger<ArticleOption>(
+                        recordPanels.object,
                         recordPanels.displayedPanel.getNumTot());
-                tempLista.add(tempArray);
+                partialList.add(pairOptionQuantity);
             }
         }
-        return tempLista;
+        return partialList;
     }
 
     /**
@@ -258,7 +259,7 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
     @Override
     public int getNumTot() {
         int tot = 0;
-        for (GuiOrderSingleOptionPanel panel : listMngr.getPanels()) {
+        for (GuiOrderOptionPanel panel : listMngr.getPanels()) {
             tot += panel.getNumTot();
         }
         return tot;
@@ -276,8 +277,8 @@ public class GuiOrderSingleArticleWOptionsPanel extends GuiAbstrSingleEntryPanel
      * @param option
      * @return
      */
-    public GuiOrderSingleOptionPanel getSingleOptionPanel( String option ) {
-        for (GuiOrderSingleOptionPanel panel : listMngr.getPanels()) {
+    public GuiOrderOptionPanel getSingleOptionPanel( ArticleOption option ) {
+        for (GuiOrderOptionPanel panel : listMngr.getPanels()) {
             if (panel.hasSelected(option)) {
                 return panel;
             }

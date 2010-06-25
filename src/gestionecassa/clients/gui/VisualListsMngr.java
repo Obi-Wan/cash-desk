@@ -33,7 +33,7 @@ import javax.swing.JPanel;
 /**
  * Manager of the dynamical list of panels
  * @param <PanelType> Type of panels managed
- * @param <DataType> Type of the data associated to the panels
+ * @param <DataType> Type of the object associated to the panels
  * @author ben
  */
 public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataType> {
@@ -211,13 +211,13 @@ public class VisualListsMngr<PanelType extends GuiAbstrSingleEntryPanel, DataTyp
     }
 
     /**
-     * Adds a panel with related data
+     * Adds a panel with related object
      * @param pan Panel to add
-     * @param data data of the panel
+     * @param object object of the panel
      */
-    public void addRecord(PanelType pan, DataType data) {
+    public void addRecord(PanelType pan, DataType object) {
         RecordPanels<PanelType, DataType> record =
-                new RecordPanels<PanelType, DataType>(pan, data);
+                new RecordPanels<PanelType, DataType>(pan, object);
         panelsList.add(record);
         panelsMap.put(pan, record);
     }

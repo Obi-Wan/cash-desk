@@ -88,7 +88,7 @@ public class GuiAppFrameCassa extends GuiAppFrame<CassaAPI> {
     @Override
     public void setupAfterLogin(String username) {
         super.setupAfterLogin(username);
-        GuiNewOrderPanel orderPanel = new GuiNewOrderPanel(baseClient, this);
+        GuiOrderPanel orderPanel = new GuiOrderPanel(baseClient, this);
         this.setContentPanel(orderPanel);
         statusPanel.setOrderPanel(orderPanel);
         statusPanel.setLogin(username);

@@ -16,6 +16,7 @@ package gestionecassa.order;
 
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
+import gestionecassa.ArticleOption;
 import gestionecassa.ArticleWithOptions;
 import java.util.List;
 import java.util.ArrayList;
@@ -29,12 +30,12 @@ import java.util.ArrayList;
  *
  * @author ben
  */
-public class EntryArticleGroup extends BaseEntry<ArticleGroup> {
+public class EntryArticleGroup extends PairObjectInteger<ArticleGroup> {
 
     /**
      * List of sold articles.
      */
-    public List<BaseEntry<Article>> articles;
+    public List<PairObjectInteger<Article>> articles;
 
     /**
      * Sub total price
@@ -47,7 +48,7 @@ public class EntryArticleGroup extends BaseEntry<ArticleGroup> {
      * @param gr Reference to the rapresented ArticleGroup
      */
     public EntryArticleGroup(ArticleGroup gr) {
-        this(gr, 0, new ArrayList<BaseEntry<Article>>());
+        this(gr, 0, new ArrayList<PairObjectInteger<Article>>());
     }
 
     /**
@@ -57,12 +58,12 @@ public class EntryArticleGroup extends BaseEntry<ArticleGroup> {
      * @param numTot total number of articles chosen in this group
      * @param articles List of those sold articles entries.
      */
-    EntryArticleGroup(ArticleGroup gr, int numTot, List<BaseEntry<Article>> articles) {
+    EntryArticleGroup(ArticleGroup gr, int numTot, List<PairObjectInteger<Article>> articles) {
         super(gr, numTot);
         this.articles = articles;
         partialPrice = 0;
-        for (BaseEntry<Article> entry : articles) {
-            partialPrice += entry.numTot * entry.data.getPrice();
+        for (PairObjectInteger<Article> entry : articles) {
+            partialPrice += entry.numTot * entry.object.getPrice();
         }
     }
 
@@ -73,7 +74,7 @@ public class EntryArticleGroup extends BaseEntry<ArticleGroup> {
      * @param numAddTot Quantity bought
      */
     public void addArticle(Article article, int numAddTot) {
-        articles.add(new BaseEntry<Article>(article, numAddTot));
+        articles.add(new PairObjectInteger<Article>(article, numAddTot));
         this.numTot += numAddTot;
         partialPrice += numAddTot * article.getPrice();
     }
@@ -83,10 +84,11 @@ public class EntryArticleGroup extends BaseEntry<ArticleGroup> {
      *
      * @param article Article to add to this entry
      * @param numAddTot Quantity bought
+     * @param progressive starting progressive number of the articles
      * @param partialsList List of partials for the options
      */
     public void addArticleWithOptions(ArticleWithOptions article, int numAddTot,
-            int progressive, List<BaseEntry<String>> partialsList) {
+            int progressive, List<PairObjectInteger<ArticleOption>> partialsList) {
         articles.add(new EntrySingleArticleWithOption(article, numAddTot, progressive,
                 partialsList));
         this.numTot += numAddTot;

@@ -9,7 +9,7 @@ import gestionecassa.Article;
 import gestionecassa.ArticlesList;
 import gestionecassa.exceptions.MalformedOrderEXception;
 import gestionecassa.exceptions.WrongArticlesListException;
-import gestionecassa.order.BaseEntry;
+import gestionecassa.order.PairObjectInteger;
 import gestionecassa.order.EntryArticleGroup;
 import gestionecassa.order.Order;
 import java.io.IOException;
@@ -27,12 +27,12 @@ public class ServiceRMICassiereImpl extends SharedServerService
         implements ServiceRMICassiereAPI {
 
     /**
-     * Reference to the data manager
+     * Reference to the object manager
      */
     DMCassaAPI dataManager;
 
     /**
-     * Identifier of this session, used with the data manager.
+     * Identifier of this session, used with the object manager.
      */
     final String sessionIdentifier;
 
@@ -145,11 +145,11 @@ public class ServiceRMICassiereImpl extends SharedServerService
             }
 
             double groupPrice = 0;
-            for (BaseEntry<Article> artEntry : groupEntry.articles) {
+            for (PairObjectInteger<Article> artEntry : groupEntry.articles) {
                 if (artEntry.numTot == 0) {
                     throw new MalformedOrderEXception("Empty article found");
                 }
-                groupPrice += artEntry.numTot * artEntry.data.getPrice();
+                groupPrice += artEntry.numTot * artEntry.object.getPrice();
             }
             if (groupEntry.partialPrice != groupPrice) {
                 logger.warn("wrong partial price in session: " +
