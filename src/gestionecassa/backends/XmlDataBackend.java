@@ -74,8 +74,8 @@ public class XmlDataBackend implements BackendAPI_1 {
         for (ArticleGroup group : groups) {
             Element tempGroup = root.addElement("group");
 
-            tempGroup.addElement("name").addText(group.getGroupName());
-            tempGroup.addElement("id").addText(group.getIdGroup()+"");
+            tempGroup.addElement("name").addText(group.getName());
+            tempGroup.addElement("id").addText(group.getId()+"");
 
             for (Article art : group.getList()) {
                 Element tempArt = tempGroup.addElement("article");
@@ -311,7 +311,7 @@ public class XmlDataBackend implements BackendAPI_1 {
 
                 for (BaseEntry<String> option : options) {
 
-                    String stringaProgressivi = new String((progressivo++) + "");
+                    String stringaProgressivi = (progressivo++) + "";
                     for (int i = 1; i < option.numTot; i++) {
                         stringaProgressivi += ", " + progressivo++;
                     }

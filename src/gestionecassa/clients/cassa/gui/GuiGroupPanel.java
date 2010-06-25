@@ -65,7 +65,7 @@ public class GuiGroupPanel extends GuiAbstrSingleEntryPanel implements VariableV
         this.group = group;
 
         this.setBorder(
-                javax.swing.BorderFactory.createTitledBorder(group.getGroupName()));
+                javax.swing.BorderFactory.createTitledBorder(group.getName()));
 
         varListMngr = new VisualListsMngr<GuiAbstrSingleEntryPanel, Article>(this);
     }

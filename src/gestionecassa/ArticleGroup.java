@@ -26,22 +26,7 @@ import java.util.ArrayList;
  *
  * @author ben
  */
-public class ArticleGroup implements Serializable {
-
-    /**
-     * The Id of the group
-     */
-    final private int idGroup;
-
-    /**
-     * Name of the group
-     */
-    private String groupName;
-
-    /**
-     * Tells if it's enabled
-     */
-    private boolean enabled;
+public class ArticleGroup extends ManageableObject implements Serializable {
 
     /**
      * List of the articles sold in this group
@@ -78,37 +63,8 @@ public class ArticleGroup implements Serializable {
      * @param list List of articles of this group
      */
     public ArticleGroup(int id, String grn, boolean en, Collection<Article> list) {
-        this.groupName = grn;
+        super(id, grn, en);
         this.list = new ArrayList<Article>(list);
-        this.enabled = en;
-        this.idGroup = id;
-    }
-
-    /**
-     * Gets the name of this group
-     *
-     * @return A <code>String</code> containing the name of this group
-     */
-    public String getGroupName() {
-        return groupName;
-    }
-
-    /**
-     * Gets the id of the group
-     * 
-     * @return Int value of Group Id
-     */
-    public int getIdGroup() {
-        return idGroup;
-    }
-
-    /**
-     * Tells if this group is enabled
-     * 
-     * @return <code>true</code> for enabled, and <code>false</code> for disabled
-     */
-    public boolean isEnabled() {
-        return enabled;
     }
 
     /**
@@ -118,15 +74,6 @@ public class ArticleGroup implements Serializable {
      */
     public List<Article> getList() {
         return list;
-    }
-
-    /**
-     * Sets the new name of this group
-     *
-     * @param groupName String containing the new name of this group
-     */
-    void setGroupName(String groupName) {
-        this.groupName = groupName;
     }
 
 
@@ -146,7 +93,9 @@ public class ArticleGroup implements Serializable {
      * @param enable Enable/disable
      */
     Article enableArticle(int pos, boolean enable) {
-        return list.get(pos).setEnabled(enable);
+        Article temp = list.get(pos);
+        temp.setEnabled(enable);
+        return temp;
     }
 
     /**
@@ -202,8 +151,9 @@ public class ArticleGroup implements Serializable {
      *
      * @return A String containing the description of the content of this group
      */
+    @Override
     public String getPrintableFormat() {
-        String output = "Articoli del gruppo " + groupName + ":\n";
+        String output = "Articoli del gruppo " + getName() + ":\n";
         for (int i = 0; i < list.size(); i++) {
             Article article = list.get(i);
             output += String.format("%2d %s\n",i,article.getPrintableFormat());

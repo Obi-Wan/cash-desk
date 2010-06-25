@@ -14,35 +14,18 @@
 
 package gestionecassa;
 
-import java.io.Serializable;
-
 /**
  * Class rapresenting an Article sold. Not synchronized.
  * If accessing concurrently you need to externally synchronize it.
  *
  * @author ben
  */
-public class Article implements Serializable {
-
-    /**
-     * Id of the article
-     */
-    final int id;
-
-    /**
-     * Name of the article
-     */
-    final String name;
+public class Article extends ManageableObject {
 
     /**
      * Price of a single piece of this article
      */
     final double price;
-
-    /**
-     * Whether it is enabled or not.
-     */
-    boolean enabled;
 
     /**
      * Explicit constructor
@@ -64,10 +47,8 @@ public class Article implements Serializable {
      * @param enabled
      */
     public Article(int id, String name, double price, boolean enabled) {
-        this.name = new String(name);
+        super(id, name, enabled);
         this.price = price;
-        this.enabled = enabled;
-        this.id = id;
     }
 
     /**
@@ -84,17 +65,10 @@ public class Article implements Serializable {
      *
      * @return The string describing the good.
      */
+    @Override
     public String getPrintableFormat() {
         return String.format("- %s - %10s -€ %05.2f",
-                             (enabled ? "Enabled " : "Disabled"), name, price);
-    }
-
-    /**
-     *
-     * @return A string containing the name of this article
-     */
-    final public String getName() {
-        return name;
+                     (isEnabled() ? "Enabled " : "Disabled"), getName(), price);
     }
 
     /**
@@ -103,36 +77,6 @@ public class Article implements Serializable {
      */
     final public double getPrice() {
         return price;
-    }
-
-    /**
-     * Sets the new value for this article
-     *
-     * @param enabled New value for the field enabled
-     *
-     * @return A reference to this article
-     */
-    public Article setEnabled(boolean enabled) {
-        this.enabled = enabled;
-        return this;
-    }
-
-    /**
-     * Tells whether this article is enabled or not
-     *
-     * @return <code>true</code> if it's enbaled, <code>false</code> if not.
-     */
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    /**
-     * Getter for the id of the article
-     *
-     * @return Int containing the Id
-     */
-    public int getId() {
-        return id;
     }
 
     /**
@@ -145,15 +89,15 @@ public class Article implements Serializable {
     @Override
     public boolean equals(Object obj) {
         return (obj instanceof Article) &&
-                (this.name.equals(((Article)obj).name)) &&
+                (this.getName().equals(((Article)obj).getName())) &&
                 (this.price == (((Article)obj).price));
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 37 * hash + this.id;
-        hash = 37 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 37 * hash + this.getId();
+        hash = 37 * hash + (this.getName() != null ? this.getName().hashCode() : 0);
         hash = 37 * hash + (int) (Double.doubleToLongBits(this.price) ^
                                 (Double.doubleToLongBits(this.price) >>> 32));
         return hash;

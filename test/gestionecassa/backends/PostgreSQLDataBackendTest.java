@@ -331,12 +331,12 @@ public class PostgreSQLDataBackendTest {
         System.out.println("loadArticlesList");
 
         List<ArticleGroup> grs = backend.loadArticlesList();
-        assertEquals(grs.get(0).getGroupName(), groups.get(0).getGroupName());
-        assertEquals(grs.get(0).getIdGroup(), groups.get(0).getIdGroup());
+        assertEquals(grs.get(0).getName(), groups.get(0).getName());
+        assertEquals(grs.get(0).getId(), groups.get(0).getId());
         assertEquals(grs.get(0).getList(), groups.get(0).getList());
 
-        assertEquals(grs.get(1).getGroupName(), groups.get(1).getGroupName());
-        assertEquals(grs.get(1).getIdGroup(), groups.get(1).getIdGroup());
+        assertEquals(grs.get(1).getName(), groups.get(1).getName());
+        assertEquals(grs.get(1).getId(), groups.get(1).getId());
 
         List<Article> artsInGroup = grs.get(1).getList();
         assertEquals(artsInGroup.size(), 4);

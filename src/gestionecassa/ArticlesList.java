@@ -102,7 +102,7 @@ public class ArticlesList implements Serializable {
     private void generateNumMap() {
         grNum = new TreeMap<String, Integer>();
         for (int i = 0; i < groups.size(); i++) {
-            grNum.put(groups.get(i).getGroupName(), i);
+            grNum.put(groups.get(i).getName(), i);
         }
     }
 
@@ -113,7 +113,7 @@ public class ArticlesList implements Serializable {
         articles = new TreeMap<String, Article>();
         for (ArticleGroup artGroup : groups) {
             for (Article article : artGroup.getList()) {
-                articles.put(article.name, article);
+                articles.put(article.getName(), article);
             }
         }
     }
@@ -141,20 +141,20 @@ public class ArticlesList implements Serializable {
      */
     public void addGroup(ArticleGroup group) throws DuplicateGroupException,
             DuplicateArticleException {
-        if (!grNum.containsKey(group.getGroupName())) {
+        if (!grNum.containsKey(group.getName())) {
             for (Article article : group.getList()) {
-                if (articles.containsKey(article.name)) {
+                if (articles.containsKey(article.getName())) {
                     throw new DuplicateArticleException("Duplicated article: "
-                            + article.name + " in group that's being added: " + 
-                            group.getGroupName());
+                            + article.getName() + " in group that's being added: " + 
+                            group.getName());
                 }
             }
             groups.add(group);
-            grNum.put(group.getGroupName(), groups.size()-1);
+            grNum.put(group.getName(), groups.size()-1);
             generateArtMap();
         } else {
             throw new DuplicateGroupException("Already existing group: "
-                    + group.getGroupName());
+                    + group.getName());
         }
 
         //FIXME can be heavy if in a batch of adds
@@ -171,14 +171,14 @@ public class ArticlesList implements Serializable {
      */
     public void addArticleToGroup(String groupName, Article article)
             throws DuplicateArticleException, NotExistingGroupException {
-        if (articles.containsKey(article.name)) {
+        if (articles.containsKey(article.getName())) {
             throw new DuplicateArticleException("Duplicate article with name:" +
-                    article.name);
+                    article.getName());
         } else if (!grNum.containsKey(groupName)) {
             throw new NotExistingGroupException("No group with name:" +
                     " " + groupName);
         } else {
-            articles.put(article.name, article);
+            articles.put(article.getName(), article);
             groups.get(grNum.get(groupName)).addArticle(article);
         }
 
@@ -196,14 +196,14 @@ public class ArticlesList implements Serializable {
      */
     public void addArticleToGroup(int groupNum, Article article)
             throws DuplicateArticleException, NotExistingGroupException {
-        if (articles.containsKey(article.name)) {
+        if (articles.containsKey(article.getName())) {
             throw new DuplicateArticleException("Duplicate article with name:" +
-                    article.name);
+                    article.getName());
         } else if (groupNum >= 0 && groupNum < groups.size()) {
             throw new NotExistingGroupException("No group with cardinal number:" +
                     " " + groupNum);
         } else {
-            articles.put(article.name, article);
+            articles.put(article.getName(), article);
             groups.get(groupNum).addArticle(article);
         }
 
@@ -236,8 +236,10 @@ public class ArticlesList implements Serializable {
      * @return reference to the article enabled
      */
     public Article enableArticle(Article art, boolean enable) {
-        if (articles.containsKey(art.name)) {
-            return articles.get(art.name).setEnabled(enable);
+        if (articles.containsKey(art.getName())) {
+            Article temp = articles.get(art.getName());
+            temp.setEnabled(enable);
+            return temp;
         } else {
             return null;
         }
@@ -328,10 +330,10 @@ public class ArticlesList implements Serializable {
         List<ArticleGroup> tempList = new ArrayList<ArticleGroup>();
         for (ArticleGroup artGr : groups) {
             ArticleGroup tempGroup =
-                    new ArticleGroup(artGr.getIdGroup(), artGr.getGroupName());
+                    new ArticleGroup(artGr.getId(), artGr.getName());
             if (tempGroup.isEnabled()) {
                 for (Article art : artGr.getList()) {
-                    if (art.enabled) {
+                    if (art.isEnabled()) {
                         tempGroup.addArticle(art);
                     }
                 }

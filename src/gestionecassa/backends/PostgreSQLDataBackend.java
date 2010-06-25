@@ -258,7 +258,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
         int idGroup = getNextId("groups_id_group_seq");
         String insQuery =
                 "INSERT INTO groups ( id_group, name, enabled, num_pos)" +
-                "VALUES ('" + idGroup + "', '" + group.getGroupName() + "', '" +
+                "VALUES ('" + idGroup + "', '" + group.getName() + "', '" +
                     group.isEnabled() + "', '" + (idGroup-1) + "' )";
         genericCommit(insQuery);
 
@@ -269,6 +269,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 
     /**
      *
+     * @param idGroup
      * @param article
      * @param position
      * @throws IOException
@@ -326,6 +327,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 
     /**
      *
+     * @param idGroup
      * @param article
      * @throws IOException
      */
@@ -410,6 +412,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 
     /**
      *
+     * @param idGroup 
      * @return
      * @throws IOException
      */
