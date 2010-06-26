@@ -77,7 +77,7 @@ public class Server extends UnicastRemoteObject
     /**
      * 
      */
-    static Registry registry;
+    static Registry registry = null;
 
     /**
      * 

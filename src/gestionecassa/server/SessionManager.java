@@ -21,6 +21,9 @@
 package gestionecassa.server;
 
 import gestionecassa.exceptions.NotExistingSessionException;
+import java.rmi.AccessException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
@@ -148,10 +151,34 @@ class SessionManager {
         sessions.remove(session.sessionId);
         recycleIds.add(session.sessionId);
 
+        // The if is a workaround for testing framework
+        if (Server.registry != null) {
+            unbindService(session.sessionId);
+        }
+
         session.user = null;
         session.serviceThread.stopThread();
         
         logger.debug("Invalidata la sessione scaduta o terminata");
+    }
+
+    /**
+     * Unbinds the working thread from registry
+     * @param sessionID session id of the thread to unbind
+     */
+    private void unbindService(int sessionID) {
+        try {
+            Server.registry.unbind("Server" + sessionID);
+        } catch (AccessException ex) {
+            logger.error("non e' stato possible togliere la registrazione della"
+                    + " la classe del working thread: remote exception",ex);
+        } catch (RemoteException ex) {
+            logger.error("non e' stato possible togliere la registrazione della"
+                    + " la classe del working thread: remote exception",ex);
+        } catch (NotBoundException ex) {
+            logger.error("non e' stato possible togliere la registrazione della"
+                    + " la classe del working thread: remote exception",ex);
+        }
     }
 
     /**
