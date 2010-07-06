@@ -33,9 +33,11 @@ public class SharedServerService extends UnicastRemoteObject
      */
     Logger logger;
     
-    /** Creates a new instance of SharedServerService */
-    SharedServerService(Logger logger)
-                throws  RemoteException{
+    /** Creates a new instance of SharedServerService
+     * @param logger
+     * @throws RemoteException
+     */
+    SharedServerService(Logger logger) throws RemoteException {
         this.logger = logger;
     }
     

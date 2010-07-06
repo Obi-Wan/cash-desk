@@ -68,7 +68,7 @@ public class Log {
 
         // config manuale
         if (GESTIONECASSA.isDebugEnabled()) {
-            String messaggio= "";
+            String messaggio= "Debug is Enabled";
             // codice per comporre messaggio oneroso
             GESTIONECASSA.debug(messaggio);
         }
