@@ -168,7 +168,7 @@ public class PostgreSQLDataBackendTest {
 
     @AfterClass
     public static void tearDownClass() throws Exception {
-        for (String table_ref : backend.tables.keySet()) {
+        for (String table_ref : PostgreSQLDataBackend.tables.keySet()) {
             String table_name = table_ref.substring(3);
             String query = "DROP TABLE " + table_name + " CASCADE;";
             try {
@@ -218,7 +218,7 @@ public class PostgreSQLDataBackendTest {
                 }
                 rs.close();
 
-                for (String table_ref : backend.tables.keySet()) {
+                for (String table_ref : PostgreSQLDataBackend.tables.keySet()) {
                     String table_name = table_ref.substring(3);
                     if (!tabelleDB.contains(table_name)) {
                         fail("init did not create table: " + table_name);

@@ -62,18 +62,17 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
     Connection db;
 
     /**
-     * List of tables and information on how to create them if missing
+     * Tells whether the class for the db was found, so the subsystem is usable
      */
-    Map<String,List<String>> tables;
+    static private boolean classFound;
 
     /**
-     * Default constructor
+     * List of tables and information on how to create them if missing
      */
-    public PostgreSQLDataBackend() {
-        logger = Log.GESTIONECASSA_SERVER_DATAMANAGER_DB;
+    final static Map<String,List<String>> tables =
+            new ConcurrentSkipListMap<String, List<String>>();
 
-        tables = new ConcurrentSkipListMap<String, List<String>>();
-
+    static {
         List<String> tempList = new ArrayList<String>();
         tempList.add("id_cassiere serial PRIMARY KEY");
         tempList.add("username text UNIQUE");
@@ -158,6 +157,23 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
         tempList.add("id_option integer REFERENCES options ON DELETE RESTRICT");
         tempList.add("num_parz integer");
         tables.put("11_opts_of_article_in_order", tempList);
+
+
+        try {
+            Class.forName("org.postgresql.Driver");
+            classFound = true;
+            
+        } catch (ClassNotFoundException ex) {
+            classFound = false;
+        }
+    }
+
+    /**
+     * Default constructor
+     */
+    public PostgreSQLDataBackend() {
+        logger = Log.GESTIONECASSA_SERVER_DATAMANAGER_DB;
+
     }
 
     /**
@@ -167,14 +183,16 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      */
     @Override
     public void init(String url) throws IOException {
+
+        if (!classFound) {
+            logger.error("class org.postgresql.Driver not found");
+            throw new IOException("Class org.postgresql.Driver was not found");
+        }
+
+        String username = "gestionecassa";
+        String password = "GestioneCassa";
         try {
-            Class.forName("org.postgresql.Driver");
-            String username = "gestionecassa";
-            String password = "GestioneCassa";
             db = DriverManager.getConnection(url, username, password);
-        } catch (ClassNotFoundException ex) {
-            logger.error("classe non trovata", ex);
-            throw new IOException(ex);
         } catch (SQLException ex) {
             logger.error("errore connessione db", ex);
             throw new IOException(ex);
@@ -196,7 +214,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                 }
                 rs.close();
 
-                /* Check tables existance */
+                /* Check tables existence and correctness */
                 for (String table_ref : tables.keySet()) {
                     String table_name = table_ref.substring(3);
                     if (!dbTables.contains(table_name)) {
@@ -210,13 +228,18 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                             genericCommit("CREATE TABLE " + table_name + " ( " +
                                             columns + " );");
                         } else {
-                            // scream for vengence!
+                            logger.warn("Possible mistake: entry in Tables list"
+                                    + " without columns");
                         }
                     } else {
+                        /* Let's verify columns now:
+                         * for better performance add a prepared statement
+                         */
                         checkTableColumns(table_ref);
                     }
                 }
 
+                /* And now fix Events entries */
                 String queryEvent = "SELECT * FROM events WHERE id_event = '1';";
                 rs = st.executeQuery(queryEvent);
                 if (!rs.next()) {
