@@ -17,8 +17,8 @@ package gestionecassa.clients.cassa.printing;
 import gestionecassa.Article;
 import gestionecassa.ArticleOption;
 import gestionecassa.ArticleWithOptions;
+import gestionecassa.stubs.DebugDataProvider;
 import java.util.List;
-import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -35,15 +35,9 @@ public class TextPainterTest {
     List<Article> articles;
 
     public TextPainterTest() {
-        articles = new ArrayList<Article>();
-        List<ArticleOption> options = new ArrayList<ArticleOption>();
-        options.add(new ArticleOption(0, "corta", true));
-        options.add(new ArticleOption(1, "media", true));
-        options.add(new ArticleOption(2, "lunga", true));
-        articles.add(new Article(articles.size()+1, "gatto", 5.5));
-        articles.add(new Article(articles.size()+1, "cane", 10));
-        articles.add(new ArticleWithOptions(articles.size()+1, "falce", 4.25, options));
-        articles.add(new Article(articles.size()+1, "vanga", 0.2));
+        DebugDataProvider dataProvider = new DebugDataProvider();
+
+        articles = dataProvider.getCopyGroups().get(0).getList();
     }
 
     @BeforeClass
@@ -75,6 +69,9 @@ public class TextPainterTest {
 
         TextPainter instance2 = new TextPainter("test2");
 
+        if (!articles.get(2).hasOptions()) {
+            fail("Bad data backend");
+        }
         ArticleWithOptions articleChosen = (ArticleWithOptions)articles.get(2);
         ArticleOption option = articleChosen.getOptions().get(0);
         instance2.addArticleWOptions(articleChosen, 12, option);

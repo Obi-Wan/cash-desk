@@ -19,9 +19,12 @@ import gestionecassa.ArticleGroup;
 import gestionecassa.ArticleOption;
 import gestionecassa.ArticleWithOptions;
 import gestionecassa.ArticlesList;
+import gestionecassa.order.EntryArticleGroup;
 import gestionecassa.order.Order;
-import java.util.List;
+import gestionecassa.order.PairObjectInteger;
+import gestionecassa.stubs.DebugDataProvider;
 import java.util.ArrayList;
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -45,39 +48,28 @@ public class PrinterHelperTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        groups = new ArrayList<ArticleGroup>();
-
-        int idArticle = 0;
-
-        /* First group with id 0 */
-        articles = new ArrayList<Article>();
-        List<ArticleOption> options = new ArrayList<ArticleOption>();
-        options.add(new ArticleOption(0, "corta", true));
-        options.add(new ArticleOption(1, "media", true));
-        options.add(new ArticleOption(2, "lunga", true));
-        articles.add(new Article(++idArticle, "gatto", 5.5));
-        articles.add(new Article(++idArticle, "cane", 10));
-        articles.add(new ArticleWithOptions(++idArticle, "falce", 4.25, options));
-        articles.add(new Article(++idArticle, "vanga", 0.2));
-
-        groups.add(new ArticleGroup(1, "Group1", articles));
-
-        /* Second group, empty, with id 1 */
-        articles = new ArrayList<Article>();
-        groups.add(new ArticleGroup(2, "Group2", articles));
-
-        /* Articles not in group 1 to add later */
-        articles = new ArrayList<Article>();options = new ArrayList<ArticleOption>();
-        options.add(new ArticleOption(3, "corta1", true));
-        options.add(new ArticleOption(4, "media1", true));
-        options.add(new ArticleOption(5, "lunga1", true));
-        articles.add(new Article(++idArticle, "gatto1", 5.5));
-        articles.add(new Article(++idArticle, "cane1", 10));
-        articles.add(new ArticleWithOptions(++idArticle, "falce1", 4.25, options));
-        articles.add(new Article(++idArticle, "vanga1", 0.2));
-
-        list = new ArticlesList(groups);
+        
+        DebugDataProvider dataProvider = new DebugDataProvider();
+        articles = dataProvider.getCopyArticles();
+        groups = dataProvider.getCopyGroups();
+        list = dataProvider.getCopyListOfArts();
         order = new Order("bene", "hell", 0, list.getSignature());
+        
+        EntryArticleGroup entryGroup = new EntryArticleGroup(groups.get(0));
+        entryGroup.addArticle(groups.get(0).getList().get(0), 3);
+        entryGroup.addArticle(groups.get(0).getList().get(3), 2);
+
+        if (!groups.get(0).getList().get(2).hasOptions()) {
+            fail("Bad data backend");
+        }
+        ArticleWithOptions art = (ArticleWithOptions) groups.get(0).getList().get(2);
+        List<PairObjectInteger<ArticleOption>> options =
+                new ArrayList<PairObjectInteger<ArticleOption>>();
+        options.add(new PairObjectInteger<ArticleOption>(art.getOptions().get(0), 2));
+        options.add(new PairObjectInteger<ArticleOption>(art.getOptions().get(1), 1));
+        entryGroup.addArticleWithOptions(art,3, 2, options);
+
+        order.addGroup(entryGroup);
     }
 
     @AfterClass

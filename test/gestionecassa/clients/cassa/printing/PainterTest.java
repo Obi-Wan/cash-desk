@@ -15,12 +15,11 @@
 package gestionecassa.clients.cassa.printing;
 
 import gestionecassa.Article;
-import gestionecassa.ArticleOption;
 import gestionecassa.ArticleWithOptions;
+import gestionecassa.stubs.DebugDataProvider;
 import java.awt.print.PrinterJob;
 import java.io.File;
 import java.util.List;
-import java.util.ArrayList;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.Destination;
@@ -43,15 +42,15 @@ public class PainterTest {
     List<Article> articles;
 
     public PainterTest() {
-        articles = new ArrayList<Article>();
-        List<ArticleOption> options = new ArrayList<ArticleOption>();
-        options.add(new ArticleOption(0, "corta", true));
-        options.add(new ArticleOption(1, "media", true));
-        options.add(new ArticleOption(2, "lunga", true));
-        articles.add(new Article(articles.size()+1, "gatto", 5.5));
-        articles.add(new Article(articles.size()+1, "cane", 10));
-        articles.add(new ArticleWithOptions(articles.size()+1, "falce", 4.25, options));
-        articles.add(new Article(articles.size()+1, "vanga", 0.2));
+        DebugDataProvider dataProvider = new DebugDataProvider();
+
+        /* Ensures 4 articles:
+         * 0 - Article
+         * 1 - Article
+         * 2 - ArticleWithOptions
+         * 3 - Article
+         */
+        articles = dataProvider.getCopyGroups().get(0).getList();
     }
 
     @BeforeClass
@@ -107,6 +106,9 @@ public class PainterTest {
 
         System.out.println("printing: " + articles.get(2).getName());
 
+        if (!articles.get(2).hasOptions()) {
+            fail("Bad data backend");
+        }
         ArticleWithOptions articleChosen = (ArticleWithOptions)articles.get(2);
         String nameOfTheOption = articleChosen.getOptions().get(0).getName();
         job.setPrintable(new Painter(articleChosen, 12, nameOfTheOption));
