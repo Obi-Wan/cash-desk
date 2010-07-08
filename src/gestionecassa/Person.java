@@ -63,11 +63,12 @@ public class Person {
      * @param id 
      * @param password
      * @param username
+     * @param b 
      */
     public Person(int id, String username, String password, boolean b) {
         this.id = id;
-        this.password = new String(password);
-        this.username = new String(username);
+        this.password = password;
+        this.username = username;
         this.enabled = b;
     }
 
