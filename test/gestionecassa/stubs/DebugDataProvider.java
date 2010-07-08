@@ -78,13 +78,13 @@ public class DebugDataProvider {
 
         /* Admins */
         admins = new ArrayList<Admin>();
-        admins.add(new Admin(admins.size(), "admin", "password"));
-        admins.add(new Admin(admins.size(), "admin1", "password1"));
+        admins.add(new Admin(admins.size()+1, "admin", "password"));
+        admins.add(new Admin(admins.size()+1, "admin1", "password1"));
 
         /* Cassieres */
         cassieres = new ArrayList<Cassiere>();
-        cassieres.add(new Cassiere(cassieres.size(), "bene", "male"));
-        cassieres.add(new Cassiere(cassieres.size(), "bene1", "male1"));
+        cassieres.add(new Cassiere(cassieres.size()+1, "bene", "male"));
+        cassieres.add(new Cassiere(cassieres.size()+1, "bene1", "male1"));
     }
 
     public List<Admin> getCopyAdmins() {

@@ -28,6 +28,7 @@ import gestionecassa.order.PairObjectInteger;
 import gestionecassa.order.EntryArticleGroup;
 import gestionecassa.order.EntrySingleArticleWithOption;
 import gestionecassa.order.Order;
+import gestionecassa.stubs.DebugDataProvider;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -74,40 +75,15 @@ public class PostgreSQLDataBackendTest {
 
     public PostgreSQLDataBackendTest() {
         dbUrl = "jdbc:postgresql://localhost:5432/TestGCDB";
-        testAdmin = new Admin(1, "admin", "password");
-        testCassiere = new Cassiere(1, "bene", "male");
 
-        groups = new ArrayList<ArticleGroup>();
+        DebugDataProvider dataProvider = new DebugDataProvider();
 
-        int idArticle = 0;
+        testAdmin = dataProvider.getCopyAdmins().get(0);
+        testCassiere = dataProvider.getCopyCassieres().get(0);
 
-        /* First group with id 0 */
-        articles = new ArrayList<Article>();
-        List<ArticleOption> options = new ArrayList<ArticleOption>();
-        options.add(new ArticleOption(0, "corta", true));
-        options.add(new ArticleOption(1, "media", true));
-        options.add(new ArticleOption(2, "lunga", true));
-        articles.add(new Article(++idArticle, "gatto", 5.5));
-        articles.add(new Article(++idArticle, "cane", 10));
-        articles.add(new ArticleWithOptions(++idArticle, "falce", 4.25, options));
-        articles.add(new Article(++idArticle, "vanga", 0.2));
-
-        groups.add(new ArticleGroup(1, "Group1", articles));
-
-        /* Second group, empty, with id 1 */
-        articles = new ArrayList<Article>();
-        groups.add(new ArticleGroup(2, "Group2", articles));
-
-        /* Articles not in group 1 to add later */
-        articles = new ArrayList<Article>();
-        options = new ArrayList<ArticleOption>();
-        options.add(new ArticleOption(3, "corta1", true));
-        options.add(new ArticleOption(4, "media1", true));
-        options.add(new ArticleOption(5, "lunga1", true));
-        articles.add(new Article(++idArticle, "gatto1", 5.5));
-        articles.add(new Article(++idArticle, "cane1", 10));
-        articles.add(new ArticleWithOptions(++idArticle, "falce1", 4.25, options));
-        articles.add(new Article(++idArticle, "vanga1", 0.2));
+        groups = dataProvider.getCopyGroups();
+        articles = dataProvider.getCopyArticles();
+        listOfArts = dataProvider.getCopyListOfArts();
 
         /*  */
         dates = new LinkedList<EventDate>();
@@ -157,8 +133,6 @@ public class PostgreSQLDataBackendTest {
                     ex.getLocalizedMessage());
         }
         dates.add(new EventDate("gli oribbili", startDate.getTime(), endDate.getTime()));
-
-        listOfArts = new ArticlesList(groups);
     }
 
     @BeforeClass
@@ -740,6 +714,8 @@ public class PostgreSQLDataBackendTest {
         try {
             Statement st = backend.db.createStatement();
             try {
+                PairObjectInteger<Article> tempArtEntry =
+                        tempOrder.getGroups().get(0).articles.get(0);
                 ResultSet rs = st.executeQuery(query);
 
                 assertTrue(rs.next());
@@ -750,11 +726,11 @@ public class PostgreSQLDataBackendTest {
                 assertTrue(rs.isLast());
 
                 assertEquals(tempOrder.getUsername(), rs.getString("u_name"));
-                assertEquals(tempOrder.getArticlesSold().get(0).object.getPrice(),
+                assertEquals(tempArtEntry.object.getPrice(),
                                 rs.getDouble("price"),0);
-                assertEquals(tempOrder.getArticlesSold().get(0).object.getName(),
+                assertEquals(tempArtEntry.object.getName(),
                                 rs.getString("a_name"));
-                assertEquals(tempOrder.getArticlesSold().get(0).numTot,
+                assertEquals(tempArtEntry.numTot,
                                 rs.getInt("num_tot"));
 
             } catch (SQLException ex) {
@@ -779,20 +755,21 @@ public class PostgreSQLDataBackendTest {
         try {
             Statement st = backend.db.createStatement();
             try {
+                EntrySingleArticleWithOption tempArtEntry =
+                        (EntrySingleArticleWithOption)
+                            tempOrder.getGroups().get(0).articles.get(0);
                 ResultSet rs = st.executeQuery(query);
 
                 assertTrue(rs.next());
                 assertTrue(!rs.isLast());
-
+                
                 assertEquals(tempOrder.getDate().getTime(),
                                 rs.getTimestamp("time").getTime());
-                assertEquals(tempOrder.getArticlesSold().get(0).object.getName(),
+                assertEquals(tempArtEntry.object.getName(),
                                 rs.getString("a_name"));
-                assertEquals(
-                        ((EntrySingleArticleWithOption)tempOrder.getArticlesSold().get(0)).numPartial.get(0).numTot,
+                assertEquals(tempArtEntry.numPartial.get(0).numTot,
                                 rs.getInt("num_parz"));
-                assertEquals(
-                        ((EntrySingleArticleWithOption)tempOrder.getArticlesSold().get(0)).numPartial.get(0).object,
+                assertEquals(tempArtEntry.numPartial.get(0).object.getName(),
                                 rs.getString("op_name"));
 
                 assertTrue(rs.next());
@@ -800,13 +777,11 @@ public class PostgreSQLDataBackendTest {
 
                 assertEquals(tempOrder.getDate().getTime(),
                                 rs.getTimestamp("time").getTime());
-                assertEquals(tempOrder.getArticlesSold().get(0).object.getName(),
+                assertEquals(tempArtEntry.object.getName(),
                                 rs.getString("a_name"));
-                assertEquals(
-                        ((EntrySingleArticleWithOption)tempOrder.getArticlesSold().get(0)).numPartial.get(1).numTot,
+                assertEquals(tempArtEntry.numPartial.get(1).numTot,
                                 rs.getInt("num_parz"));
-                assertEquals(
-                        ((EntrySingleArticleWithOption)tempOrder.getArticlesSold().get(0)).numPartial.get(1).object,
+                assertEquals(tempArtEntry.numPartial.get(1).object.getName(),
                                 rs.getString("op_name"));
 
             } catch (SQLException ex) {
