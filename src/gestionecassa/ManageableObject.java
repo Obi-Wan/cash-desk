@@ -52,6 +52,7 @@ public abstract class ManageableObject implements Serializable {
         this.id = id;
         this.name = name;
         this.enabled = enabled;
+        this.currentlyAvailabe = true;
     }
 
     /**

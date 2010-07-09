@@ -245,6 +245,40 @@ public class ArticlesList implements Serializable {
         }
     }
 
+    /**
+     * Enables/disables a specified article
+     *
+     * @param group Cardinal number of the group
+     * @param pos Position of the article
+     * @param avail Enable/disable
+     * @return reference to the article enabled
+     */
+    public Article markArticleAvailable(int group, int pos, boolean avail) {
+        if ((group >= 0 && group < groups.size()) &&
+                ( pos >= 0 && pos < groups.get(group).getList().size()) ) {
+            return groups.get(group).markArticleAvailable(pos, avail);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Enables/disables a specified article
+     *
+     * @param art The article to modify
+     * @param avail Enable/disable
+     * @return reference to the article enabled
+     */
+    public Article markArticleAvailable(Article art, boolean avail) {
+        if (articles.containsKey(art.getName())) {
+            Article temp = articles.get(art.getName());
+            temp.setAvailabe(avail);
+            return temp;
+        } else {
+            return null;
+        }
+    }
+
 //    /**
 //     * Moves an article to another group
 //     *

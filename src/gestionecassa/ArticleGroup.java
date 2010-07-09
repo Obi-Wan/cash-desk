@@ -115,6 +115,34 @@ public class ArticleGroup extends ManageableObject implements Serializable {
     }
 
     /**
+     * Enables/disables a specified article
+     *
+     * @param pos Position of the article
+     * @param avail Enable/disable
+     */
+    Article markArticleAvailable(int pos, boolean avail) {
+        Article temp = list.get(pos);
+        temp.setEnabled(avail);
+        return temp;
+    }
+
+    /**
+     * Enables/disables a specified article
+     *
+     * @param art The article to modify
+     * @param avail Enable/disable
+     */
+    Article markArticleAvailable(Article art, boolean avail) {
+        for (Article article : list) {
+            if (article.equals(art)) {
+                article.setEnabled(avail);
+                return article;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Moves an article
      *
      * @param oldPos Old position
