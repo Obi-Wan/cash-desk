@@ -181,6 +181,7 @@ public final class GuiOrderPanel extends javax.swing.JPanel implements VariableV
 
             fillContentsList();
             rebuildVisualList();
+            cleanDataFields();
         } catch (RemoteException ex) {
             frame.showMessageDialog("Il server non ha risposto alla richiesta "
                 + "della lista, che non sarà aggiornata.",

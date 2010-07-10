@@ -38,6 +38,7 @@ abstract public class GuiAbstrSingleEntryPanel extends javax.swing.JPanel
      */
     abstract public int getNumTot();
 
+    @Override
     public int compareTo(GuiAbstrSingleEntryPanel o) {
         return (this.hashCode() - o.hashCode());
     }
