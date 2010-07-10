@@ -8,7 +8,6 @@ package gestionecassa.server.datamanager;
 import gestionecassa.backends.BackendAPI_2;
 import gestionecassa.backends.BackendAPI_1;
 import gestionecassa.Admin;
-import gestionecassa.ArticleWithPreparation;
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
 import gestionecassa.Cassiere;
@@ -237,7 +236,7 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
                     progressivesList = new TreeMap<String, Integer>();
                 
                     for (Article article : articlesList.getArticlesList()) {
-                        if (article instanceof ArticleWithPreparation) {
+                        if (article.hasOptions()) {
                             progressivesList.put(article.getName(), 0);
                         }
                     }
@@ -434,7 +433,7 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
                 progressivesList = new TreeMap<String, Integer>();
 
                 for (Article article : list.getArticlesList()) {
-                    if (article instanceof ArticleWithPreparation) {
+                    if (article.hasOptions()) {
                         progressivesList.put(article.getName(), 0);
                     }
                 }
@@ -468,7 +467,7 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
                 }
             }
 
-            if (article instanceof ArticleWithPreparation) {
+            if (article.hasOptions()) {
                 synchronized (listProgressiviSemaphore) {
                     progressivesList.put(article.getName(), 0);
                 }

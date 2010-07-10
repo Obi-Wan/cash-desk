@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @author ben
  */
-public class ArticleWithOptions extends Article implements ArticleWithPreparation {
+public class ArticleWithOptions extends Article {
 
     /**
      * Lista delle options disponibili per questo bene.
