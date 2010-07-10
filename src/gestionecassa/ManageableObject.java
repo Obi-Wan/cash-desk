@@ -56,6 +56,15 @@ public abstract class ManageableObject implements Serializable {
     }
 
     /**
+     * Copy constructor
+     * @param obj The {@code ManageableObject} to copy from
+     */
+    public ManageableObject(ManageableObject obj) {
+        this(obj.id, obj.name, obj.enabled);
+        this.currentlyAvailabe = obj.currentlyAvailabe;
+    }
+
+    /**
      * Getter for the id of the object
      * @return Int containing the Id
      */

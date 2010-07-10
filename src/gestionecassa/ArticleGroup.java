@@ -68,6 +68,15 @@ public class ArticleGroup extends ManageableObject implements Serializable {
     }
 
     /**
+     * Copy constructor
+     * @param grp The group to copy from
+     */
+    public ArticleGroup(ArticleGroup grp) {
+        super(grp);
+        this.list = new ArrayList<Article>(grp.list);
+    }
+
+    /**
      * Gets the list of articles in this group
      *
      * @return A list containing the articles of this group

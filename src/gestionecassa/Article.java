@@ -52,6 +52,15 @@ public class Article extends ManageableObject {
     }
 
     /**
+     * Copy construct
+     * @param art The article to copy from
+     */
+    public Article(Article art) {
+        super(art);
+        this.price = art.price;
+    }
+
+    /**
      * Tells us wheter it has options or not.
      *
      * @return false

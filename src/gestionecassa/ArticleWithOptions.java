@@ -69,6 +69,15 @@ public class ArticleWithOptions extends Article implements ArticleWithPreparatio
     }
 
     /**
+     * Copy constructor
+     * @param art The article co copy from
+     */
+    public ArticleWithOptions(ArticleWithOptions art) {
+        super(art);
+        this.options = new ArrayList<ArticleOption>(art.options);
+    }
+
+    /**
      * Tells us wether it has opsions or not.
      *
      * @return true

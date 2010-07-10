@@ -47,6 +47,15 @@ public class ArticleOption extends ManageableObject {
         this.description = descr;
     }
 
+    /**
+     * Copy constructor
+     * @param opt the option to copy from
+     */
+    public ArticleOption(ArticleOption opt) {
+        super(opt);
+        this.description = opt.description;
+    }
+
     @Override
     public String getPrintableFormat() {
         return getName();
