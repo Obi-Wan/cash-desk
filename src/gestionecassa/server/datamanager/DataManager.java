@@ -331,6 +331,14 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
         }
     }
 
+    private void checkListSignature(List<Integer> sign) throws WrongArticlesListException {
+        if (!articlesList.getSignature().equals(sign)) {
+            throw new WrongArticlesListException(
+                    "Lists' signatures don't match\nmain: "
+                    + articlesList.getSignature() + "\nclient:" + sign);
+        }
+    }
+
     //----------------------------//
     // Cassa Client handle.
     //----------------------------//
@@ -363,12 +371,8 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
     public void addNewOrder(String id, Order order)
             throws IOException, WrongArticlesListException {
         synchronized (listOrdersSemaphore) {
-            if (!articlesList.getSignature().equals(order.getListSignature())) {
-                throw new WrongArticlesListException(
-                        "Lists' signatures don't match\nmain: "
-                        + articlesList.getSignature() + "\nclient:"
-                        + order.getListSignature());
-            }
+            checkListSignature(order.getListSignature());
+            
             ordersTable.get(id).add(order);
             if (!useFallback) {
                 dataBackendDB.addNewOrder(order);
