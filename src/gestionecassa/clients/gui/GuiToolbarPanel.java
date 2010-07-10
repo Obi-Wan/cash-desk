@@ -130,7 +130,7 @@ public class GuiToolbarPanel extends javax.swing.JPanel {
      *
      * @param value
      */
-    public void enableLogout(boolean value) {
+    public void enableSessionButtons(boolean value) {
         jButtonLogout.setEnabled(value);
     }
 }

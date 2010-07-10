@@ -125,6 +125,10 @@ abstract public class GuiAppFrame<ClientTypeAPI extends ClientAPI>
         jScrollPanelMain.setViewportView(
                 jScrollPanelMain.getViewport().getView());
     }
+
+    public JPanel getContentPanel() {
+        return (JPanel)jScrollPanelMain.getViewport().getView();
+    }
     
     /**
      * Enables or disables logout button.
@@ -132,7 +136,7 @@ abstract public class GuiAppFrame<ClientTypeAPI extends ClientAPI>
      * @param value
      */
     public final void enableLogout(boolean value) {
-        toolbar.enableLogout(value);
+        toolbar.enableSessionButtons(value);
     }
 
     /**
