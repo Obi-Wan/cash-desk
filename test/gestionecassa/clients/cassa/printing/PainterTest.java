@@ -15,7 +15,6 @@
 package gestionecassa.clients.cassa.printing;
 
 import gestionecassa.Article;
-import gestionecassa.ArticleWithOptions;
 import gestionecassa.stubs.DebugDataProvider;
 import java.awt.print.PrinterJob;
 import java.io.File;
@@ -47,7 +46,7 @@ public class PainterTest {
         /* Ensures 4 articles:
          * 0 - Article
          * 1 - Article
-         * 2 - ArticleWithOptions
+         * 2 - Article with Options
          * 3 - Article
          */
         articles = dataProvider.getCopyGroups().get(0).getList();
@@ -109,7 +108,7 @@ public class PainterTest {
         if (!articles.get(2).hasOptions()) {
             fail("Bad data backend");
         }
-        ArticleWithOptions articleChosen = (ArticleWithOptions)articles.get(2);
+        Article articleChosen = articles.get(2);
         String nameOfTheOption = articleChosen.getOptions().get(0).getName();
         job.setPrintable(new Painter(articleChosen, 12, nameOfTheOption));
 

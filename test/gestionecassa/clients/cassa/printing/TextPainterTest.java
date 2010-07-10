@@ -16,7 +16,6 @@ package gestionecassa.clients.cassa.printing;
 
 import gestionecassa.Article;
 import gestionecassa.ArticleOption;
-import gestionecassa.ArticleWithOptions;
 import gestionecassa.stubs.DebugDataProvider;
 import java.util.List;
 import org.junit.After;
@@ -72,7 +71,7 @@ public class TextPainterTest {
         if (!articles.get(2).hasOptions()) {
             fail("Bad data backend");
         }
-        ArticleWithOptions articleChosen = (ArticleWithOptions)articles.get(2);
+        Article articleChosen = articles.get(2);
         ArticleOption option = articleChosen.getOptions().get(0);
         instance2.addArticleWOptions(articleChosen, 12, option);
 

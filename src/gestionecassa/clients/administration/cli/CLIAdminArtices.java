@@ -17,7 +17,6 @@ package gestionecassa.clients.administration.cli;
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
 import gestionecassa.ArticleOption;
-import gestionecassa.ArticleWithOptions;
 import gestionecassa.clients.administration.AdministrationAPI;
 import gestionecassa.exceptions.DuplicateArticleException;
 import gestionecassa.exceptions.NotExistingGroupException;
@@ -161,7 +160,7 @@ public class CLIAdminArtices {
             try {
                 baseClient.addRMIArticle(group.getId(),
                         hasOptions ?
-                            new ArticleWithOptions(0, name, price, options) :
+                            new Article(0, name, price, true, options) :
                             new Article(0, name, price));
             } catch (DuplicateArticleException ex) {
 
@@ -208,7 +207,7 @@ public class CLIAdminArtices {
         boolean enabled = art.isEnabled();
         List<ArticleOption> options = new ArrayList<ArticleOption>();
         if (art.hasOptions()) {
-            options = ((ArticleWithOptions)art).getOptions();
+            options = art.getOptions();
         }
 
         switch (choice) {
@@ -221,7 +220,7 @@ public class CLIAdminArtices {
                 break;
         }
         Article newArt = (art.hasOptions() ?
-            new ArticleWithOptions(id, name, price, options, enabled) :
+            new Article(id, name, price, enabled, options) :
             new Article(id, name, price, enabled));
 
         if (Boolean.parseBoolean(

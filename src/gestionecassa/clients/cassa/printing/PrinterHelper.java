@@ -16,7 +16,6 @@ package gestionecassa.clients.cassa.printing;
 
 import gestionecassa.Article;
 import gestionecassa.ArticleOption;
-import gestionecassa.ArticleWithOptions;
 import gestionecassa.Log;
 import gestionecassa.order.PairObjectInteger;
 import gestionecassa.order.EntrySingleArticleWithOption;
@@ -60,8 +59,7 @@ public class PrinterHelper extends Thread {
                     int prog = entry.startProgressive;
                     for (PairObjectInteger<ArticleOption> entrySingleOption : entry.numPartial) {
                         for (int i = 0; i < entrySingleOption.numTot; i++) {
-                            painter.addArticleWOptions(
-                                    (ArticleWithOptions)entrySingleArticle.object,
+                            painter.addArticleWOptions(entrySingleArticle.object,
                                     prog++, entrySingleOption.object);
                         }
                     }

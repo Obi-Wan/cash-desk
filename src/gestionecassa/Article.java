@@ -14,6 +14,9 @@
 
 package gestionecassa;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Class rapresenting an Article sold. Not synchronized.
  * If accessing concurrently you need to externally synchronize it.
@@ -26,6 +29,10 @@ public class Article extends ManageableObject {
      * Price of a single piece of this article
      */
     final double price;
+    /**
+     * Lista delle options disponibili per questo bene.
+     */
+    List<ArticleOption> options;
 
     /**
      * Explicit constructor
@@ -47,8 +54,22 @@ public class Article extends ManageableObject {
      * @param enabled
      */
     public Article(int id, String name, double price, boolean enabled) {
+        this(id, name, price, enabled, new ArrayList<ArticleOption>());
+    }
+
+    /**
+     * Explicit Constructor
+     * @param id
+     * @param name
+     * @param price
+     * @param enabled 
+     * @param options
+     */
+    public Article(int id, String name, double price, boolean enabled,
+            List<ArticleOption> options) {
         super(id, name, enabled);
         this.price = price;
+        this.options = new ArrayList<ArticleOption>(options);
     }
 
     /**
@@ -58,6 +79,7 @@ public class Article extends ManageableObject {
     public Article(Article art) {
         super(art);
         this.price = art.price;
+        this.options = new ArrayList<ArticleOption>(art.options);
     }
 
     /**
@@ -66,7 +88,7 @@ public class Article extends ManageableObject {
      * @return false
      */
     public boolean hasOptions() {
-        return false;
+        return !options.isEmpty();
     }
 
     /**
@@ -76,8 +98,12 @@ public class Article extends ManageableObject {
      */
     @Override
     public String getPrintableFormat() {
-        return String.format("- %s - %10s -€ %05.2f",
+        String output = String.format("- %s - %10s -€ %05.2f",
                      (isEnabled() ? "Enabled " : "Disabled"), getName(), price);
+        for (ArticleOption option : options) {
+            output += String.format("\n\t      . %10s", option.getPrintableFormat());
+        }
+        return output;
     }
 
     /**
@@ -99,7 +125,8 @@ public class Article extends ManageableObject {
     public boolean equals(Object obj) {
         return (obj instanceof Article) &&
                 (this.getName().equals(((Article)obj).getName())) &&
-                (this.price == (((Article)obj).price));
+                (this.price == (((Article)obj).price)) &&
+                (this.options.equals(((Article)obj).options));
     }
 
     @Override
@@ -109,6 +136,15 @@ public class Article extends ManageableObject {
         hash = 37 * hash + (this.getName() != null ? this.getName().hashCode() : 0);
         hash = 37 * hash + (int) (Double.doubleToLongBits(this.price) ^
                                 (Double.doubleToLongBits(this.price) >>> 32));
+        hash = 37 * hash + (this.options != null ? this.options.hashCode() : 0);
         return hash;
+    }
+
+    /**
+     * Method that returns the options of this article
+     * @return reference to the options
+     */
+    public List<ArticleOption> getOptions() {
+        return options;
     }
 }

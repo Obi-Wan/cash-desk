@@ -16,7 +16,6 @@ package gestionecassa.clients.cassa.printing;
 
 import gestionecassa.Article;
 import gestionecassa.ArticleOption;
-import gestionecassa.ArticleWithOptions;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -63,7 +62,7 @@ public class TextPainter {
     }
 
     /**
-     * Adds the given <code>ArticleWithOptions</code> to the file to print
+     * Adds the given <code>Article</code> with Options to the file to print
      * 
      * @param article the article to print
      * @param prog
@@ -71,7 +70,7 @@ public class TextPainter {
      *
      * @throws IOException
      */
-    public void addArticleWOptions(ArticleWithOptions article, int prog,
+    public void addArticleWOptions(Article article, int prog,
             ArticleOption option) throws IOException {
 
         if (!article.hasOptions()) {

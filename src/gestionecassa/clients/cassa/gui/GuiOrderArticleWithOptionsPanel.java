@@ -20,10 +20,10 @@
 
 package gestionecassa.clients.cassa.gui;
 
+import gestionecassa.Article;
 import gestionecassa.ArticleOption;
 import gestionecassa.clients.gui.VisualListsMngr;
 import gestionecassa.clients.gui.GuiOkCancelDialog;
-import gestionecassa.ArticleWithOptions;
 import gestionecassa.clients.gui.RecordPanels;
 import gestionecassa.order.PairObjectInteger;
 import java.awt.event.ActionEvent;
@@ -40,7 +40,7 @@ public class GuiOrderArticleWithOptionsPanel extends GuiAbstrSingleEntryPanel {
     /**
      * 
      */
-    ArticleWithOptions article;
+    Article article;
 
     /**
      *
@@ -60,7 +60,7 @@ public class GuiOrderArticleWithOptionsPanel extends GuiAbstrSingleEntryPanel {
      * @param index 
      */
     public GuiOrderArticleWithOptionsPanel(GuiOrderPanel orderPanel,
-            ArticleWithOptions art, int index) {
+            Article art, int index) {
         initComponents();
 
         this.orderPanel = orderPanel;
@@ -189,7 +189,7 @@ public class GuiOrderArticleWithOptionsPanel extends GuiAbstrSingleEntryPanel {
 
     /**
      * Opens a dialog that makes it possible to add/delete/modify options for
-     * the selected <code>ArticleWithOptions</code>
+     * the selected <code>Article</code> with options
      */
     private void modifyOptions() {
         GuiModifyOptionsPanel panel = new GuiModifyOptionsPanel(this);
@@ -225,7 +225,7 @@ public class GuiOrderArticleWithOptionsPanel extends GuiAbstrSingleEntryPanel {
 
     /**
      * Updates the visual list after a modification of the options of an
-     * <code>ArticleWithOptions</code>
+     * <code>Article</code> with Options
      */
     void updateAfterModify() {
         listMngr.buildVisualList();

@@ -18,7 +18,6 @@ import gestionecassa.Admin;
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
 import gestionecassa.ArticleOption;
-import gestionecassa.ArticleWithOptions;
 import gestionecassa.ArticlesList;
 import gestionecassa.Cassiere;
 import java.util.ArrayList;
@@ -53,7 +52,7 @@ public class DebugDataProvider {
         options.add(new ArticleOption(++idOption, "lunga", true));
         articles.add(new Article(++idArticle, "gatto", 5.5));
         articles.add(new Article(++idArticle, "cane", 10));
-        articles.add(new ArticleWithOptions(++idArticle, "falce", 4.25, options));
+        articles.add(new Article(++idArticle, "falce", 4.25, true, options));
         articles.add(new Article(++idArticle, "vanga", 0.2));
 
         groups.add(new ArticleGroup(++idGroup, "Group1", articles));
@@ -70,7 +69,7 @@ public class DebugDataProvider {
         options.add(new ArticleOption(++idOption, "lunga1", true));
         articles.add(new Article(++idArticle, "gatto1", 5.5));
         articles.add(new Article(++idArticle, "cane1", 10));
-        articles.add(new ArticleWithOptions(++idArticle, "falce1", 4.25, options));
+        articles.add(new Article(++idArticle, "falce1", 4.25, true, options));
         articles.add(new Article(++idArticle, "vanga1", 0.2));
         
         /* List of Articles creation */

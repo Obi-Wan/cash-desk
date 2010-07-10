@@ -17,7 +17,6 @@ package gestionecassa.order;
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
 import gestionecassa.ArticleOption;
-import gestionecassa.ArticleWithOptions;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -87,7 +86,7 @@ public class EntryArticleGroup extends PairObjectInteger<ArticleGroup> {
      * @param progressive starting progressive number of the articles
      * @param partialsList List of partials for the options
      */
-    public void addArticleWithOptions(ArticleWithOptions article, int numAddTot,
+    public void addArticleWithOptions(Article article, int numAddTot,
             int progressive, List<PairObjectInteger<ArticleOption>> partialsList) {
         articles.add(new EntrySingleArticleWithOption(article, numAddTot, progressive,
                 partialsList));

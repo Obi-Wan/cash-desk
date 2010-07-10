@@ -18,7 +18,6 @@ import gestionecassa.Admin;
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
 import gestionecassa.ArticleOption;
-import gestionecassa.ArticleWithOptions;
 import gestionecassa.Cassiere;
 import gestionecassa.EventDate;
 import gestionecassa.Log;
@@ -370,7 +369,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
 
         //then just if it has options
         if (article.hasOptions()) {
-            List<ArticleOption> opts = ((ArticleWithOptions)article).getOptions();
+            List<ArticleOption> opts = article.getOptions();
             String insOptsQuery =
                     "INSERT INTO options (id_article, name) VALUES ";
             for (Iterator<ArticleOption> it = opts.iterator(); it.hasNext();) {
@@ -456,11 +455,11 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                     int idArticle = rs.getInt("id_article");
 
                     outout.add(rs.getBoolean("has_options")
-                                    ? new ArticleWithOptions(idArticle,
+                                    ? new Article(idArticle,
                                             rs.getString("name"),
                                             rs.getDouble("price"),
-                                            loadOptionsOfArticle(idArticle),
-                                            rs.getBoolean("enabled"))
+                                            rs.getBoolean("enabled"),
+                                            loadOptionsOfArticle(idArticle))
                                     : new Article(idArticle,
                                             rs.getString("name"),
                                             rs.getDouble("price"),

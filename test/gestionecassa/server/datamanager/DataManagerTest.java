@@ -18,7 +18,6 @@ import gestionecassa.Admin;
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
 import gestionecassa.ArticleOption;
-import gestionecassa.ArticleWithOptions;
 import gestionecassa.ArticlesList;
 import gestionecassa.Cassiere;
 import gestionecassa.Person;
@@ -278,7 +277,7 @@ public class DataManagerTest {
         ArticleGroup group = dataManager.getAllArticlesList().getEnabledList().getGroup(0);
         EntryArticleGroup groupsToAdd = new EntryArticleGroup(group);
 
-        ArticleWithOptions articleWO = (ArticleWithOptions) group.getList().get(3);
+        Article articleWO = group.getList().get(3);
 
         int progressive = dataManager.getNProgressive(articleWO.getName(), 2);
         groupsToAdd.addArticleWithOptions(
@@ -291,6 +290,7 @@ public class DataManagerTest {
 
         /* Verify orders were flushed */
         int numPrima = dataManager.getOrdersTable().size();
+        //FIXME implementazione non finitA
         dataManager.closeCassaSession(identifier);
     }
 
@@ -305,13 +305,13 @@ public class DataManagerTest {
         Collection<Article> oldArticles = dataManager.getAllArticlesList().getArticlesList();
         
         List<Article> articles = new ArrayList<Article>();
-        Collection<ArticleOption> listaOpzioni = new ArrayList<ArticleOption>();
+        List<ArticleOption> listaOpzioni = new ArrayList<ArticleOption>();
         listaOpzioni.add(new ArticleOption(0, "cacca secca", true));
         listaOpzioni.add(new ArticleOption(1, "cacca liquida", true));
         articles.add(new Article(1,"fagiolo", 25));
         articles.add(new Article(2,"blabla", 35));
         articles.add(new Article(3,"merda dello stige", 5.5));
-        articles.add(new ArticleWithOptions(4,"yeah", 10.25, listaOpzioni));
+        articles.add(new Article(4,"yeah", 10.25, true, listaOpzioni));
         
         List<ArticleGroup> groups = new ArrayList<ArticleGroup>();
         groups.add(new ArticleGroup(1, "group", articles));

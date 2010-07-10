@@ -22,7 +22,6 @@ package gestionecassa.clients.cassa.gui;
 
 import gestionecassa.clients.gui.VisualListsMngr;
 import gestionecassa.clients.cassa.*;
-import gestionecassa.ArticleWithOptions;
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
 import gestionecassa.ArticlesList;
@@ -141,9 +140,8 @@ public final class GuiOrderPanel extends javax.swing.JPanel implements VariableV
             /* for every article in that group */
             for (Article article : articleGroup.getList()) {
                 GuiAbstrSingleEntryPanel tempPanel;
-                if (article instanceof ArticleWithOptions) {
-                    tempPanel = new GuiOrderArticleWithOptionsPanel(this,
-                                                (ArticleWithOptions)article,i);
+                if (article.hasOptions()) {
+                    tempPanel = new GuiOrderArticleWithOptionsPanel(this, article, i);
                 } else {
                     tempPanel = new GuiOrderArticlePanel(this, article, i);
                 }

@@ -17,7 +17,6 @@ package gestionecassa.clients.cassa.printing;
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
 import gestionecassa.ArticleOption;
-import gestionecassa.ArticleWithOptions;
 import gestionecassa.ArticlesList;
 import gestionecassa.order.EntryArticleGroup;
 import gestionecassa.order.Order;
@@ -62,7 +61,7 @@ public class PrinterHelperTest {
         if (!groups.get(0).getList().get(2).hasOptions()) {
             fail("Bad data backend");
         }
-        ArticleWithOptions art = (ArticleWithOptions) groups.get(0).getList().get(2);
+        Article art = groups.get(0).getList().get(2);
         List<PairObjectInteger<ArticleOption>> options =
                 new ArrayList<PairObjectInteger<ArticleOption>>();
         options.add(new PairObjectInteger<ArticleOption>(art.getOptions().get(0), 2));

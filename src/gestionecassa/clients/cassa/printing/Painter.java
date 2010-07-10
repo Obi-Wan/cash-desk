@@ -15,7 +15,6 @@
 package gestionecassa.clients.cassa.printing;
 
 import gestionecassa.Article;
-import gestionecassa.ArticleWithOptions;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -46,13 +45,13 @@ public class Painter implements Printable {
     final String option;
 
     /**
-     * Constructor for <code>ArticleWithOption</code>
+     * Constructor for <code>Article</code> with Option
      * 
      * @param article
      * @param prog
      * @param option
      */
-    public Painter(ArticleWithOptions article, int prog, String option) {
+    public Painter(Article article, int prog, String option) {
         this.article = article;
         this.progressive = prog;
         this.option = option;
@@ -105,13 +104,13 @@ public class Painter implements Printable {
 
         if (article.hasOptions()) {
             //debug only
-            if (option.equals("")) {
-                if (!((ArticleWithOptions)article).getOptions().contains("")) {
-                    throw new RuntimeException(
-                            "Option was not passed but the article has some, " +
-                            "different from the empty");
-                }
-            }
+//            if (option.equals("")) {
+//                if (!article.getOptions().contains("")) {
+//                    throw new RuntimeException(
+//                            "Option was not passed but the article has some, " +
+//                            "different from the empty");
+//                }
+//            }
             //end debug only
 
             centralString += ": " + option;

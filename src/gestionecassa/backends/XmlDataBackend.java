@@ -15,7 +15,6 @@
 package gestionecassa.backends;
 
 import gestionecassa.Admin;
-import gestionecassa.ArticleWithOptions;
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
 import gestionecassa.ArticleOption;
@@ -29,6 +28,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -89,7 +89,7 @@ public class XmlDataBackend implements BackendAPI_1 {
                     tempArt.addAttribute("options", "true");
                     Element tempOpzioni = tempArt.addElement("options");
 
-                    Collection<ArticleOption> options = ((ArticleWithOptions)art).getOptions();
+                    Collection<ArticleOption> options = art.getOptions();
                     for (ArticleOption option : options) {
                         tempOpzioni.addElement("option").addText(option.getName());
                     } //FIXME aggiungi altre parti di ArticleOption
@@ -141,13 +141,13 @@ public class XmlDataBackend implements BackendAPI_1 {
                 Article article;
                 if (tempRefArt.attribute("options").getValue().equals("true")) {
 
-                    Collection<ArticleOption> opts = new LinkedList<ArticleOption>();
+                    List<ArticleOption> opts = new LinkedList<ArticleOption>();
                     int idOpt = 0;
                     for (Object opt : tempRefArt.element("options").elements("option")) {
                         opts.add(new ArticleOption(idOpt++,((Element)opt).getText(),true));
                     }
 
-                    article = new ArticleWithOptions(id, name, price, opts);
+                    article = new Article(id, name, price, true, opts);
                 } else {
                     article = new Article(id, name, price);
                 }

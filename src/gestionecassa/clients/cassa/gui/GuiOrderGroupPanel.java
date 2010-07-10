@@ -22,7 +22,6 @@ package gestionecassa.clients.cassa.gui;
 
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
-import gestionecassa.ArticleWithOptions;
 import gestionecassa.clients.cassa.CassaAPI;
 import gestionecassa.clients.gui.RecordPanels;
 import gestionecassa.clients.gui.VariableVisualList;
@@ -134,8 +133,7 @@ public class GuiOrderGroupPanel extends GuiAbstrSingleEntryPanel implements Vari
 
             if (tempNumTot > 0) {
                 if (record.object.hasOptions()) {
-                    ArticleWithOptions article =
-                            (ArticleWithOptions)record.object;
+                    Article article = record.object;
                     GuiOrderArticleWithOptionsPanel articlePanel =
                             (GuiOrderArticleWithOptionsPanel) record.displayedPanel;
 

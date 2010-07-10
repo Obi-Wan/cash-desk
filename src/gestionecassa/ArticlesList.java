@@ -373,15 +373,15 @@ public class ArticlesList implements Serializable {
                     if (art.isEnabled()) {
                         if (art.hasOptions()) {
                             List<ArticleOption> options = new ArrayList<ArticleOption>();
-                            for (ArticleOption option : ((ArticleWithOptions)art).getOptions()) {
+                            for (ArticleOption option : art.getOptions()) {
                                 if (option.isEnabled()) {
                                     options.add(option);
                                 }
                             }
                             
-                            ArticleWithOptions newArt = 
-                                    new ArticleWithOptions(art.getId(),
-                                            art.getName(), art.getPrice(), options);
+                            Article newArt = 
+                                    new Article(art.getId(), art.getName(),
+                                                art.getPrice(), true, options);
                             newArt.setAvailabe(art.isAvailable());
                             tempGroup.addArticle(newArt);
                         } else {

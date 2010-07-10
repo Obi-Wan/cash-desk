@@ -18,7 +18,6 @@ import gestionecassa.Admin;
 import gestionecassa.Article;
 import gestionecassa.ArticleGroup;
 import gestionecassa.ArticleOption;
-import gestionecassa.ArticleWithOptions;
 import gestionecassa.ArticlesList;
 import gestionecassa.Cassiere;
 import gestionecassa.EventDate;
@@ -661,15 +660,14 @@ public class PostgreSQLDataBackendTest {
         List<PairObjectInteger<ArticleOption>> optionsList =
                 new ArrayList<PairObjectInteger<ArticleOption>>();
         optionsList.add(new PairObjectInteger<ArticleOption>(
-                ((ArticleWithOptions)articles.get(2)).getOptions().get(0), 2));
+                articles.get(2).getOptions().get(0), 2));
         optionsList.add(new PairObjectInteger<ArticleOption>(
-                ((ArticleWithOptions)articles.get(2)).getOptions().get(1), 3));
+                articles.get(2).getOptions().get(1), 3));
 
         Order tempOrder = new Order(testCassiere.getUsername(), "hell", 0,
                                     listOfArts.getSignature());
         EntryArticleGroup entry = new EntryArticleGroup(groups.get(0));
-        entry.addArticleWithOptions(
-                (ArticleWithOptions)articles.get(2), 5, 0, optionsList);
+        entry.addArticleWithOptions(articles.get(2), 5, 0, optionsList);
         tempOrder.addGroup(entry);
 
         backend.addNewOrder(tempOrder);
@@ -980,11 +978,11 @@ public class PostgreSQLDataBackendTest {
                                 ? "Dovrebbe aver opzioni ma non ne ha!"
                                 : "Non dovrebbe aver opzioni ma ne ha!",
                              testArticle.hasOptions(),rs.getBoolean("has_options"));
-                if (testArticle.hasOptions()) {
-                    for (ArticleOption option : ((ArticleWithOptions)testArticle).getOptions()) {
-                        testOptionPresence(option.getName());
-                    }
+
+                for (ArticleOption option : testArticle.getOptions()) {
+                    testOptionPresence(option.getName());
                 }
+                
             } catch (SQLException ex) {
                 fail("Failed in executing the query: " + query + "\n" + ex.getMessage());
             } finally {
