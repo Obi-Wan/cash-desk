@@ -362,13 +362,31 @@ public class ArticlesList implements Serializable {
      */
     public ArticlesList getEnabledList() {
         List<ArticleGroup> tempList = new ArrayList<ArticleGroup>();
+        
         for (ArticleGroup artGr : groups) {
-            ArticleGroup tempGroup =
-                    new ArticleGroup(artGr.getId(), artGr.getName());
-            if (tempGroup.isEnabled()) {
+            if (artGr.isEnabled()) {
+                ArticleGroup tempGroup =
+                        new ArticleGroup(artGr.getId(), artGr.getName());
+                tempGroup.setAvailabe(artGr.isAvailable());
+            
                 for (Article art : artGr.getList()) {
                     if (art.isEnabled()) {
-                        tempGroup.addArticle(art);
+                        if (art.hasOptions()) {
+                            List<ArticleOption> options = new ArrayList<ArticleOption>();
+                            for (ArticleOption option : ((ArticleWithOptions)art).getOptions()) {
+                                if (option.isEnabled()) {
+                                    options.add(option);
+                                }
+                            }
+                            
+                            ArticleWithOptions newArt = 
+                                    new ArticleWithOptions(art.getId(),
+                                            art.getName(), art.getPrice(), options);
+                            newArt.setAvailabe(art.isAvailable());
+                            tempGroup.addArticle(newArt);
+                        } else {
+                            tempGroup.addArticle(new Article(art));
+                        }
                     }
                 }
                 tempList.add(tempGroup);
