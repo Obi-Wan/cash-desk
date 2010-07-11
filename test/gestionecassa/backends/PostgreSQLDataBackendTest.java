@@ -230,6 +230,29 @@ public class PostgreSQLDataBackendTest {
 
         List<Article> artsInGroup = backend.loadArticlesOfGroup(1);
 
+        assertNotNull("Nno articles of group 1 are retrieved", artsInGroup);
+//        for (Article article : artsInGroup) {
+//            System.out.println("- Article: " + article.getName() +
+//                               "\n  Num options: " + article.getOptions().size());
+//            for (ArticleOption articleOption : article.getOptions()) {
+//                assertNotNull("Opzione null", articleOption);
+//                assertNotNull("Nome null", articleOption.getName());
+//                assertNotNull("Descrizione null", articleOption.getDescription());
+//                System.out.println("    Option: " + articleOption.getName() +
+//                        "\n    Description: " + articleOption.getDescription());
+//            }
+//        }
+//        for (Article article : groups.get(0).getList()) {
+//            System.out.println("- Article: " + article.getName() +
+//                               "\n  Num options: " + article.getOptions().size());
+//            for (ArticleOption articleOption : article.getOptions()) {
+//                assertNotNull("Opzione null", articleOption);
+//                assertNotNull("Nome null", articleOption.getName());
+//                assertNotNull("Descrizione null", articleOption.getDescription());
+//                System.out.println("    Option: " + articleOption.getName() +
+//                        "\n    Description: " + articleOption.getDescription());
+//            }
+//        }
         assertEquals(artsInGroup, groups.get(0).getList());
     }
 
