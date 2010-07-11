@@ -139,7 +139,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
         tempList.add("id_option serial PRIMARY KEY");
         tempList.add("id_article integer REFERENCES articles ON DELETE CASCADE");
         tempList.add("name text");
-//        tempList.add("description text");
+        tempList.add("description text");
         tables.put("09_options", tempList);
 
         tempList = new ArrayList<String>();
@@ -931,20 +931,23 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @throws IOException
      */
     private List<ArticleOption> loadOptionsOfArticle(int art_id) throws IOException {
-        String queryOpts =  "SELECT id_option, name" +
+        String queryOpts =  "SELECT id_option, name, description" +
                             "   FROM options" +
-                            "   WHERE id_article = '" + art_id + "';";
+                            "   WHERE id_article = '" + art_id + "'" +
+                            "   ORDER BY id_option;";
         try {
             Statement stOpts = db.createStatement();
 
             try {
                 ResultSet rsOpts = stOpts.executeQuery(queryOpts);
-                List<ArticleOption> options = new LinkedList<ArticleOption>();
-                while (rsOpts.next()) {
+                List<ArticleOption> options = new ArrayList<ArticleOption>();
+                while(rsOpts.next()) {
+                    String descr = rsOpts.getString("description");
                     options.add(new ArticleOption(rsOpts.getInt("id_option"),
-                                                  rsOpts.getString("name"), true)
+                                                  rsOpts.getString("name"), true,
+                                                  (descr != null) ? descr : "")
                                 );
-                }//FIXME carica anche la descrizione
+                }
                 return options;
             } catch (SQLException ex) {
                 logger.error("Errore con la query: " + queryOpts, ex);

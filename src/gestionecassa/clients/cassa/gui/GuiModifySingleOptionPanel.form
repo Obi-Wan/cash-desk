@@ -28,7 +28,9 @@
               <Component id="jLabelNum" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabelOptionName" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="218" max="32767" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="jLabelDescript" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="135" max="32767" attributes="0"/>
               <Component id="jButtonLess" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="jSpinnerNum" min="-2" pref="48" max="-2" attributes="0"/>
@@ -48,6 +50,7 @@
                   <Component id="jSpinnerNum" alignment="3" min="-2" pref="21" max="-2" attributes="0"/>
                   <Component id="jButtonLess" alignment="3" min="-2" pref="21" max="-2" attributes="0"/>
                   <Component id="jLabelNum" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelDescript" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -109,6 +112,11 @@
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelNum">
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelDescript">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="descrizione"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

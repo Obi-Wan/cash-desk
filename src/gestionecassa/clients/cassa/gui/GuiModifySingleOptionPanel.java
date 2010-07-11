@@ -21,6 +21,7 @@
 package gestionecassa.clients.cassa.gui;
 
 import gestionecassa.ArticleOption;
+import java.awt.Color;
 
 /**
  *
@@ -43,8 +44,11 @@ public class GuiModifySingleOptionPanel extends GuiAbstrMoreLessPanel {
 
         jSpinnerNum.setModel(spinnerModel);
 
-        jLabelOptionName.setText(option.getName());
+        jLabelOptionName.setText(option.getName() + " :");
+        jLabelDescript.setText(option.getDescription());
         jLabelNum.setText((indexPanel + 1) + ".");
+
+        jLabelDescript.setForeground(Color.GRAY);
     }
 
     /** This method is called from within the constructor to
@@ -61,6 +65,7 @@ public class GuiModifySingleOptionPanel extends GuiAbstrMoreLessPanel {
     jSpinnerNum = new javax.swing.JSpinner();
     jButtonLess = new javax.swing.JButton();
     jLabelNum = new javax.swing.JLabel();
+    jLabelDescript = new javax.swing.JLabel();
 
     setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -91,6 +96,8 @@ public class GuiModifySingleOptionPanel extends GuiAbstrMoreLessPanel {
       }
     });
 
+    jLabelDescript.setText("descrizione");
+
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
     this.setLayout(layout);
     layout.setHorizontalGroup(
@@ -100,7 +107,9 @@ public class GuiModifySingleOptionPanel extends GuiAbstrMoreLessPanel {
         .addComponent(jLabelNum)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jLabelOptionName)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 218, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+        .addComponent(jLabelDescript)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 135, Short.MAX_VALUE)
         .addComponent(jButtonLess, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jSpinnerNum, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -117,7 +126,8 @@ public class GuiModifySingleOptionPanel extends GuiAbstrMoreLessPanel {
           .addComponent(jButtonMore, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jSpinnerNum, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jButtonLess, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jLabelNum))
+          .addComponent(jLabelNum)
+          .addComponent(jLabelDescript))
         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
   }// </editor-fold>//GEN-END:initComponents
@@ -134,6 +144,7 @@ public class GuiModifySingleOptionPanel extends GuiAbstrMoreLessPanel {
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton jButtonLess;
   private javax.swing.JButton jButtonMore;
+  private javax.swing.JLabel jLabelDescript;
   private javax.swing.JLabel jLabelNum;
   private javax.swing.JLabel jLabelOptionName;
   private javax.swing.JSpinner jSpinnerNum;
