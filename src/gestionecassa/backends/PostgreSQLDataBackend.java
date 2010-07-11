@@ -139,6 +139,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
         tempList.add("id_option serial PRIMARY KEY");
         tempList.add("id_article integer REFERENCES articles ON DELETE CASCADE");
         tempList.add("name text");
+        tempList.add("enabled boolean");
         tempList.add("description text");
         tables.put("09_options", tempList);
 
@@ -931,7 +932,7 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
      * @throws IOException
      */
     private List<ArticleOption> loadOptionsOfArticle(int art_id) throws IOException {
-        String queryOpts =  "SELECT id_option, name, description" +
+        String queryOpts =  "SELECT id_option, name, enabled, description" +
                             "   FROM options" +
                             "   WHERE id_article = '" + art_id + "'" +
                             "   ORDER BY id_option;";
@@ -944,7 +945,8 @@ public class PostgreSQLDataBackend implements BackendAPI_2 {
                 while(rsOpts.next()) {
                     String descr = rsOpts.getString("description");
                     options.add(new ArticleOption(rsOpts.getInt("id_option"),
-                                                  rsOpts.getString("name"), true,
+                                                  rsOpts.getString("name"),
+                                                  rsOpts.getBoolean("enabled"),
                                                   (descr != null) ? descr : "")
                                 );
                 }
