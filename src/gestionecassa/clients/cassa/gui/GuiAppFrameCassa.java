@@ -47,6 +47,8 @@ public class GuiAppFrameCassa extends GuiAppFrame<CassaAPI> {
         super(baseClient);
         initComponents();
 
+        this.setTitle("Cassa");
+
         statusPanel = new GuiStatusCassaPanel(baseClient.getHostname());
 
         GuiHelper.MngBorderLayout.init(getContentPane());
