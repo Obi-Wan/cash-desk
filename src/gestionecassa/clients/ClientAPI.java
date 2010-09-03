@@ -62,6 +62,11 @@ public interface ClientAPI<PrefsType extends BaseClientPrefs> {
      * @throws RemoteException
      */
     public void logout() throws RemoteException;
+
+    /**
+     * Checks errors in the threads running apart from the main one
+     */
+    public void checkErrors();
     
     /**
      * Starts the thread deputated to keep connection alive

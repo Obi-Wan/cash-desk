@@ -16,6 +16,7 @@ package gestionecassa.clients.administration.cli;
 
 import gestionecassa.clients.administration.Administration;
 import gestionecassa.clients.administration.AdministrationAPI;
+import gestionecassa.clients.gui.GuiAppFrame.MessageType;
 import gestionecassa.exceptions.WrongLoginException;
 import java.io.Console;
 import java.net.MalformedURLException;
@@ -194,5 +195,11 @@ public class AdministrationCLI extends Administration {
         String greeting = "This is the CLI administrative client of Cash-Desk" +
                 " project.";
         con.writer().println(greeting);
+    }
+
+    @Override
+    protected void showMessage(String msg, MessageType type) {
+        con.writer().println("Error: " + type.toString());
+        con.writer().println(msg);
     }
 }

@@ -41,7 +41,6 @@ import gestionecassa.backends.BackendAPI_2;
 import gestionecassa.backends.PostgreSQLDataBackend;
 import gestionecassa.backends.XmlDataBackend;
 import java.rmi.Naming;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 
@@ -360,12 +359,13 @@ public class Server extends UnicastRemoteObject
      * @throws  RemoteException because we are in RMI context.
      */
     @Override
-    public void keepAlive(int sessionID) throws  RemoteException {
+    public void keepAlive(int sessionID)
+            throws  RemoteException, NotExistingSessionException {
         try {
             sessionMngr.keepAlive(sessionID);
         } catch (NotExistingSessionException ex) {
             logger.warn("Sessione con quell'id inesistente", ex);
-            throw new RemoteException("Sessione con quell'id inesistente", ex);
+            throw ex;
         }
     }
     
@@ -374,7 +374,8 @@ public class Server extends UnicastRemoteObject
      * @throws  RemoteException because we are in RMI context.
      */
     @Override
-    public void closeService(int sessionID) throws  RemoteException {
+    public void closeService(int sessionID)
+            throws  RemoteException {
         try {
             sessionMngr.closeService(sessionID);
         } catch (NotExistingSessionException ex) {

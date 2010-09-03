@@ -11,6 +11,7 @@ import gestionecassa.order.Order;
 import gestionecassa.clients.gui.GuiLoginPanel;
 import gestionecassa.clients.BaseClient;
 import gestionecassa.clients.cassa.printing.PrinterHelper;
+import gestionecassa.clients.gui.GuiAppFrame.MessageType;
 import gestionecassa.exceptions.*;
 import gestionecassa.server.ServerRMICommon;
 import gestionecassa.server.clientservices.ServiceRMICassiereAPI;
@@ -230,5 +231,38 @@ public class Cassa extends BaseClient<ServerRMICommon, CassaPrefs>
     @Override
     public Logger getLoggerUI() {
         return loggerGUI;
+    }
+
+    @Override
+    public void checkErrors() {
+        if (threadConnessione != null) {
+            switch (threadConnessione.getErrorState()) {
+                case NotExistingSessionError: {
+                    appFrame.showMessageDialog(
+                            "The connection with the server has expired",
+                            MessageType.ErrorComunication);
+                    try {
+                        logout();
+                    } catch (RemoteException ex) {
+                        logger.warn("Error in logout after NotExistingSession "
+                                + "exception in the"
+                                + " connection daemon: may not be severe", ex);
+                    }
+                    break;
+                }
+                case RemoteError: {
+                    appFrame.showMessageDialog(
+                            "Remote error in the connection daemon",
+                            MessageType.ErrorComunication);
+                    try {
+                        logout();
+                    } catch (RemoteException ex) {
+                        logger.warn("Error in logout after remote exception in the"
+                                + " connection daemon: may not be severe", ex);
+                    }
+                    break;
+                }
+            }
+        }
     }
 }

@@ -5,6 +5,7 @@
 
 package gestionecassa.server;
 
+import gestionecassa.exceptions.NotExistingSessionException;
 import gestionecassa.exceptions.WrongLoginException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -35,8 +36,10 @@ public interface ServerRMICommon extends Remote {
      *
      * @param sessionID Id of the session to keep alive
      * @throws  RemoteException because we are in RMI context.
+     * @throws NotExistingSessionException 
      */
-    public void keepAlive(int sessionID) throws RemoteException;
+    public void keepAlive(int sessionID)
+            throws RemoteException, NotExistingSessionException;
 
     /**
      * Method that tell's to the thread to shut down.

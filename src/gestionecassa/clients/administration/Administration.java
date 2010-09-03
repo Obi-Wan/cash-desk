@@ -9,6 +9,7 @@ import gestionecassa.Article;
 import gestionecassa.Log;
 import gestionecassa.Person;
 import gestionecassa.clients.BaseClient;
+import gestionecassa.clients.gui.GuiAppFrame.MessageType;
 import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.DuplicateArticleException;
 import gestionecassa.exceptions.NotExistingGroupException;
@@ -24,7 +25,7 @@ import org.apache.log4j.Logger;
  *
  * @author ben
  */
-public class Administration extends BaseClient<ServerRMIAdmin, AdminPrefs>
+abstract public class Administration extends BaseClient<ServerRMIAdmin, AdminPrefs>
         implements AdministrationAPI {
 
     /**
@@ -214,4 +215,37 @@ public class Administration extends BaseClient<ServerRMIAdmin, AdminPrefs>
 //    public void moveRMIArticle(Article article, int newPos) throws RemoteException {
 //        server.moveRMIArticle(article, newPos);
 //    }
+
+    abstract protected void showMessage(String msg, MessageType type);
+
+    @Override
+    public void checkErrors() {
+        if (threadConnessione != null) {
+            switch (threadConnessione.getErrorState()) {
+                case NotExistingSessionError: {
+                    showMessage("The connection with the server has expired",
+                            MessageType.ErrorComunication);
+                    try {
+                        logout();
+                    } catch (RemoteException ex) {
+                        logger.warn("Error in logout after NotExistingSession "
+                                + "exception in the connection daemon: may not be "
+                                + "severe", ex);
+                    }
+                    break;
+                }
+                case RemoteError: {
+                    showMessage("Remote error in the connection daemon",
+                            MessageType.ErrorComunication);
+                    try {
+                        logout();
+                    } catch (RemoteException ex) {
+                        logger.warn("Error in logout after remote exception in the"
+                                + " connection daemon: may not be severe", ex);
+                    }
+                    break;
+                }
+            }
+        }
+    }
 }

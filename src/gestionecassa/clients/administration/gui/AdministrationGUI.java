@@ -19,6 +19,7 @@ import gestionecassa.clients.administration.AdminPrefs;
 import gestionecassa.clients.gui.GuiLoginPanel;
 import gestionecassa.clients.administration.Administration;
 import gestionecassa.clients.administration.AdministrationAPI;
+import gestionecassa.clients.gui.GuiAppFrame.MessageType;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 
@@ -99,5 +100,10 @@ public class AdministrationGUI extends Administration implements ClientAPI<Admin
         super.logout();
         
         appFrame.setdownAfterLogout();
+    }
+
+    @Override
+    protected void showMessage(String msg, MessageType type) {
+        appFrame.showMessageDialog(msg, type);
     }
 }
