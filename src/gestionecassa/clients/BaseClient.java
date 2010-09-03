@@ -10,6 +10,8 @@ import gestionecassa.XmlPreferencesHandler;
 import gestionecassa.exceptions.WrongLoginException;
 import gestionecassa.server.ServerRMICommon;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -201,20 +203,18 @@ abstract public class BaseClient
      * 
      * @return reference to the server.
      * 
-     * @throws gestionecassa.exceptions.WrongLoginException
-     * @throws java.rmi.RemoteException
-     * @throws java.rmi.NotBoundException
+     * @throws WrongLoginException
+     * @throws RemoteException
+     * @throws NotBoundException
+     * @throws MalformedURLException
      */
     @SuppressWarnings("unchecked")
     protected Remote sendDatiLogin(String username, String password, String serverName)
-            throws WrongLoginException, RemoteException, NotBoundException
+            throws WrongLoginException, RemoteException, NotBoundException, MalformedURLException
     {
         try {
             /* Login phase */
-            java.rmi.registry.Registry registry =
-                    java.rmi.registry.LocateRegistry.getRegistry(serverName);
-            
-            serverCentrale = (ServerType) registry.lookup("ServerRMI");
+            serverCentrale = (ServerType) Naming.lookup("//" + serverName + "/ServerRMI");
 
             sessionID = serverCentrale.doRMILogin(username, password);
 
@@ -222,11 +222,15 @@ abstract public class BaseClient
              * server creer un nuovo thread che si chiama sessionID, il client
              * far poi la lookup al suo sessionID e cos comunica cn il suo thread
              */
-            return registry.lookup("Server" + sessionID);
+            return Naming.lookup("//" + serverName + "/Server" + sessionID);
 
         } catch (RemoteException ex) {
 
             logger.warn("RemoteException nel tentativo di connessione",ex);
+            throw ex;
+        } catch (MalformedURLException ex) {
+
+            logger.warn("The name of the server is wrong: ",ex);
             throw ex;
         } catch (NotBoundException ex) {
             

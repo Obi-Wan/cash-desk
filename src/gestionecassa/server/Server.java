@@ -25,6 +25,7 @@ import gestionecassa.server.datamanager.DataManager;
 import gestionecassa.Admin;
 import gestionecassa.Cassiere;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -39,6 +40,8 @@ import gestionecassa.backends.BackendAPI_1;
 import gestionecassa.backends.BackendAPI_2;
 import gestionecassa.backends.PostgreSQLDataBackend;
 import gestionecassa.backends.XmlDataBackend;
+import java.rmi.Naming;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 
@@ -177,9 +180,12 @@ public class Server extends UnicastRemoteObject
 
             System.out.print(" - Unbinding from RMI register... ");
             try {
-                registry.unbind("ServerRMI");
+                Naming.unbind("ServerRMI");
                 System.out.println("done.");
 
+            } catch (MalformedURLException ex) {
+                logger.warn("Error while accessing registry", ex);
+                System.out.println("error (read in the log).");
             } catch (AccessException ex) {
                 logger.warn("Error while accessing registry", ex);
                 System.out.println("error (read in the log).");
@@ -216,7 +222,7 @@ public class Server extends UnicastRemoteObject
                 registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
 
                 try {
-                    registry.rebind("ServerRMI", Server.getInstance());
+                    Naming.rebind("ServerRMI", Server.getInstance());
 
                     new Thread(Server.getInstance()).start();
 
@@ -333,13 +339,18 @@ public class Server extends UnicastRemoteObject
      */
     private void bindService(SessionRecord record) throws RemoteException {
         try {
-            registry.rebind("Server" + record.sessionId, record.serviceThread);
-//            logger.debug("Registrato nuovo working thread" +
-//                    " raggiungibile a: /Server" + record.sessionId);
+            Naming.rebind("Server" + record.sessionId, record.serviceThread);
+            //                    " raggiungibile a: /Server" + record.sessionId);
+            //                    " raggiungibile a: /Server" + record.sessionId);
         } catch (RemoteException ex) {
             logger.error("non e' stato possible registrare" +
                     " la classe del working thread: remote exception",ex);
             throw ex;
+        } catch (MalformedURLException ex) {
+            logger.error("non e' stato possible registrare" +
+                    " la classe del working thread: remote exception",ex);
+            throw new RemoteException("non e' stato possible registrare" +
+                    " la classe del working thread: remote exception", ex);
         }
     }
     

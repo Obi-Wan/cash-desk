@@ -7,6 +7,7 @@ package gestionecassa.clients;
 
 import gestionecassa.ArticlesList;
 import gestionecassa.exceptions.*;
+import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import org.apache.log4j.Logger;
@@ -51,9 +52,10 @@ public interface ClientAPI<PrefsType extends BaseClientPrefs> {
      * @throws gestionecassa.exceptions.WrongLoginException
      * @throws java.rmi.RemoteException
      * @throws java.rmi.NotBoundException
+     * @throws MalformedURLException 
      */
     public void login(String username, String password, String serverName)
-            throws WrongLoginException, RemoteException, NotBoundException;
+            throws WrongLoginException, RemoteException, NotBoundException, MalformedURLException;
 
     /**
      * Logs out the current user from the remote app-server

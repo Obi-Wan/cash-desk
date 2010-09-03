@@ -15,6 +15,7 @@ import gestionecassa.exceptions.NotExistingGroupException;
 import gestionecassa.exceptions.WrongLoginException;
 import gestionecassa.server.clientservices.ServiceRMIAdminAPI;
 import gestionecassa.server.ServerRMIAdmin;
+import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import org.apache.log4j.Logger;
@@ -83,7 +84,7 @@ public class Administration extends BaseClient<ServerRMIAdmin, AdminPrefs>
      */
     @Override
     public void login(String username, String password, String serverName)
-            throws WrongLoginException, RemoteException, NotBoundException
+            throws WrongLoginException, RemoteException, NotBoundException, MalformedURLException
     {
         server = (ServiceRMIAdminAPI)
                 sendDatiLogin(username, password, serverName);

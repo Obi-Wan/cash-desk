@@ -24,6 +24,7 @@ import gestionecassa.clients.*;
 import gestionecassa.exceptions.WrongLoginException;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import javax.swing.AbstractAction;
@@ -288,6 +289,10 @@ public class GuiLoginPanel extends javax.swing.JPanel {
         } catch (NotBoundException ex) {
             frame.showMessageDialog(
                     "La classe non e' stata registrata sul server",
+                    GuiAppFrame.MessageType.ErrorComunication);
+        } catch (MalformedURLException ex) {
+            frame.showMessageDialog(
+                    "L'indirizzo del server non è giusto",
                     GuiAppFrame.MessageType.ErrorComunication);
         } finally {
             waiting.dispose();

@@ -21,6 +21,7 @@ public interface CassaAPI extends ClientAPI<CassaPrefs> {
      *
      *
      * @throws java.rmi.RemoteException
+     * @throws IOException
      */
     void delRMILastOrder() throws RemoteException, IOException;
 
@@ -29,6 +30,8 @@ public interface CassaAPI extends ClientAPI<CassaPrefs> {
      * @param nuovoOrdine
      *
      * @throws java.rmi.RemoteException
+     * @throws IOException
+     * @throws WrongArticlesListException
      */
     void sendRMINewOrder(Order nuovoOrdine)
             throws RemoteException, IOException, WrongArticlesListException;

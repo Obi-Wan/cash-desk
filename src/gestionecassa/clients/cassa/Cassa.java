@@ -15,6 +15,7 @@ import gestionecassa.exceptions.*;
 import gestionecassa.server.ServerRMICommon;
 import gestionecassa.server.clientservices.ServiceRMICassiereAPI;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -118,10 +119,11 @@ public class Cassa extends BaseClient<ServerRMICommon, CassaPrefs>
      * @throws gestionecassa.exceptions.WrongLoginException
      * @throws java.rmi.RemoteException
      * @throws java.rmi.NotBoundException
+     * @throws MalformedURLException
      */
     @Override
     public void login(String username, String password, String serverName)
-            throws WrongLoginException, RemoteException, NotBoundException
+            throws WrongLoginException, RemoteException, NotBoundException, MalformedURLException
     {
         server = (ServiceRMICassiereAPI)
                 sendDatiLogin(username, password, serverName);
