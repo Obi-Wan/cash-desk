@@ -126,7 +126,7 @@ public class Cassa extends BaseClient<ServerRMICommon, CassaPrefs>
             throws WrongLoginException, RemoteException, NotBoundException, MalformedURLException
     {
         server = (ServiceRMICassiereAPI)
-                sendDatiLogin(username, password, serverName);
+                sendLoginData(username, password, serverName);
 
         setupAfterLogin(username);
     }

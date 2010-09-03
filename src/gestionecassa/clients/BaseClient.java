@@ -209,7 +209,7 @@ abstract public class BaseClient
      * @throws MalformedURLException
      */
     @SuppressWarnings("unchecked")
-    protected Remote sendDatiLogin(String username, String password, String serverName)
+    protected Remote sendLoginData(String username, String password, String serverName)
             throws WrongLoginException, RemoteException, NotBoundException, MalformedURLException
     {
         try {

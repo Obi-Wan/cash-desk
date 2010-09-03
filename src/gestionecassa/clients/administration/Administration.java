@@ -60,7 +60,7 @@ public class Administration extends BaseClient<ServerRMIAdmin, AdminPrefs>
             throws ActorAlreadyExistingException, RemoteException
     {
         try {
-            server.sendRMIDatiRegistrazione(user);
+            server.sendRMIRegistrationData(user);
             // FIXME ora dovre recuperar la nuova lista di utenti e mostrarla
 
         } catch (RemoteException e) {
@@ -87,7 +87,7 @@ public class Administration extends BaseClient<ServerRMIAdmin, AdminPrefs>
             throws WrongLoginException, RemoteException, NotBoundException, MalformedURLException
     {
         server = (ServiceRMIAdminAPI)
-                sendDatiLogin(username, password, serverName);
+                sendLoginData(username, password, serverName);
 
         setupAfterLogin(username);
     }

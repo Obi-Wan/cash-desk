@@ -27,9 +27,8 @@ public interface ServiceRMIAdminAPI extends Remote, Serializable {
      *
      * @throws RemoteException Throws a remote exception, because we are aon RMI context.
      * @throws ActorAlreadyExistingException Signals if the actor already exists.
-     * @throws WrongLoginException
      */
-    public void sendRMIDatiRegistrazione(Person user)
+    public void sendRMIRegistrationData(Person user)
             throws RemoteException, ActorAlreadyExistingException;
 
 
@@ -45,9 +44,12 @@ public interface ServiceRMIAdminAPI extends Remote, Serializable {
     /**
      * Adds an article to the common list.
      *
+     * @param group
      * @param article
      *
      * @throws RemoteException
+     * @throws DuplicateArticleException
+     * @throws NotExistingGroupException
      */
     void addRMIArticle(int group, Article article) throws RemoteException,
             DuplicateArticleException, NotExistingGroupException;
@@ -55,9 +57,12 @@ public interface ServiceRMIAdminAPI extends Remote, Serializable {
     /**
      * Adds an article to the common list.
      *
+     * @param group
      * @param article
      *
      * @throws RemoteException
+     * @throws DuplicateArticleException
+     * @throws NotExistingGroupException
      */
     void addRMIArticle(String group, Article article) throws RemoteException,
             DuplicateArticleException, NotExistingGroupException;
@@ -65,6 +70,7 @@ public interface ServiceRMIAdminAPI extends Remote, Serializable {
     /**
      * Enables/disables an article at the index specified by position.
      *
+     * @param group
      * @param position
      * @param enable
      *

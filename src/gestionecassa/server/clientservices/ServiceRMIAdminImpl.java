@@ -63,7 +63,7 @@ public class ServiceRMIAdminImpl extends SharedServerService
      * @throws ActorAlreadyExistingException
      */
     @Override
-    public void sendRMIDatiRegistrazione(Person user)
+    public void sendRMIRegistrationData(Person user)
             throws    RemoteException, ActorAlreadyExistingException {
 
         //se lo username non e' presente lo posso registrare.
