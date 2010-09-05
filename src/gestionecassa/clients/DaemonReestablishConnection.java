@@ -65,6 +65,7 @@ public class DaemonReestablishConnection extends Thread {
         this.logger = logger;
         this.id = id;
         this.server = server;
+        this.errorState = DaemonErrorState.NoError;
     }
     
     /**

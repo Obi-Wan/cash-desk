@@ -111,6 +111,7 @@ abstract public class BaseClient
         try {
             while (stopApp == false) {
                 Thread.sleep(100);
+                this.checkErrors();
             }
         } catch (InterruptedException ex) {
             System.out.println(ex.getMessage());
