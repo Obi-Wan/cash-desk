@@ -19,9 +19,12 @@ import gestionecassa.ArticleOption;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
- *
+ * Prints every article of the order, managing their order.
  * @author ben
  */
 public class TextPainter {
@@ -31,6 +34,17 @@ public class TextPainter {
      */
     BufferedWriter outputStream;
 
+    List<RecordArticleWithPerparation> preps;
+
+    final static List<String> sentences;
+
+    static {
+        sentences = new ArrayList<String>();
+        sentences.add("Emesso da:");
+        sentences.add("Per il cliente:");
+        sentences.add("Per l'addetto:");
+    }
+
     /**
      * Constructor tat initializes the file descriptor and the name of who
      * emitted the order
@@ -39,8 +53,10 @@ public class TextPainter {
      */
     public TextPainter(String username) throws IOException {
         outputStream = new BufferedWriter(new FileWriter("output.txt"));
-        outputStream.write("  " + "Emesso da:\n  -> " + username.toUpperCase() +
-                " <-\n\n\n");
+        outputStream.write("  " + sentences.get(0) + "\n  -> " +
+                username.toUpperCase() + " <-\n\n\n");
+
+        preps = new LinkedList<RecordArticleWithPerparation>();
     }
 
     /**
@@ -78,32 +94,59 @@ public class TextPainter {
                     " options");
         }
         
-        for (int i = 0; i < 2; i++) {
-
-            outputStream.write("  " + String.format("N. %03d", prog) + "\n");
-
-            String centralString =
-                    "  " + article.getName() + ":\n" + "  " + option.getName();
-            centralString = centralString.toUpperCase();
-
-            outputStream.write(centralString + "\n\n\n");
-        }
-        outputStream.flush();
+        preps.add(new RecordArticleWithPerparation(article, prog, option));
     }
 
     /**
-     * It actualy prints and closes the file descriptor.
+     * Adds last pieces and closes the file descriptor.
+     * @throws IOException
+     */
+    public void closePrint() throws IOException {
+        if (!preps.isEmpty()) {
+            for (int i = 0; i < 2; i++) {
+                outputStream.write("  " + "-----------------\n  " +
+                                    sentences.get(i+1) + "\n\n\n");
+                for (RecordArticleWithPerparation record : preps) {
+                    outputStream.write("  " +
+                            String.format("N. %03d", record.prog) + "\n");
+
+                    String centralString = "  " + record.article.getName() +
+                                        ":\n" + "  " + record.option.getName();
+                    centralString = centralString.toUpperCase();
+                    outputStream.write(centralString + "\n\n\n");
+                }
+            }
+        }
+        outputStream.write("  " + "-----------------\n\n\n");
+        outputStream.flush();
+        outputStream.close();
+    }
+
+    /**
+     * It actualy prints
      *
      * @throws IOException
      * @throws InterruptedException
      */
     public void doPrint() throws IOException, InterruptedException {
-        outputStream.write("  " + "-----------------\n\n\n");
-        outputStream.flush();
-        outputStream.close();
-
         String cmd[] = {"lpr", "-o", "PrintQuality=Text", "output.txt"};
         Runtime run = Runtime.getRuntime();
         run.exec(cmd).waitFor();
+    }
+
+    /**
+     * Stores articles that need preparation
+     */
+    private class RecordArticleWithPerparation {
+        Article article;
+        int prog;
+        ArticleOption option;
+
+        public RecordArticleWithPerparation(Article article, int prog,
+                ArticleOption option) {
+            this.article = article;
+            this.prog = prog;
+            this.option = option;
+        }
     }
 }

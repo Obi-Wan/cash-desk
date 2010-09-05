@@ -17,6 +17,7 @@ package gestionecassa.clients.cassa.printing;
 import gestionecassa.Article;
 import gestionecassa.ArticleOption;
 import gestionecassa.Log;
+import gestionecassa.order.EntryArticleGroup;
 import gestionecassa.order.PairObjectInteger;
 import gestionecassa.order.EntrySingleArticleWithOption;
 import gestionecassa.order.Order;
@@ -52,22 +53,25 @@ public class PrinterHelper extends Thread {
         try {
             TextPainter painter = new TextPainter(order.getUsername());
             
-            for (PairObjectInteger<Article> entrySingleArticle : order.getArticlesSold()) {
-                if (entrySingleArticle.object.hasOptions()) {
-                    EntrySingleArticleWithOption entry =
-                            (EntrySingleArticleWithOption)entrySingleArticle;
-                    int prog = entry.startProgressive;
-                    for (PairObjectInteger<ArticleOption> entrySingleOption : entry.numPartial) {
-                        for (int i = 0; i < entrySingleOption.numTot; i++) {
-                            painter.addArticleWOptions(entrySingleArticle.object,
-                                    prog++, entrySingleOption.object);
+            for (EntryArticleGroup entryGroup : order.getGroups()) {
+                for (PairObjectInteger<Article> entrySingleArticle : entryGroup.articles) {
+                    if (entrySingleArticle.object.hasOptions()) {
+                        EntrySingleArticleWithOption entry =
+                                (EntrySingleArticleWithOption)entrySingleArticle;
+                        int prog = entry.startProgressive;
+                        for (PairObjectInteger<ArticleOption> entrySingleOption : entry.numPartial) {
+                            for (int i = 0; i < entrySingleOption.numTot; i++) {
+                                painter.addArticleWOptions(entrySingleArticle.object,
+                                        prog++, entrySingleOption.object);
+                            }
                         }
+                    } else {
+                        painter.addArticle(entrySingleArticle.object,
+                                entrySingleArticle.numTot);
                     }
-                } else {
-                    painter.addArticle(entrySingleArticle.object,
-                            entrySingleArticle.numTot);
                 }
             }
+            painter.closePrint();
             painter.doPrint();
 
         } catch (InterruptedException ex) {
