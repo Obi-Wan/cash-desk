@@ -58,6 +58,16 @@ public class Person {
     }
 
     /**
+     * Copy construcotr
+     * 
+     * @param old The person to copy from
+     * @param newPassword The new password for the person 
+     */
+    public Person(Person old, String newPassword) {
+        this(old.id, old.username, newPassword, old.enabled);
+    }
+
+    /**
      * Explicit construcotr
      *
      * @param id 

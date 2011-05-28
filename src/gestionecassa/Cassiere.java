@@ -30,6 +30,16 @@ public class Cassiere extends Person {
     }
 
     /**
+     * Copy constructor
+     *
+     * @param old the Cassiere to copy from.
+     * @param newPassword The new Password 
+     */
+    public Cassiere(Cassiere old, String newPassword) {
+        this(old.id, old.username, newPassword, old.enabled);
+    }
+
+    /**
      * Creates a Cassiere from from specified fields
      *
      * @param idCassiere The id of cassiere

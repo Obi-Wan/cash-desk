@@ -24,10 +24,20 @@ public class Admin extends Person {
     /**
      * Copy constructor
      *
-     * @param person old Person class from which we copy information
+     * @param person old Admin class from which we copy information
      */
-    public Admin(Person person) {
+    public Admin(Admin person) {
         this(person.id, person.username, person.password, person.enabled);
+    }
+
+    /**
+     * Copy constructor
+     *
+     * @param old the Admin to copy from.
+     * @param newPassword The new Password 
+     */
+    public Admin(Admin old, String newPassword) {
+        this(old.id, old.username, newPassword, old.enabled);
     }
 
     /**

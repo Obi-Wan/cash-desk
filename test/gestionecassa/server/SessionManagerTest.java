@@ -49,7 +49,8 @@ public class SessionManagerTest {
         user3 = new Admin(3, "Admin1", "Admin1");
         user4 = new Cassiere((Cassiere)user1);
 
-        dataMngr = new DataManager(new BackendStub_2(), "", new BackendStub_1());
+        dataMngr = new DataManager(new BackendStub_2(), new ServerPrefs(),
+                new BackendStub_1());
     }
 
     @BeforeClass

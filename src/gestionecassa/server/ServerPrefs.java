@@ -42,6 +42,11 @@ public class ServerPrefs extends Preferences {
      * the same user.
      */
     public boolean kickOffOnNewSession;
+    
+    /**
+     * Tells if the passwords need to be hashed or not.
+     */
+    public boolean digestPasswords;
 
     /**
      * Default constructor
@@ -53,9 +58,9 @@ public class ServerPrefs extends Preferences {
     public ServerPrefs(Integer securityLevel, String dbUrl, Boolean trustOrders,
             Boolean kickoff) {
         this.securityLevel = new Integer(securityLevel);
-        this.dbUrl = new String(dbUrl);
-        this.trustOrders = new Boolean(trustOrders);
-        this.kickOffOnNewSession = new Boolean(kickoff);
+        this.dbUrl = dbUrl;
+        this.trustOrders = trustOrders;
+        this.kickOffOnNewSession = kickoff;
     }
 
     /**

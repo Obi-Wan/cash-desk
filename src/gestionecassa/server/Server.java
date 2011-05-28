@@ -126,7 +126,7 @@ public class Server extends UnicastRemoteObject
         BackendAPI_1 fallbackXML = new XmlDataBackend();
         BackendAPI_2 dataBackend = new PostgreSQLDataBackend();
         
-        dataManager = new DataManager(dataBackend, prefs.dbUrl, fallbackXML);
+        dataManager = new DataManager(dataBackend, prefs, fallbackXML);
 
         java.util.Calendar tempCal = java.util.Calendar.getInstance();
         tempCal.setTime(new java.util.Date());
@@ -247,10 +247,10 @@ public class Server extends UnicastRemoteObject
     /**
      * Method which both the clients use to log themselves in.
      *
-     * @param   username    username through which they can access to their own data.
-     * @param   password    the password used by the user.
+     * @param username username through which they can access to their own data.
+     * @param password the password used by the user.
      *
-     * @throws RemoteException Throws a remote exception, because we are aon RMI context.
+     * @throws RemoteException In case of error of the RMI context.
      * @throws WrongLoginException
      *
      * @return  The id of the user, which is used in comunication, once logged.
@@ -265,7 +265,7 @@ public class Server extends UnicastRemoteObject
         record.user = dataManager.verifyUsername(username);
 
         /* Tests if this connection should be rejected */
-        if (record.user == null || !record.user.getPassword().equals(password))
+        if (!dataManager.passwordManager.checkUserAndPassword(record.user, password))
         {
             /* questo indica che l'utente non e' stato trovato nel db,
              * che la password non è giusta */
@@ -339,8 +339,8 @@ public class Server extends UnicastRemoteObject
     private void bindService(SessionRecord record) throws RemoteException {
         try {
             Naming.rebind("Server" + record.sessionId, record.serviceThread);
-            //                    " raggiungibile a: /Server" + record.sessionId);
-            //                    " raggiungibile a: /Server" + record.sessionId);
+            //                  " raggiungibile a: /Server" + record.sessionId);
+            //                  " raggiungibile a: /Server" + record.sessionId);
         } catch (RemoteException ex) {
             logger.error("non e' stato possible registrare" +
                     " la classe del working thread: remote exception",ex);

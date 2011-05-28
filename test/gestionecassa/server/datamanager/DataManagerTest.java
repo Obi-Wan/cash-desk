@@ -25,6 +25,7 @@ import gestionecassa.exceptions.WrongArticlesListException;
 import gestionecassa.order.PairObjectInteger;
 import gestionecassa.order.EntryArticleGroup;
 import gestionecassa.order.Order;
+import gestionecassa.server.ServerPrefs;
 import gestionecassa.stubs.BackendStub_1;
 import gestionecassa.stubs.BackendStub_2;
 import java.io.IOException;
@@ -53,7 +54,7 @@ public class DataManagerTest {
     public DataManagerTest() {
         backend_1 = new BackendStub_1();
         backend_2 = new BackendStub_2();
-        dataManager = new DataManager(backend_2, "", backend_1);
+        dataManager = new DataManager(backend_2, new ServerPrefs(), backend_1);
     }
 
     @BeforeClass

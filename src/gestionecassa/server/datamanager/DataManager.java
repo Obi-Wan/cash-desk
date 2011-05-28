@@ -18,7 +18,9 @@ import gestionecassa.order.Order;
 import gestionecassa.Person;
 import gestionecassa.exceptions.NotExistingGroupException;
 import gestionecassa.exceptions.WrongArticlesListException;
+import gestionecassa.server.ServerPrefs;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,6 +38,11 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
      * 
      */
     private Logger logger;
+    
+    /**
+     * It takes care of password handling and verification
+     */
+    public PasswordManager passwordManager;
 
     /**
      * The data store backend
@@ -76,7 +83,8 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
      * For the goods with time of preparation is nice to have a number of
      * corrispondence between our ticket and the one held by the cooker.
      *
-     * NOTE: in this implementation it is resetted everytime the server starts/stops
+     * NOTE: in this implementation it is resetted everytime the server
+     * starts/stops
      */
     private TreeMap<String, Integer> progressivesList;
 
@@ -128,24 +136,39 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
     /**
      * Creates a new DataManager class
      * @param fallback
-     * @param dbUrl
+     * @param prefs Server preferences
      * @param dataBackend
      */
-    public DataManager(BackendAPI_2 fallback, String dbUrl, BackendAPI_1 dataBackend) {
+    public DataManager(BackendAPI_2 fallback, ServerPrefs prefs,
+            BackendAPI_1 dataBackend) {
         this.fallbackXML = dataBackend;
         this.dataBackendDB = fallback;
         this.logger = Log.GESTIONECASSA_SERVER_DATAMANAGER;
+        
+        passwordManager = new PasswordManager();
+        try {
+            passwordManager.initDigest(prefs.digestPasswords);
+        } catch (NoSuchAlgorithmException ex) {
+            prefs.digestPasswords = false;
+            final String errorHash = " - Warn: MD5 algorithm not available "
+                    + "for Hashing passwords. Disabling Hashing passwords.";
+            logger.warn(errorHash, ex);
+            System.out.println(errorHash);
+        }
+        logger.info("Charset used for bytes decoding: "
+                + passwordManager.charset.displayName());
 
         ordersTable = new TreeMap<String, List<Order>>();
 
         try {
-            dataBackendDB.init(dbUrl);
+            dataBackendDB.init(prefs.dbUrl);
             useFallback =false;
             
         } catch (IOException ex) {
             useFallback = true;
             System.out.println("DB non accessibile o non conforme: using XML");
-            Log.GESTIONECASSA_SERVER.error("errore nell'instanziare il db, uso XML", ex);
+            Log.GESTIONECASSA_SERVER.error(
+                    "errore nell'instanziare il db, uso XML", ex);
         }
 
         loadAdminsList();
@@ -253,7 +276,9 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
     public void registerUser(Person user) {
         if (user instanceof Cassiere) {
             synchronized (listCassieriSemaphore) {
-                cassieresList.put(user.getUsername(), (Cassiere)user);
+                Cassiere tempRecord = new Cassiere((Cassiere)user,
+                        passwordManager.digestPassword(user.getPassword()));
+                cassieresList.put(user.getUsername(), tempRecord);
                 try {
                     if (useFallback) {
                         fallbackXML.saveCassiereList(cassieresList.values());
@@ -266,7 +291,9 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
             }
         } else if (user instanceof Admin) {
             synchronized (listAdminsSemaphore) {
-                adminsList.put(user.getUsername(), (Admin)user);
+                Admin tempRecord = new Admin((Admin)user,
+                        passwordManager.digestPassword(user.getPassword()));
+                adminsList.put(user.getUsername(), tempRecord);
                 try {
                     if (useFallback) {
                         fallbackXML.saveAdminsList(adminsList.values());
@@ -281,8 +308,8 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
     }
 
     /**
-     * Verifies a username exists, and if is the case, 
-     * it creates a new read only copy of the user to prevent problems in syncronization
+     * Verifies a username exists, and if is the case, it creates a new read
+     * only copy of the user to prevent problems in syncronization
      *
      * @param username Username of the desired person
      *
