@@ -55,7 +55,7 @@ public class ServiceRMICassiereImpl extends SharedServerService
         this.trustOrders = trust;
 
         final String timestamp = new SimpleDateFormat(
-                "yyyy-MM-dd_HH-mm-ss").format(new Date());
+                "yyyy-MM-dd_HH-mm-ss-SSS").format(new Date());
         sessionIdentifier = username + "@" + timestamp;
 
         dataManager.createNewCassaSession(sessionIdentifier);

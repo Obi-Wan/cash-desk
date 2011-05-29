@@ -31,6 +31,7 @@ public interface ServiceRMICassiereAPI extends Remote, Serializable {
      * @param newOrder
      * @throws RemoteException
      * @throws IOException
+     * @throws WrongArticlesListException 
      */
     public void sendOrder(Order newOrder)
             throws RemoteException, IOException, WrongArticlesListException;
