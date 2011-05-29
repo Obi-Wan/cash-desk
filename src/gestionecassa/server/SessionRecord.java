@@ -32,6 +32,9 @@ class SessionRecord implements Serializable {
     
     /** Session ID of the user. */
     int sessionId;
+
+    /** Session Hash of the connection */
+    int sessionHash;
     
     /** Thread that is serving this user. */
     SharedServerService serviceThread;

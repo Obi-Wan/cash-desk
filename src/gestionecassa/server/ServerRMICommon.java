@@ -5,6 +5,7 @@
 
 package gestionecassa.server;
 
+import gestionecassa.ConnectionDetails;
 import gestionecassa.exceptions.NotExistingSessionException;
 import gestionecassa.exceptions.WrongLoginException;
 import java.rmi.Remote;
@@ -27,7 +28,7 @@ public interface ServerRMICommon extends Remote {
      *
      * @return  The id of the user, which is used in comunication, once logged.
      */
-    public int doRMILogin(String username, String password)
+    public ConnectionDetails doRMILogin(String username, String password)
             throws   RemoteException, WrongLoginException;
     
     /**

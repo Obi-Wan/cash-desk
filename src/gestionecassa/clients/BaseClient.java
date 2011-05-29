@@ -6,7 +6,9 @@
 package gestionecassa.clients;
 
 import gestionecassa.ArticlesList;
+import gestionecassa.ConnectionDetails;
 import gestionecassa.XmlPreferencesHandler;
+import gestionecassa.exceptions.NotExistingSessionException;
 import gestionecassa.exceptions.WrongLoginException;
 import gestionecassa.server.ServerRMICommon;
 import java.io.IOException;
@@ -43,7 +45,7 @@ abstract public class BaseClient
      * The ID returned from the server, that we will use
      * to comunicate with it.
      */
-    protected int sessionID;
+    protected ConnectionDetails connectionDetails;
 
     /**
      * Nome identificativo del luogo (hostname)
@@ -86,7 +88,7 @@ abstract public class BaseClient
         this.hostname = hostname;
         this.logger = logger;
         this.stopApp = false;
-        this.sessionID = -1;
+        this.connectionDetails = new ConnectionDetails();
         this.serverCentrale = null;
         this.articles = null;
         this.username = "";
@@ -211,23 +213,28 @@ abstract public class BaseClient
      */
     @SuppressWarnings("unchecked")
     protected Remote sendLoginData(String username, String password, String serverName)
-            throws WrongLoginException, RemoteException, NotBoundException, MalformedURLException
+            throws WrongLoginException, RemoteException, NotBoundException,
+                      MalformedURLException
     {
         try {
             /* Login phase */
-            serverCentrale = (ServerType) Naming.lookup("//" + serverName + "/ServerRMI");
+            serverCentrale = (ServerType)
+                    Naming.lookup("//" + serverName + "/ServerRMI");
 
-            sessionID = serverCentrale.doRMILogin(username, password);
+            connectionDetails = serverCentrale.doRMILogin(username, password);
 
             /* quando il client si connette e il server crea il sessionID, il
              * server creer un nuovo thread che si chiama sessionID, il client
-             * far poi la lookup al suo sessionID e cos comunica cn il suo thread
+             * far poi la lookup al suo sessionID e cos comunica cn il suo
+             * thread
              */
-            return Naming.lookup("//" + serverName + "/Server" + sessionID);
+            
+            return Naming.lookup("//" + serverName + "/Server"
+                    + connectionDetails.sessionID);
 
         } catch (RemoteException ex) {
 
-            logger.warn("RemoteException nel tentativo di connessione",ex);
+            logger.warn("RemoteException while connecting",ex);
             throw ex;
         } catch (MalformedURLException ex) {
 
@@ -235,7 +242,7 @@ abstract public class BaseClient
             throw ex;
         } catch (NotBoundException ex) {
             
-            logger.warn("NotBoundException nel tentativo di connessione",ex);
+            logger.warn("NotBoundException while connecting",ex);
             throw ex;
         }
     }
@@ -246,7 +253,7 @@ abstract public class BaseClient
      * @throws RemoteException
      */
     protected void setupAfterLogin(String username) throws RemoteException {
-        logger.info("Connessione avvenuta con id: " + sessionID);
+        logger.info("Connected with ID: " + connectionDetails.sessionID);
 
         this.username = username;
         startDaemonConnection();
@@ -255,14 +262,8 @@ abstract public class BaseClient
         } catch (RemoteException ex) {
             logger.warn("Il server non ha risposto alla richiesta della " +
                     "lista beni, subio dopo la connessione", ex);
-            try {
-                logout();
-            } catch (RemoteException ex1) {
-                logger.warn("Neanche la comunicazione per la disconnessione" +
-                        " è andata a buon fine", ex1);
-            } finally {
-                throw ex;
-            }
+            
+            logout();
         }
     }
 
@@ -271,7 +272,8 @@ abstract public class BaseClient
      */
     private void startDaemonConnection() {
         threadConnessione =
-                new DaemonReestablishConnection(serverCentrale,sessionID,logger);
+                new DaemonReestablishConnection(serverCentrale,
+                                                connectionDetails);
         threadConnessione.start();
     }
 
@@ -284,6 +286,14 @@ abstract public class BaseClient
         }
     }
 
+    private void cleanConnection() {
+        stopDaemonConnection();
+        connectionDetails = new ConnectionDetails();
+        serverCentrale = null;
+        articles = null;
+        username = "";
+    }
+
     /**
      * Logs out the current user from the remote app-server
      * @throws RemoteException
@@ -292,18 +302,18 @@ abstract public class BaseClient
     public void logout() throws RemoteException {
         try {
             /*Let's stop the service on the server.*/
-            if (serverCentrale != null && sessionID >= 0) {
-                serverCentrale.closeService(sessionID);
+            if (serverCentrale != null && connectionDetails != null
+                    && connectionDetails.sessionID >= 0)
+            {
+                serverCentrale.closeService(connectionDetails.sessionID);
             }
         } catch (RemoteException ex) {
-            logger.warn("Connessione interrotta in modo brusco", ex);
+            logger.warn("Main server down, while trying to close the connection"
+                    + "to session with ID: "
+                    + Integer.toString(connectionDetails.sessionID), ex);
             throw ex;
         } finally {
-            stopDaemonConnection();
-            sessionID = -1;
-            serverCentrale = null;
-            articles = null;
-            username = "";
+            cleanConnection();
         }
     }
 
@@ -333,4 +343,38 @@ abstract public class BaseClient
     public void setPrefs(PrefsType prefs) {
         this.preferences = prefs;
     }
+
+    /**
+     * 
+     * @throws NotExistingSessionException
+     * @throws RemoteException 
+     */
+    protected void checkConnectionErrors()
+            throws NotExistingSessionException, RemoteException
+    {
+        if (threadConnessione != null) {
+            switch (threadConnessione.getDaemonState()) {
+                case RemoteError: {
+                    cleanConnection();
+                    
+                    RemoteException ex = (RemoteException)
+                            threadConnessione.getErrorException();
+                    logger.warn("RemoteException nel tentativo di inviare il "
+                            + "keepalive", ex);
+                    throw ex;
+                }
+                case NotExistingSessionError: {
+                    cleanConnection();
+                    
+                    NotExistingSessionException ex =
+                            (NotExistingSessionException)
+                            threadConnessione.getErrorException();
+                    logger.warn("KeepAlive not possible: the session in the "
+                            + "server has expired", ex);
+                    throw ex;
+                }
+            }
+        }
+    }
+    
 }

@@ -24,6 +24,7 @@ import gestionecassa.exceptions.NotExistingSessionException;
 import gestionecassa.server.datamanager.DataManager;
 import gestionecassa.Admin;
 import gestionecassa.Cassiere;
+import gestionecassa.ConnectionDetails;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
@@ -125,7 +126,7 @@ public class Server extends UnicastRemoteObject
         BackendAPI_2 dataBackend = new PostgreSQLDataBackend();
         
         dataManager = new DataManager(dataBackend, prefs, fallbackXML);
-        
+
         Runtime.getRuntime().addShutdownHook(
                 new Thread(new ServerDisposer(sessionMngr, prefs),
                 "ServerDisposer"));
@@ -152,7 +153,7 @@ public class Server extends UnicastRemoteObject
     public void run() {
         try {
             while (stopApp != true) {
-                Thread.sleep(1000);
+                Thread.sleep(SessionManager.tic);
                 sessionMngr.tick();
             }
         } catch (InterruptedException ex) {
@@ -225,8 +226,8 @@ public class Server extends UnicastRemoteObject
      * @return  The id of the user, which is used in comunication, once logged.
      */
     @Override
-    public int doRMILogin(String username, String password)
-            throws RemoteException, WrongLoginException{
+    public ConnectionDetails doRMILogin(String username, String password)
+            throws RemoteException, WrongLoginException {
         
         SessionRecord record = new SessionRecord();
 
@@ -259,12 +260,20 @@ public class Server extends UnicastRemoteObject
         /* Register the new session */
         record.sessionId = sessionMngr.newSession(record);
 
+        /* Assign Hash to the session */
+        // FIXME: do proper hashing
+        record.sessionHash = -1;
+
         /* Bind the new service to an RMI socket, and finally start the service
          */
         bindService(record);
         record.serviceThread.start();
+
+        ConnectionDetails connectionDetails =
+                new ConnectionDetails(record.sessionId, record.sessionHash,
+                                      SessionManager.getTimeount());
         
-        return record.sessionId;
+        return connectionDetails;
     }
 
     /**

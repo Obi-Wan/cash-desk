@@ -9,10 +9,10 @@
 
 package gestionecassa.clients;
 
+import gestionecassa.ConnectionDetails;
 import gestionecassa.exceptions.NotExistingSessionException;
 import java.rmi.RemoteException;
 import gestionecassa.server.ServerRMICommon;
-import org.apache.log4j.Logger;
 
 /**
  * This class has the only scope to keep alive connection.
@@ -23,15 +23,9 @@ import org.apache.log4j.Logger;
 public class DaemonReestablishConnection extends Thread {
 
     /**
-     * Right log to use.
+     * Details of the connection of the client
      */
-    private Logger logger;
-
-    /**
-     * Id of the client.
-     */
-    private int id;
-
+    private ConnectionDetails connectionDetails;
     /**
      * Server
      */
@@ -40,7 +34,12 @@ public class DaemonReestablishConnection extends Thread {
     /**
      * Error state of the daemon
      */
-    private DaemonErrorState errorState;
+    private DaemonRuntimeState errorState;
+    
+    /**
+     * Saves the exception in case of error, for later reading.
+     */
+    private Exception exception;
 
     /**
      * Semaphore for the error state of the daemon
@@ -55,17 +54,17 @@ public class DaemonReestablishConnection extends Thread {
      * Creates a new instance of DaemonReestablishConnection
      *
      * @param server 
-     * @param id
-     * @param logger
+     * @param connDet
      */
-    public DaemonReestablishConnection(ServerRMICommon server, int id, Logger logger) {
+    public DaemonReestablishConnection(ServerRMICommon server,
+            ConnectionDetails connDet) {
         /*The only way to destroy it, without having care of anything*/
         this.setDaemon(true);
 
-        this.logger = logger;
-        this.id = id;
+        this.connectionDetails = new ConnectionDetails(connDet);
         this.server = server;
-        this.errorState = DaemonErrorState.NoError;
+        this.errorState = DaemonRuntimeState.Running;
+        this.exception = new Exception();
     }
     
     /**
@@ -73,42 +72,53 @@ public class DaemonReestablishConnection extends Thread {
      */
     @Override
     public void run() {
+        while (getDaemonState() == DaemonRuntimeState.Running) {
+            keepAlive();
+        }
+    }
+    
+    void keepAlive() {
         try {
-            while (true) {
-                /*sleeps for 30 seconds*/
-                Thread.sleep(30000);
-                server.keepAlive(id); //FIXME Add hash handling
-                
-//                logger.info("keepalive mandato al server.");
-            }
+            server.keepAlive(connectionDetails.sessionID); //FIXME Add hash handling
+//            logger.info("keepalive mandato al server.");
+
+            /*sleeps for 30 seconds*/
+            Thread.sleep(connectionDetails.timeout/2);
         } catch (NotExistingSessionException ex) {
             synchronized (errorStateSemaphore) {
-                errorState = DaemonErrorState.NotExistingSessionError;
+                errorState = DaemonRuntimeState.NotExistingSessionError;
+                exception = ex;
             }
-            logger.warn("KeepAlive not possible: the session in the server "
-                    + "has expired",ex);
             
         } catch (RemoteException ex) {
             synchronized (errorStateSemaphore) {
-                errorState = DaemonErrorState.RemoteError;
+                errorState = DaemonRuntimeState.RemoteError;
+                exception = ex;
             }
-            logger.warn("RemoteException nel tentativo "+
-                    "di inviar eil keepalive",ex);
             
         } catch (InterruptedException ex) {
-            logger.warn("Thread refresh connessione "+
-                    "interrotto",ex);
+            synchronized (errorStateSemaphore) {
+                errorState = DaemonRuntimeState.Stopped;
+                exception = ex;
+            }
         }
     }
 
-    public DaemonErrorState getErrorState() {
+    public DaemonRuntimeState getDaemonState() {
         synchronized (errorStateSemaphore) {
             return errorState;
         }
     }
 
-    public enum DaemonErrorState {
-        NoError,
+    public Exception getErrorException() {
+        synchronized (errorStateSemaphore) {
+            return exception;
+        }
+    }
+
+    public enum DaemonRuntimeState {
+        Running,
+        Stopped,
         NotExistingSessionError,
         RemoteError,
     }

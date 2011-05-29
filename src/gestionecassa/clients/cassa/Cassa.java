@@ -233,36 +233,28 @@ public class Cassa extends BaseClient<ServerRMICommon, CassaPrefs>
         return loggerGUI;
     }
 
+    /**
+     * Checks for errors in the current session/connection or base client.
+     *
+     * In case of connection errors it just resets the interface, since the
+     * connection is already broken.
+     */
     @Override
     public void checkErrors() {
-        if (threadConnessione != null) {
-            switch (threadConnessione.getErrorState()) {
-                case NotExistingSessionError: {
-                    appFrame.showMessageDialog(
-                            "The connection with the server has expired",
-                            MessageType.ErrorComunication);
-                    try {
-                        logout();
-                    } catch (RemoteException ex) {
-                        logger.warn("Error in logout after NotExistingSession "
-                                + "exception in the"
-                                + " connection daemon: may not be severe", ex);
-                    }
-                    break;
-                }
-                case RemoteError: {
-                    appFrame.showMessageDialog(
-                            "Remote error in the connection daemon",
-                            MessageType.ErrorComunication);
-                    try {
-                        logout();
-                    } catch (RemoteException ex) {
-                        logger.warn("Error in logout after remote exception in the"
-                                + " connection daemon: may not be severe", ex);
-                    }
-                    break;
-                }
-            }
+        try {
+            checkConnectionErrors();
+        } catch (NotExistingSessionException ex) {
+            appFrame.setdownAfterLogout();
+            
+            appFrame.showMessageDialog(
+                    "The connection with the server has expired",
+                    MessageType.ErrorComunication);
+        } catch (RemoteException ex) {
+            appFrame.setdownAfterLogout();
+            
+            appFrame.showMessageDialog(
+                    "Remote error in the connection daemon",
+                    MessageType.ErrorComunication);
         }
     }
 }

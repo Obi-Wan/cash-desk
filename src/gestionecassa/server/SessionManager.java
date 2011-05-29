@@ -74,6 +74,12 @@ class SessionManager {
      * Max value of numTick.
      */
     final static int toc = 10;
+
+    final static int tic = 1000;
+
+    static int getTimeount() {
+        return tic * toc;
+    }
     
     /**
      * Creates a new instance of SessionManager

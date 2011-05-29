@@ -13,6 +13,7 @@ import gestionecassa.clients.gui.GuiAppFrame.MessageType;
 import gestionecassa.exceptions.ActorAlreadyExistingException;
 import gestionecassa.exceptions.DuplicateArticleException;
 import gestionecassa.exceptions.NotExistingGroupException;
+import gestionecassa.exceptions.NotExistingSessionException;
 import gestionecassa.exceptions.WrongLoginException;
 import gestionecassa.server.clientservices.ServiceRMIAdminAPI;
 import gestionecassa.server.ServerRMIAdmin;
@@ -112,7 +113,8 @@ abstract public class Administration extends BaseClient<ServerRMIAdmin, AdminPre
      */
     @Override
     public void stopServer() throws RemoteException {
-        if (this.serverCentrale != null && sessionID >= 0) {
+        if (this.serverCentrale != null && connectionDetails != null &&
+                connectionDetails.sessionID >= 0) {
             ServerRMIAdmin serverDaChiudere = serverCentrale;
             logout();
             try {
@@ -220,32 +222,14 @@ abstract public class Administration extends BaseClient<ServerRMIAdmin, AdminPre
 
     @Override
     public void checkErrors() {
-        if (threadConnessione != null) {
-            switch (threadConnessione.getErrorState()) {
-                case NotExistingSessionError: {
-                    showMessage("The connection with the server has expired",
-                            MessageType.ErrorComunication);
-                    try {
-                        logout();
-                    } catch (RemoteException ex) {
-                        logger.warn("Error in logout after NotExistingSession "
-                                + "exception in the connection daemon: may not be "
-                                + "severe", ex);
-                    }
-                    break;
-                }
-                case RemoteError: {
-                    showMessage("Remote error in the connection daemon",
-                            MessageType.ErrorComunication);
-                    try {
-                        logout();
-                    } catch (RemoteException ex) {
-                        logger.warn("Error in logout after remote exception in the"
-                                + " connection daemon: may not be severe", ex);
-                    }
-                    break;
-                }
-            }
+        try {
+            checkConnectionErrors();
+        } catch (NotExistingSessionException ex) {
+            showMessage("The connection with the server has expired",
+                    MessageType.ErrorComunication);
+        } catch (RemoteException ex) {
+            showMessage("Remote error in the connection daemon",
+                    MessageType.ErrorComunication);
         }
     }
 }
