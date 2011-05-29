@@ -283,18 +283,16 @@ public class Server extends UnicastRemoteObject
                 record.serviceThread =
                         new ServiceRMICassiereImpl(record.getUsername(),
                                                    prefs.trustOrders,
-                                                   dataManager, logger);
+                                                   dataManager);
             } else if (record.user instanceof Admin){
 
-                record.serviceThread =
-                        new ServiceRMIAdminImpl(dataManager, logger);
+                record.serviceThread = new ServiceRMIAdminImpl(dataManager);
             } else {
                 // Se non appartiene a nessuna delle classi di client, errore.
                 throw new WrongLoginException();
             }
         } catch (RemoteException ex) {
-            logger.error("Errore nell'instanziazione dell'" +
-                    "oggetto del working thread",ex);
+            logger.error("Error while instantiating the working thread", ex);
             throw ex;
         }
     }

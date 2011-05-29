@@ -9,6 +9,7 @@
 
 package gestionecassa.server.clientservices;
 
+import gestionecassa.Log;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -31,14 +32,16 @@ public class SharedServerService extends UnicastRemoteObject
     /**
      * Reference to the logger that eats our messages.
      */
-    Logger logger;
+    static Logger logger;
+    
+    static {
+        logger = Log.GESTIONECASSA_SERVER;
+    }
     
     /** Creates a new instance of SharedServerService
-     * @param logger
      * @throws RemoteException
      */
-    SharedServerService(Logger logger) throws RemoteException {
-        this.logger = logger;
+    SharedServerService() throws RemoteException {
     }
     
     /**

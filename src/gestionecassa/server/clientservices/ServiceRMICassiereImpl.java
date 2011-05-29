@@ -14,7 +14,6 @@ import gestionecassa.order.EntryArticleGroup;
 import gestionecassa.order.Order;
 import java.io.IOException;
 import java.rmi.RemoteException;
-import org.apache.log4j.Logger;
 import gestionecassa.server.datamanager.DMCassaAPI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -46,13 +45,12 @@ public class ServiceRMICassiereImpl extends SharedServerService
      * @param username
      * @param trust
      * @param dataManager
-     * @param logger
      * @throws RemoteException
      */
     public ServiceRMICassiereImpl(String username, boolean trust,
-            DMCassaAPI dataManager, Logger logger)
-                throws  RemoteException {
-        super(logger);
+            DMCassaAPI dataManager)
+                throws  RemoteException
+    {
         this.dataManager = dataManager;
         this.trustOrders = trust;
 

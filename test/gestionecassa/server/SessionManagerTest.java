@@ -103,6 +103,7 @@ public class SessionManagerTest {
 
     /**
      * Test of tick method, of class SessionManager.
+     * @throws RemoteException 
      */
     @Test
     public void testTick() throws RemoteException {
@@ -110,7 +111,7 @@ public class SessionManagerTest {
         SessionRecord newRecord = new SessionRecord();
         newRecord.user = user1;
         newRecord.serviceThread =
-                new ServiceRMICassiereImpl(user1.getUsername(), true, dataMngr, null);
+                new ServiceRMICassiereImpl(user1.getUsername(), true, dataMngr);
         int sessID = sectMngr.newSession(newRecord);
 
         for(int i = 0; i < SessionManager.toc+1; i++) {
@@ -134,7 +135,7 @@ public class SessionManagerTest {
         SessionRecord newRecord2 = new SessionRecord();
         newRecord2.user = user2;
         newRecord2.serviceThread =
-                new ServiceRMICassiereImpl(user1.getUsername(), true, dataMngr, null);
+                new ServiceRMICassiereImpl(user1.getUsername(), true, dataMngr);
         int sessID2 = sectMngr.newSession(newRecord2);
 
         for(int i = 0; i < SessionManager.toc+1; i++) {
@@ -173,6 +174,7 @@ public class SessionManagerTest {
 
     /**
      * Test of keepAlive method, of class SessionManager.
+     * @throws Exception 
      */
     @Test
     public void testKeepAlive() throws Exception {
@@ -180,7 +182,7 @@ public class SessionManagerTest {
         SessionRecord newRecord = new SessionRecord();
         newRecord.user = user1;
         newRecord.serviceThread =
-                new ServiceRMICassiereImpl(user1.getUsername(), true, dataMngr, null);
+                new ServiceRMICassiereImpl(user1.getUsername(), true, dataMngr);
         int sessID = sectMngr.newSession(newRecord);
 
         for(int i = 0; i < SessionManager.toc+1; i++) {
@@ -195,6 +197,7 @@ public class SessionManagerTest {
 
     /**
      * Test of closeService method, of class SessionManager.
+     * @throws Exception 
      */
     @Test
     public void testCloseService() throws Exception {
@@ -202,7 +205,7 @@ public class SessionManagerTest {
         SessionRecord newRecord = new SessionRecord();
         newRecord.user = user1;
         newRecord.serviceThread =
-                new ServiceRMICassiereImpl(user1.getUsername(), true, dataMngr, null);
+                new ServiceRMICassiereImpl(user1.getUsername(), true, dataMngr);
         int sessID = sectMngr.newSession(newRecord);
 
         sectMngr.closeService(sessID);
@@ -215,6 +218,7 @@ public class SessionManagerTest {
 
     /**
      * Test of kickOff method, of class SessionManager.
+     * @throws RemoteException 
      */
     @Test
     public void testKickOff() throws RemoteException {
@@ -222,7 +226,7 @@ public class SessionManagerTest {
         SessionRecord newRecord = new SessionRecord();
         newRecord.user = user1;
         newRecord.serviceThread =
-                new ServiceRMICassiereImpl(user1.getUsername(), true, dataMngr, null);
+                new ServiceRMICassiereImpl(user1.getUsername(), true, dataMngr);
         int sessID = sectMngr.newSession(newRecord);
 
         sectMngr.kickOff(newRecord);
@@ -235,6 +239,7 @@ public class SessionManagerTest {
 
     /**
      * Test of temrinate method, of class SessionManager.
+     * @throws RemoteException 
      */
     @Test
     public void testTemrinate() throws RemoteException {
@@ -242,7 +247,7 @@ public class SessionManagerTest {
         SessionRecord newRecord = new SessionRecord();
         newRecord.user = user1;
         newRecord.serviceThread =
-                new ServiceRMICassiereImpl(user1.getUsername(), true, dataMngr, null);
+                new ServiceRMICassiereImpl(user1.getUsername(), true, dataMngr);
         int sessID = sectMngr.newSession(newRecord);
 
         sectMngr.temrinate();
