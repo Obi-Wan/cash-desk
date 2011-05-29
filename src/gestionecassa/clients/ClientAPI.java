@@ -67,16 +67,6 @@ public interface ClientAPI<PrefsType extends BaseClientPrefs> {
      * Checks errors in the threads running apart from the main one
      */
     public void checkErrors();
-    
-    /**
-     * Starts the thread deputated to keep connection alive
-     */
-    public void startDaemonConnection();
-
-    /**
-     * Stops the thread deputated to keep connection alive
-     */
-    public void stopDaemonConnection();
 
     /**
      * Fetches the remote list of articles

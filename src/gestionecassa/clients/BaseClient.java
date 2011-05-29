@@ -269,8 +269,7 @@ abstract public class BaseClient
     /**
      * Starts the thread deputated to keep connection alive
      */
-    @Override
-    public void startDaemonConnection() {
+    private void startDaemonConnection() {
         threadConnessione =
                 new DaemonReestablishConnection(serverCentrale,sessionID,logger);
         threadConnessione.start();
@@ -279,8 +278,7 @@ abstract public class BaseClient
     /**
      * Stops the thread deputated to keep connection alive
      */
-    @Override
-    public void stopDaemonConnection() {
+    private void stopDaemonConnection() {
         if (threadConnessione != null) {
             threadConnessione.interrupt();
         }
