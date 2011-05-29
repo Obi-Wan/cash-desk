@@ -279,14 +279,12 @@ public class Server extends UnicastRemoteObject
             throws WrongLoginException, RemoteException {
         try {
             if (record.user instanceof Cassiere) {
+                record.serviceThread = new ServiceRMICassiereImpl(
+                        record.getUsername(), prefs.trustOrders, dataManager);
 
-                record.serviceThread =
-                        new ServiceRMICassiereImpl(record.getUsername(),
-                                                   prefs.trustOrders,
-                                                   dataManager);
-            } else if (record.user instanceof Admin){
-
+            } else if (record.user instanceof Admin) {
                 record.serviceThread = new ServiceRMIAdminImpl(dataManager);
+
             } else {
                 // Se non appartiene a nessuna delle classi di client, errore.
                 throw new WrongLoginException();
