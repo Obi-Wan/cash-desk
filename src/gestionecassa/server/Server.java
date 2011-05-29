@@ -26,8 +26,6 @@ import gestionecassa.Admin;
 import gestionecassa.Cassiere;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.rmi.AccessException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -127,6 +125,10 @@ public class Server extends UnicastRemoteObject
         BackendAPI_2 dataBackend = new PostgreSQLDataBackend();
         
         dataManager = new DataManager(dataBackend, prefs, fallbackXML);
+        
+        Runtime.getRuntime().addShutdownHook(
+                new Thread(new ServerDisposer(sessionMngr, prefs),
+                "ServerDisposer"));
 
         java.util.Calendar tempCal = java.util.Calendar.getInstance();
         tempCal.setTime(new java.util.Date());
@@ -159,46 +161,7 @@ public class Server extends UnicastRemoteObject
             logger.warn(errorMsg, ex);
             System.out.println(errorMsg);
         } finally {
-            System.out.print("Server Shutting Down:\n - Closing services... ");
-
-            sessionMngr.temrinate();
-
-            System.out.print("done.\n - Saving preferences... ");
-
-            XmlPreferencesHandler<ServerPrefs> xmlHandler =
-                    new XmlPreferencesHandler<ServerPrefs>(logger);
-            try {
-                xmlHandler.savePrefs(prefs);
-                System.out.println("done.");
-
-            } catch (IOException ex) {
-                logger.warn("Error while saving preferences", ex);
-                System.out.println("error (read in the log).");
-            }
-
-
-            System.out.print(" - Unbinding from RMI register... ");
-            try {
-                Naming.unbind("ServerRMI");
-                System.out.println("done.");
-
-            } catch (MalformedURLException ex) {
-                logger.warn("Error while accessing registry", ex);
-                System.out.println("error (read in the log).");
-            } catch (AccessException ex) {
-                logger.warn("Error while accessing registry", ex);
-                System.out.println("error (read in the log).");
-            } catch (NotBoundException ex) {
-                logger.warn("Error in registry", ex);
-                System.out.println("error (read in the log).");
-            } catch (RemoteException ex) {
-                logger.warn("Error while accessing registry", ex);
-                System.out.println("error (read in the log).");
-            }
-
-            localBLogic = null;
-
-            System.out.println("Finished.");
+            System.exit(0);
         }
     }
 
@@ -218,7 +181,8 @@ public class Server extends UnicastRemoteObject
         if (localBLogic == null) {
 
             try {
-                registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
+                registry =
+                        LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
 
                 try {
                     Naming.rebind("ServerRMI", Server.getInstance());
@@ -229,15 +193,20 @@ public class Server extends UnicastRemoteObject
                     System.out.println("Service Up and Running");
                     
                 } catch (RemoteException ex) {
-                    logger.error("Impossibile accedere al registry: ",ex);
-
+                    String errorMsg = "No access to the registry";
+                    logger.error(errorMsg + ": ",ex);
+                    String exMsg = ex.getMessage();
+                    System.out.println(errorMsg + "\n" +
+                                    exMsg.substring(0, exMsg.indexOf(";")));
                     localBLogic.stopServer();
                 }
             } catch (Exception ex) {
-                String errorMsg = "Impossibile avviare un nuovo"+
-                        " registry (e' forse gia' in esecuzione?)";
+                String errorMsg = "Not possible to open a new registry "
+                        + "(is it already running on this host?)";
                 logger.warn(errorMsg, ex);
-                System.out.println(errorMsg);
+                String exMsg = ex.getMessage();
+                System.out.println(errorMsg + "\n" +
+                                    exMsg.substring(0, exMsg.indexOf(";")));
             }
         } else {
             System.out.println("Another Instance of the Server is running");
@@ -339,8 +308,7 @@ public class Server extends UnicastRemoteObject
     private void bindService(SessionRecord record) throws RemoteException {
         try {
             Naming.rebind("Server" + record.sessionId, record.serviceThread);
-            //                  " raggiungibile a: /Server" + record.sessionId);
-            //                  " raggiungibile a: /Server" + record.sessionId);
+
         } catch (RemoteException ex) {
             logger.error("non e' stato possible registrare" +
                     " la classe del working thread: remote exception",ex);
@@ -364,7 +332,7 @@ public class Server extends UnicastRemoteObject
         try {
             sessionMngr.keepAlive(sessionID);
         } catch (NotExistingSessionException ex) {
-            logger.warn("Sessione con quell'id inesistente", ex);
+            logger.warn("Unexisting session with ID: " + sessionID, ex);
             throw ex;
         }
     }
@@ -379,8 +347,8 @@ public class Server extends UnicastRemoteObject
         try {
             sessionMngr.closeService(sessionID);
         } catch (NotExistingSessionException ex) {
-            logger.warn("Sessione con quell'id inesistente, era magari già" +
-                    " stata chiusa", ex);
+            logger.warn("Unexisting session with ID: " + sessionID +
+                    ", maybe it was closed previously", ex);
         }
     }
 }
