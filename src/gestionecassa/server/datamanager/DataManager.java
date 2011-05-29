@@ -181,28 +181,28 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
      * Initialization method for the list of Admins
      */
     private void loadAdminsList() {
-        Collection<Admin> listaAdmin;
         synchronized (listAdminsSemaphore) {
             adminsList = new TreeMap<String, Admin>();
             try {
+                Collection<Admin> tempAdminList;
                 if (useFallback) {
-                    listaAdmin = fallbackXML.loadAdminsList();
+                    tempAdminList = fallbackXML.loadAdminsList();
                 } else {
-                    listaAdmin = dataBackendDB.loadAdminsList();
+                    tempAdminList = dataBackendDB.loadAdminsList();
                 }
                 
-                if (listaAdmin.isEmpty()) {
+                if (tempAdminList.isEmpty()) {
                     logger.warn("no admins, creating a new blank/default list");
                     registerUser(new Admin(adminsList.size()+1, "GCAdmin",
                                            "GCPassword"));
                 } else {
-                    for (Admin admin : listaAdmin) {
+                    for (Admin admin : tempAdminList) {
                         adminsList.put(admin.getUsername(), admin);
                     }
                 }
             } catch (IOException ex) {
-                logger.warn("reading Admins was not successful, creating a new " +
-                        "blank/default list", ex);
+                logger.warn("reading Admins was not successful, creating a new "
+                        + "blank/default list", ex);
 
                 registerUser(new Admin(adminsList.size()+1, "GCAdmin",
                                        "GCPassword"));
@@ -214,24 +214,25 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
      * Initialization method for the list of Cassieres
      */
     private void loadCassieresList() {
-        Collection<Cassiere> listaCassiere;
         synchronized (listCassieriSemaphore) {
             cassieresList = new TreeMap<String, Cassiere>();
             try {
+                Collection<Cassiere> tempCassiereList;
                 if (useFallback) {
-                    listaCassiere = fallbackXML.loadCassiereList();
+                    tempCassiereList = fallbackXML.loadCassiereList();
                 } else {
-                    listaCassiere = dataBackendDB.loadCassiereList();
+                    tempCassiereList = dataBackendDB.loadCassiereList();
                 }
                 
-                for (Cassiere cassiere : listaCassiere) {
+                for (Cassiere cassiere : tempCassiereList) {
                     cassieresList.put(cassiere.getUsername(), cassiere);
                 }
             } catch (IOException ex) {
                 logger.warn("reading Admins from file failed, creating a new " +
                         "blank list", ex);
 
-                registerUser(new Cassiere(cassieresList.size()+1, "bene", "male"));
+                registerUser(new Cassiere(cassieresList.size()+1,
+                        "cassiere1", "pwd1"));
             }
         }
     }
@@ -240,15 +241,15 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
      * Initialization method for the list of Articles
      */
     private void loadArticlesList() {
-        Collection<ArticleGroup> lista;
         synchronized (listArticlesSemaphore) {
             try {
+                Collection<ArticleGroup> articles;
                 if (useFallback) {
-                    lista = fallbackXML.loadArticlesList();
+                    articles = fallbackXML.loadArticlesList();
                 } else {
-                    lista = dataBackendDB.loadArticlesList();
+                    articles = dataBackendDB.loadArticlesList();
                 }
-                articlesList = new ArticlesList(lista);
+                articlesList = new ArticlesList(articles);
             } catch (IOException ex) {
                 logger.warn("ListaBeni could not be loaded, starting up a" +
                         " new clean list.", ex);
@@ -357,7 +358,8 @@ public class DataManager implements DMCassaAPI, DMServerAPI,
         }
     }
 
-    private void checkListSignature(List<Integer> sign) throws WrongArticlesListException {
+    private void checkListSignature(List<Integer> sign)
+            throws WrongArticlesListException {
         if (!articlesList.getSignature().equals(sign)) {
             throw new WrongArticlesListException(
                     "Lists' signatures don't match\nmain: "
