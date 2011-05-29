@@ -5,4 +5,5 @@
   <dbUrl>jdbc:postgresql://localhost:5432/GCDB</dbUrl>
   <trustOrders>true</trustOrders>
   <kickOffOnNewSession>true</kickOffOnNewSession>
+  <digestPasswords>false</digestPasswords>
 </config>
