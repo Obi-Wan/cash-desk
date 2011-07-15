@@ -20,6 +20,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -49,12 +50,13 @@ public class TextPainter {
      * Constructor tat initializes the file descriptor and the name of who
      * emitted the order
      * @param username
+     * @param date
      * @throws IOException
      */
-    public TextPainter(String username) throws IOException {
+    public TextPainter(String username, Date date) throws IOException {
         outputStream = new BufferedWriter(new FileWriter("output.txt"));
         outputStream.write("  " + sentences.get(0) + "\n  -> " +
-                username.toUpperCase() + " <-\n\n\n");
+                username.toUpperCase() + " <-\n" + date.toString() + "\n\n");
 
         preps = new LinkedList<RecordArticleWithPerparation>();
     }

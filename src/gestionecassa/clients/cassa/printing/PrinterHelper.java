@@ -51,7 +51,8 @@ public class PrinterHelper extends Thread {
     @Override
     public void run() {
         try {
-            TextPainter painter = new TextPainter(order.getUsername());
+            TextPainter painter =
+		    new TextPainter(order.getUsername(), order.getDate());
             
             for (EntryArticleGroup entryGroup : order.getGroups()) {
                 for (PairObjectInteger<Article> entrySingleArticle : entryGroup.articles) {
